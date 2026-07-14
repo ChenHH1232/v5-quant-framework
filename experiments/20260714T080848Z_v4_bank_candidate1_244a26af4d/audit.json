@@ -1,0 +1,25 @@
+{
+  "passed": true,
+  "issues": [
+    {
+      "code": "NO_FINANCIAL_DISCLOSURE_LAG",
+      "severity": "warning",
+      "message": "Factor roe has zero disclosure lag; confirm the vendor uses true announcement dates."
+    },
+    {
+      "code": "NO_FINANCIAL_DISCLOSURE_LAG",
+      "severity": "warning",
+      "message": "Factor non_performing_loan_ratio has zero disclosure lag; confirm the vendor uses true announcement dates."
+    },
+    {
+      "code": "NO_FINANCIAL_DISCLOSURE_LAG",
+      "severity": "warning",
+      "message": "Factor capital_adequacy_ratio has zero disclosure lag; confirm the vendor uses true announcement dates."
+    },
+    {
+      "code": "NO_FINANCIAL_DISCLOSURE_LAG",
+      "severity": "warning",
+      "message": "Factor provision_coverage_ratio has zero disclosure lag; confirm the vendor uses true announcement dates."
+    }
+  ]
+}

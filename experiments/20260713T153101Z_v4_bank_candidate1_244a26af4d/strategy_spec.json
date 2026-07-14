@@ -1,0 +1,102 @@
+{
+  "meta": {
+    "strategy_id": "v4_bank_candidate1",
+    "name": "V4 Bank Fundamental Candidate 1",
+    "objective": "Reproduce the accepted V4 bank fundamental strategy as the first V5 standard case."
+  },
+  "universe": {
+    "name": "A-share listed banks",
+    "construction": "industry_membership_point_in_time",
+    "point_in_time": true
+  },
+  "data": {
+    "vendor": "local_v4_dataset",
+    "price_frequency": "daily",
+    "financial_as_of_policy": "announcement_date"
+  },
+  "signals": {
+    "factors": [
+      {
+        "name": "roe",
+        "source": "financial_statement",
+        "direction": "higher_is_better",
+        "definition": "Return on equity from disclosed financial statements.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 0,
+        "missing_policy": "drop_security",
+        "winsorize": "cross_sectional_mad",
+        "normalize": "cross_sectional_zscore"
+      },
+      {
+        "name": "non_performing_loan_ratio",
+        "source": "financial_statement",
+        "direction": "lower_is_better",
+        "definition": "Non-performing loan ratio from disclosed financial statements.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 0,
+        "missing_policy": "drop_security",
+        "winsorize": "cross_sectional_mad",
+        "normalize": "cross_sectional_zscore"
+      },
+      {
+        "name": "capital_adequacy_ratio",
+        "source": "financial_statement",
+        "direction": "higher_is_better",
+        "definition": "Capital adequacy ratio from disclosed financial statements.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 0,
+        "missing_policy": "drop_security",
+        "winsorize": "cross_sectional_mad",
+        "normalize": "cross_sectional_zscore"
+      },
+      {
+        "name": "provision_coverage_ratio",
+        "source": "financial_statement",
+        "direction": "higher_is_better",
+        "definition": "Provision coverage ratio from disclosed financial statements.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 0,
+        "missing_policy": "drop_security",
+        "winsorize": "cross_sectional_mad",
+        "normalize": "cross_sectional_zscore"
+      }
+    ],
+    "scoring": {
+      "method": "equal_weighted_factor_score",
+      "normalization_scope": "rebalance_cross_section"
+    }
+  },
+  "schedule": {
+    "signal_frequency": "quarterly_after_financial_disclosure",
+    "rebalance_frequency": "quarterly"
+  },
+  "portfolio": {
+    "selection_count": 6,
+    "weighting": "equal_weight",
+    "max_position_weight": 0.2
+  },
+  "risk": {
+    "defensive_asset": "short_duration_bond_fund",
+    "defensive_rule": {
+      "enabled": true,
+      "name": "market_weakness_filter",
+      "description": "Allocate to short-duration bond asset when the independent defensive module signals weak market state."
+    }
+  },
+  "validation": {
+    "method": "rolling",
+    "train_years": 5,
+    "test_years": 2
+  },
+  "execution": {
+    "commission_bps": 3,
+    "slippage_bps": 5,
+    "suspension_policy": "skip_untradeable",
+    "limit_policy": "skip_limit_blocked"
+  },
+  "outputs": {
+    "save_holdings": true,
+    "save_rebalance_signals": true,
+    "report": "markdown"
+  }
+}

@@ -1,0 +1,397 @@
+{
+  "project": "Bank Quant V5",
+  "identity": "AI-assisted quantitative research framework",
+  "mission": "Transform investment hypotheses into reproducible, explainable, and deployable quantitative strategies through a standardized research pipeline.",
+  "motto": "A strategy can generate returns. A research framework can generate strategies. Bank Quant V5 is designed to build the latter.",
+  "core_thesis": "Statistics can tell us whether a relationship exists. Finance explains why it exists. AI helps us discover and implement it.",
+  "core_questions": [
+    "What works?",
+    "Why does it work?",
+    "How can we systematically discover the next strategy that works?"
+  ],
+  "evolution": {
+    "V1": "Can fundamental factors outperform?",
+    "V2": "Are these factors statistically significant?",
+    "V3": "Can they become a deployable strategy?",
+    "V4": "Is the strategy robust under rolling validation?",
+    "V5": "Can the entire research process itself become systematic?"
+  },
+  "principles": [
+    "Research before strategy",
+    "Explainability before performance",
+    "Evidence before optimization",
+    "Reproducibility before convenience",
+    "Modularity before complexity",
+    "AI augments researchers rather than replacing them",
+    "Skills are living infrastructure and must be updated when reality changes"
+  ],
+  "agent_architecture": {
+    "design_goal": "Use a compact four-agent structure that mirrors a real quantitative research team and creates checks and balances across research, validation, engineering, and project orchestration.",
+    "shared_rule": "Every decision must be evidence-driven, financially explainable, statistically validated, reproducible and maintainable. Historical performance alone is never sufficient evidence for accepting a strategy.",
+    "agents": [
+      {
+        "name": "Project Manager Agent",
+        "role": "Orchestrator",
+        "mission": "Plan, coordinate, and manage the V5 project.",
+        "core_question": "What should happen next?",
+        "responsibilities": [
+          "Read the V5 Manifesto",
+          "Maintain the roadmap",
+          "Break development into stages",
+          "Assign tasks to other agents",
+          "Summarize research results",
+          "Manage experiment flow",
+          "Update TODOs",
+          "Record final decisions"
+        ],
+        "never_do": [
+          "Directly design factors",
+          "Write strategy code",
+          "Perform statistical validation"
+        ],
+        "outputs": [
+          "Task List",
+          "Development Plan",
+          "Decision Log",
+          "Sprint Report"
+        ]
+      },
+      {
+        "name": "Research Agent",
+        "role": "Financial Researcher",
+        "mission": "Convert investment ideas into testable research hypotheses.",
+        "core_question": "Why is this worth researching?",
+        "responsibilities": [
+          "Propose research directions",
+          "Design new factors",
+          "Design strategy frameworks",
+          "Explain financial logic",
+          "Review literature",
+          "Judge economic meaning",
+          "Create experiment plans"
+        ],
+        "never_do": [
+          "Write code",
+          "Tune parameters",
+          "Accept strategies based only on returns"
+        ],
+        "outputs": [
+          "Research Proposal",
+          "Hypothesis",
+          "Experiment Design",
+          "Factor Specification"
+        ]
+      },
+      {
+        "name": "Quant Validation Agent",
+        "role": "Statistical Analyst",
+        "mission": "Validate research hypotheses with statistical evidence.",
+        "core_question": "Is there evidence to support this?",
+        "responsibilities": [
+          "IC analysis",
+          "RankIC analysis",
+          "Fama-MacBeth regression",
+          "Correlation analysis",
+          "Feature selection",
+          "Rolling validation",
+          "Walk-forward testing",
+          "Robustness testing",
+          "Overfitting checks"
+        ],
+        "never_do": [
+          "Create financial theory",
+          "Modify strategy ideas",
+          "Write trading logic"
+        ],
+        "outputs": [
+          "Validation Report",
+          "Statistical Evidence",
+          "Factor Ranking",
+          "Robustness Report"
+        ]
+      },
+      {
+        "name": "Engineering Agent",
+        "role": "Quantitative Engineer",
+        "mission": "Turn validated research into reliable running systems.",
+        "core_question": "How can this be implemented reliably?",
+        "responsibilities": [
+          "Python implementation",
+          "JoinQuant implementation",
+          "Strategy engine development",
+          "Portfolio construction",
+          "Risk control",
+          "Unit testing",
+          "Integration testing",
+          "Documentation",
+          "Audit checks for future leakage, survivorship bias, look-ahead bias, data leakage, reproducibility, and config errors"
+        ],
+        "never_do": [
+          "Invent investment views",
+          "Change research conclusions",
+          "Adjust theory to fit historical performance"
+        ],
+        "outputs": [
+          "Strategy Code",
+          "Backtest",
+          "Tests",
+          "Audit Report"
+        ]
+      }
+    ]
+  },
+  "success_criteria": [
+    "Preserve research evidence",
+    "Automate repetitive research tasks",
+    "Reduce implementation errors",
+    "Improve reproducibility",
+    "Accelerate future strategy development"
+  ],
+  "scope": {
+    "initial_domain": "Chinese banking sector",
+    "long_term": "Reusable framework for multiple industries, asset classes, and investment methodologies"
+  },
+  "data_collection": {
+    "current_constraints": [
+      "As of 2026-07-14, JoinQuant bank_indicator must be treated as unavailable for new V5 collection work.",
+      "Bank-specialized indicators should use documented replacements, reconstructed ratios, or annual report extraction with source labels.",
+      "Raw source files must not be overwritten by standardized outputs."
+    ],
+    "skills": [
+      "data-source-router",
+      "joinquant-a-share-collector",
+      "tushare-data-collector",
+      "financial-statement-standardizer",
+      "bank-indicator-replacement-collector",
+      "annual-report-bank-indicator-collector"
+    ]
+  },
+  "skill_lifecycle": {
+    "policy": "Skills must be dynamically maintained. Unavailable or unsafe skills should be limited, deprecated, or disabled for new work. Repeatable successful non-skill workflows should be summarized and promoted into candidate skills.",
+    "statuses": [
+      "active",
+      "limited",
+      "deprecated",
+      "disabled",
+      "candidate"
+    ],
+    "manager_skill": "skill-lifecycle-manager",
+    "rules": [
+      "Do not keep using a failed skill just because it exists.",
+      "Do not silently bypass a failed skill without recording the reason.",
+      "Do not promote a workaround into a skill unless it is repeatable.",
+      "Keep old disabled or deprecated skills as historical evidence unless removal is explicitly requested.",
+      "Validate affected skills and run project tests after lifecycle updates."
+    ]
+  },
+  "skill_map": {
+    "document": "docs/V5_SKILL_MAP.md",
+    "phases": [
+      {
+        "phase": "Project intake and orchestration",
+        "owner": "Project Manager Agent",
+        "skills": [
+          "v5-controller",
+          "skill-lifecycle-manager",
+          "candidate-governance",
+          "research-archive-freeze"
+        ],
+        "outputs": [
+          "Task List",
+          "Development Plan",
+          "Decision Log",
+          "Sprint Report"
+        ]
+      },
+      {
+        "phase": "Research hypothesis and factor design",
+        "owner": "Research Agent",
+        "skills": [
+          "research-agent",
+          "factor-research",
+          "strategy-spec",
+          "momentum-research",
+          "mean-reversion-research",
+          "defensive-overlay-research",
+          "state-routing-research",
+          "allocation-selection-separator"
+        ],
+        "outputs": [
+          "Research Proposal",
+          "Hypothesis",
+          "Factor Specification",
+          "Experiment Design"
+        ]
+      },
+      {
+        "phase": "Data collection and standardization",
+        "owner": "Research Agent with Engineering Agent support",
+        "skills": [
+          "data-source-router",
+          "joinquant-a-share-collector",
+          "tushare-data-collector",
+          "financial-statement-standardizer",
+          "bank-indicator-replacement-collector",
+          "annual-report-bank-indicator-collector",
+          "skill-lifecycle-manager"
+        ],
+        "outputs": [
+          "Raw Source Files",
+          "Standardized Datasets",
+          "Source Labels",
+          "Data Availability Report"
+        ]
+      },
+      {
+        "phase": "Statistical validation",
+        "owner": "Quant Validation Agent",
+        "skills": [
+          "quant-validation-agent",
+          "statistical-validation-protocol",
+          "rolling-validation",
+          "strategy-attribution",
+          "allocation-selection-separator"
+        ],
+        "outputs": [
+          "Validation Report",
+          "Statistical Evidence",
+          "Factor Ranking",
+          "Robustness Report",
+          "Attribution Report"
+        ]
+      },
+      {
+        "phase": "Candidate governance and research decision",
+        "owner": "Project Manager Agent",
+        "skills": [
+          "candidate-governance",
+          "strategy-attribution",
+          "execution-stress-test",
+          "research-archive-freeze",
+          "research-report"
+        ],
+        "outputs": [
+          "Formal Candidate Ranking",
+          "Decision Log",
+          "Final Validation Packet",
+          "Archive Packet"
+        ]
+      },
+      {
+        "phase": "Engineering implementation",
+        "owner": "Engineering Agent",
+        "skills": [
+          "engineering-agent",
+          "strategy-spec",
+          "data-leakage-audit",
+          "execution-consistency",
+          "joinquant-strategy-exporter",
+          "execution-stress-test"
+        ],
+        "outputs": [
+          "Strategy Code",
+          "Backtest Artifacts",
+          "Audit Report",
+          "Platform Export",
+          "Execution Consistency Report"
+        ]
+      },
+      {
+        "phase": "Final freeze and lifecycle update",
+        "owner": "Project Manager Agent",
+        "skills": [
+          "research-archive-freeze",
+          "skill-lifecycle-manager",
+          "candidate-governance",
+          "research-report"
+        ],
+        "outputs": [
+          "Active Baseline Record",
+          "Archived Branch Record",
+          "Skill Lifecycle Notes",
+          "Final Sprint Report"
+        ]
+      }
+    ],
+    "default_chain": [
+      "v5-controller",
+      "research-agent",
+      "factor-research",
+      "data-source-router",
+      "relevant collector skills",
+      "financial-statement-standardizer",
+      "statistical-validation-protocol",
+      "strategy-attribution",
+      "candidate-governance",
+      "strategy-spec",
+      "data-leakage-audit",
+      "execution-stress-test",
+      "joinquant-strategy-exporter",
+      "execution-consistency",
+      "research-archive-freeze",
+      "skill-lifecycle-manager when any skill changes status"
+    ]
+  },
+  "statistical_validation": {
+    "source": "V4 statistical validation workflow",
+    "manager_skill": "statistical-validation-protocol",
+    "core_methods": [
+      "Factor coverage and missingness checks",
+      "IC and RankIC analysis",
+      "Positive IC ratio",
+      "Top-minus-bottom spread",
+      "Annual factor refresh",
+      "5y train + 2y test + 1y review rolling validation",
+      "Walk-forward validation",
+      "Robustness perturbation",
+      "Leave-one-out factor validation",
+      "Common-sample candidate comparison",
+      "Final validation packet and freeze decision"
+    ],
+    "rules": [
+      "Validate factors before strategies.",
+      "Refit preprocessing, weights, and selections inside each fold only.",
+      "Freeze factor sets before review periods.",
+      "Treat capacity as a ceiling, not a fill target.",
+      "Compare candidates on common samples when possible.",
+      "Archive coherent but weaker branches instead of endlessly tuning them.",
+      "Historical performance alone is never sufficient evidence."
+    ]
+  },
+  "v4_method_inheritance": {
+    "source": "Reusable V4 research processes beyond data collection and statistical validation.",
+    "skills": [
+      "candidate-governance",
+      "allocation-selection-separator",
+      "momentum-research",
+      "mean-reversion-research",
+      "defensive-overlay-research",
+      "state-routing-research",
+      "strategy-attribution",
+      "execution-stress-test",
+      "research-archive-freeze"
+    ],
+    "rules": [
+      "Promote candidates only through explicit baseline comparison and decision status.",
+      "Separate allocation, selection, risk-control, and execution effects before accepting improvements.",
+      "Treat momentum as state-dependent research alpha unless deployment evidence supports promotion.",
+      "Archive coherent but non-deployable mean-reversion branches instead of retuning frozen windows.",
+      "Evaluate defensive overlays as risk-control layers, not as factor evidence.",
+      "Build state-routing rules from observable timestamped inputs only.",
+      "Attribute strategy changes before candidate governance decisions.",
+      "Stress execution assumptions while holding the signal layer fixed.",
+      "Freeze accepted or rejected branches with artifacts, windows, status labels, and revisit conditions."
+    ]
+  },
+  "platform_export": {
+    "joinquant_skill": "joinquant-strategy-exporter",
+    "policy": "Export to JoinQuant only after research, validation, strategy specification, and audit are complete. Platform code must preserve the frozen V5 strategy contract and must pass execution-consistency checks before platform backtests are accepted.",
+    "rules": [
+      "Do not invent new factors during JoinQuant export.",
+      "Do not change thresholds, weights, schedules, or factor definitions to improve platform backtests.",
+      "Do not rely on direct JoinQuant bank_indicator access for new V5 code.",
+      "Keep platform adapters separate from ranking, weighting, and risk-control logic.",
+      "Record factor dates, rebalance reasons, selected securities, target weights, and execution assumptions."
+    ]
+  }
+}

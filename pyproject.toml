@@ -1,0 +1,9 @@
+[project]
+name = "v5-quant-framework"
+version = "0.1.0"
+description = "Natural-language-driven, auditable quantitative strategy research framework."
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["src"]

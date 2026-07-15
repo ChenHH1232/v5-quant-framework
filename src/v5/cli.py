@@ -312,8 +312,6 @@ def main(argv: list[str] | None = None) -> int:
                 benchmark_fq=None if args.benchmark_fq == "none" else args.benchmark_fq,
                 dividend_csv=args.dividend_csv,
                 dividend_tax_rate=args.dividend_tax_rate,
-                bank_quality_csv=args.bank_quality_csv,
-                bank_quality_min_review_status=args.bank_quality_min_review_status,
             )
             print(result.price_path)
             return 0
@@ -331,6 +329,8 @@ def main(argv: list[str] | None = None) -> int:
                 benchmark_fq=None if args.benchmark_fq == "none" else args.benchmark_fq,
                 dividend_csv=args.dividend_csv,
                 dividend_tax_rate=args.dividend_tax_rate,
+                bank_quality_csv=args.bank_quality_csv,
+                bank_quality_min_review_status=args.bank_quality_min_review_status,
             )
             print(result.panel_path)
             return 0

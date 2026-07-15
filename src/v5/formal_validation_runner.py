@@ -30,11 +30,13 @@ def run_formal_validation(
     baseline_rows = _baseline_tests(rows, spec.raw)
     ablation_rows = _ablation_tests(rows, spec.raw)
     robustness_rows = _robustness_tests(rows, spec.raw)
+    interaction_rows = _common_sample_interaction_tests(rows, spec.raw)
     _write_csv(out / "notice_date_leakage_audit.csv", list(leakage_rows[0].keys()) if leakage_rows else ["check", "status", "detail"], leakage_rows)
     _write_csv(out / "rolling_validation.csv", list(rolling_rows[0].keys()) if rolling_rows else ["window", "status"], rolling_rows)
     _write_csv(out / "baseline_tests.csv", list(baseline_rows[0].keys()), baseline_rows)
     _write_csv(out / "ablation_tests.csv", list(ablation_rows[0].keys()), ablation_rows)
     _write_csv(out / "robustness_tests.csv", list(robustness_rows[0].keys()), robustness_rows)
+    _write_csv(out / "common_sample_interaction_tests.csv", list(interaction_rows[0].keys()), interaction_rows)
     summary = {
         "strategy_id": spec.strategy_id,
         "experiment_layer": experiment_layer,
@@ -47,6 +49,7 @@ def run_formal_validation(
         "baseline_tests": baseline_rows,
         "ablation_tests": ablation_rows,
         "robustness_tests": robustness_rows,
+        "common_sample_interaction_tests": interaction_rows,
         "governance": "Do not use 2021-2026 platform-confirmation results for tuning. Single-model acceptance requires rolling validation.",
     }
     _write_json(out / "formal_validation_summary.json", summary)
@@ -64,6 +67,7 @@ def run_formal_validation(
                 "baseline_tests": "baseline_tests.csv",
                 "ablation_tests": "ablation_tests.csv",
                 "robustness_tests": "robustness_tests.csv",
+                "common_sample_interaction_tests": "common_sample_interaction_tests.csv",
             },
             warnings=["Formal validation output is evidence, not automatic strategy acceptance."],
         ),
@@ -160,6 +164,42 @@ def _robustness_tests(rows: list[dict[str, Any]], raw: dict[str, Any]) -> list[d
     return result
 
 
+def _common_sample_interaction_tests(rows: list[dict[str, Any]], raw: dict[str, Any]) -> list[dict[str, Any]]:
+    common_required = [
+        "dividend_yield",
+        "return_on_equity_ttm",
+        "low_price_to_book",
+        "provision_coverage_ratio",
+        "core_tier_1_capital_adequacy_ratio",
+    ]
+    common_rows = [row for row in rows if all(_to_float(row.get(name)) is not None for name in common_required)]
+    common_date_count = len({row["trade_date"] for row in common_rows})
+    common_security_count = len({row["code"] for row in common_rows})
+    cases = [
+        ("common_high_dividend_only", ["dividend_yield"]),
+        ("common_high_dividend_plus_roe", ["dividend_yield", "return_on_equity_ttm"]),
+        ("common_high_dividend_plus_low_pb", ["dividend_yield", "low_price_to_book"]),
+        ("common_high_dividend_plus_provision", ["dividend_yield", "provision_coverage_ratio"]),
+        ("common_high_dividend_plus_capital", ["dividend_yield", "core_tier_1_capital_adequacy_ratio"]),
+        (
+            "common_high_dividend_plus_provision_capital",
+            ["dividend_yield", "provision_coverage_ratio", "core_tier_1_capital_adequacy_ratio"],
+        ),
+        ("common_high_dividend_all_support", common_required),
+    ]
+    result = []
+    for name, factors in cases:
+        row = _strategy_case(name, common_rows, raw, mode="composite", use_factors=factors)
+        row["common_sample_rows"] = len(common_rows)
+        row["common_sample_dates"] = common_date_count
+        row["common_sample_securities"] = common_security_count
+        row["required_common_fields"] = ";".join(common_required)
+        row["tested_factors"] = ";".join(factors)
+        row["status"] = "completed" if common_date_count >= 4 else "insufficient_common_sample"
+        result.append(row)
+    return result
+
+
 def _strategy_case(
     name: str,
     rows: list[dict[str, Any]],
@@ -169,6 +209,7 @@ def _strategy_case(
     drop_factor: str | None = None,
     selection_count: int | None = None,
     weight_scale: dict[str, float] | None = None,
+    use_factors: list[str] | None = None,
 ) -> dict[str, Any]:
     by_date: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in rows:
@@ -176,7 +217,11 @@ def _strategy_case(
     returns = []
     selected_counts = []
     current_selection_count = selection_count or int(raw["portfolio"]["selection_count"])
-    factors = [dict(item) for item in raw["signals"]["factors"] if item["name"] != drop_factor]
+    factors = [
+        dict(item)
+        for item in raw["signals"]["factors"]
+        if item["name"] != drop_factor and (use_factors is None or item["name"] in use_factors)
+    ]
     weights = dict(raw["signals"]["scoring"].get("weights", {}))
     if drop_factor:
         weights.pop(drop_factor, None)
@@ -237,7 +282,14 @@ def _compound(returns: list[float]) -> float | None:
 
 def _write_report(path: Path, summary: dict[str, Any]) -> None:
     lines = [f"# Formal Validation Report: {summary['strategy_id']}", "", f"- Status: `{summary['status']}`", ""]
-    for section in ["notice_date_leakage_audit", "rolling_validation", "baseline_tests", "ablation_tests", "robustness_tests"]:
+    for section in [
+        "notice_date_leakage_audit",
+        "rolling_validation",
+        "baseline_tests",
+        "ablation_tests",
+        "robustness_tests",
+        "common_sample_interaction_tests",
+    ]:
         lines.extend([f"## {section}", ""])
         for row in summary[section]:
             label = row.get("case") or row.get("check") or row.get("window")

@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 
 from v5.experiment_governance import validate_daily_run_contract, validate_experiment_layer
-from v5.formal_validation_runner import _notice_date_leakage_audit, run_formal_validation
+from v5.formal_validation_runner import _common_sample_interaction_tests, _notice_date_leakage_audit, run_formal_validation
 
 
 class ExperimentGovernanceTests(unittest.TestCase):
@@ -63,6 +63,50 @@ class ExperimentGovernanceTests(unittest.TestCase):
 
         self.assertEqual(audit[0]["status"], "needs_review")
         self.assertEqual(audit[0]["future_notice_violations"], 1)
+
+    def test_common_sample_interactions_use_same_rows(self):
+        raw = {
+            "signals": {
+                "factors": [
+                    {"name": "dividend_yield", "direction": "higher_is_better"},
+                    {"name": "return_on_equity_ttm", "direction": "higher_is_better"},
+                    {"name": "low_price_to_book", "direction": "lower_is_better"},
+                    {"name": "provision_coverage_ratio", "direction": "higher_is_better"},
+                    {"name": "core_tier_1_capital_adequacy_ratio", "direction": "higher_is_better"},
+                ],
+                "scoring": {
+                    "weights": {
+                        "dividend_yield": 0.35,
+                        "return_on_equity_ttm": 0.2,
+                        "low_price_to_book": 0.2,
+                        "provision_coverage_ratio": 0.15,
+                        "core_tier_1_capital_adequacy_ratio": 0.1,
+                    }
+                },
+            },
+            "portfolio": {"selection_count": 2},
+        }
+        rows = []
+        for trade_date in ["2025-04-01", "2025-07-01", "2025-10-08", "2026-01-05"]:
+            for index in range(3):
+                rows.append(
+                    {
+                        "trade_date": trade_date,
+                        "code": f"B{index}",
+                        "future_return": 0.01 * (index + 1),
+                        "dividend_yield": 0.04 + index * 0.01,
+                        "return_on_equity_ttm": 8 + index,
+                        "low_price_to_book": 1.0 - index * 0.1,
+                        "provision_coverage_ratio": 200 + index * 10,
+                        "core_tier_1_capital_adequacy_ratio": 9 + index,
+                    }
+                )
+
+        result = _common_sample_interaction_tests(rows, raw)
+
+        self.assertEqual({row["common_sample_rows"] for row in result}, {12})
+        self.assertEqual({row["common_sample_dates"] for row in result}, {4})
+        self.assertTrue(all(row["status"] == "completed" for row in result))
 
 
 if __name__ == "__main__":

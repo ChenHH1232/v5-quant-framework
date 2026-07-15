@@ -110,15 +110,60 @@ Robustness:
 - value weight scale 1.0: 59.99
 - value weight scale 1.2: 61.58
 
+## Common-Sample Interaction Test
+
+Formal validation now writes:
+
+- `validation_formal/bank_high_dividend_sustainability_v3/common_sample_interaction_tests.csv`
+
+Purpose:
+
+Compare high dividend alone against high dividend plus quality/support variables on exactly the same rows. This prevents false improvement caused by silently changing the sample.
+
+Common sample:
+
+| Item | Count |
+| --- | ---: |
+| rows | 101 |
+| dates | 4 |
+| securities | 29 |
+
+Required common fields:
+
+- `dividend_yield`
+- `return_on_equity_ttm`
+- `low_price_to_book`
+- `provision_coverage_ratio`
+- `core_tier_1_capital_adequacy_ratio`
+
+Results:
+
+| Case | Cumulative Return | Mean Return | Positive Ratio |
+| --- | ---: | ---: | ---: |
+| high dividend only | 6.80% | 2.04% | 50.00% |
+| high dividend + ROE | 6.07% | 1.87% | 50.00% |
+| high dividend + low PB | 9.20% | 2.58% | 75.00% |
+| high dividend + provision | 10.08% | 2.78% | 75.00% |
+| high dividend + capital | 8.61% | 2.43% | 50.00% |
+| high dividend + provision + capital | 9.92% | 2.72% | 75.00% |
+| high dividend + all support fields | 7.48% | 2.18% | 50.00% |
+
+Interpretation:
+
+- Provision support shows the clearest preliminary incremental value on the tiny common sample.
+- Capital support is directionally positive but weaker than provision in this run.
+- Adding every support field together is not automatically better; ROE and full composite weighting may dilute the useful signal.
+- The common sample has only 4 dates, so this is an exploratory result, not acceptance evidence.
+
 ## Project Manager Decision
 
 Decision:
 
-`continue_research_with_bank_quality_coverage_upgrade`
+`continue_research_with_bank_quality_coverage_upgrade_and_common_sample_validation`
 
 Reason:
 
-The third test now has a working PIT data path and a stricter notice-date audit. However, the current bank quality sample is only visible in 4 validation dates, so it cannot yet prove that quality-conditioned high dividend is superior to raw high dividend. It only supports the weaker statement that provision and capital are directionally positive where data exists.
+The third test now has a working PIT data path, stricter notice-date audit, and common-sample interaction validation. However, the current bank quality sample is only visible in 4 validation dates, so it cannot yet prove that quality-conditioned high dividend is superior to raw high dividend. It supports only the weaker statement that provision support has preliminary incremental value where data exists.
 
 ## Next Step
 

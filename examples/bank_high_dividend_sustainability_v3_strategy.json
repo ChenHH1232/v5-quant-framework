@@ -1,0 +1,166 @@
+{
+  "meta": {
+    "strategy_id": "bank_high_dividend_sustainability_v3",
+    "name": "Bank High Dividend Sustainability V3",
+    "objective": "Test whether high dividend yield in A-share banks is more useful when supported by ROE, capital adequacy, provision coverage, and reasonable price-to-book valuation.",
+    "status": "research_pit_validation_candidate"
+  },
+  "universe": {
+    "name": "A-share listed banks",
+    "construction": "point_in_time_bank_industry_membership_excluding_st_suspended_limit_blocked_and_newly_listed_under_180_days",
+    "point_in_time": true,
+    "minimum_rebalance_coverage_ratio": 0.8
+  },
+  "data": {
+    "vendor": "V5 migrated local bank panel with JoinQuant-style market/valuation data and reconstructed bank indicators",
+    "price_frequency": "quarterly_signal_panel",
+    "financial_as_of_policy": "announcement_date",
+    "price_adjustment": {
+      "research_panel": "documented_total_return_or_raw_price_plus_cash_dividend",
+      "status": "data_limited_requires_price_dividend_audit"
+    },
+    "window": {
+      "research_start": "2014-01-02",
+      "research_end": "2026-05-31"
+    },
+    "source_warning": "This V3 test uses an existing local panel and is not a final PIT-approved dataset."
+  },
+  "signals": {
+    "factors": [
+      {
+        "name": "dividend_yield",
+        "source": "dividend_records_and_price",
+        "role": "shareholder_return_signal",
+        "direction": "higher_is_better",
+        "definition": "Trailing visible cash dividend yield. High yield is a hypothesis only and may indicate a value trap.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 1,
+        "missing_policy": "set_to_zero_if_no_visible_cash_dividend",
+        "winsorize": "rebalance_cross_section_mad_3",
+        "normalize": "rebalance_cross_section_zscore",
+        "evidence_status": "hypothesis_only"
+      },
+      {
+        "name": "return_on_equity_ttm",
+        "source": "financial_statement",
+        "role": "profitability_support",
+        "direction": "higher_is_better",
+        "definition": "Visible trailing ROE used to test whether dividend yield is supported by profitability.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 90,
+        "missing_policy": "drop_security",
+        "winsorize": "rebalance_cross_section_mad_3",
+        "normalize": "rebalance_cross_section_zscore",
+        "evidence_status": "hypothesis_only"
+      },
+      {
+        "name": "low_price_to_book",
+        "source": "valuation",
+        "role": "valuation_support",
+        "direction": "lower_is_better",
+        "definition": "Price-to-book ratio used as valuation support, not as standalone proof of mispricing.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security",
+        "winsorize": "rebalance_cross_section_mad_3",
+        "normalize": "rebalance_cross_section_zscore",
+        "evidence_status": "baseline_and_support"
+      },
+      {
+        "name": "provision_coverage_ratio",
+        "source": "reconstructed_bank_indicator_or_annual_report",
+        "role": "provision_support",
+        "direction": "higher_is_better",
+        "definition": "Provision coverage ratio used as a bank-specific sustainability control.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 90,
+        "missing_policy": "drop_security_if_unavailable_after_source_review",
+        "winsorize": "rebalance_cross_section_mad_3",
+        "normalize": "rebalance_cross_section_zscore",
+        "evidence_status": "hypothesis_only"
+      },
+      {
+        "name": "core_tier_1_capital_adequacy_ratio",
+        "source": "annual_report_bank_indicator",
+        "role": "capital_support",
+        "direction": "higher_is_better",
+        "definition": "Core tier 1 capital adequacy ratio used to test whether dividend capacity is supported by capital resilience.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 90,
+        "missing_policy": "drop_security_if_unavailable_after_source_review",
+        "winsorize": "rebalance_cross_section_mad_3",
+        "normalize": "rebalance_cross_section_zscore",
+        "evidence_status": "hypothesis_only"
+      }
+    ],
+    "scoring": {
+      "method": "weighted_composite_score",
+      "normalization_scope": "rebalance_cross_section",
+      "weights": {
+        "dividend_yield": 0.35,
+        "return_on_equity_ttm": 0.2,
+        "low_price_to_book": 0.2,
+        "provision_coverage_ratio": 0.15,
+        "core_tier_1_capital_adequacy_ratio": 0.1
+      },
+      "value_trap_guard": "Treat weak provision and capital support as a value-trap risk; validation must test ablation and common-sample behavior."
+    }
+  },
+  "schedule": {
+    "signal_frequency": "quarterly_after_financial_disclosure",
+    "rebalance_frequency": "quarterly",
+    "rebalance_rule": "first_tradable_day_after_required_financial_data_visibility_check"
+  },
+  "portfolio": {
+    "selection_count": 8,
+    "weighting": "equal_weight_after_sustainability_score",
+    "max_position_weight": 0.15,
+    "cash_policy": "hold_residual_cash_when_fewer_than_8_banks_pass_filters"
+  },
+  "risk": {
+    "defensive_asset": "cash",
+    "defensive_rule": {
+      "enabled": false,
+      "reason": "This V3 test isolates dividend sustainability rather than a defensive overlay."
+    },
+    "individual_stop_loss_take_profit": {
+      "enabled": false,
+      "reason": "Fixed price exits are not part of the high-dividend sustainability hypothesis."
+    }
+  },
+  "validation": {
+    "method": "rolling",
+    "train_years": 5,
+    "test_years": 2,
+    "review_years": 1,
+    "required_tests": [
+      "price_and_dividend_treatment_audit",
+      "notice_date_leakage_audit",
+      "IC_and_RankIC_by_factor",
+      "low_pb_baseline_comparison",
+      "equal_weight_bank_baseline",
+      "leave_one_factor_out_ablation",
+      "rolling_validation",
+      "selection_count_robustness",
+      "dividend_factor_failure_mode_review"
+    ],
+    "acceptance_rule": "Do not accept unless sustainable dividend composite beats low-PB and equal-bank baselines under rolling common-sample validation without relying on 2021-2026 platform confirmation."
+  },
+  "execution": {
+    "status": "not_for_platform_replication_yet",
+    "commission_bps": 3,
+    "slippage_bps": 5,
+    "suspension_policy": "skip_untradeable",
+    "limit_policy": "skip_limit_blocked"
+  },
+  "outputs": {
+    "save_holdings": true,
+    "save_rebalance_signals": true,
+    "report": "markdown",
+    "required_reports": [
+      "factor_validation_report",
+      "formal_validation_report",
+      "project_manager_decision_note"
+    ]
+  }
+}

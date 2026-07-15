@@ -73,11 +73,21 @@ def run_formal_validation(
 
 
 def _notice_date_leakage_audit(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    pit_sensitive_fields = [
+        "asset_quality_trend",
+        "provision_buffer",
+        "capital_resilience",
+        "non_performing_loan_ratio",
+        "provision_coverage_ratio",
+        "core_tier_1_capital_adequacy_ratio",
+        "return_on_equity_ttm",
+        "dividend_yield",
+    ]
     checked = 0
     missing_notice = 0
     violations = 0
     for row in rows:
-        fields_present = any(row.get(name) not in {None, ""} for name in ["asset_quality_trend", "provision_buffer", "capital_resilience"])
+        fields_present = any(row.get(name) not in {None, ""} for name in pit_sensitive_fields)
         if not fields_present:
             continue
         checked += 1

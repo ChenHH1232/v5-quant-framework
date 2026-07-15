@@ -5,7 +5,12 @@ import unittest
 from pathlib import Path
 
 from v5.experiment_governance import validate_daily_run_contract, validate_experiment_layer
-from v5.formal_validation_runner import _common_sample_interaction_tests, _notice_date_leakage_audit, run_formal_validation
+from v5.formal_validation_runner import (
+    _baseline_tests,
+    _common_sample_interaction_tests,
+    _notice_date_leakage_audit,
+    run_formal_validation,
+)
 
 
 class ExperimentGovernanceTests(unittest.TestCase):
@@ -107,6 +112,79 @@ class ExperimentGovernanceTests(unittest.TestCase):
         self.assertEqual({row["common_sample_rows"] for row in result}, {12})
         self.assertEqual({row["common_sample_dates"] for row in result}, {4})
         self.assertTrue(all(row["status"] == "completed" for row in result))
+
+    def test_configured_utilities_common_sample_interactions_are_not_bank_specific(self):
+        raw = {
+            "signals": {
+                "factors": [
+                    {"name": "low_price_to_book", "direction": "lower_is_better"},
+                    {"name": "dividend_yield", "direction": "higher_is_better"},
+                    {"name": "interest_coverage", "direction": "higher_is_better"},
+                ],
+                "scoring": {
+                    "weights": {
+                        "low_price_to_book": 0.4,
+                        "dividend_yield": 0.3,
+                        "interest_coverage": 0.3,
+                    }
+                },
+            },
+            "portfolio": {"selection_count": 2},
+            "validation": {
+                "common_sample_fields": ["low_price_to_book", "dividend_yield", "interest_coverage"],
+                "common_sample_interactions": [
+                    {"name": "common_utilities_value_dividend", "factors": ["low_price_to_book", "dividend_yield"]},
+                    {"name": "common_utilities_all_support", "factors": ["low_price_to_book", "dividend_yield", "interest_coverage"]},
+                ],
+            },
+        }
+        rows = []
+        for trade_date in ["2024-04-01", "2024-07-01", "2024-10-08", "2025-01-02"]:
+            for index in range(3):
+                rows.append(
+                    {
+                        "trade_date": trade_date,
+                        "code": f"U{index}",
+                        "future_return": 0.01 * (index + 1),
+                        "low_price_to_book": 1.0 - index * 0.1,
+                        "dividend_yield": 0.03 + index * 0.01,
+                        "interest_coverage": 3 + index,
+                    }
+                )
+
+        result = _common_sample_interaction_tests(rows, raw)
+
+        self.assertEqual([row["case"] for row in result], ["common_utilities_value_dividend", "common_utilities_all_support"])
+        self.assertEqual({row["required_common_fields"] for row in result}, {"low_price_to_book;dividend_yield;interest_coverage"})
+        self.assertTrue(all(row["status"] == "completed" for row in result))
+
+    def test_configured_high_dividend_baseline_selects_high_values(self):
+        raw = {
+            "signals": {
+                "factors": [{"name": "dividend_yield", "direction": "higher_is_better"}],
+                "scoring": {"weights": {"dividend_yield": 1.0}},
+            },
+            "portfolio": {"selection_count": 1},
+            "validation": {
+                "baselines": [
+                    {
+                        "name": "high_dividend_utilities_top1",
+                        "mode": "single_factor",
+                        "factor": "dividend_yield",
+                        "selection_count": 1,
+                    }
+                ]
+            },
+        }
+        rows = [
+            {"trade_date": "2025-04-01", "code": "LOW", "future_return": -0.05, "dividend_yield": 0.01},
+            {"trade_date": "2025-04-01", "code": "HIGH", "future_return": 0.07, "dividend_yield": 0.08},
+        ]
+
+        result = _baseline_tests(rows, raw)
+
+        self.assertEqual(result[0]["case"], "high_dividend_utilities_top1")
+        self.assertEqual(result[0]["mean_return"], 0.07)
 
 
 if __name__ == "__main__":

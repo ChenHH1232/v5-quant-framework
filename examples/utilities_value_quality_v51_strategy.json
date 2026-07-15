@@ -1,0 +1,296 @@
+{
+  "meta": {
+    "strategy_id": "utilities_value_quality_v51",
+    "name": "Utilities Value Quality V5.1",
+    "objective": "Test whether value, dividend sustainability, cash-flow support, profitability stability, and debt-service capacity can explain relative returns in A-share utilities operating companies.",
+    "status": "research_pit_validation_ready"
+  },
+  "universe": {
+    "name": "A-share utilities operating companies",
+    "construction": "point_in_time_utilities_operating_company_membership_excluding_st_suspended_limit_blocked_newly_listed_and_non_operating_equipment_or_epc_companies",
+    "point_in_time": true,
+    "minimum_rebalance_coverage_ratio": 0.8
+  },
+  "data": {
+    "vendor": "JoinQuant/DataJQ/Tushare/exchange disclosures to be collected into a local PIT utilities panel",
+    "price_frequency": "quarterly_signal_panel",
+    "financial_as_of_policy": "announcement_date",
+    "price_adjustment": {
+      "research_panel": "raw price plus explicit cash dividend or documented total-return series",
+      "status": "pending_utilities_data_collection"
+    },
+    "window": {
+      "research_start": "2014-01-02",
+      "research_end": "2026-05-31"
+    },
+    "source_warning": "V5.1 is a process-portability test. This spec is not a formal strategy candidate until PIT validation passes."
+  },
+  "signals": {
+    "factors": [
+      {
+        "name": "low_price_to_book",
+        "source": "valuation",
+        "role": "asset_value_signal",
+        "direction": "lower_is_better",
+        "definition": "Price-to-book ratio, used to test whether stable utility assets are over-discounted.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security",
+        "winsorize": "rebalance_cross_section_mad_3",
+        "normalize": "rebalance_cross_section_zscore",
+        "evidence_status": "hypothesis_only"
+      },
+      {
+        "name": "dividend_yield",
+        "source": "dividend_records_and_price",
+        "role": "shareholder_return_signal",
+        "direction": "higher_is_better",
+        "definition": "Trailing visible cash dividend yield. High yield must be checked against cash-flow coverage.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 1,
+        "missing_policy": "set_to_zero_if_no_visible_cash_dividend",
+        "winsorize": "rebalance_cross_section_mad_3",
+        "normalize": "rebalance_cross_section_zscore",
+        "evidence_status": "hypothesis_only"
+      },
+      {
+        "name": "operating_cash_flow_yield",
+        "source": "cash_flow_statement_and_market_cap",
+        "role": "cash_flow_value_signal",
+        "direction": "higher_is_better",
+        "definition": "Visible operating cash flow divided by market capitalization.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 90,
+        "missing_policy": "drop_security",
+        "winsorize": "rebalance_cross_section_mad_3",
+        "normalize": "rebalance_cross_section_zscore",
+        "evidence_status": "hypothesis_only"
+      },
+      {
+        "name": "return_on_equity_ttm",
+        "source": "financial_statement",
+        "role": "profitability_support",
+        "direction": "higher_is_better",
+        "definition": "Visible trailing ROE, used as a profitability support factor while monitoring leverage distortion.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 90,
+        "missing_policy": "drop_security",
+        "winsorize": "rebalance_cross_section_mad_3",
+        "normalize": "rebalance_cross_section_zscore",
+        "evidence_status": "hypothesis_only"
+      },
+      {
+        "name": "operating_cash_flow_to_net_profit",
+        "source": "financial_statement",
+        "role": "earnings_cash_quality",
+        "direction": "higher_is_better",
+        "definition": "Operating cash flow divided by net profit, used to test whether earnings are cash-backed.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 90,
+        "missing_policy": "drop_security_if_net_profit_invalid_or_missing",
+        "winsorize": "rebalance_cross_section_mad_3",
+        "normalize": "rebalance_cross_section_zscore",
+        "evidence_status": "hypothesis_only"
+      },
+      {
+        "name": "interest_coverage",
+        "source": "financial_statement",
+        "role": "debt_service_capacity",
+        "direction": "higher_is_better",
+        "definition": "EBIT or operating cash flow divided by interest expense. Used to test whether leverage is serviceable.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 90,
+        "missing_policy": "drop_security_if_unavailable_after_source_review",
+        "winsorize": "rebalance_cross_section_mad_3",
+        "normalize": "rebalance_cross_section_zscore",
+        "evidence_status": "hypothesis_only"
+      },
+      {
+        "name": "capex_burden",
+        "source": "cash_flow_statement",
+        "role": "cash_flow_pressure",
+        "direction": "lower_is_better",
+        "definition": "Capital expenditure divided by operating cash flow or revenue. Used as a pressure variable rather than a pure alpha factor.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 90,
+        "missing_policy": "drop_security",
+        "winsorize": "rebalance_cross_section_mad_3",
+        "normalize": "rebalance_cross_section_zscore",
+        "evidence_status": "hypothesis_only"
+      }
+    ],
+    "scoring": {
+      "method": "weighted_composite_score",
+      "normalization_scope": "rebalance_cross_section",
+      "weights": {
+        "low_price_to_book": 0.2,
+        "dividend_yield": 0.2,
+        "operating_cash_flow_yield": 0.2,
+        "return_on_equity_ttm": 0.15,
+        "operating_cash_flow_to_net_profit": 0.1,
+        "interest_coverage": 0.1,
+        "capex_burden": 0.05
+      },
+      "min_factor_count": 4,
+      "value_trap_guard": "High dividend yield should be treated as a value-trap risk if operating cash flow, capex burden, or debt-service capacity fails validation."
+    }
+  },
+  "schedule": {
+    "signal_frequency": "quarterly_after_financial_disclosure",
+    "rebalance_frequency": "quarterly",
+    "rebalance_rule": "first_tradable_day_after_required_financial_data_visibility_check"
+  },
+  "portfolio": {
+    "selection_count": 10,
+    "weighting": "equal_weight_after_utilities_value_quality_score",
+    "max_position_weight": 0.12,
+    "cash_policy": "hold_residual_cash_when_fewer_than_10_utilities_pass_filters"
+  },
+  "risk": {
+    "defensive_asset": "cash",
+    "defensive_rule": {
+      "enabled": false,
+      "reason": "V5.1 Test-1 isolates utilities value-quality factors and does not add defensive timing."
+    },
+    "individual_stop_loss_take_profit": {
+      "enabled": false,
+      "reason": "Fixed exits are not part of the research hypothesis."
+    }
+  },
+  "validation": {
+    "method": "rolling",
+    "train_years": 5,
+    "test_years": 2,
+    "review_years": 1,
+    "weak_years": [
+      "2018",
+      "2021",
+      "2022"
+    ],
+    "baselines": [
+      {
+        "name": "equal_weight_utilities",
+        "mode": "equal_all"
+      },
+      {
+        "name": "low_pb_utilities_top10",
+        "mode": "single_factor",
+        "factor": "low_price_to_book",
+        "selection_count": 10
+      },
+      {
+        "name": "high_dividend_utilities_top10",
+        "mode": "single_factor",
+        "factor": "dividend_yield",
+        "selection_count": 10
+      },
+      {
+        "name": "composite_current",
+        "mode": "composite"
+      }
+    ],
+    "common_sample_fields": [
+      "low_price_to_book",
+      "dividend_yield",
+      "operating_cash_flow_yield",
+      "return_on_equity_ttm",
+      "operating_cash_flow_to_net_profit",
+      "interest_coverage",
+      "capex_burden"
+    ],
+    "common_sample_interactions": [
+      {
+        "name": "common_low_pb_only",
+        "factors": [
+          "low_price_to_book"
+        ]
+      },
+      {
+        "name": "common_dividend_only",
+        "factors": [
+          "dividend_yield"
+        ]
+      },
+      {
+        "name": "common_value_plus_dividend",
+        "factors": [
+          "low_price_to_book",
+          "dividend_yield"
+        ]
+      },
+      {
+        "name": "common_value_dividend_cashflow",
+        "factors": [
+          "low_price_to_book",
+          "dividend_yield",
+          "operating_cash_flow_yield",
+          "operating_cash_flow_to_net_profit"
+        ]
+      },
+      {
+        "name": "common_all_support",
+        "factors": [
+          "low_price_to_book",
+          "dividend_yield",
+          "operating_cash_flow_yield",
+          "return_on_equity_ttm",
+          "operating_cash_flow_to_net_profit",
+          "interest_coverage",
+          "capex_burden"
+        ]
+      }
+    ],
+    "robustness": {
+      "selection_counts": [
+        8,
+        10,
+        12
+      ],
+      "weight_scale_factors": [
+        "low_price_to_book",
+        "dividend_yield",
+        "operating_cash_flow_yield"
+      ],
+      "weight_scales": [
+        0.8,
+        1.0,
+        1.2
+      ]
+    },
+    "required_tests": [
+      "utilities_universe_pit_audit",
+      "notice_date_leakage_audit",
+      "IC_and_RankIC_by_factor",
+      "equal_weight_utilities_baseline",
+      "low_pb_utilities_baseline",
+      "high_dividend_utilities_baseline",
+      "leave_one_module_out_ablation",
+      "rolling_validation",
+      "selection_count_robustness",
+      "factor_weight_perturbation",
+      "sub_industry_split",
+      "utilities_failure_mode_review"
+    ],
+    "acceptance_rule": "Do not promote to formal_strategy_candidate unless retained factors beat utilities baselines under PIT rolling validation and remain financially explainable without relying on 2021-2026 platform confirmation."
+  },
+  "execution": {
+    "status": "blocked_until_research_pit_validation_passes",
+    "next_gate": "research_pit_validation",
+    "not_status": "formal_strategy_candidate",
+    "commission_bps": 3,
+    "slippage_bps": 5,
+    "suspension_policy": "skip_untradeable",
+    "limit_policy": "skip_limit_blocked"
+  },
+  "outputs": {
+    "save_holdings": true,
+    "save_rebalance_signals": true,
+    "report": "markdown",
+    "required_reports": [
+      "utilities_field_availability_report",
+      "factor_validation_report",
+      "formal_validation_report",
+      "project_manager_decision_note"
+    ]
+  }
+}

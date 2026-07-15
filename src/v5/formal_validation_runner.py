@@ -34,7 +34,7 @@ def run_formal_validation(
     robustness_rows = _robustness_tests(rows, spec.raw)
     interaction_rows = _common_sample_interaction_tests(rows, spec.raw)
     factor_rows = _factor_ic_rankic(rows, spec.raw)
-    failure_rows = _failure_mode_analysis(rows, spec.raw, weak_years=["2018", "2021"])
+    failure_rows = _failure_mode_analysis(rows, spec.raw, weak_years=_weak_years(spec.raw))
     _write_csv(out / "notice_date_leakage_audit.csv", list(leakage_rows[0].keys()) if leakage_rows else ["check", "status", "detail"], leakage_rows)
     _write_csv(out / "rolling_validation.csv", list(rolling_rows[0].keys()) if rolling_rows else ["window", "status"], rolling_rows)
     _write_csv(out / "baseline_tests.csv", list(baseline_rows[0].keys()), baseline_rows)
@@ -150,6 +150,22 @@ def _rolling_validation(rows: list[dict[str, Any]], raw: dict[str, Any]) -> list
 
 
 def _baseline_tests(rows: list[dict[str, Any]], raw: dict[str, Any]) -> list[dict[str, Any]]:
+    configured = raw.get("validation", {}).get("baselines")
+    if configured:
+        result = []
+        for item in configured:
+            mode = str(item.get("mode", "composite"))
+            result.append(
+                _strategy_case(
+                    str(item["name"]),
+                    rows,
+                    raw,
+                    mode=mode,
+                    factor=item.get("factor"),
+                    selection_count=item.get("selection_count"),
+                )
+            )
+        return result
     return [
         _strategy_case("equal_weight_all_banks", rows, raw, mode="equal_all"),
         _strategy_case("low_pb_top8", rows, raw, mode="single_factor", factor="low_price_to_book"),
@@ -167,36 +183,56 @@ def _ablation_tests(rows: list[dict[str, Any]], raw: dict[str, Any]) -> list[dic
 
 def _robustness_tests(rows: list[dict[str, Any]], raw: dict[str, Any]) -> list[dict[str, Any]]:
     result = []
-    for count in [6, 8, 10]:
+    robustness = raw.get("validation", {}).get("robustness", {})
+    selection_counts = robustness.get("selection_counts", [6, 8, 10])
+    weight_scale_factors = robustness.get("weight_scale_factors", ["low_price_to_book", "dividend_yield"])
+    weight_scales = robustness.get("weight_scales", [0.8, 1.0, 1.2])
+    for count in selection_counts:
         result.append(_strategy_case(f"selection_count_{count}", rows, raw, mode="composite", selection_count=count))
-    for scale in [0.8, 1.0, 1.2]:
-        result.append(_strategy_case(f"value_weight_scale_{scale}", rows, raw, mode="composite", weight_scale={"low_price_to_book": scale, "dividend_yield": scale}))
+    for scale in weight_scales:
+        result.append(
+            _strategy_case(
+                f"weight_scale_{scale}",
+                rows,
+                raw,
+                mode="composite",
+                weight_scale={name: scale for name in weight_scale_factors},
+            )
+        )
     return result
 
 
 def _common_sample_interaction_tests(rows: list[dict[str, Any]], raw: dict[str, Any]) -> list[dict[str, Any]]:
-    common_required = [
-        "dividend_yield",
-        "return_on_equity_ttm",
-        "low_price_to_book",
-        "provision_coverage_ratio",
-        "core_tier_1_capital_adequacy_ratio",
-    ]
+    validation = raw.get("validation", {})
+    common_required = validation.get(
+        "common_sample_fields",
+        [
+            "dividend_yield",
+            "return_on_equity_ttm",
+            "low_price_to_book",
+            "provision_coverage_ratio",
+            "core_tier_1_capital_adequacy_ratio",
+        ],
+    )
     common_rows = [row for row in rows if all(_to_float(row.get(name)) is not None for name in common_required)]
     common_date_count = len({row["trade_date"] for row in common_rows})
     common_security_count = len({row["code"] for row in common_rows})
-    cases = [
-        ("common_high_dividend_only", ["dividend_yield"]),
-        ("common_high_dividend_plus_roe", ["dividend_yield", "return_on_equity_ttm"]),
-        ("common_high_dividend_plus_low_pb", ["dividend_yield", "low_price_to_book"]),
-        ("common_high_dividend_plus_provision", ["dividend_yield", "provision_coverage_ratio"]),
-        ("common_high_dividend_plus_capital", ["dividend_yield", "core_tier_1_capital_adequacy_ratio"]),
-        (
-            "common_high_dividend_plus_provision_capital",
-            ["dividend_yield", "provision_coverage_ratio", "core_tier_1_capital_adequacy_ratio"],
-        ),
-        ("common_high_dividend_all_support", common_required),
-    ]
+    configured_cases = validation.get("common_sample_interactions")
+    if configured_cases:
+        cases = [(str(item["name"]), list(item["factors"])) for item in configured_cases]
+    else:
+        cases = [
+            ("common_high_dividend_only", ["dividend_yield"]),
+            ("common_high_dividend_plus_roe", ["dividend_yield", "return_on_equity_ttm"]),
+            ("common_high_dividend_plus_low_pb", ["dividend_yield", "low_price_to_book"]),
+            ("common_high_dividend_plus_provision", ["dividend_yield", "provision_coverage_ratio"]),
+            ("common_high_dividend_plus_capital", ["dividend_yield", "core_tier_1_capital_adequacy_ratio"]),
+            (
+                "common_high_dividend_plus_provision_capital",
+                ["dividend_yield", "provision_coverage_ratio", "core_tier_1_capital_adequacy_ratio"],
+            ),
+            ("common_high_dividend_all_support", common_required),
+        ]
     result = []
     for name, factors in cases:
         row = _strategy_case(name, common_rows, raw, mode="composite", use_factors=factors)
@@ -339,7 +375,7 @@ def _strategy_case(
         by_date[row["trade_date"]].append(row)
     returns = []
     selected_counts = []
-    current_selection_count = selection_count or int(raw["portfolio"]["selection_count"])
+    current_selection_count = int(selection_count or raw["portfolio"]["selection_count"])
     factors = [
         dict(item)
         for item in raw["signals"]["factors"]
@@ -356,9 +392,11 @@ def _strategy_case(
         if mode == "equal_all":
             selected = date_rows
         elif mode == "single_factor" and factor:
+            factor_direction = _factor_direction(raw, factor)
             selected = sorted(
                 [row for row in date_rows if _to_float(row.get(factor)) is not None],
                 key=lambda row: _to_float(row.get(factor)) or 0.0,
+                reverse=factor_direction == "higher_is_better",
             )[:current_selection_count]
         else:
             scored = _score_date_rows(date_rows, factors, weights)
@@ -461,6 +499,20 @@ def _failure_interpretation(year: str, selected_returns: list[float], all_return
     if _positive_ratio(selected_returns) is not None and (_positive_ratio(selected_returns) or 0) < 0.5:
         notes.append("low_positive_period_ratio")
     return f"{year}: " + ",".join(notes)
+
+
+def _weak_years(raw: dict[str, Any]) -> list[str]:
+    years = raw.get("validation", {}).get("weak_years")
+    if years:
+        return [str(year) for year in years]
+    return ["2018", "2021"]
+
+
+def _factor_direction(raw: dict[str, Any], factor_name: str) -> str:
+    for factor in raw.get("signals", {}).get("factors", []):
+        if factor.get("name") == factor_name:
+            return str(factor.get("direction", "higher_is_better"))
+    return "higher_is_better"
 
 
 def _write_report(path: Path, summary: dict[str, Any]) -> None:

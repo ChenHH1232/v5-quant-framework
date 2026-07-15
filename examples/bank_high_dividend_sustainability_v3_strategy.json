@@ -103,6 +103,7 @@
         "provision_coverage_ratio": 0.15,
         "core_tier_1_capital_adequacy_ratio": 0.1
       },
+      "min_factor_count": 3,
       "value_trap_guard": "Treat weak provision and capital support as a value-trap risk; validation must test ablation and common-sample behavior."
     }
   },

@@ -238,3 +238,50 @@ Important interpretation:
 - The platform replication result remains an engineering comparison output only.
 - The positive local return is not an acceptance decision.
 - The next required external input is the JoinQuant daily result CSV, so Engineering Agent can run daily attribution.
+
+## H. JoinQuant Signal Alignment Update: 2026-07-15
+
+User supplied three JoinQuant exports:
+
+- `position.csv`
+- `transaction.csv`
+- `log.txt`
+
+Engineering Agent used them to locate the local-vs-JoinQuant gap by layer.
+
+Findings:
+
+| Layer | Finding |
+| --- | --- |
+| Position layer | Initial local replication only matched 4 of 8 first-day holdings. |
+| Transaction layer | Initial local replication only matched 4 of 8 first-day trades. |
+| Signal log layer | JoinQuant logged `value trap guard degraded: missing quality fields; no guard applied.` |
+| Local signal layer | Local replication had applied the value-trap guard and reduced first-day candidates from 40 to 18. |
+| Dividend-yield layer | Local panel dividend yield used a different historical / adjusted-price basis than the JoinQuant V3 code. |
+
+Fixes applied:
+
+- added `--value-trap-guard-mode apply|disabled`;
+- added `--signal-dividend-yield-mode panel|cash_dividend_trailing`;
+- aligned weighted composite scoring with JoinQuant export:
+  - winsorize before z-score;
+  - support `min_factor_count`;
+  - V3 spec explicitly sets `min_factor_count = 3`;
+- kept formal research validation separate from platform replication behavior.
+
+Post-fix alignment result:
+
+| Check | Before | After |
+| --- | ---: | ---: |
+| First-day selected stocks matched | 4 / 8 | 8 / 8 |
+| Transaction matched keys | 98 | 215 |
+| JoinQuant-only transaction keys | 134 | 17 |
+| Local-only transaction keys | 107 | 5 |
+| Signal set-match dates | not aligned | 17 of 19 matched local dates |
+
+Remaining gaps:
+
+- local still uses daily open approximation while JoinQuant executes at 09:40 market price;
+- candidate counts still differ on all dates, meaning local tradability / valid-data filtering is not identical to JoinQuant;
+- three rebalance dates still have small selection-set mismatch;
+- full NAV attribution still needs JoinQuant daily return / net-value CSV.

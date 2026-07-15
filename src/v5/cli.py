@@ -157,6 +157,12 @@ def main(argv: list[str] | None = None) -> int:
     daily_backtest_parser.add_argument("--defensive-mode", choices=["none", "benchmark_ma"], default="none")
     daily_backtest_parser.add_argument("--defensive-ma-days", type=int, default=252)
     daily_backtest_parser.add_argument("--defensive-risk-exposure", type=float, default=0.5)
+    daily_backtest_parser.add_argument("--value-trap-guard-mode", choices=["apply", "disabled"], default="apply")
+    daily_backtest_parser.add_argument(
+        "--signal-dividend-yield-mode",
+        choices=["panel", "cash_dividend_trailing"],
+        default="panel",
+    )
 
     jq_real_parser = subparsers.add_parser("collect-joinquant-real-data")
     jq_real_parser.add_argument("panel", type=Path)
@@ -314,6 +320,7 @@ def main(argv: list[str] | None = None) -> int:
                     defensive_mode=args.defensive_mode,
                     defensive_ma_days=args.defensive_ma_days,
                     defensive_risk_exposure=args.defensive_risk_exposure,
+                    value_trap_guard_mode=args.value_trap_guard_mode,
                 ),
                 benchmark_id=args.benchmark_id,
                 execution_price_csv=args.execution_price_csv,
@@ -321,6 +328,7 @@ def main(argv: list[str] | None = None) -> int:
                 eastmoney_quality_csv=args.eastmoney_quality_csv,
                 eastmoney_min_review_status=args.eastmoney_min_review_status,
                 eastmoney_visibility_mode=args.eastmoney_visibility_mode,
+                signal_dividend_yield_mode=args.signal_dividend_yield_mode,
                 experiment_layer=args.experiment_layer,
                 snapshot_out=args.snapshot_out,
             )

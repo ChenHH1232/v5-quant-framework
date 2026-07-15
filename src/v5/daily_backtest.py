@@ -5,6 +5,7 @@ import csv
 import json
 import math
 from collections import defaultdict
+from datetime import timedelta
 from pathlib import Path
 from statistics import mean
 from typing import Any
@@ -44,6 +45,7 @@ def run_daily_joinquant_like_backtest(
     eastmoney_quality_csv: Path | None = None,
     eastmoney_min_review_status: str = "needs_check",
     eastmoney_visibility_mode: str = "notice_date",
+    signal_dividend_yield_mode: str = "panel",
     experiment_layer: str = "engineering_smoke_test",
     snapshot_out: Path | None = None,
 ) -> Path:
@@ -63,6 +65,9 @@ def run_daily_joinquant_like_backtest(
         eastmoney_quality_csv,
         eastmoney_min_review_status,
         eastmoney_visibility_mode,
+        signal_dividend_yield_mode,
+        execution_price_csv,
+        dividend_cash_csv,
     )
     if execution_price_csv is not None:
         prices_by_date = _load_execution_prices(execution_price_csv, options.start_date, options.end_date)
@@ -87,6 +92,7 @@ def run_daily_joinquant_like_backtest(
         "eastmoney_quality_csv": str(eastmoney_quality_csv) if eastmoney_quality_csv else None,
         "eastmoney_min_review_status": eastmoney_min_review_status,
         "eastmoney_visibility_mode": eastmoney_visibility_mode,
+        "signal_dividend_yield_mode": signal_dividend_yield_mode,
         "experiment_layer": experiment_layer,
         "benchmark_id": benchmark_id,
         "window": {
@@ -108,6 +114,8 @@ def run_daily_joinquant_like_backtest(
             "defensive_mode": options.defensive_mode,
             "defensive_ma_days": options.defensive_ma_days,
             "defensive_risk_exposure": options.defensive_risk_exposure,
+            "value_trap_guard_mode": options.value_trap_guard_mode,
+            "signal_dividend_yield_mode": signal_dividend_yield_mode,
         },
         "signal_count": len(signals),
         "daily_count": len(daily_rows),
@@ -147,6 +155,7 @@ def run_daily_joinquant_like_backtest(
             "eastmoney_quality_csv": str(eastmoney_quality_csv) if eastmoney_quality_csv else None,
             "eastmoney_min_review_status": eastmoney_min_review_status,
             "eastmoney_visibility_mode": eastmoney_visibility_mode,
+            "signal_dividend_yield_mode": signal_dividend_yield_mode,
             "start_date": options.start_date,
             "end_date": options.end_date,
             "initial_cash": options.initial_cash,
@@ -175,6 +184,9 @@ def _build_rebalance_signals(
     eastmoney_quality_csv: Path | None = None,
     eastmoney_min_review_status: str = "needs_check",
     eastmoney_visibility_mode: str = "notice_date",
+    signal_dividend_yield_mode: str = "panel",
+    execution_price_csv: Path | None = None,
+    dividend_cash_csv: Path | None = None,
 ) -> tuple[dict[str, list[str]], list[dict[str, Any]]]:
     with panel_path.open("r", encoding="utf-8-sig", newline="") as handle:
         rows = list(csv.DictReader(handle))
@@ -192,6 +204,10 @@ def _build_rebalance_signals(
             panel_rows.append(item)
 
     panel_rows = merge_eastmoney_quality(panel_rows, eastmoney_quality_csv, eastmoney_min_review_status, eastmoney_visibility_mode)
+    if signal_dividend_yield_mode == "cash_dividend_trailing":
+        panel_rows = _override_trailing_cash_dividend_yield(panel_rows, execution_price_csv, dividend_cash_csv)
+    elif signal_dividend_yield_mode != "panel":
+        raise ValueError("signal_dividend_yield_mode must be panel or cash_dividend_trailing")
     by_date: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for item in panel_rows:
         by_date[item["trade_date"]].append(item)
@@ -213,7 +229,12 @@ def _build_rebalance_signals(
         if len(date_rows) < min_required_coverage:
             continue
         scored, used_factors = score_rows(raw_spec, date_rows)
-        eligible = apply_value_trap_guard(raw_spec, scored)
+        if options.value_trap_guard_mode == "disabled":
+            eligible = scored
+        elif options.value_trap_guard_mode == "apply":
+            eligible = apply_value_trap_guard(raw_spec, scored)
+        else:
+            raise ValueError("value_trap_guard_mode must be apply or disabled")
         selected = sorted(eligible, key=lambda item: item["score"], reverse=True)[:selection_count]
         signals[trade_date] = [row["code"] for row in selected]
         executed_keys.add(key)
@@ -228,6 +249,78 @@ def _build_rebalance_signals(
             }
         )
     return signals, signal_rows
+
+
+def _override_trailing_cash_dividend_yield(
+    panel_rows: list[dict[str, Any]],
+    execution_price_csv: Path | None,
+    dividend_cash_csv: Path | None,
+) -> list[dict[str, Any]]:
+    if execution_price_csv is None or dividend_cash_csv is None:
+        return panel_rows
+    close_by_code_date, trading_dates = _load_signal_closes(execution_price_csv)
+    dividends_by_code = _load_signal_dividends(dividend_cash_csv)
+    result: list[dict[str, Any]] = []
+    for row in panel_rows:
+        trade_day = _parse_date(row["trade_date"])
+        factor_day = _previous_available_date(trading_dates, trade_day)
+        close = close_by_code_date.get((row["code"], factor_day.isoformat())) if factor_day else None
+        enriched = dict(row)
+        if close is not None and close > 0 and factor_day is not None:
+            start_day = factor_day - timedelta(days=365)
+            cash = 0.0
+            for event in dividends_by_code.get(row["code"], []):
+                visible = _parse_date(event["visible_date"])
+                ex_date = _parse_date(event["ex_date"])
+                if visible <= factor_day and start_day < ex_date <= factor_day:
+                    cash += event["cash_per_share"]
+            enriched["dividend_yield"] = cash / close
+            enriched["dividend_yield_source"] = "cash_dividend_trailing_365d_over_factor_close"
+            enriched["dividend_yield_factor_date"] = factor_day.isoformat()
+        result.append(enriched)
+    return result
+
+
+def _load_signal_closes(path: Path) -> tuple[dict[tuple[str, str], float], list[Any]]:
+    close_by_code_date: dict[tuple[str, str], float] = {}
+    dates = set()
+    with path.open("r", encoding="utf-8-sig", newline="") as handle:
+        for row in csv.DictReader(handle):
+            day = row.get("date") or row.get("trade_date")
+            code = row.get("code")
+            close = _to_float(row.get("close"))
+            if not day or not code or close is None:
+                continue
+            day_text = day[:10]
+            close_by_code_date[(code, day_text)] = close
+            dates.add(_parse_date(day_text))
+    return close_by_code_date, sorted(dates)
+
+
+def _load_signal_dividends(path: Path) -> dict[str, list[dict[str, Any]]]:
+    by_code: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    with path.open("r", encoding="utf-8-sig", newline="") as handle:
+        for row in csv.DictReader(handle):
+            code = row.get("code")
+            ex_date = row.get("ex_date")
+            cash = _to_float(row.get("cash_per_share"))
+            visible = row.get("announce_date") or row.get("visible_date") or row.get("ex_date")
+            if not code or not ex_date or not visible or cash is None:
+                continue
+            by_code[code].append({"ex_date": ex_date[:10], "visible_date": visible[:10], "cash_per_share": cash})
+    for rows in by_code.values():
+        rows.sort(key=lambda item: (item["visible_date"], item["ex_date"]))
+    return dict(by_code)
+
+
+def _previous_available_date(sorted_dates: list[Any], day: Any) -> Any | None:
+    previous = None
+    for candidate in sorted_dates:
+        if candidate < day:
+            previous = candidate
+        else:
+            break
+    return previous
 
 
 def _load_daily_prices(v4_raw_dir: Path, start_date: str, end_date: str) -> dict[str, dict[str, dict[str, float]]]:

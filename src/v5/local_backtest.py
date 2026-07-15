@@ -61,6 +61,7 @@ class BacktestOptions:
     defensive_mode: str = "none"
     defensive_ma_days: int = 252
     defensive_risk_exposure: float = 0.5
+    value_trap_guard_mode: str = "apply"
 
 
 def run_local_backtest(spec_path: Path, panel_path: Path, out_dir: Path, options: BacktestOptions | None = None) -> Path:

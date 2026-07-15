@@ -25,7 +25,9 @@ def score_rows(raw_spec: dict[str, Any], date_rows: list[dict[str, Any]]) -> tup
 
 def score_weighted_composite(raw_spec: dict[str, Any], date_rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[str]]:
     factors = raw_spec["signals"]["factors"]
-    weights = raw_spec["signals"]["scoring"].get("weights", {})
+    scoring = raw_spec["signals"]["scoring"]
+    weights = scoring.get("weights", {})
+    min_factor_count = int(scoring.get("min_factor_count", 1))
     factor_scores: dict[str, dict[str, float]] = {}
     used_factors: list[str] = []
     for factor in factors:
@@ -39,7 +41,7 @@ def score_weighted_composite(raw_spec: dict[str, Any], date_rows: list[dict[str,
             value = -raw_value if factor["direction"] == "lower_is_better" else raw_value
             values.append(value)
             keyed.append((row["code"], value))
-        zscores = _zscores(values)
+        zscores = _zscores(_winsorized(values))
         if len(zscores) >= 3:
             used_factors.append(name)
             factor_scores[name] = {code: zscores[index] for index, (code, _value) in enumerate(keyed)}
@@ -50,6 +52,7 @@ def score_weighted_composite(raw_spec: dict[str, Any], date_rows: list[dict[str,
     for row in date_rows:
         score = 0.0
         used_weight = 0.0
+        factor_count = 0
         for factor in factors:
             name = factor["name"]
             factor_weight = float(weights.get(name, 1.0))
@@ -58,11 +61,15 @@ def score_weighted_composite(raw_spec: dict[str, Any], date_rows: list[dict[str,
                 continue
             score += factor_weight * value
             used_weight += abs(factor_weight)
+            factor_count += 1
         if used_weight <= 0:
+            continue
+        if factor_count < min_factor_count:
             continue
         enriched = dict(row)
         enriched["score"] = score / used_weight
         enriched["final_score"] = enriched["score"]
+        enriched["factor_count"] = factor_count
         scored.append(enriched)
     return scored, used_factors
 

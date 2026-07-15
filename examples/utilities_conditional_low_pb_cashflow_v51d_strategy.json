@@ -1,0 +1,247 @@
+{
+  "meta": {
+    "strategy_id": "utilities_conditional_low_pb_cashflow_v51d",
+    "name": "Utilities Conditional Low PB Cashflow V5.1d",
+    "objective": "Test conditional utilities hypotheses after V5.1c showed that low PB and operating cash-flow yield work individually but weaken when combined by static weighting.",
+    "status": "research_pit_validation_ready"
+  },
+  "universe": {
+    "name": "A-share utilities operating companies",
+    "construction": "point_in_time_core_utilities_operating_company_membership_with_conditional_low_pb_cashflow_tests",
+    "point_in_time": true,
+    "minimum_rebalance_coverage_ratio": 0.8
+  },
+  "data": {
+    "vendor": "JoinQuant/DataJQ PIT utilities panel plus V5 sub-industry score enhancement",
+    "price_frequency": "quarterly_signal_panel",
+    "financial_as_of_policy": "announcement_date",
+    "price_adjustment": {
+      "research_panel": "pre_adjusted_total_return",
+      "status": "research_pit_validation_only"
+    },
+    "window": {
+      "research_start": "2017-01-01",
+      "research_end": "2026-05-31"
+    },
+    "source_warning": "V5.1d is conditional research validation only. It must not trigger platform replication."
+  },
+  "signals": {
+    "factors": [
+      {
+        "name": "low_pb_subindustry_score",
+        "source": "derived_from_pb_ratio",
+        "role": "subindustry_relative_valuation",
+        "direction": "higher_is_better",
+        "definition": "Within-date and within-sub-industry percentile score where lower PB receives higher score.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security",
+        "winsorize": "already_ranked",
+        "normalize": "rebalance_cross_section_zscore",
+        "evidence_status": "hypothesis_only"
+      },
+      {
+        "name": "cashflow_yield_subindustry_score",
+        "source": "derived_from_operating_cash_flow_yield",
+        "role": "subindustry_relative_cashflow_value",
+        "direction": "higher_is_better",
+        "definition": "Within-date and within-sub-industry percentile score of operating cash-flow yield.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 90,
+        "missing_policy": "drop_security",
+        "winsorize": "already_ranked",
+        "normalize": "rebalance_cross_section_zscore",
+        "evidence_status": "hypothesis_only"
+      }
+    ],
+    "scoring": {
+      "method": "weighted_composite_score",
+      "normalization_scope": "rebalance_cross_section",
+      "weights": {
+        "low_pb_subindustry_score": 0.5,
+        "cashflow_yield_subindustry_score": 0.5
+      },
+      "min_factor_count": 2,
+      "value_trap_guard": "The composite remains a reference only. V5.1d's main evidence is conditional baseline comparison."
+    }
+  },
+  "schedule": {
+    "signal_frequency": "quarterly_after_financial_disclosure",
+    "rebalance_frequency": "quarterly",
+    "rebalance_rule": "first_tradable_day_after_required_financial_data_visibility_check"
+  },
+  "portfolio": {
+    "selection_count": 10,
+    "weighting": "conditional_equal_weight_research_only",
+    "max_position_weight": 0.12,
+    "cash_policy": "hold_residual_cash_when_fewer_than_10_utilities_pass_filters"
+  },
+  "risk": {
+    "defensive_asset": "cash",
+    "defensive_rule": {
+      "enabled": false,
+      "reason": "V5.1d tests conditional factor evidence only."
+    },
+    "individual_stop_loss_take_profit": {
+      "enabled": false,
+      "reason": "Fixed exits are not part of the conditional factor hypothesis."
+    }
+  },
+  "validation": {
+    "method": "rolling",
+    "train_years": 5,
+    "test_years": 2,
+    "review_years": 1,
+    "weak_years": [
+      "2018",
+      "2019",
+      "2020",
+      "2021",
+      "2022"
+    ],
+    "baselines": [
+      {
+        "name": "equal_weight_utilities",
+        "mode": "equal_all"
+      },
+      {
+        "name": "raw_low_pb_utilities_top10",
+        "mode": "single_factor",
+        "factor": "low_price_to_book",
+        "direction": "lower_is_better",
+        "selection_count": 10
+      },
+      {
+        "name": "raw_cashflow_yield_utilities_top10",
+        "mode": "single_factor",
+        "factor": "operating_cash_flow_yield",
+        "direction": "higher_is_better",
+        "selection_count": 10
+      },
+      {
+        "name": "low_pb_with_top_half_cashflow",
+        "mode": "single_factor",
+        "factor": "low_price_to_book",
+        "direction": "lower_is_better",
+        "selection_count": 10,
+        "condition": {
+          "field": "operating_cash_flow_yield",
+          "direction": "higher_is_better",
+          "quantile": 0.5,
+          "keep": "top"
+        }
+      },
+      {
+        "name": "cashflow_with_top_half_low_pb",
+        "mode": "single_factor",
+        "factor": "operating_cash_flow_yield",
+        "direction": "higher_is_better",
+        "selection_count": 10,
+        "condition": {
+          "field": "low_price_to_book",
+          "direction": "lower_is_better",
+          "quantile": 0.5,
+          "keep": "top"
+        }
+      },
+      {
+        "name": "subindustry_low_pb_with_top_half_cashflow",
+        "mode": "single_factor",
+        "factor": "low_pb_subindustry_score",
+        "direction": "higher_is_better",
+        "selection_count": 10,
+        "condition": {
+          "field": "cashflow_yield_subindustry_score",
+          "direction": "higher_is_better",
+          "quantile": 0.5,
+          "keep": "top"
+        }
+      },
+      {
+        "name": "subindustry_cashflow_with_top_half_low_pb",
+        "mode": "single_factor",
+        "factor": "cashflow_yield_subindustry_score",
+        "direction": "higher_is_better",
+        "selection_count": 10,
+        "condition": {
+          "field": "low_pb_subindustry_score",
+          "direction": "higher_is_better",
+          "quantile": 0.5,
+          "keep": "top"
+        }
+      },
+      {
+        "name": "reference_static_composite_v51d",
+        "mode": "composite"
+      }
+    ],
+    "common_sample_fields": [
+      "low_pb_subindustry_score",
+      "cashflow_yield_subindustry_score"
+    ],
+    "common_sample_interactions": [
+      {
+        "name": "common_low_pb_only",
+        "factors": [
+          "low_pb_subindustry_score"
+        ]
+      },
+      {
+        "name": "common_cashflow_only",
+        "factors": [
+          "cashflow_yield_subindustry_score"
+        ]
+      },
+      {
+        "name": "common_low_pb_cashflow",
+        "factors": [
+          "low_pb_subindustry_score",
+          "cashflow_yield_subindustry_score"
+        ]
+      }
+    ],
+    "robustness": {
+      "selection_counts": [
+        8,
+        10,
+        12
+      ],
+      "weight_scale_factors": [
+        "low_pb_subindustry_score",
+        "cashflow_yield_subindustry_score"
+      ],
+      "weight_scales": [
+        0.8,
+        1.0,
+        1.2
+      ]
+    },
+    "required_tests": [
+      "conditional_low_pb_given_cashflow",
+      "conditional_cashflow_given_low_pb",
+      "raw_baseline_comparison",
+      "subindustry_conditional_comparison",
+      "rolling_validation"
+    ],
+    "acceptance_rule": "Do not promote unless a conditional case beats raw low-PB and raw cash-flow yield baselines under PIT validation."
+  },
+  "execution": {
+    "status": "blocked_until_research_pit_validation_passes",
+    "next_gate": "research_pit_validation",
+    "not_status": "formal_strategy_candidate",
+    "commission_bps": 3,
+    "slippage_bps": 5,
+    "suspension_policy": "skip_untradeable",
+    "limit_policy": "skip_limit_blocked"
+  },
+  "outputs": {
+    "save_holdings": true,
+    "save_rebalance_signals": true,
+    "report": "markdown",
+    "required_reports": [
+      "factor_validation_report",
+      "formal_validation_report",
+      "project_manager_decision_note"
+    ]
+  }
+}

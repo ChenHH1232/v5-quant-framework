@@ -215,6 +215,43 @@ class ExperimentGovernanceTests(unittest.TestCase):
         self.assertEqual(result[0]["case"], "raw_low_pb_top1")
         self.assertEqual(result[0]["mean_return"], 0.06)
 
+    def test_configured_baseline_condition_filters_before_ranking(self):
+        raw = {
+            "signals": {
+                "factors": [{"name": "cashflow", "direction": "higher_is_better"}],
+                "scoring": {"weights": {"cashflow": 1.0}},
+            },
+            "portfolio": {"selection_count": 1},
+            "validation": {
+                "baselines": [
+                    {
+                        "name": "low_pb_with_top_cashflow",
+                        "mode": "single_factor",
+                        "factor": "pb",
+                        "direction": "lower_is_better",
+                        "selection_count": 1,
+                        "condition": {
+                            "field": "cashflow",
+                            "direction": "higher_is_better",
+                            "quantile": 0.5,
+                            "keep": "top",
+                        },
+                    }
+                ]
+            },
+        }
+        rows = [
+            {"trade_date": "2025-04-01", "code": "LOW_PB_BAD_CASHFLOW", "future_return": -0.10, "pb": 0.3, "cashflow": 0.1},
+            {"trade_date": "2025-04-01", "code": "MID_PB_GOOD_CASHFLOW", "future_return": 0.08, "pb": 0.8, "cashflow": 0.9},
+            {"trade_date": "2025-04-01", "code": "HIGH_PB_GOOD_CASHFLOW", "future_return": 0.02, "pb": 1.5, "cashflow": 0.8},
+            {"trade_date": "2025-04-01", "code": "HIGH_PB_BAD_CASHFLOW", "future_return": -0.03, "pb": 2.0, "cashflow": 0.2},
+        ]
+
+        result = _baseline_tests(rows, raw)
+
+        self.assertEqual(result[0]["case"], "low_pb_with_top_cashflow")
+        self.assertEqual(result[0]["mean_return"], 0.08)
+
 
 if __name__ == "__main__":
     unittest.main()

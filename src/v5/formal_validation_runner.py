@@ -164,6 +164,7 @@ def _baseline_tests(rows: list[dict[str, Any]], raw: dict[str, Any]) -> list[dic
                     factor=item.get("factor"),
                     selection_count=item.get("selection_count"),
                     factor_direction=item.get("direction"),
+                    condition=item.get("condition"),
                 )
             )
         return result
@@ -371,6 +372,7 @@ def _strategy_case(
     weight_scale: dict[str, float] | None = None,
     use_factors: list[str] | None = None,
     factor_direction: str | None = None,
+    condition: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     by_date: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in rows:
@@ -391,17 +393,18 @@ def _strategy_case(
             if key in weights:
                 weights[key] = float(weights[key]) * scale
     for _date, date_rows in sorted(by_date.items()):
+        case_rows = _apply_condition(date_rows, condition)
         if mode == "equal_all":
-            selected = date_rows
+            selected = case_rows
         elif mode == "single_factor" and factor:
             current_factor_direction = factor_direction or _factor_direction(raw, factor)
             selected = sorted(
-                [row for row in date_rows if _to_float(row.get(factor)) is not None],
+                [row for row in case_rows if _to_float(row.get(factor)) is not None],
                 key=lambda row: _to_float(row.get(factor)) or 0.0,
                 reverse=current_factor_direction == "higher_is_better",
             )[:current_selection_count]
         else:
-            scored = _score_date_rows(date_rows, factors, weights)
+            scored = _score_date_rows(case_rows, factors, weights)
             selected = sorted(_apply_value_trap_guard(scored), key=lambda item: item["score"], reverse=True)[:current_selection_count]
         if selected:
             returns.append(mean(float(row["future_return"]) for row in selected))
@@ -417,6 +420,29 @@ def _strategy_case(
         "positive_ratio": sum(1 for ret in returns if ret > 0) / len(returns) if returns else None,
         "mean_selected_count": mean(selected_counts) if selected_counts else None,
     }
+
+
+def _apply_condition(rows: list[dict[str, Any]], condition: dict[str, Any] | None) -> list[dict[str, Any]]:
+    if not condition:
+        return rows
+    field = str(condition.get("field", ""))
+    if not field:
+        return rows
+    direction = str(condition.get("direction", _factor_direction({"signals": {"factors": []}}, field)))
+    quantile = float(condition.get("quantile", 0.5))
+    keep = str(condition.get("keep", "top"))
+    ranked = [row for row in rows if _to_float(row.get(field)) is not None]
+    if not ranked:
+        return []
+    ranked = sorted(
+        ranked,
+        key=lambda row: _to_float(row.get(field)) or 0.0,
+        reverse=direction == "higher_is_better",
+    )
+    count = max(1, int(len(ranked) * quantile))
+    if keep == "bottom":
+        return ranked[-count:]
+    return ranked[:count]
 
 
 def _load_panel(path: Path) -> list[dict[str, Any]]:

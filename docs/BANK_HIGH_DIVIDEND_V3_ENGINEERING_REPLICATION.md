@@ -222,13 +222,47 @@ Interpretation:
 - Risk path is very close: max drawdown, drawdown interval, beta, and volatility are all near local simulation.
 - Strategy final return is lower on JoinQuant by 4.41 percentage points; this is plausible but still requires daily attribution.
 - Excess return differs more because benchmark return differs by 1.35 percentage points and JoinQuant reports excess on its platform convention.
-- This run supports "engineering smoke passed" for the guard-applied script, but strict platform replication remains pending until fresh daily result, position, transaction, and log exports are attributed.
+- This run supports "engineering smoke passed" for the guard-applied script. Fresh daily-result attribution has now been completed, while strict platform replication remains pending until fresh position, transaction, and log exports are attributed.
 
-## 8. Next Engineering Action
+## 8. Fresh Daily Attribution
 
-Use the fresh JoinQuant formal-candidate export to run attribution:
+Fresh JoinQuant daily result export:
 
-- daily result CSV;
+```text
+C:/Users/Administrator/Downloads/result_1 (16).csv
+```
+
+Attribution output:
+
+```text
+platform_attribution_v3_formal_candidate_fresh/bank_high_dividend_sustainability_v3/
+```
+
+Result:
+
+| Check | Result |
+| --- | ---: |
+| matched days | 1228 |
+| final strategy diff | +4.41 pct points |
+| final benchmark diff | -1.35 pct points |
+| max absolute strategy diff | 7.19 pct points |
+| max absolute benchmark diff | 1.62 pct points |
+| local trade count | 192 |
+| local dividend event count | 39 |
+| local rebalance count | 19 |
+
+Interpretation:
+
+- Daily NAV attribution confirms the fresh JoinQuant run and local formal-candidate run are now materially aligned.
+- Most of 2021-2025 shows a strategy-return difference around 0.5 to 1.6 percentage points at rebalance checkpoints.
+- The largest divergence appears in 2026-04 to 2026-05. The maximum strategy difference occurs on 2026-05-11 at 7.19 percentage points and narrows to 4.41 percentage points by 2026-05-29.
+- The remaining gap likely comes from execution timing, platform cash/dividend handling, or order/position differences near the final 2026 rebalances.
+- The temporary position, transaction, and log files available locally were older than `result_1 (16).csv` and still reflected the old run, so they were not used for fresh formal-candidate attribution.
+
+## 9. Next Engineering Action
+
+Use fresh JoinQuant formal-candidate exports to finish attribution:
+
 - position CSV;
 - transaction CSV;
 - log TXT containing value-trap guard application lines.

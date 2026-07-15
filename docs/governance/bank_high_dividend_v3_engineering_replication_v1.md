@@ -10,9 +10,9 @@ Experiment layer:
 
 Engineering local daily simulation for V3 formal candidate is complete.
 
-Fresh JoinQuant execution for the guard-applied V3 formal candidate is now complete by user-reported platform summary.
+Fresh JoinQuant execution for the guard-applied V3 formal candidate is now complete by user-reported platform summary, and fresh daily-result attribution is complete.
 
-Strict JoinQuant replication is not complete yet because fresh daily result, position, transaction, and log exports still need attribution against local simulation.
+Strict JoinQuant replication is not complete yet because fresh position, transaction, and log exports still need attribution against local simulation.
 
 ## Evidence
 
@@ -47,6 +47,13 @@ Strict JoinQuant replication is not complete yet because fresh daily result, pos
   - beta: 0.863
   - strategy volatility: 0.163
   - max drawdown interval: 2021-07-07,2022-10-31
+- Fresh daily-result attribution using `result_1 (16).csv`:
+  - matched days: 1228
+  - final strategy diff: +4.41 percentage points
+  - final benchmark diff: -1.35 percentage points
+  - max absolute strategy diff: 7.19 percentage points
+  - max absolute benchmark diff: 1.62 percentage points
+  - largest divergence period: 2026-04 to 2026-05
 
 ## PM Interpretation
 
@@ -54,8 +61,8 @@ The previous JoinQuant export should be treated as an older no-guard platform re
 
 It should not be used to accept or reject the guard-applied V3 formal candidate.
 
-The fresh guard-applied JoinQuant platform summary is close enough to local simulation to move to formal attribution. Risk path alignment is strong, while return difference still requires daily decomposition.
+The fresh guard-applied JoinQuant platform summary is close enough to local simulation to move to order-level attribution. Daily NAV attribution shows material alignment, with the remaining strategy-return gap concentrated late in the window. Risk path alignment is strong, while return difference still requires position, transaction, dividend, and cash decomposition.
 
 ## Required Next Gate
 
-Engineering Agent must attribute fresh JoinQuant daily result, position, transaction, and log exports before Project Manager Agent can mark platform replication as passed.
+Engineering Agent must attribute fresh JoinQuant position, transaction, and log exports before Project Manager Agent can mark platform replication as passed.

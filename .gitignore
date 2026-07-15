@@ -9,6 +9,7 @@ build/
 
 data/
 validation/
+validation_*/
 experiments/
 local_backtests/
 local_backtests_*/
@@ -17,6 +18,7 @@ local_daily_backtests_*/
 platform_attribution/
 universes/
 validation_formal/
+validation_formal_*/
 
 数据库/raw/
 数据库/processed/

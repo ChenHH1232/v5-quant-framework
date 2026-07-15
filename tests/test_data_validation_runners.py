@@ -14,6 +14,7 @@ from v5.dividend_runner import _normalize_akshare_dividend_row
 from v5.joinquant_pit_panel_runner import _latest_visible_bank_quality, _load_bank_quality_snapshots
 from v5.local_backtest import BacktestOptions, run_local_backtest
 from v5.validation_runner import validate_panel
+from v5.v4_legacy_bank_quality_runner import collect_v4_legacy_bank_quality
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -241,6 +242,52 @@ class DataValidationRunnerTests(unittest.TestCase):
         self.assertIsNotNone(visible)
         assert visible is not None
         self.assertEqual(visible["source_year"], "2024")
+
+    def test_collect_v4_legacy_bank_quality_uses_first_visible_rebalance_date(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            source = tmp_path / "phase1.csv"
+            self._write_csv(
+                source,
+                [
+                    "rebalance_date",
+                    "code",
+                    "bank_indicator__Nonperforming_loan_rate",
+                    "bank_indicator__Nonperforming_loan_rate__source_year",
+                    "bank_indicator__non_performing_loan_provision_coverage",
+                    "bank_indicator__core_level_capital_adequacy_ratio",
+                    "bank_indicator__capital_adequacy_ratio",
+                ],
+                [
+                    {
+                        "rebalance_date": "2025-04-01",
+                        "code": "000001.XSHE",
+                        "bank_indicator__Nonperforming_loan_rate": "1.06",
+                        "bank_indicator__Nonperforming_loan_rate__source_year": "2024",
+                        "bank_indicator__non_performing_loan_provision_coverage": "315.02",
+                        "bank_indicator__core_level_capital_adequacy_ratio": "9.12",
+                        "bank_indicator__capital_adequacy_ratio": "13.0",
+                    },
+                    {
+                        "rebalance_date": "2025-07-01",
+                        "code": "000001.XSHE",
+                        "bank_indicator__Nonperforming_loan_rate": "1.06",
+                        "bank_indicator__Nonperforming_loan_rate__source_year": "2024",
+                        "bank_indicator__non_performing_loan_provision_coverage": "315.02",
+                        "bank_indicator__core_level_capital_adequacy_ratio": "9.12",
+                        "bank_indicator__capital_adequacy_ratio": "13.0",
+                    },
+                ],
+            )
+
+            result = collect_v4_legacy_bank_quality(source, tmp_path)
+            with result.quality_path.open(encoding="utf-8", newline="") as handle:
+                rows = list(csv.DictReader(handle))
+
+        self.assertEqual(result.row_count, 1)
+        self.assertEqual(rows[0]["notice_date"], "2025-04-01")
+        self.assertEqual(rows[0]["review_status"], "needs_check")
+        self.assertEqual(rows[0]["source_year"], "2024")
 
     def test_benchmark_row_normalizes_close_series(self) -> None:
         spec = {

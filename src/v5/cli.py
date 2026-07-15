@@ -26,6 +26,10 @@ from v5.formal_validation_runner import run_formal_validation
 from v5.platform_attribution_runner import run_platform_attribution
 from v5.universe_runner import build_point_in_time_universe
 from v5.validation_runner import validate_panel
+from v5.v4_legacy_bank_quality_runner import (
+    DEFAULT_V4_PHASE1_PANEL,
+    collect_v4_legacy_bank_quality,
+)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -79,6 +83,10 @@ def main(argv: list[str] | None = None) -> int:
         choices=["reviewed", "needs_check", "unreviewed"],
         default="needs_check",
     )
+
+    v4_quality_parser = subparsers.add_parser("collect-v4-legacy-bank-quality")
+    v4_quality_parser.add_argument("--source-panel", type=Path, default=DEFAULT_V4_PHASE1_PANEL)
+    v4_quality_parser.add_argument("--out-dir", type=Path, default=DEFAULT_DATABASE_DIR / "processed")
 
     research_validate_parser = subparsers.add_parser("validate-research")
     research_validate_parser.add_argument("spec", type=Path)
@@ -244,6 +252,10 @@ def main(argv: list[str] | None = None) -> int:
                 args.out_dir,
                 args.min_review_status,
             )
+            print(result.quality_path)
+            return 0
+        if args.command == "collect-v4-legacy-bank-quality":
+            result = collect_v4_legacy_bank_quality(args.source_panel, args.out_dir)
             print(result.quality_path)
             return 0
         if args.command == "validate-research":

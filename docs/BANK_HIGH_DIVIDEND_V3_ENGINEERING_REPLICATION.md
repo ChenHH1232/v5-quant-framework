@@ -259,12 +259,58 @@ Interpretation:
 - The remaining gap likely comes from execution timing, platform cash/dividend handling, or order/position differences near the final 2026 rebalances.
 - The temporary position, transaction, and log files available locally were older than `result_1 (16).csv` and still reflected the old run, so they were not used for fresh formal-candidate attribution.
 
-## 9. Next Engineering Action
+## 9. Fresh Transaction Attribution
 
-Use fresh JoinQuant formal-candidate exports to finish attribution:
+Fresh JoinQuant transaction export:
 
+```text
+C:/Users/Administrator/AppData/Local/Temp/transaction (1).csv
+```
+
+Attribution output:
+
+```text
+platform_attribution_v3_formal_candidate_fresh_transactions/bank_high_dividend_sustainability_v3_transactions_transactions/
+```
+
+Result:
+
+| Check | Result |
+| --- | ---: |
+| JoinQuant transaction rows | 206 |
+| local transaction rows | 191 |
+| matched transaction keys | 189 |
+| JoinQuant-only keys | 17 |
+| local-only keys | 2 |
+| first-day common position count | 8 / 8 |
+| first-day absolute amount difference | 1,700 shares |
+| first-day absolute value difference | 3,441 |
+| first-day absolute commission difference | 1.03 |
+
+First-day selected stocks are fully aligned:
+
+```text
+002966.XSHE;600928.XSHG;601009.XSHG;601077.XSHG;601128.XSHG;601838.XSHG;601997.XSHG;603323.XSHG
+```
+
+Diagnosis:
+
+- Fresh transaction attribution confirms the formal-candidate signal contract is now aligned at the first rebalance.
+- The remaining return gap is not caused by the old no-guard signal mismatch.
+- A major local-replication issue was found: the local PIT panel used in this run ends at `2026-01-05`, so local daily simulation has no `2026-04-01` rebalance signal.
+- JoinQuant has 10 transactions on `2026-04-01`, including sells in `601838.XSHG`, `000001.XSHE`, small trims, and buys in `600036.XSHG` and `601825.XSHG`.
+- This explains why daily NAV divergence grows in `2026-04` to `2026-05`.
+- Therefore the current local-vs-JoinQuant gap should not be treated as platform execution mismatch until the local PIT panel is extended through `2026-04-01`.
+
+## 10. Next Engineering Action
+
+Rebuild local PIT panel through the 2026-04 rebalance date and rerun local daily simulation, then rerun attribution:
+
+- update / collect the PIT panel so `2026-04-01` appears in `rebalance_signals.csv`;
+- rerun local `daily-backtest` with the same V3 formal-candidate settings;
+- rerun daily result attribution against `result_1 (16).csv`;
+- rerun transaction attribution against `transaction (1).csv`;
 - position CSV;
-- transaction CSV;
 - log TXT containing value-trap guard application lines.
 
 Only after that fresh attribution should Project Manager Agent decide whether platform replication passes for the formal candidate.

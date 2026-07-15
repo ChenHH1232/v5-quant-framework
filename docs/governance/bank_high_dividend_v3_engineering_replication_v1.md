@@ -10,9 +10,9 @@ Experiment layer:
 
 Engineering local daily simulation for V3 formal candidate is complete.
 
-Fresh JoinQuant execution for the guard-applied V3 formal candidate is now complete by user-reported platform summary, and fresh daily-result attribution is complete.
+Fresh JoinQuant execution for the guard-applied V3 formal candidate is now complete by user-reported platform summary. Fresh daily-result attribution and transaction attribution are complete.
 
-Strict JoinQuant replication is not complete yet because fresh position, transaction, and log exports still need attribution against local simulation.
+Strict JoinQuant replication is not complete yet because the current local PIT panel ends at the 2026-01 rebalance and misses the 2026-04 rebalance that JoinQuant executed.
 
 ## Evidence
 
@@ -54,6 +54,19 @@ Strict JoinQuant replication is not complete yet because fresh position, transac
   - max absolute strategy diff: 7.19 percentage points
   - max absolute benchmark diff: 1.62 percentage points
   - largest divergence period: 2026-04 to 2026-05
+- Fresh transaction attribution using `transaction (1).csv`:
+  - JoinQuant transaction rows: 206
+  - local transaction rows: 191
+  - matched transaction keys: 189
+  - JoinQuant-only keys: 17
+  - local-only keys: 2
+  - first-day selected stocks match: 8 / 8
+  - first-day absolute value difference: 3,441
+  - key issue: JoinQuant has 10 transactions on 2026-04-01 while local has no 2026-04 rebalance signal.
+- Local data coverage issue:
+  - `joinquant_basic_pit_panel_v4_legacy_quality/panel.csv` ends at `2026-01-05`
+  - local `rebalance_signals.csv` ends at `2026-01-05`
+  - JoinQuant executed the expected 2026-04 rebalance.
 
 ## PM Interpretation
 
@@ -61,8 +74,8 @@ The previous JoinQuant export should be treated as an older no-guard platform re
 
 It should not be used to accept or reject the guard-applied V3 formal candidate.
 
-The fresh guard-applied JoinQuant platform summary is close enough to local simulation to move to order-level attribution. Daily NAV attribution shows material alignment, with the remaining strategy-return gap concentrated late in the window. Risk path alignment is strong, while return difference still requires position, transaction, dividend, and cash decomposition.
+The fresh guard-applied JoinQuant platform summary is close enough to local simulation to move forward, and transaction attribution confirms the first rebalance signal contract is aligned. The remaining late-window return gap is now primarily a local data-coverage problem, not evidence that the strategy failed or that JoinQuant ran the wrong contract.
 
 ## Required Next Gate
 
-Engineering Agent must attribute fresh JoinQuant position, transaction, and log exports before Project Manager Agent can mark platform replication as passed.
+Engineering Agent must extend the local PIT panel through the 2026-04 rebalance, rerun local daily simulation, rerun daily and transaction attribution, and then attribute fresh position/log exports before Project Manager Agent can mark platform replication as passed.

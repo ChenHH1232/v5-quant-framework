@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 
 from v5.experiment_governance import validate_daily_run_contract, validate_experiment_layer
-from v5.formal_validation_runner import run_formal_validation
+from v5.formal_validation_runner import _notice_date_leakage_audit, run_formal_validation
 
 
 class ExperimentGovernanceTests(unittest.TestCase):
@@ -47,6 +47,22 @@ class ExperimentGovernanceTests(unittest.TestCase):
                 Path("validation_formal"),
                 experiment_layer="platform_replication",
             )
+
+    def test_bank_quality_notice_date_is_audited_separately(self):
+        rows = [
+            {
+                "trade_date": "2025-03-31",
+                "code": "A",
+                "factor_visible_date": "2025-03-31",
+                "provision_coverage_ratio": "300",
+                "bank_quality_notice_date": "2025-04-01",
+            }
+        ]
+
+        audit = _notice_date_leakage_audit(rows)
+
+        self.assertEqual(audit[0]["status"], "needs_review")
+        self.assertEqual(audit[0]["future_notice_violations"], 1)
 
 
 if __name__ == "__main__":

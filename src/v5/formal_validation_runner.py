@@ -83,6 +83,14 @@ def _notice_date_leakage_audit(rows: list[dict[str, Any]]) -> list[dict[str, Any
         "return_on_equity_ttm",
         "dividend_yield",
     ]
+    bank_quality_fields = [
+        "non_performing_loan_ratio",
+        "provision_coverage_ratio",
+        "core_tier_1_capital_adequacy_ratio",
+        "asset_quality_trend",
+        "provision_buffer",
+        "capital_resilience",
+    ]
     checked = 0
     missing_notice = 0
     violations = 0
@@ -91,7 +99,11 @@ def _notice_date_leakage_audit(rows: list[dict[str, Any]]) -> list[dict[str, Any
         if not fields_present:
             continue
         checked += 1
-        notice = row.get("factor_visible_date") or row.get("eastmoney_quality_notice_date") or row.get("notice_date") or row.get("announce_date")
+        has_bank_quality = any(row.get(name) not in {None, ""} for name in bank_quality_fields)
+        if has_bank_quality:
+            notice = row.get("bank_quality_notice_date") or row.get("eastmoney_quality_notice_date")
+        else:
+            notice = row.get("factor_visible_date") or row.get("notice_date") or row.get("announce_date")
         if not notice:
             missing_notice += 1
             continue

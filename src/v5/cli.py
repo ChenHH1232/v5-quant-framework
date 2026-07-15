@@ -173,6 +173,12 @@ def main(argv: list[str] | None = None) -> int:
     jq_pit_parser.add_argument("--benchmark-fq", default="pre", choices=["pre", "post", "none"])
     jq_pit_parser.add_argument("--dividend-csv", type=Path)
     jq_pit_parser.add_argument("--dividend-tax-rate", type=float, default=0.2)
+    jq_pit_parser.add_argument("--bank-quality-csv", type=Path)
+    jq_pit_parser.add_argument(
+        "--bank-quality-min-review-status",
+        choices=["reviewed", "needs_check", "unreviewed"],
+        default="needs_check",
+    )
 
     universe_parser = subparsers.add_parser("build-universe")
     universe_parser.add_argument("panel", type=Path)
@@ -306,6 +312,8 @@ def main(argv: list[str] | None = None) -> int:
                 benchmark_fq=None if args.benchmark_fq == "none" else args.benchmark_fq,
                 dividend_csv=args.dividend_csv,
                 dividend_tax_rate=args.dividend_tax_rate,
+                bank_quality_csv=args.bank_quality_csv,
+                bank_quality_min_review_status=args.bank_quality_min_review_status,
             )
             print(result.price_path)
             return 0

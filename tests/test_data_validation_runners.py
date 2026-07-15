@@ -4,12 +4,14 @@ import csv
 import json
 import tempfile
 import unittest
+from datetime import date
 from pathlib import Path
 
 from v5.data_runner import collect_panel_from_v4_raw, write_collection_manifest
 from v5.daily_backtest import _defensive_state
 from v5.benchmark_runner import _normalize_benchmark_row
 from v5.dividend_runner import _normalize_akshare_dividend_row
+from v5.joinquant_pit_panel_runner import _latest_visible_bank_quality, _load_bank_quality_snapshots
 from v5.local_backtest import BacktestOptions, run_local_backtest
 from v5.validation_runner import validate_panel
 
@@ -194,6 +196,51 @@ class DataValidationRunnerTests(unittest.TestCase):
         self.assertEqual(normalized["ex_date"], "2025-06-20")
         self.assertEqual(normalized["announce_date"], "2025-06-12")
         self.assertAlmostEqual(float(normalized["cash_per_share"]), 0.35)
+
+    def test_bank_quality_snapshots_use_notice_date_visibility(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "quality.csv"
+            self._write_csv(
+                path,
+                [
+                    "code",
+                    "source_year",
+                    "npl_ratio",
+                    "provision_coverage_ratio",
+                    "core_tier_1_capital_adequacy_ratio",
+                    "notice_date",
+                    "review_status",
+                ],
+                [
+                    {
+                        "code": "000001.SZ",
+                        "source_year": "2024",
+                        "npl_ratio": "1.06",
+                        "provision_coverage_ratio": "315.02",
+                        "core_tier_1_capital_adequacy_ratio": "9.12",
+                        "notice_date": "2025-03-15",
+                        "review_status": "needs_check",
+                    },
+                    {
+                        "code": "000001.SZ",
+                        "source_year": "2025",
+                        "npl_ratio": "1.05",
+                        "provision_coverage_ratio": "330.03",
+                        "core_tier_1_capital_adequacy_ratio": "9.36",
+                        "notice_date": "2026-03-21",
+                        "review_status": "needs_check",
+                    },
+                ],
+            )
+
+            snapshots = _load_bank_quality_snapshots(path, "needs_check")
+            early = _latest_visible_bank_quality(snapshots["000001.XSHE"], date.fromisoformat("2025-03-14"))
+            visible = _latest_visible_bank_quality(snapshots["000001.XSHE"], date.fromisoformat("2025-03-15"))
+
+        self.assertIsNone(early)
+        self.assertIsNotNone(visible)
+        assert visible is not None
+        self.assertEqual(visible["source_year"], "2024")
 
     def test_benchmark_row_normalizes_close_series(self) -> None:
         spec = {

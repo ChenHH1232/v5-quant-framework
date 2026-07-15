@@ -44,6 +44,8 @@ PIT_PANEL_FIELDS = [
     "core_tier_1_capital_adequacy_ratio",
     "factor_visible_date",
     "factor_visibility_source",
+    "bank_quality_notice_date",
+    "bank_quality_review_status",
     "dividend_visible_policy",
 ]
 
@@ -58,6 +60,8 @@ def collect_joinquant_basic_pit_panel(
     benchmark_fq: str = "pre",
     dividend_csv: Path | None = None,
     dividend_tax_rate: float = 0.2,
+    bank_quality_csv: Path | None = None,
+    bank_quality_min_review_status: str = "needs_check",
     username_env: str = "JQDATA_USERNAME",
     password_env: str = "JQDATA_PASSWORD",
 ) -> JoinQuantPitPanelResult:
@@ -68,6 +72,10 @@ def collect_joinquant_basic_pit_panel(
     dates = sorted({row["trade_date"] for row in scaffold_rows})
     codes = sorted({row["code"] for row in scaffold_rows})
     dividends = _load_dividend_events(dividend_csv or database_dir / "processed" / "bank_cash_dividends.csv")
+    bank_quality = _load_bank_quality_snapshots(
+        bank_quality_csv or database_dir / "processed" / "eastmoney_bank_quality_manual_csv.csv",
+        bank_quality_min_review_status,
+    )
     warnings: list[str] = []
 
     fundamentals_by_date: dict[str, dict[str, dict[str, Any]]] = {}
@@ -114,6 +122,7 @@ def collect_joinquant_basic_pit_panel(
         total_return = price_return
         benchmark_return = _period_return(benchmark_closes, trade_day, next_day)
         fundamentals = fundamentals_by_date.get(trade_day.isoformat(), {}).get(code, {})
+        quality = _latest_visible_bank_quality(bank_quality.get(code, []), trade_day)
         rows.append(
             {
                 "trade_date": trade_day.isoformat(),
@@ -131,11 +140,13 @@ def collect_joinquant_basic_pit_panel(
                 "low_price_to_book": _fmt_float(fundamentals.get("pb_ratio")),
                 "dividend_yield": _fmt_float(_trailing_dividend_yield(dividends.get(code, []), trade_day, close)),
                 "return_on_equity_ttm": _fmt_float(fundamentals.get("roe")),
-                "non_performing_loan_ratio": "",
-                "provision_coverage_ratio": "",
-                "core_tier_1_capital_adequacy_ratio": "",
+                "non_performing_loan_ratio": _fmt_float(quality.get("npl_ratio") if quality else None),
+                "provision_coverage_ratio": _fmt_float(quality.get("provision_coverage_ratio") if quality else None),
+                "core_tier_1_capital_adequacy_ratio": _fmt_float(quality.get("core_tier_1_capital_adequacy_ratio") if quality else None),
                 "factor_visible_date": trade_day.isoformat(),
                 "factor_visibility_source": "jqdatasdk.get_fundamentals(date=trade_date)",
+                "bank_quality_notice_date": quality.get("notice_date", "") if quality else "",
+                "bank_quality_review_status": quality.get("review_status", "") if quality else "",
                 "dividend_visible_policy": "announce_date_or_ex_date_must_be_on_or_before_trade_date",
             }
         )
@@ -155,6 +166,8 @@ def collect_joinquant_basic_pit_panel(
         "benchmark_fq": benchmark_fq,
         "dividend_csv": str(dividend_csv or database_dir / "processed" / "bank_cash_dividends.csv"),
         "dividend_tax_rate": dividend_tax_rate,
+        "bank_quality_csv": str(bank_quality_csv or database_dir / "processed" / "eastmoney_bank_quality_manual_csv.csv"),
+        "bank_quality_min_review_status": bank_quality_min_review_status,
         "row_count": len(rows),
         "date_count": len({row["trade_date"] for row in rows}),
         "code_count": len({row["code"] for row in rows}),
@@ -162,7 +175,7 @@ def collect_joinquant_basic_pit_panel(
         "fields": PIT_PANEL_FIELDS,
         "limitations": [
             "Uses JoinQuant get_fundamentals(date=trade_date) as point-in-time visibility, but does not expose the original announcement date per field.",
-            "Bank-specialized NPL, provision coverage, and core tier 1 fields are intentionally blank until annual-report or reviewed bank-indicator replacements are connected.",
+            "Bank-specialized quality fields are sourced from the local Eastmoney annual-report extraction when a visible notice_date is available. Rows marked needs_check are not final acceptance evidence.",
             "Pre-adjusted stock prices are used for research total return; cash dividends are retained as attribution only to avoid double counting.",
         ],
         "credential_policy": f"Credentials loaded from {username_env}/{password_env} or existing authenticated jqdatasdk session. Credentials are never written.",
@@ -258,6 +271,48 @@ def _load_dividend_events(path: Path) -> dict[str, list[DividendEvent]]:
     for code_events in events.values():
         code_events.sort(key=lambda item: item.ex_date)
     return events
+
+
+def _load_bank_quality_snapshots(path: Path, min_review_status: str) -> dict[str, list[dict[str, Any]]]:
+    if not path.exists():
+        return {}
+    allowed = _allowed_review_statuses(min_review_status)
+    snapshots: dict[str, list[dict[str, Any]]] = {}
+    with path.open("r", encoding="utf-8-sig", newline="") as handle:
+        for row in csv.DictReader(handle):
+            code = _normalize_code(row.get("code") or "")
+            notice_date = row.get("notice_date") or ""
+            if not code or not notice_date:
+                continue
+            if str(row.get("review_status") or "") not in allowed:
+                continue
+            item = dict(row)
+            item["code"] = code
+            item["notice_day"] = _parse_date(notice_date)
+            snapshots.setdefault(code, []).append(item)
+    for code_snapshots in snapshots.values():
+        code_snapshots.sort(key=lambda item: (item["notice_day"], int(float(item.get("source_year") or 0))))
+    return snapshots
+
+
+def _latest_visible_bank_quality(snapshots: list[dict[str, Any]], trade_day: date) -> dict[str, Any] | None:
+    visible = None
+    for snapshot in snapshots:
+        if snapshot["notice_day"] <= trade_day:
+            visible = snapshot
+        else:
+            break
+    return visible
+
+
+def _allowed_review_statuses(min_review_status: str) -> set[str]:
+    if min_review_status == "reviewed":
+        return {"reviewed"}
+    if min_review_status == "needs_check":
+        return {"reviewed", "needs_check"}
+    if min_review_status == "unreviewed":
+        return {"reviewed", "needs_check", "unreviewed"}
+    raise ValueError("min_review_status must be reviewed, needs_check, or unreviewed")
 
 
 def _trailing_dividend_yield(events: list[DividendEvent], trade_day: date, close: float) -> float:
@@ -388,6 +443,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--benchmark-fq", default="pre", choices=["pre", "post", "none"])
     parser.add_argument("--dividend-csv", type=Path)
     parser.add_argument("--dividend-tax-rate", type=float, default=0.2)
+    parser.add_argument("--bank-quality-csv", type=Path)
+    parser.add_argument("--bank-quality-min-review-status", choices=["reviewed", "needs_check", "unreviewed"], default="needs_check")
     args = parser.parse_args(argv)
     result = collect_joinquant_basic_pit_panel(
         args.scaffold_panel,
@@ -399,6 +456,8 @@ def main(argv: list[str] | None = None) -> int:
         benchmark_fq=None if args.benchmark_fq == "none" else args.benchmark_fq,
         dividend_csv=args.dividend_csv,
         dividend_tax_rate=args.dividend_tax_rate,
+        bank_quality_csv=args.bank_quality_csv,
+        bank_quality_min_review_status=args.bank_quality_min_review_status,
     )
     print(result.panel_path)
     return 0

@@ -1,0 +1,223 @@
+{
+  "meta": {
+    "strategy_id": "bank_value_quality_v2",
+    "name": "Bank Value Quality V2",
+    "objective": "Define a citation-backed and validation-ready bank-sector value strategy that separates value alpha hypotheses from value-trap controls and defensive risk-control candidates.",
+    "status": "engineering_test_candidate_eastmoney_quality_proxy_pending_quant_validation",
+    "created_on": "2026-07-15"
+  },
+  "universe": {
+    "name": "A-share listed banks",
+    "construction": "point_in_time_bank_industry_membership_excluding_st_suspended_limit_blocked_and_newly_listed_under_180_days",
+    "point_in_time": true,
+    "minimum_rebalance_coverage_ratio": 0.8,
+    "coverage_policy": "skip_rebalance_date_if_required_factor_coverage_below_threshold"
+  },
+  "data": {
+    "vendor": "JoinQuant market and valuation data plus reconstructed bank-specific indicators and listed-bank disclosure fallback",
+    "price_frequency": "daily",
+    "financial_as_of_policy": "announcement_date",
+    "price_adjustment": {
+      "research_panel": "pre_adjusted_total_return_or_raw_price_plus_cash_dividend",
+      "execution_panel": "unadjusted_real_open_close_plus_explicit_cash_dividend",
+      "platform_confirmation_panel": "JoinQuant fq=None stock prices and JoinQuant-compatible benchmark series"
+    },
+    "window": {
+      "research_start": "2011-07-14",
+      "research_end": "2026-07-14",
+      "platform_confirmation_only_start": "2021-05-01",
+      "platform_confirmation_only_end": "2026-05-31"
+    },
+    "bank_indicator_policy": "Do not use deprecated JoinQuant bank_indicator. Use Eastmoney annual-report extraction, reconstructed ratios, visible financial statements, annual/interim report extraction, review_status, and source confidence labels."
+  },
+  "signals": {
+    "factors": [
+      {
+        "name": "low_price_to_book",
+        "source": "valuation",
+        "role": "primary_value_signal",
+        "direction": "lower_is_better",
+        "definition": "Price-to-book ratio using point-in-time market value and latest visible book equity.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security",
+        "winsorize": "rebalance_cross_section_mad_3",
+        "normalize": "rebalance_cross_section_rank_zscore",
+        "evidence_status": "hypothesis_only"
+      },
+      {
+        "name": "sustainable_dividend_yield",
+        "source": "dividend_records_and_financial_statement",
+        "role": "shareholder_return_signal",
+        "direction": "higher_is_better",
+        "definition": "Trailing announced cash dividend yield, penalized when payout is unsupported by visible ROE or capital adequacy.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 1,
+        "missing_policy": "set_to_zero_if_no_visible_cash_dividend",
+        "winsorize": "rebalance_cross_section_mad_3",
+        "normalize": "rebalance_cross_section_rank_zscore",
+        "evidence_status": "hypothesis_only"
+      },
+      {
+        "name": "roe_quality",
+        "source": "financial_statement",
+        "role": "profitability_quality_signal",
+        "direction": "higher_is_better",
+        "definition": "Visible ROE level and stability, with high ROE penalized if driven by excessive leverage or weak provisioning.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 90,
+        "missing_policy": "drop_security",
+        "winsorize": "rebalance_cross_section_mad_3",
+        "normalize": "rebalance_cross_section_rank_zscore",
+        "evidence_status": "hypothesis_only"
+      },
+      {
+        "name": "asset_quality_trend",
+        "source": "reconstructed_bank_indicator_or_report_extraction",
+        "role": "value_trap_guard",
+        "direction": "higher_is_better",
+        "definition": "Composite score rewarding stable or improving NPL, special-mention loan, overdue loan, and credit-cost indicators.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 90,
+        "missing_policy": "drop_security_if_unavailable_after_source_review",
+        "winsorize": "rebalance_cross_section_mad_3",
+        "normalize": "rebalance_cross_section_rank_zscore",
+        "evidence_status": "hypothesis_only"
+      },
+      {
+        "name": "provision_buffer",
+        "source": "reconstructed_bank_indicator_or_report_extraction",
+        "role": "value_trap_guard",
+        "direction": "higher_is_better",
+        "definition": "Provision coverage and loan-loss reserve strength relative to asset-quality trend.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 90,
+        "missing_policy": "drop_security_if_unavailable_after_source_review",
+        "winsorize": "rebalance_cross_section_mad_3",
+        "normalize": "rebalance_cross_section_rank_zscore",
+        "evidence_status": "hypothesis_only"
+      },
+      {
+        "name": "capital_resilience",
+        "source": "annual_or_interim_report_extraction",
+        "role": "value_trap_guard",
+        "direction": "higher_is_better",
+        "definition": "Core tier 1 capital adequacy ratio and capital surplus over regulatory minimum, aligned by announcement date.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 90,
+        "missing_policy": "drop_security_if_unavailable_after_source_review",
+        "winsorize": "rebalance_cross_section_mad_3",
+        "normalize": "rebalance_cross_section_rank_zscore",
+        "evidence_status": "hypothesis_only"
+      }
+    ],
+    "scoring": {
+      "method": "two_layer_score",
+      "normalization_scope": "rebalance_cross_section_common_sample",
+      "value_score": {
+        "low_price_to_book": 0.6,
+        "sustainable_dividend_yield": 0.4
+      },
+      "quality_score": {
+        "roe_quality": 0.35,
+        "asset_quality_trend": 0.25,
+        "provision_buffer": 0.2,
+        "capital_resilience": 0.2
+      },
+      "final_score": "0.55 * value_score + 0.45 * quality_score",
+      "value_trap_guard": {
+        "enabled": true,
+        "rule": "A low-valuation stock cannot enter the portfolio if quality_score is below the bank-universe median or if asset_quality_trend is in the bottom quartile.",
+        "status": "hypothesis_only_pending_validation"
+      }
+    }
+  },
+  "schedule": {
+    "signal_frequency": "quarterly_after_financial_disclosure",
+    "rebalance_frequency": "quarterly",
+    "rebalance_rule": "first_tradable_day_after_required_financial_data_visibility_check",
+    "rebalance_day_robustness": [
+      "first_tradable_day",
+      "fifth_tradable_day",
+      "tenth_tradable_day"
+    ]
+  },
+  "portfolio": {
+    "selection_count": 6,
+    "weighting": "equal_weight_after_value_trap_guard",
+    "max_position_weight": 0.18,
+    "min_position_weight": 0.05,
+    "cash_policy": "hold_residual_cash_when_fewer_than_6_banks_pass_filters",
+    "lot_policy": "round_down_to_100_share_lot_and_reallocate_residual_cash_at_next_rebalance"
+  },
+  "risk": {
+    "defensive_asset": "cash",
+    "defensive_rule": {
+      "enabled": false,
+      "name": "none_for_alpha_strategy",
+      "description": "No defensive overlay is active in the base alpha strategy. Defensive rules are tested separately as risk-control candidates."
+    },
+    "individual_stop_loss_take_profit": {
+      "enabled": false,
+      "reason": "Fixed price stops are not part of the value thesis and require a separate risk-control hypothesis."
+    },
+    "defensive_overlay_candidate": {
+      "enabled_for_research_only": true,
+      "name": "bank_etf_trend_state",
+      "benchmark": "512800.XSHG",
+      "rule": "If previous close is below the pre-specified 252-day moving average, test 50 percent target exposure as a risk-control candidate.",
+      "status": "risk_control_candidate_not_alpha_evidence"
+    }
+  },
+  "validation": {
+    "method": "rolling_common_sample_validation",
+    "train_years": 5,
+    "test_years": 2,
+    "review_years": 1,
+    "required_tests": [
+      "data_lineage_and_point_in_time_audit",
+      "factor_coverage_by_rebalance_date",
+      "IC_and_RankIC_by_factor",
+      "quantile_or_top_bottom_group_spread",
+      "low_pb_baseline_comparison",
+      "equal_weight_bank_basket_baseline",
+      "leave_one_factor_out_ablation",
+      "weight_perturbation_robustness",
+      "rebalance_day_robustness",
+      "transaction_cost_sensitivity",
+      "dividend_treatment_sensitivity",
+      "defensive_overlay_separate_risk_control_test",
+      "local_vs_joinquant_daily_attribution"
+    ],
+    "acceptance_rule": "Approve for engineering only if value and quality layers improve common-sample rolling evidence versus low-PB-only and equal-bank baselines without relying on the 2021-05 to 2026-05 platform-confirmation window."
+  },
+  "execution": {
+    "commission_bps": 3,
+    "slippage_bps": 5,
+    "tax_policy": "China A-share sell-side stamp duty when applicable",
+    "dividend_tax_policy": "Use platform-compatible cash dividend treatment in execution confirmation; keep research total-return treatment separately labeled.",
+    "suspension_policy": "skip_untradeable",
+    "limit_policy": "skip_limit_blocked",
+    "stress_scenarios": [
+      "base_cost",
+      "cost_10bps",
+      "cost_30bps",
+      "delay_1_trading_day",
+      "delay_3_trading_days"
+    ]
+  },
+  "outputs": {
+    "save_holdings": true,
+    "save_rebalance_signals": true,
+    "report": "markdown",
+    "required_reports": [
+      "research_proposal",
+      "data_lineage_report",
+      "factor_validation_report",
+      "robustness_report",
+      "leakage_audit_report",
+      "attribution_report",
+      "project_manager_decision_log"
+    ]
+  }
+}

@@ -13,7 +13,7 @@ from statistics import mean, median, pstdev
 from typing import Any
 
 from v5.engine import load_spec
-from v5.validation_runner import _apply_value_trap_guard, _score_date_rows
+from v5.scoring import apply_value_trap_guard, score_rows
 
 
 DEFAULT_BACKTEST_START = "2021-05-01"
@@ -183,8 +183,6 @@ def _build_period_returns(
     min_required_coverage = math.ceil(max_date_coverage * min_coverage_ratio) if max_date_coverage else 0
 
     selection_count = int(raw_spec["portfolio"]["selection_count"])
-    factors = raw_spec["signals"]["factors"]
-    weights = raw_spec["signals"]["scoring"].get("weights", {})
     period_rows: list[dict[str, Any]] = []
     holding_rows: list[dict[str, Any]] = []
     strategy_nav = 1.0
@@ -206,8 +204,8 @@ def _build_period_returns(
             )
             continue
 
-        scored = _score_date_rows(date_rows, factors, weights)
-        eligible = _apply_value_trap_guard(scored)
+        scored, _used_factors = score_rows(raw_spec, date_rows)
+        eligible = apply_value_trap_guard(raw_spec, scored)
         selected = sorted(eligible, key=lambda item: item["score"], reverse=True)[:selection_count]
         selected_count = len(selected)
         cash_weight = max(0.0, 1.0 - (selected_count / selection_count))
@@ -277,8 +275,6 @@ def _build_joinquant_like_period_returns(
     max_date_coverage = max((len(date_rows) for date_rows in by_date.values()), default=0)
     min_required_coverage = math.ceil(max_date_coverage * options.min_coverage_ratio) if max_date_coverage else 0
     selection_count = int(raw_spec["portfolio"]["selection_count"])
-    factors = raw_spec["signals"]["factors"]
-    weights = raw_spec["signals"]["scoring"].get("weights", {})
 
     cash = float(options.initial_cash)
     positions: dict[str, int] = {}
@@ -313,8 +309,8 @@ def _build_joinquant_like_period_returns(
         }
         last_prices.update(current_prices)
 
-        scored = _score_date_rows(date_rows, factors, weights)
-        eligible = _apply_value_trap_guard(scored)
+        scored, _used_factors = score_rows(raw_spec, date_rows)
+        eligible = apply_value_trap_guard(raw_spec, scored)
         selected = sorted(eligible, key=lambda item: item["score"], reverse=True)[:selection_count]
         selected_codes = [row["code"] for row in selected]
         selected_by_code = {row["code"]: row for row in selected}

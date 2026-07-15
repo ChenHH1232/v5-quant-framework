@@ -25,6 +25,7 @@ Validate research hypotheses with statistical evidence while preserving out-of-s
 - Detect overfitting and test-period contamination.
 - Produce evidence for acceptance, rejection, or pending status.
 - Apply `statistical-validation-protocol` for V4-derived factor validation, annual refresh, walk-forward, robustness, leave-one-out, common-sample comparison, and final freeze packets.
+- Apply `knowledge/quant_validation_agent/methodology/stock_price_time_series_standards.md` whenever validating stock prices, ETF prices, benchmark prices, price-derived factors, strategy daily returns, active returns, or defensive overlays.
 
 ## Never Do
 
@@ -59,6 +60,9 @@ When validating a hypothesis, include:
 Hypothesis Tested:
 Data Window:
 Point-in-Time Assumptions:
+Price / Return Definition:
+Price Adjustment And Dividend Treatment:
+Benchmark And Beta Treatment:
 Methods:
 Evidence Summary:
 Robustness Checks:
@@ -73,3 +77,5 @@ Next Agent: Engineering Agent or Research Agent
 Evidence must be reproducible, separated by time, and reported with weaknesses visible. A good-looking aggregate result is not enough if yearly behavior, turnover, missingness, or validation separation is poor.
 
 Use the V4-derived statistical protocol when deciding whether evidence is strong enough to accept, reject, archive, or keep a candidate pending.
+
+For stock-price-related evidence, unclear price adjustment, unclear dividend treatment, uncorrected overlapping forward returns, price-level regressions without stationarity or cointegration justification, or benchmark exposure misreported as alpha are blocker issues.

@@ -13,8 +13,13 @@ from v5.benchmark_runner import (
 from v5.data_runner import collect_panel_from_v4_raw, write_collection_manifest
 from v5.daily_backtest import run_daily_joinquant_like_backtest
 from v5.dividend_runner import DEFAULT_DATABASE_DIR, DEFAULT_DIVIDEND_PROCESSED, collect_bank_dividends
+from v5.eastmoney_bank_indicator_runner import (
+    DEFAULT_V4_EXTRACTED_VALUES,
+    collect_eastmoney_bank_indicators,
+)
 from v5.engine import RunBlockedError, run_strategy, validate_spec_file
 from v5.joinquant_real_data_runner import collect_joinquant_real_data
+from v5.joinquant_capability_probe import run_joinquant_capability_probe
 from v5.local_backtest import DEFAULT_BACKTEST_END, DEFAULT_BACKTEST_START, BacktestOptions, run_local_backtest
 from v5.formal_validation_runner import run_formal_validation
 from v5.platform_attribution_runner import run_platform_attribution
@@ -65,6 +70,15 @@ def main(argv: list[str] | None = None) -> int:
     benchmark_parser.add_argument("--start-date", default="2011-01-01")
     benchmark_parser.add_argument("--end-date", default="2026-07-14")
 
+    eastmoney_parser = subparsers.add_parser("collect-eastmoney-bank-indicators")
+    eastmoney_parser.add_argument("--source-csv", type=Path, default=DEFAULT_V4_EXTRACTED_VALUES)
+    eastmoney_parser.add_argument("--out-dir", type=Path, default=DEFAULT_DATABASE_DIR / "processed")
+    eastmoney_parser.add_argument(
+        "--min-review-status",
+        choices=["reviewed", "needs_check", "unreviewed"],
+        default="needs_check",
+    )
+
     research_validate_parser = subparsers.add_parser("validate-research")
     research_validate_parser.add_argument("spec", type=Path)
     research_validate_parser.add_argument("panel", type=Path)
@@ -74,6 +88,7 @@ def main(argv: list[str] | None = None) -> int:
     formal_validate_parser.add_argument("spec", type=Path)
     formal_validate_parser.add_argument("panel", type=Path)
     formal_validate_parser.add_argument("--out", type=Path, default=Path("validation_formal"))
+    formal_validate_parser.add_argument("--experiment-layer", default="research_pit_validation")
 
     local_backtest_parser = subparsers.add_parser("local-backtest")
     local_backtest_parser.add_argument("spec", type=Path)
@@ -108,6 +123,23 @@ def main(argv: list[str] | None = None) -> int:
     daily_backtest_parser.add_argument("--benchmark-id", default=DEFAULT_BENCHMARK_ID)
     daily_backtest_parser.add_argument("--execution-price-csv", type=Path)
     daily_backtest_parser.add_argument("--dividend-cash-csv", type=Path)
+    daily_backtest_parser.add_argument("--eastmoney-quality-csv", type=Path)
+    daily_backtest_parser.add_argument(
+        "--eastmoney-min-review-status",
+        choices=["reviewed", "needs_check", "unreviewed"],
+        default="needs_check",
+    )
+    daily_backtest_parser.add_argument(
+        "--eastmoney-visibility-mode",
+        choices=["notice_date", "joinquant_source_year"],
+        default="notice_date",
+    )
+    daily_backtest_parser.add_argument(
+        "--experiment-layer",
+        choices=["research_pit_validation", "platform_replication", "engineering_smoke_test", "paper_trading"],
+        default="engineering_smoke_test",
+    )
+    daily_backtest_parser.add_argument("--snapshot-out", type=Path)
     daily_backtest_parser.add_argument("--out", type=Path, default=Path("local_daily_backtests"))
     daily_backtest_parser.add_argument("--start-date", default=DEFAULT_BACKTEST_START)
     daily_backtest_parser.add_argument("--end-date", default=DEFAULT_BACKTEST_END)
@@ -127,6 +159,9 @@ def main(argv: list[str] | None = None) -> int:
     jq_real_parser.add_argument("--dividend-csv", type=Path)
     jq_real_parser.add_argument("--dividend-tax-rate", type=float, default=0.2)
 
+    jq_probe_parser = subparsers.add_parser("probe-joinquant-capabilities")
+    jq_probe_parser.add_argument("--out-dir", type=Path, default=DEFAULT_DATABASE_DIR / "manifests")
+
     universe_parser = subparsers.add_parser("build-universe")
     universe_parser.add_argument("panel", type=Path)
     universe_parser.add_argument("execution_price_csv", type=Path)
@@ -138,6 +173,9 @@ def main(argv: list[str] | None = None) -> int:
     attribution_parser.add_argument("joinquant_daily_csv", type=Path)
     attribution_parser.add_argument("--out", type=Path, default=Path("platform_attribution"))
     attribution_parser.add_argument("--strategy-id", default="bank_value_15y")
+    attribution_parser.add_argument("--local-rebalance-signals-csv", type=Path)
+    attribution_parser.add_argument("--local-trades-csv", type=Path)
+    attribution_parser.add_argument("--local-dividends-csv", type=Path)
 
     args = parser.parse_args(argv)
 
@@ -182,11 +220,19 @@ def main(argv: list[str] | None = None) -> int:
             result = collect_bank_benchmarks(args.database_dir, args.start_date, args.end_date)
             print(result.processed_path)
             return 0
+        if args.command == "collect-eastmoney-bank-indicators":
+            result = collect_eastmoney_bank_indicators(
+                args.source_csv,
+                args.out_dir,
+                args.min_review_status,
+            )
+            print(result.quality_path)
+            return 0
         if args.command == "validate-research":
             print(validate_panel(args.spec, args.panel, args.out))
             return 0
         if args.command == "validate-formal":
-            print(run_formal_validation(args.spec, args.panel, args.out))
+            print(run_formal_validation(args.spec, args.panel, args.out, args.experiment_layer))
             return 0
         if args.command == "local-backtest":
             report = run_local_backtest(
@@ -230,6 +276,11 @@ def main(argv: list[str] | None = None) -> int:
                 benchmark_id=args.benchmark_id,
                 execution_price_csv=args.execution_price_csv,
                 dividend_cash_csv=args.dividend_cash_csv,
+                eastmoney_quality_csv=args.eastmoney_quality_csv,
+                eastmoney_min_review_status=args.eastmoney_min_review_status,
+                eastmoney_visibility_mode=args.eastmoney_visibility_mode,
+                experiment_layer=args.experiment_layer,
+                snapshot_out=args.snapshot_out,
             )
             print(report)
             return 0
@@ -246,11 +297,24 @@ def main(argv: list[str] | None = None) -> int:
             )
             print(result.price_path)
             return 0
+        if args.command == "probe-joinquant-capabilities":
+            print(run_joinquant_capability_probe(args.out_dir))
+            return 0
         if args.command == "build-universe":
             print(build_point_in_time_universe(args.panel, args.execution_price_csv, args.out, args.strategy_id))
             return 0
         if args.command == "platform-attribution":
-            print(run_platform_attribution(args.local_daily_csv, args.joinquant_daily_csv, args.out, args.strategy_id))
+            print(
+                run_platform_attribution(
+                    args.local_daily_csv,
+                    args.joinquant_daily_csv,
+                    args.out,
+                    args.strategy_id,
+                    local_rebalance_signals_csv=args.local_rebalance_signals_csv,
+                    local_trades_csv=args.local_trades_csv,
+                    local_dividends_csv=args.local_dividends_csv,
+                )
+            )
             return 0
     except (RunBlockedError, RuntimeError) as exc:
         print(str(exc), file=sys.stderr)

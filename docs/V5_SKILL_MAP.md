@@ -162,6 +162,7 @@ Use these skills:
 - `strategy-spec`: convert approved research into a structured contract.
 - `data-leakage-audit`: check future leakage, look-ahead bias, survivorship bias, and data leakage.
 - `execution-consistency`: compare local logic and platform behavior.
+- `joinquant-local-replication`: run local JoinQuant-compatible daily simulation, write snapshots, and prepare platform attribution.
 - `joinquant-strategy-exporter`: export the frozen strategy to JoinQuant code.
 - `execution-stress-test`: test transaction cost, delay, and turnover assumptions.
 
@@ -202,7 +203,7 @@ Outputs:
 | Project Manager Agent | `v5-controller`, `candidate-governance`, `research-archive-freeze`, `skill-lifecycle-manager` | `research-report`, `strategy-attribution`, `execution-stress-test` |
 | Research Agent | `research-agent`, `factor-research`, `strategy-spec`, `momentum-research`, `mean-reversion-research`, `defensive-overlay-research`, `state-routing-research` | `allocation-selection-separator`, `data-source-router` |
 | Quant Validation Agent | `quant-validation-agent`, `statistical-validation-protocol`, `rolling-validation`, `strategy-attribution` | `allocation-selection-separator`, `candidate-governance`, `execution-stress-test` |
-| Engineering Agent | `engineering-agent`, `strategy-spec`, `data-leakage-audit`, `execution-consistency`, `joinquant-strategy-exporter` | `execution-stress-test`, `data-source-router`, `financial-statement-standardizer` |
+| Engineering Agent | `engineering-agent`, `strategy-spec`, `data-leakage-audit`, `joinquant-local-replication`, `execution-consistency`, `joinquant-strategy-exporter` | `execution-stress-test`, `data-source-router`, `financial-statement-standardizer` |
 
 ## Default Skill Chain
 
@@ -221,6 +222,7 @@ v5-controller
   -> strategy-spec
   -> data-leakage-audit
   -> execution-stress-test
+  -> joinquant-local-replication
   -> joinquant-strategy-exporter
   -> execution-consistency
   -> research-archive-freeze

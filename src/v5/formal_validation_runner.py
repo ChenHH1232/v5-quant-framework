@@ -9,34 +9,108 @@ from statistics import mean
 from typing import Any
 
 from v5.engine import load_spec
+from v5.experiment_governance import build_run_manifest, write_run_manifest
 from v5.validation_runner import _apply_value_trap_guard, _score_date_rows, _to_float
 
 
-def run_formal_validation(spec_path: Path, panel_path: Path, out_dir: Path) -> Path:
+def run_formal_validation(
+    spec_path: Path,
+    panel_path: Path,
+    out_dir: Path,
+    experiment_layer: str = "research_pit_validation",
+) -> Path:
+    if experiment_layer != "research_pit_validation":
+        raise ValueError("formal validation must run as research_pit_validation")
     spec = load_spec(spec_path)
     rows = _load_panel(panel_path)
     out = out_dir / spec.strategy_id
     out.mkdir(parents=True, exist_ok=True)
+    leakage_rows = _notice_date_leakage_audit(rows)
+    rolling_rows = _rolling_validation(rows, spec.raw)
     baseline_rows = _baseline_tests(rows, spec.raw)
     ablation_rows = _ablation_tests(rows, spec.raw)
     robustness_rows = _robustness_tests(rows, spec.raw)
+    _write_csv(out / "notice_date_leakage_audit.csv", list(leakage_rows[0].keys()) if leakage_rows else ["check", "status", "detail"], leakage_rows)
+    _write_csv(out / "rolling_validation.csv", list(rolling_rows[0].keys()) if rolling_rows else ["window", "status"], rolling_rows)
     _write_csv(out / "baseline_tests.csv", list(baseline_rows[0].keys()), baseline_rows)
     _write_csv(out / "ablation_tests.csv", list(ablation_rows[0].keys()), ablation_rows)
     _write_csv(out / "robustness_tests.csv", list(robustness_rows[0].keys()), robustness_rows)
     summary = {
         "strategy_id": spec.strategy_id,
+        "experiment_layer": experiment_layer,
         "panel": str(panel_path),
         "row_count": len(rows),
         "date_count": len({row["trade_date"] for row in rows}),
         "status": "formal_validation_completed_not_acceptance",
+        "notice_date_leakage_audit": leakage_rows,
+        "rolling_validation": rolling_rows,
         "baseline_tests": baseline_rows,
         "ablation_tests": ablation_rows,
         "robustness_tests": robustness_rows,
         "governance": "Do not use 2021-2026 platform-confirmation results for tuning. Single-model acceptance requires rolling validation.",
     }
     _write_json(out / "formal_validation_summary.json", summary)
+    write_run_manifest(
+        out / "RUN_MANIFEST.json",
+        build_run_manifest(
+            strategy_id=spec.strategy_id,
+            experiment_layer=experiment_layer,
+            command_profile={"spec": str(spec_path), "panel": str(panel_path), "out": str(out_dir)},
+            outputs={
+                "formal_validation_summary": "formal_validation_summary.json",
+                "formal_validation_report": "formal_validation_report.md",
+                "notice_date_leakage_audit": "notice_date_leakage_audit.csv",
+                "rolling_validation": "rolling_validation.csv",
+                "baseline_tests": "baseline_tests.csv",
+                "ablation_tests": "ablation_tests.csv",
+                "robustness_tests": "robustness_tests.csv",
+            },
+            warnings=["Formal validation output is evidence, not automatic strategy acceptance."],
+        ),
+    )
     _write_report(out / "formal_validation_report.md", summary)
     return out / "formal_validation_report.md"
+
+
+def _notice_date_leakage_audit(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    checked = 0
+    missing_notice = 0
+    violations = 0
+    for row in rows:
+        fields_present = any(row.get(name) not in {None, ""} for name in ["asset_quality_trend", "provision_buffer", "capital_resilience"])
+        if not fields_present:
+            continue
+        checked += 1
+        notice = row.get("eastmoney_quality_notice_date") or row.get("notice_date") or row.get("announce_date")
+        if not notice:
+            missing_notice += 1
+            continue
+        if str(notice)[:10] > str(row.get("trade_date", ""))[:10]:
+            violations += 1
+    status = "pass" if violations == 0 and missing_notice == 0 else "needs_review"
+    return [
+        {
+            "check": "bank_quality_notice_date_visibility",
+            "status": status,
+            "checked_rows": checked,
+            "missing_notice_date_rows": missing_notice,
+            "future_notice_violations": violations,
+            "detail": "Quality fields used in formal validation must have notice_date <= trade_date.",
+        }
+    ]
+
+
+def _rolling_validation(rows: list[dict[str, Any]], raw: dict[str, Any]) -> list[dict[str, Any]]:
+    years = sorted({str(row["trade_date"])[:4] for row in rows if row.get("trade_date")})
+    result = []
+    if len(years) < 4:
+        return [{"window": "insufficient_history", "status": "skipped", "cum_return": None, "positive_ratio": None, "mean_selected_count": None}]
+    for index in range(2, len(years)):
+        test_year = years[index]
+        window_rows = [row for row in rows if str(row["trade_date"]).startswith(test_year)]
+        case = _strategy_case(f"rolling_test_{test_year}", window_rows, raw, mode="composite")
+        result.append({"window": test_year, "status": "completed", **case})
+    return result
 
 
 def _baseline_tests(rows: list[dict[str, Any]], raw: dict[str, Any]) -> list[dict[str, Any]]:
@@ -141,10 +215,11 @@ def _compound(returns: list[float]) -> float | None:
 
 def _write_report(path: Path, summary: dict[str, Any]) -> None:
     lines = [f"# Formal Validation Report: {summary['strategy_id']}", "", f"- Status: `{summary['status']}`", ""]
-    for section in ["baseline_tests", "ablation_tests", "robustness_tests"]:
+    for section in ["notice_date_leakage_audit", "rolling_validation", "baseline_tests", "ablation_tests", "robustness_tests"]:
         lines.extend([f"## {section}", ""])
         for row in summary[section]:
-            lines.append(f"- `{row['case']}`: cum_return=`{row['cum_return']}`, positive_ratio=`{row['positive_ratio']}`, mean_selected_count=`{row['mean_selected_count']}`")
+            label = row.get("case") or row.get("check") or row.get("window")
+            lines.append(f"- `{label}`: {row}")
         lines.append("")
     lines.extend(["## Governance", "", summary["governance"], ""])
     path.write_text("\n".join(lines), encoding="utf-8")
@@ -168,8 +243,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("spec", type=Path)
     parser.add_argument("panel", type=Path)
     parser.add_argument("--out", type=Path, default=Path("validation_formal"))
+    parser.add_argument("--experiment-layer", default="research_pit_validation")
     args = parser.parse_args(argv)
-    print(run_formal_validation(args.spec, args.panel, args.out))
+    print(run_formal_validation(args.spec, args.panel, args.out, args.experiment_layer))
     return 0
 
 

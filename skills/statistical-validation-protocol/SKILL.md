@@ -22,6 +22,7 @@ Turn research hypotheses into reproducible evidence without letting test results
 - Compare candidates on common samples when possible.
 - Treat stronger return as insufficient unless stability, robustness, and financial meaning also survive.
 - Archive coherent but weaker branches instead of endlessly tuning them.
+- For stock-price-related evidence, enforce explicit price adjustment, dividend treatment, benchmark identity, stationarity treatment, and overlapping-return handling.
 
 ## Standard Validation Stack
 
@@ -37,6 +38,7 @@ For each factor, report:
 - train/test/review behavior;
 - yearly or fold-level instability;
 - source and point-in-time assumptions.
+- price / return definition and dividend treatment when the factor or target uses stock prices.
 
 ### 2. Annual Factor Refresh
 
@@ -126,6 +128,8 @@ Methods:
 Evidence Summary:
 Robustness Checks:
 Common-Sample Checks:
+Price / Return Treatment:
+Autocorrelation Or Overlap Handling:
 Leakage and Overfitting Risks:
 Decision:
 Reason:

@@ -11,6 +11,7 @@ from statistics import mean, median
 from typing import Any
 
 from v5.engine import load_spec
+from v5.scoring import apply_value_trap_guard, score_rows
 
 
 @dataclass(frozen=True)
@@ -125,16 +126,14 @@ def _factor_result(rows: list[dict[str, Any]], factor_name: str, direction: str)
 
 def _portfolio_backtest(rows: list[dict[str, Any]], raw_spec: dict[str, Any]) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     by_date = _group_by_date(rows)
-    factors = raw_spec["signals"]["factors"]
-    weights = raw_spec["signals"]["scoring"].get("weights", {})
     selection_count = int(raw_spec["portfolio"]["selection_count"])
 
     period_rows: list[dict[str, Any]] = []
     returns: list[float] = []
     cash_weights: list[float] = []
     for trade_date, date_rows in sorted(by_date.items()):
-        scored = _score_date_rows(date_rows, factors, weights)
-        eligible = _apply_value_trap_guard(scored)
+        scored, _used_factors = score_rows(raw_spec, date_rows)
+        eligible = apply_value_trap_guard(raw_spec, scored)
         selected = sorted(eligible, key=lambda item: item["score"], reverse=True)[:selection_count]
         if not selected:
             period_return = 0.0

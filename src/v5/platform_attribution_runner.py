@@ -6,6 +6,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+import re
 
 
 def run_platform_attribution(
@@ -51,6 +52,62 @@ def run_platform_attribution(
     return out / "platform_attribution_report.md"
 
 
+def run_position_attribution(
+    joinquant_position_csv: Path,
+    local_holdings_csv: Path,
+    out_dir: Path,
+    strategy_id: str = "bank_value_15y",
+) -> Path:
+    out = out_dir / f"{strategy_id}_positions"
+    out.mkdir(parents=True, exist_ok=True)
+    jq_positions, jq_cash_by_date, jq_value_by_date, encoding = _load_joinquant_positions(joinquant_position_csv)
+    local_positions = _load_local_holdings(local_holdings_csv)
+    normalized_path = out / "normalized_joinquant_positions.csv"
+    comparison_path = out / "position_comparison_summary.csv"
+    diff_path = out / "position_common_diffs.csv"
+    _write_csv(normalized_path, list(jq_positions[0].keys()) if jq_positions else [], jq_positions)
+    summary_rows, diff_rows = _compare_positions(jq_positions, local_positions, jq_cash_by_date, jq_value_by_date)
+    _write_csv(comparison_path, list(summary_rows[0].keys()) if summary_rows else [], summary_rows)
+    _write_csv(diff_path, list(diff_rows[0].keys()) if diff_rows else [], diff_rows)
+    summary = {
+        "strategy_id": strategy_id,
+        "joinquant_position_csv": str(joinquant_position_csv),
+        "local_holdings_csv": str(local_holdings_csv),
+        "encoding": encoding,
+        "joinquant_position_rows": len(jq_positions),
+        "joinquant_dates": len({row["trade_date"] for row in jq_positions}),
+        "local_dates": len({row["trade_date"] for row in local_positions}),
+        "date_range": _date_range(summary_rows),
+        "perfect_position_dates": sum(
+            1
+            for row in summary_rows
+            if row["only_jq_count"] == 0 and row["only_local_count"] == 0 and row["amount_abs_diff"] == 0
+        ),
+        "dates_with_code_mismatch": sum(1 for row in summary_rows if row["only_jq_count"] or row["only_local_count"]),
+        "dates_with_amount_diff": sum(1 for row in summary_rows if row["amount_abs_diff"] != 0),
+        "first_mismatch": next(
+            (
+                row
+                for row in summary_rows
+                if row["only_jq_count"] or row["only_local_count"] or row["amount_abs_diff"] != 0
+            ),
+            None,
+        ),
+        "outputs": {
+            "normalized_joinquant_positions": normalized_path.name,
+            "position_comparison_summary": comparison_path.name,
+            "position_common_diffs": diff_path.name,
+            "position_attribution_summary": "position_attribution_summary.json",
+            "position_attribution_report": "position_attribution_report.md",
+        },
+        "created_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
+        "note": "JoinQuant position exports are position/cash diagnostics. Daily NAV attribution still requires JoinQuant daily result CSV.",
+    }
+    _write_json(out / "position_attribution_summary.json", summary)
+    _write_position_report(out / "position_attribution_report.md", summary)
+    return out / "position_attribution_report.md"
+
+
 def _load_local(path: Path) -> dict[str, dict[str, str]]:
     with path.open("r", encoding="utf-8-sig", newline="") as handle:
         return {row["trade_date"][:10]: row for row in csv.DictReader(handle) if row.get("trade_date")}
@@ -79,8 +136,162 @@ def _load_joinquant(path: Path) -> dict[str, dict[str, float]]:
     raise RuntimeError(f"failed to read JoinQuant daily CSV: {last_error}")
 
 
+def _load_joinquant_positions(path: Path) -> tuple[list[dict[str, Any]], dict[str, float], dict[str, float], str]:
+    encodings = ["utf-8-sig", "gb18030", "gbk"]
+    last_error: Exception | None = None
+    for encoding in encodings:
+        try:
+            with path.open("r", encoding=encoding, newline="") as handle:
+                reader = csv.reader(handle)
+                next(reader, None)
+                rows = list(reader)
+            positions: list[dict[str, Any]] = []
+            cash_by_date: dict[str, float] = {}
+            value_by_date: dict[str, float] = {}
+            for row in rows:
+                if len(row) < 8:
+                    continue
+                day = row[0][:10]
+                target = row[2]
+                if target == "Cash":
+                    cash_by_date[day] = _parse_number(row[7]) or 0.0
+                    value_by_date.setdefault(day, cash_by_date[day])
+                    continue
+                code = _extract_joinquant_code(target)
+                if not code:
+                    continue
+                amount = int(round(_parse_number(row[4]) or 0.0))
+                close = _parse_number(row[6]) or 0.0
+                market_value = _parse_number(row[7]) or 0.0
+                total_value = _parse_number(row[15]) if len(row) > 16 else None
+                weight = _parse_number(row[16]) if len(row) > 16 else _parse_number(row[15])
+                if weight is not None:
+                    weight /= 100.0
+                if total_value is not None:
+                    value_by_date[day] = max(value_by_date.get(day, 0.0), total_value)
+                positions.append(
+                    {
+                        "trade_date": day,
+                        "code": code,
+                        "amount": amount,
+                        "close": close,
+                        "market_value": market_value,
+                        "weight": weight if weight is not None else "",
+                        "target_raw": target,
+                    }
+                )
+            return positions, cash_by_date, value_by_date, encoding
+        except Exception as exc:  # pragma: no cover - fallback path
+            last_error = exc
+    raise RuntimeError(f"failed to read JoinQuant position CSV: {last_error}")
+
+
+def _load_local_holdings(path: Path) -> list[dict[str, Any]]:
+    result: list[dict[str, Any]] = []
+    with path.open("r", encoding="utf-8-sig", newline="") as handle:
+        for row in csv.DictReader(handle):
+            if not row.get("trade_date") or not row.get("code"):
+                continue
+            result.append(
+                {
+                    "trade_date": row["trade_date"][:10],
+                    "code": row["code"],
+                    "amount": int(float(row.get("amount") or 0)),
+                    "close": _float(row.get("close")) or 0.0,
+                    "actual_weight": _float(row.get("actual_weight")) or 0.0,
+                }
+            )
+    return result
+
+
+def _compare_positions(
+    joinquant_positions: list[dict[str, Any]],
+    local_positions: list[dict[str, Any]],
+    joinquant_cash_by_date: dict[str, float],
+    joinquant_value_by_date: dict[str, float],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    jq_by_date: dict[str, dict[str, dict[str, Any]]] = {}
+    for row in joinquant_positions:
+        jq_by_date.setdefault(row["trade_date"], {})[row["code"]] = row
+    local_by_date: dict[str, dict[str, dict[str, Any]]] = {}
+    for row in local_positions:
+        local_by_date.setdefault(row["trade_date"], {})[row["code"]] = row
+    summary_rows: list[dict[str, Any]] = []
+    diff_rows: list[dict[str, Any]] = []
+    for day in sorted(set(jq_by_date) | set(local_by_date)):
+        jq_codes = set(jq_by_date.get(day, {}))
+        local_codes = set(local_by_date.get(day, {}))
+        common = jq_codes & local_codes
+        amount_abs_diff = sum(abs(jq_by_date[day][code]["amount"] - local_by_date[day][code]["amount"]) for code in common)
+        weight_abs_diff = sum(
+            abs((_coerce_float(jq_by_date[day][code].get("weight")) or 0.0) - local_by_date[day][code]["actual_weight"])
+            for code in common
+        )
+        only_jq = sorted(jq_codes - local_codes)
+        only_local = sorted(local_codes - jq_codes)
+        summary_rows.append(
+            {
+                "trade_date": day,
+                "jq_count": len(jq_codes),
+                "local_count": len(local_codes),
+                "common_count": len(common),
+                "only_jq_count": len(only_jq),
+                "only_local_count": len(only_local),
+                "amount_abs_diff": amount_abs_diff,
+                "weight_abs_diff": weight_abs_diff,
+                "jq_cash": joinquant_cash_by_date.get(day, ""),
+                "jq_portfolio_value": joinquant_value_by_date.get(day, ""),
+                "only_jq_codes": ";".join(only_jq),
+                "only_local_codes": ";".join(only_local),
+            }
+        )
+        for code in sorted(common):
+            jq = jq_by_date[day][code]
+            local = local_by_date[day][code]
+            amount_diff = jq["amount"] - local["amount"]
+            jq_weight = _coerce_float(jq.get("weight")) or 0.0
+            weight_diff = jq_weight - local["actual_weight"]
+            if amount_diff or abs(weight_diff) > 0.002:
+                diff_rows.append(
+                    {
+                        "trade_date": day,
+                        "code": code,
+                        "jq_amount": jq["amount"],
+                        "local_amount": local["amount"],
+                        "amount_diff": amount_diff,
+                        "jq_weight": jq_weight,
+                        "local_weight": local["actual_weight"],
+                        "weight_diff": weight_diff,
+                    }
+                )
+    return summary_rows, diff_rows
+
+
 def _pct(value: Any) -> float:
     return float(str(value).replace("%", "").strip()) / 100.0
+
+
+def _extract_joinquant_code(target: str) -> str | None:
+    match = re.search(r"\((\d{6}\.XS(?:HG|HE))\)", target or "")
+    return match.group(1) if match else None
+
+
+def _parse_number(value: Any) -> float | None:
+    if value in {None, ""}:
+        return None
+    text = str(value).replace(",", "").replace("%", "").strip()
+    if text == "-":
+        return None
+    text = re.sub(r"[^0-9.\-]", "", text)
+    if text in {"", "-"}:
+        return None
+    return float(text)
+
+
+def _coerce_float(value: Any) -> float | None:
+    if value in {None, ""}:
+        return None
+    return float(value)
 
 
 def _local_execution_diagnostics(
@@ -152,6 +363,12 @@ def _summary(rows: list[dict[str, Any]], local_daily_csv: Path, joinquant_daily_
     }
 
 
+def _date_range(rows: list[dict[str, Any]]) -> list[str]:
+    if not rows:
+        return []
+    return [rows[0]["trade_date"], rows[-1]["trade_date"]]
+
+
 def _write_report(path: Path, summary: dict[str, Any]) -> None:
     lines = [
         f"# Platform Attribution Report: {summary['strategy_id']}",
@@ -172,6 +389,35 @@ def _write_report(path: Path, summary: dict[str, Any]) -> None:
     path.write_text("\n".join(lines), encoding="utf-8")
 
 
+def _write_position_report(path: Path, summary: dict[str, Any]) -> None:
+    first = summary.get("first_mismatch") or {}
+    lines = [
+        f"# Position Attribution Report: {summary['strategy_id']}",
+        "",
+        f"- JoinQuant position rows: `{summary['joinquant_position_rows']}`",
+        f"- JoinQuant dates: `{summary['joinquant_dates']}`",
+        f"- Local holding dates: `{summary['local_dates']}`",
+        f"- Date range: `{summary['date_range']}`",
+        f"- Perfect matched dates: `{summary['perfect_position_dates']}`",
+        f"- Dates with code mismatch: `{summary['dates_with_code_mismatch']}`",
+        f"- Dates with amount diff: `{summary['dates_with_amount_diff']}`",
+        "",
+        "## First Mismatch",
+        "",
+        f"- Date: `{first.get('trade_date')}`",
+        f"- JoinQuant count: `{first.get('jq_count')}`",
+        f"- Local count: `{first.get('local_count')}`",
+        f"- Common count: `{first.get('common_count')}`",
+        f"- Only JoinQuant: `{first.get('only_jq_codes')}`",
+        f"- Only local: `{first.get('only_local_codes')}`",
+        f"- Amount abs diff: `{first.get('amount_abs_diff')}`",
+        "",
+        "This file diagnoses positions and cash. Use the JoinQuant daily result CSV for full NAV attribution.",
+        "",
+    ]
+    path.write_text("\n".join(lines), encoding="utf-8")
+
+
 def _write_csv(path: Path, fieldnames: list[str], rows: list[dict[str, Any]]) -> None:
     with path.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fieldnames)
@@ -187,25 +433,42 @@ def _write_json(path: Path, payload: dict[str, Any]) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="v5-platform-attribution")
-    parser.add_argument("local_daily_csv", type=Path)
-    parser.add_argument("joinquant_daily_csv", type=Path)
-    parser.add_argument("--out", type=Path, default=Path("platform_attribution"))
-    parser.add_argument("--strategy-id", default="bank_value_15y")
-    parser.add_argument("--local-rebalance-signals-csv", type=Path)
-    parser.add_argument("--local-trades-csv", type=Path)
-    parser.add_argument("--local-dividends-csv", type=Path)
+    subparsers = parser.add_subparsers(dest="command", required=True)
+    daily_parser = subparsers.add_parser("daily")
+    daily_parser.add_argument("local_daily_csv", type=Path)
+    daily_parser.add_argument("joinquant_daily_csv", type=Path)
+    daily_parser.add_argument("--out", type=Path, default=Path("platform_attribution"))
+    daily_parser.add_argument("--strategy-id", default="bank_value_15y")
+    daily_parser.add_argument("--local-rebalance-signals-csv", type=Path)
+    daily_parser.add_argument("--local-trades-csv", type=Path)
+    daily_parser.add_argument("--local-dividends-csv", type=Path)
+    position_parser = subparsers.add_parser("positions")
+    position_parser.add_argument("joinquant_position_csv", type=Path)
+    position_parser.add_argument("local_holdings_csv", type=Path)
+    position_parser.add_argument("--out", type=Path, default=Path("platform_attribution"))
+    position_parser.add_argument("--strategy-id", default="bank_value_15y")
     args = parser.parse_args(argv)
-    print(
-        run_platform_attribution(
-            args.local_daily_csv,
-            args.joinquant_daily_csv,
-            args.out,
-            args.strategy_id,
-            local_rebalance_signals_csv=args.local_rebalance_signals_csv,
-            local_trades_csv=args.local_trades_csv,
-            local_dividends_csv=args.local_dividends_csv,
+    if args.command == "daily":
+        print(
+            run_platform_attribution(
+                args.local_daily_csv,
+                args.joinquant_daily_csv,
+                args.out,
+                args.strategy_id,
+                local_rebalance_signals_csv=args.local_rebalance_signals_csv,
+                local_trades_csv=args.local_trades_csv,
+                local_dividends_csv=args.local_dividends_csv,
+            )
         )
-    )
+    if args.command == "positions":
+        print(
+            run_position_attribution(
+                args.joinquant_position_csv,
+                args.local_holdings_csv,
+                args.out,
+                args.strategy_id,
+            )
+        )
     return 0
 
 

@@ -15,6 +15,9 @@
 - [Bank industry research sources](references/bank_industry_research_sources.md) - pending collection.
 - [Bank market-view hypotheses](references/bank_market_view_hypotheses.md) - market views only, pending collection.
 - [Bank factor validation handoff](references/bank_factor_validation_handoff.md) - pending handoff to Quant Validation Agent.
+- [Utilities universe definition](references/utilities_universe_definition.md) - V5.1 operating-company universe boundary.
+- [Utilities data field map](references/utilities_data_field_map.md) - required PIT fields and source risks.
+- [Utilities validation handoff](references/utilities_validation_handoff.md) - Quant Validation Agent task requirements for Test-1.
 
 ## Factor Theory
 
@@ -23,6 +26,8 @@
 - [Bank stock value trap identification](factor_theory/bank_value_trap_identification.md) - citation-backed guard hypotheses, not accepted filters.
 - [Bank defensive and macro state variables](factor_theory/bank_defensive_macro_state_variables.md) - citation-backed risk-control candidates, not alpha evidence.
 - [Utilities value investing preparation note](factor_theory/utilities_value_investing_preparation_note.md) - initial V5.1 utilities economic logic, not validated factors.
+- [Utilities value investing framework](factor_theory/utilities_value_investing_framework.md) - V5.1 formal research-preparation framework.
+- [Utilities core factor hypotheses](factor_theory/utilities_core_factor_hypotheses.md) - candidate hypotheses for PIT validation, not accepted factors.
 
 ## Strategy Cases
 

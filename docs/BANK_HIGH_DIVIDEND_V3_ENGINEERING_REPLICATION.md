@@ -302,15 +302,86 @@ Diagnosis:
 - This explains why daily NAV divergence grows in `2026-04` to `2026-05`.
 - Therefore the current local-vs-JoinQuant gap should not be treated as platform execution mismatch until the local PIT panel is extended through `2026-04-01`.
 
-## 10. Next Engineering Action
+## 10. Extended Local PIT Panel Rerun
 
-Rebuild local PIT panel through the 2026-04 rebalance date and rerun local daily simulation, then rerun attribution:
+Engineering Agent extended the local scaffold and rebuilt the JoinQuant PIT panel through the `2026-04-01` rebalance:
 
-- update / collect the PIT panel so `2026-04-01` appears in `rebalance_signals.csv`;
-- rerun local `daily-backtest` with the same V3 formal-candidate settings;
-- rerun daily result attribution against `result_1 (16).csv`;
-- rerun transaction attribution against `transaction (1).csv`;
+```text
+data/processed/bank_value_15y_extended_202604/panel.csv
+数据库/processed/joinquant_basic_pit_panel_v4_legacy_quality_extended_202604/panel.csv
+```
+
+The extended PIT panel now contains:
+
+| Check | Result |
+| --- | ---: |
+| 2026-04-01 panel rows | 42 |
+| local rebalance signals | 20 |
+| 2026-04-01 candidate count | 42 |
+| 2026-04-01 guarded count | 21 |
+| 2026-04-01 selected count | 8 |
+
+Local extended daily simulation:
+
+```text
+local_daily_backtests_v3_formal_candidate_extended_202604/bank_high_dividend_sustainability_v3/
+```
+
+Key metrics after extension:
+
+| Metric | Extended Local | Fresh JoinQuant | Difference |
+| --- | ---: | ---: | ---: |
+| strategy return | 57.94% | 57.35% | +0.59 pct points |
+| annualized return | 9.83% | 9.67% | +0.16 pct points |
+| benchmark return | 25.16% | 26.51% | -1.35 pct points |
+| max drawdown | 17.24% | 17.06% | +0.18 pct points |
+| beta | 0.864 | 0.864 | aligned |
+| strategy volatility | 0.163 | 0.163 | aligned |
+| max drawdown interval | 2021-07-07,2022-10-31 | 2021/07/07,2022/10/31 | aligned |
+
+Fresh daily attribution after extension:
+
+```text
+platform_attribution_v3_formal_candidate_extended_202604/bank_high_dividend_sustainability_v3/
+```
+
+| Check | Before Extension | After Extension |
+| --- | ---: | ---: |
+| matched days | 1228 | 1228 |
+| final strategy diff | +4.41 pct points | +0.59 pct points |
+| max absolute strategy diff | 7.19 pct points | 2.52 pct points |
+| final benchmark diff | -1.35 pct points | -1.35 pct points |
+| local rebalance count | 19 | 20 |
+| local trade count | 192 | 201 |
+
+Fresh transaction attribution after extension:
+
+```text
+platform_attribution_v3_formal_candidate_extended_202604_transactions/bank_high_dividend_sustainability_v3_transactions_transactions/
+```
+
+| Check | Before Extension | After Extension |
+| --- | ---: | ---: |
+| JoinQuant transaction rows | 206 | 206 |
+| local transaction rows | 191 | 200 |
+| matched transaction keys | 189 | 198 |
+| JoinQuant-only keys | 17 | 8 |
+| local-only keys | 2 | 2 |
+| JoinQuant transaction dates | 20 | 20 |
+| local transaction dates | 19 | 20 |
+
+Interpretation:
+
+- The missing `2026-04-01` local signal was the main cause of the previous 2026-04 to 2026-05 divergence.
+- After adding the missing PIT date, strategy return difference narrows from 4.41 percentage points to 0.59 percentage points.
+- Remaining differences are now plausibly due to execution timing (`09:40` versus local daily-open approximation), hundred-share rounding, tiny order differences, cash/dividend timing, and benchmark price convention.
+- The benchmark difference remains unchanged because it comes from the local benchmark series versus JoinQuant platform benchmark convention, not from the strategy signal.
+
+## 11. Next Engineering Action
+
+Use fresh JoinQuant formal-candidate exports to finish strict platform attribution:
+
 - position CSV;
 - log TXT containing value-trap guard application lines.
 
-Only after that fresh attribution should Project Manager Agent decide whether platform replication passes for the formal candidate.
+If position and log attribution do not reveal a new mismatch, Project Manager Agent can mark V3 formal candidate platform replication as passed with minor expected execution/benchmark residuals.

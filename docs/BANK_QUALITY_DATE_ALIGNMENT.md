@@ -57,6 +57,12 @@ Build a low-confidence JoinQuant availability proxy from V4 first-visible dates:
 python -m v5.cli build-joinquant-availability-proxy
 ```
 
+Collect real JoinQuant `bank_indicator.pubDate` availability dates through DataJQ/JQData:
+
+```text
+python -m v5.cli collect-joinquant-bank-indicator-pubdates
+```
+
 Optional JoinQuant availability evidence can be provided with:
 
 ```text
@@ -113,11 +119,25 @@ Tushare collection result:
 | collected annual disclosure rows | 310 |
 | warnings | 0 |
 
+DataJQ/JQData finding:
+
+| Probe | Result |
+| --- | --- |
+| authentication | passed |
+| `jqdatasdk.bank_indicator` object | exists |
+| `get_fundamentals(..., date=trade_date)` for `bank_indicator` | returns empty frames |
+| `get_fundamentals(..., statDate=year)` for `bank_indicator` | returns data and `pubDate` |
+| collected JoinQuant `pubDate` rows | 310 / 310 |
+
+Interpretation:
+
+The issue was not missing JoinQuant bank-indicator data. The issue was query mode. Current DataJQ/JQData does not return bank-indicator rows through the usual PIT `date=trade_date` call, but it does return annual rows through `statDate`, including `pubDate`. Therefore `pubDate` should be treated as the JoinQuant availability date for the migrated V4 long-history bank-quality fields.
+
 Example:
 
 | Code | Source Year | Tushare Disclosure Date | V4 First-Visible Date | Conservative Date | Status |
 | --- | ---: | --- | --- | --- | --- |
-| `000001.XSHE` | 2019 | `2020-02-14` | `2020-11-02` | `2020-11-02` | `aligned_with_joinquant_proxy_not_formal` |
+| `000001.XSHE` | 2019 | `2020-02-14` | `2020-02-14` | `2020-11-02` | `aligned_formal_pit_ready` |
 
 ## PM Decision
 
@@ -126,7 +146,7 @@ This closes the ambiguity:
 - the missing evidence is local evidence-chain completeness, not proof that JoinQuant or Eastmoney is wrong;
 - JoinQuant and Eastmoney may have different collection dates;
 - formal research should use the most conservative date only after all three date types are present;
-- V4 first-visible dates are useful diagnostics, but they are not verified JoinQuant API availability dates;
+- V4 first-visible dates are useful diagnostics, but JoinQuant `pubDate` from `statDate` query is the stronger availability evidence for the migrated long-history bank-quality fields;
 - until then, V3 can remain `conditional_research_candidate`, but cannot become `formal_strategy_candidate` because bank-quality PIT lineage is not closed.
 
 ## Next Work

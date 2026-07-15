@@ -23,7 +23,7 @@ from v5.engine import RunBlockedError, run_strategy, validate_spec_file
 from v5.joinquant_real_data_runner import collect_joinquant_real_data
 from v5.joinquant_capability_probe import run_joinquant_capability_probe
 from v5.joinquant_pit_panel_runner import collect_joinquant_basic_pit_panel
-from v5.joinquant_availability_runner import build_joinquant_availability_proxy
+from v5.joinquant_availability_runner import build_joinquant_availability_proxy, collect_joinquant_bank_indicator_pubdates
 from v5.local_backtest import DEFAULT_BACKTEST_END, DEFAULT_BACKTEST_START, BacktestOptions, run_local_backtest
 from v5.formal_validation_runner import run_formal_validation
 from v5.platform_attribution_runner import run_platform_attribution, run_position_attribution, run_transaction_attribution
@@ -185,6 +185,10 @@ def main(argv: list[str] | None = None) -> int:
     jq_availability_parser = subparsers.add_parser("build-joinquant-availability-proxy")
     jq_availability_parser.add_argument("--v4-quality-csv", type=Path, default=DATE_ALIGNMENT_DATABASE_DIR / "processed" / "v4_legacy_bank_quality.csv")
     jq_availability_parser.add_argument("--out-dir", type=Path, default=DATE_ALIGNMENT_DATABASE_DIR / "processed" / "joinquant_availability")
+
+    jq_bank_indicator_parser = subparsers.add_parser("collect-joinquant-bank-indicator-pubdates")
+    jq_bank_indicator_parser.add_argument("--v4-quality-csv", type=Path, default=DATE_ALIGNMENT_DATABASE_DIR / "processed" / "v4_legacy_bank_quality.csv")
+    jq_bank_indicator_parser.add_argument("--out-dir", type=Path, default=DATE_ALIGNMENT_DATABASE_DIR / "processed" / "joinquant_availability")
 
     tushare_parser = subparsers.add_parser("collect-tushare-disclosure-dates")
     tushare_parser.add_argument("--quality-csv", type=Path, default=DATE_ALIGNMENT_DATABASE_DIR / "processed" / "v4_legacy_bank_quality.csv")
@@ -379,6 +383,10 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         if args.command == "build-joinquant-availability-proxy":
             result = build_joinquant_availability_proxy(args.v4_quality_csv, args.out_dir)
+            print(result.availability_path)
+            return 0
+        if args.command == "collect-joinquant-bank-indicator-pubdates":
+            result = collect_joinquant_bank_indicator_pubdates(args.v4_quality_csv, args.out_dir)
             print(result.availability_path)
             return 0
         if args.command == "collect-tushare-disclosure-dates":

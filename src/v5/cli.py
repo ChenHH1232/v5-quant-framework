@@ -28,9 +28,11 @@ from v5.local_backtest import DEFAULT_BACKTEST_END, DEFAULT_BACKTEST_START, Back
 from v5.formal_validation_runner import run_formal_validation
 from v5.platform_attribution_runner import run_platform_attribution, run_position_attribution, run_transaction_attribution
 from v5.platform_replication_runner import run_platform_replication_packet
+from v5.sector_rank_panel_runner import build_sector_rank_panel
 from v5.tushare_disclosure_runner import collect_tushare_disclosure_dates
 from v5.universe_runner import build_point_in_time_universe
 from v5.utilities_model_panel_runner import build_utilities_cashflow_value_panel
+from v5.utilities_external_state_runner import validate_utilities_external_state, write_utilities_external_state_template
 from v5.utilities_pit_panel_runner import collect_utilities_pit_panel
 from v5.validation_runner import validate_panel
 from v5.v4_quality_source_date_audit_runner import audit_v4_quality_source_dates
@@ -225,6 +227,21 @@ def main(argv: list[str] | None = None) -> int:
     utilities_model_panel_parser = subparsers.add_parser("build-utilities-cashflow-value-panel")
     utilities_model_panel_parser.add_argument("source_panel", type=Path, nargs="?", default=Path("数据库") / "processed" / "utilities_pit_panel" / "panel.csv")
     utilities_model_panel_parser.add_argument("--out-dir", type=Path, default=Path("数据库") / "processed" / "utilities_cashflow_value_v51b_panel")
+
+    sector_rank_parser = subparsers.add_parser("build-sector-rank-panel")
+    sector_rank_parser.add_argument("source_panel", type=Path)
+    sector_rank_parser.add_argument("factor_config", type=Path)
+    sector_rank_parser.add_argument("--out-dir", type=Path, default=Path("数据库") / "processed" / "sector_rank_panel")
+    sector_rank_parser.add_argument("--date-field", default="trade_date")
+    sector_rank_parser.add_argument("--group-field", default="sub_industry")
+    sector_rank_parser.add_argument("--min-group-size", type=int, default=8)
+
+    utilities_state_parser = subparsers.add_parser("utilities-external-state")
+    utilities_state_subparsers = utilities_state_parser.add_subparsers(dest="state_command", required=True)
+    utilities_state_template = utilities_state_subparsers.add_parser("template")
+    utilities_state_template.add_argument("--out-dir", type=Path, default=Path("数据库") / "processed" / "utilities_external_state")
+    utilities_state_validate = utilities_state_subparsers.add_parser("validate")
+    utilities_state_validate.add_argument("csv_path", type=Path)
 
     universe_parser = subparsers.add_parser("build-universe")
     universe_parser.add_argument("panel", type=Path)
@@ -449,6 +466,25 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "build-utilities-cashflow-value-panel":
             print(build_utilities_cashflow_value_panel(args.source_panel, args.out_dir))
             return 0
+        if args.command == "build-sector-rank-panel":
+            print(
+                build_sector_rank_panel(
+                    args.source_panel,
+                    args.out_dir,
+                    args.factor_config,
+                    date_field=args.date_field,
+                    group_field=args.group_field,
+                    min_group_size=args.min_group_size,
+                )
+            )
+            return 0
+        if args.command == "utilities-external-state":
+            if args.state_command == "template":
+                print(write_utilities_external_state_template(args.out_dir))
+                return 0
+            if args.state_command == "validate":
+                print(json.dumps(validate_utilities_external_state(args.csv_path), ensure_ascii=False, indent=2))
+                return 0
         if args.command == "build-universe":
             print(build_point_in_time_universe(args.panel, args.execution_price_csv, args.out, args.strategy_id))
             return 0

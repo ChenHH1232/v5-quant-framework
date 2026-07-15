@@ -16,6 +16,8 @@ from v5.benchmark_runner import _normalize_benchmark_row
 from v5.dividend_runner import _normalize_akshare_dividend_row
 from v5.joinquant_pit_panel_runner import _latest_visible_bank_quality, _load_bank_quality_snapshots
 from v5.local_backtest import BacktestOptions, run_local_backtest
+from v5.sector_rank_panel_runner import build_sector_rank_panel
+from v5.utilities_external_state_runner import validate_utilities_external_state, write_utilities_external_state_template
 from v5.utilities_pit_panel_runner import _interest_coverage, _market_cap_cny, _ratio
 from v5.validation_runner import validate_panel
 from v5.v4_legacy_bank_quality_runner import collect_v4_legacy_bank_quality
@@ -51,6 +53,38 @@ class DataValidationRunnerTests(unittest.TestCase):
         self.assertAlmostEqual(_ratio(50.0, 200.0) or 0.0, 0.25)
         self.assertAlmostEqual(_interest_coverage(100.0, 80.0, None, 20.0) or 0.0, 5.0)
         self.assertIsNone(_interest_coverage(100.0, 80.0, None, 0.0))
+
+    def test_sector_rank_panel_builds_group_percentile_scores(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            panel = tmp_path / "panel.csv"
+            self._write_csv(
+                panel,
+                ["trade_date", "code", "sub_industry", "pb"],
+                [
+                    {"trade_date": "2025-01-02", "code": "A", "sub_industry": "power", "pb": "0.5"},
+                    {"trade_date": "2025-01-02", "code": "B", "sub_industry": "power", "pb": "1.0"},
+                    {"trade_date": "2025-01-02", "code": "C", "sub_industry": "power", "pb": "2.0"},
+                ],
+            )
+            config = tmp_path / "config.json"
+            config.write_text('[{"input":"pb","output":"low_pb_score","direction":"lower_is_better"}]', encoding="utf-8")
+            out_panel = build_sector_rank_panel(panel, tmp_path / "ranked", config, min_group_size=3)
+            with out_panel.open("r", encoding="utf-8") as handle:
+                rows = list(csv.DictReader(handle))
+
+        scores = {row["code"]: float(row["low_pb_score"]) for row in rows}
+        self.assertGreater(scores["A"], scores["B"])
+        self.assertGreater(scores["B"], scores["C"])
+
+    def test_utilities_external_state_template_is_not_pit_usable_until_filled(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            template = write_utilities_external_state_template(Path(tmp))
+            result = validate_utilities_external_state(template)
+
+        self.assertEqual(result["status"], "needs_review")
+        self.assertEqual(result["pit_usable_count"], 0)
+        self.assertGreater(len(result["missing_required"]), 0)
 
     def test_validate_panel_writes_summary(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

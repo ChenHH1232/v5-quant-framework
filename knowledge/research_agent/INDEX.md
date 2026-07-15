@@ -35,6 +35,7 @@
 - [Bank Value 15Y defensive overlay](strategy_cases/bank_value_15y_defensive_overlay.md)
 - [Utilities V5.1 Test-1 initial result](strategy_cases/utilities_v51_test1_initial_result.md) - process portability passed, current composite rejected for formal-candidate promotion.
 - [Utilities V5.1b cashflow value result](strategy_cases/utilities_v51b_cashflow_value_result.md) - sub-industry cash-flow value improved clarity but still failed candidate promotion.
+- [Utilities V5.1c low PB cashflow result](strategy_cases/utilities_v51c_low_pb_cashflow_result.md) - both factors work individually, static two-factor composite failed.
 
 ## Open Research Questions
 

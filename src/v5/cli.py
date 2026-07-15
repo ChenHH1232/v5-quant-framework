@@ -23,7 +23,7 @@ from v5.joinquant_capability_probe import run_joinquant_capability_probe
 from v5.joinquant_pit_panel_runner import collect_joinquant_basic_pit_panel
 from v5.local_backtest import DEFAULT_BACKTEST_END, DEFAULT_BACKTEST_START, BacktestOptions, run_local_backtest
 from v5.formal_validation_runner import run_formal_validation
-from v5.platform_attribution_runner import run_platform_attribution, run_position_attribution
+from v5.platform_attribution_runner import run_platform_attribution, run_position_attribution, run_transaction_attribution
 from v5.universe_runner import build_point_in_time_universe
 from v5.validation_runner import validate_panel
 from v5.v4_legacy_bank_quality_runner import (
@@ -209,6 +209,12 @@ def main(argv: list[str] | None = None) -> int:
     position_attribution_parser.add_argument("--out", type=Path, default=Path("platform_attribution"))
     position_attribution_parser.add_argument("--strategy-id", default="bank_value_15y")
 
+    transaction_attribution_parser = subparsers.add_parser("platform-transaction-attribution")
+    transaction_attribution_parser.add_argument("joinquant_transaction_csv", type=Path)
+    transaction_attribution_parser.add_argument("local_trades_csv", type=Path)
+    transaction_attribution_parser.add_argument("--out", type=Path, default=Path("platform_attribution"))
+    transaction_attribution_parser.add_argument("--strategy-id", default="bank_value_15y")
+
     args = parser.parse_args(argv)
 
     try:
@@ -373,6 +379,16 @@ def main(argv: list[str] | None = None) -> int:
                 run_position_attribution(
                     args.joinquant_position_csv,
                     args.local_holdings_csv,
+                    args.out,
+                    args.strategy_id,
+                )
+            )
+            return 0
+        if args.command == "platform-transaction-attribution":
+            print(
+                run_transaction_attribution(
+                    args.joinquant_transaction_csv,
+                    args.local_trades_csv,
                     args.out,
                     args.strategy_id,
                 )

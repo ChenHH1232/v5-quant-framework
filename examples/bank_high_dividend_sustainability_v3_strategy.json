@@ -3,7 +3,7 @@
     "strategy_id": "bank_high_dividend_sustainability_v3",
     "name": "Bank High Dividend Sustainability V3",
     "objective": "Test whether high dividend yield in A-share banks is more useful when supported by ROE, capital adequacy, provision coverage, and reasonable price-to-book valuation.",
-    "status": "research_pit_validation_candidate"
+    "status": "formal_strategy_candidate"
   },
   "universe": {
     "name": "A-share listed banks",
@@ -23,7 +23,7 @@
       "research_start": "2014-01-02",
       "research_end": "2026-05-31"
     },
-    "source_warning": "This V3 test uses an existing local panel and is not a final PIT-approved dataset."
+    "source_warning": "The V4 long-history bank-quality bridge now has Tushare disclosure-date and JoinQuant bank_indicator pubDate alignment. V3 is a formal strategy candidate, not an accepted strategy."
   },
   "signals": {
     "factors": [

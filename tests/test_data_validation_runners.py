@@ -9,6 +9,7 @@ from pathlib import Path
 
 from v5.data_runner import collect_panel_from_v4_raw, write_collection_manifest
 from v5.daily_backtest import _defensive_state
+from v5.bank_quality_date_alignment_runner import align_bank_quality_dates
 from v5.benchmark_runner import _normalize_benchmark_row
 from v5.dividend_runner import _normalize_akshare_dividend_row
 from v5.joinquant_pit_panel_runner import _latest_visible_bank_quality, _load_bank_quality_snapshots
@@ -289,6 +290,79 @@ class DataValidationRunnerTests(unittest.TestCase):
         self.assertEqual(rows[0]["review_status"], "needs_check")
         self.assertEqual(rows[0]["source_year"], "2024")
 
+    def test_bank_quality_date_alignment_blocks_missing_joinquant_date(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            v4_quality = tmp_path / "v4_quality.csv"
+            eastmoney_quality = tmp_path / "eastmoney_quality.csv"
+            self._write_csv(
+                v4_quality,
+                ["code", "source_year", "notice_date", "review_status", "confidence", "source_note"],
+                [
+                    {
+                        "code": "000001.XSHE",
+                        "source_year": "2024",
+                        "notice_date": "2025-04-01",
+                        "review_status": "needs_check",
+                        "confidence": "medium",
+                        "source_note": "v4 local first use",
+                    }
+                ],
+            )
+            self._write_csv(
+                eastmoney_quality,
+                ["code", "source_year", "notice_date", "review_status", "confidence", "source_note"],
+                [
+                    {
+                        "code": "000001.XSHE",
+                        "source_year": "2024",
+                        "notice_date": "2025-03-15",
+                        "review_status": "needs_check",
+                        "confidence": "medium",
+                        "source_note": "eastmoney annual report",
+                    }
+                ],
+            )
+
+            result = align_bank_quality_dates(tmp_path / "aligned", v4_quality, eastmoney_quality)
+            rows = self._read_csv(result.alignment_path)
+
+        self.assertEqual(result.row_count, 1)
+        self.assertEqual(result.formal_usable_count, 0)
+        self.assertEqual(rows[0]["formal_pit_usable"], "false")
+        self.assertEqual(rows[0]["missing_date_types"], "joinquant_available_date")
+        self.assertEqual(rows[0]["conservative_visible_date"], "2025-04-01")
+
+    def test_bank_quality_date_alignment_uses_max_of_three_dates(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            v4_quality = tmp_path / "v4_quality.csv"
+            eastmoney_quality = tmp_path / "eastmoney_quality.csv"
+            jq_quality = tmp_path / "jq_quality.csv"
+            self._write_csv(
+                v4_quality,
+                ["code", "source_year", "notice_date", "review_status", "confidence", "source_note"],
+                [{"code": "000001.XSHE", "source_year": "2024", "notice_date": "2025-04-01"}],
+            )
+            self._write_csv(
+                eastmoney_quality,
+                ["code", "source_year", "notice_date", "review_status", "confidence", "source_note"],
+                [{"code": "000001.SZ", "source_year": "2024", "notice_date": "2025-03-15"}],
+            )
+            self._write_csv(
+                jq_quality,
+                ["code", "source_year", "joinquant_available_date", "review_status", "confidence", "source_note"],
+                [{"code": "000001.XSHE", "source_year": "2024", "joinquant_available_date": "2025-03-31"}],
+            )
+
+            result = align_bank_quality_dates(tmp_path / "aligned", v4_quality, eastmoney_quality, jq_quality)
+            rows = self._read_csv(result.alignment_path)
+
+        self.assertEqual(result.formal_usable_count, 1)
+        self.assertEqual(rows[0]["formal_pit_usable"], "true")
+        self.assertEqual(rows[0]["date_alignment_status"], "aligned_formal_pit_ready")
+        self.assertEqual(rows[0]["conservative_visible_date"], "2025-04-01")
+
     def test_benchmark_row_normalizes_close_series(self) -> None:
         spec = {
             "benchmark_id": "bank_etf_512800_qfq",
@@ -531,6 +605,10 @@ class DataValidationRunnerTests(unittest.TestCase):
             writer.writeheader()
             for row in rows:
                 writer.writerow(row)
+
+    def _read_csv(self, path: Path) -> list[dict[str, str]]:
+        with path.open("r", encoding="utf-8-sig", newline="") as handle:
+            return list(csv.DictReader(handle))
 
 
 if __name__ == "__main__":

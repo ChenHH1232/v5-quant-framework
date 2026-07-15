@@ -10,6 +10,8 @@ from v5.benchmark_runner import (
     DEFAULT_BENCHMARK_PROCESSED,
     collect_bank_benchmarks,
 )
+from v5.bank_quality_date_alignment_runner import DEFAULT_DATABASE_DIR as DATE_ALIGNMENT_DATABASE_DIR
+from v5.bank_quality_date_alignment_runner import align_bank_quality_dates
 from v5.data_runner import collect_panel_from_v4_raw, write_collection_manifest
 from v5.daily_backtest import run_daily_joinquant_like_backtest
 from v5.dividend_runner import DEFAULT_DATABASE_DIR, DEFAULT_DIVIDEND_PROCESSED, collect_bank_dividends
@@ -215,6 +217,12 @@ def main(argv: list[str] | None = None) -> int:
     source_date_audit_parser.add_argument("--out", type=Path, default=Path("validation_formal"))
     source_date_audit_parser.add_argument("--strategy-id", default="bank_high_dividend_sustainability_v3")
 
+    date_alignment_parser = subparsers.add_parser("align-bank-quality-dates")
+    date_alignment_parser.add_argument("--out-dir", type=Path, default=DATE_ALIGNMENT_DATABASE_DIR / "processed" / "bank_quality_date_alignment")
+    date_alignment_parser.add_argument("--v4-quality-csv", type=Path, default=DATE_ALIGNMENT_DATABASE_DIR / "processed" / "v4_legacy_bank_quality.csv")
+    date_alignment_parser.add_argument("--eastmoney-quality-csv", type=Path, default=DATE_ALIGNMENT_DATABASE_DIR / "processed" / "eastmoney_bank_quality_manual_csv.csv")
+    date_alignment_parser.add_argument("--joinquant-availability-csv", type=Path)
+
     position_attribution_parser = subparsers.add_parser("platform-position-attribution")
     position_attribution_parser.add_argument("joinquant_position_csv", type=Path)
     position_attribution_parser.add_argument("local_holdings_csv", type=Path)
@@ -390,6 +398,15 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         if args.command == "audit-v4-quality-source-dates":
             print(audit_v4_quality_source_dates(args.quality_csv, args.out, args.strategy_id))
+            return 0
+        if args.command == "align-bank-quality-dates":
+            result = align_bank_quality_dates(
+                args.out_dir,
+                v4_quality_csv=args.v4_quality_csv,
+                eastmoney_quality_csv=args.eastmoney_quality_csv,
+                joinquant_availability_csv=args.joinquant_availability_csv,
+            )
+            print(result.alignment_path)
             return 0
         if args.command == "platform-position-attribution":
             print(

@@ -14,6 +14,8 @@ Purpose:
 - Platform replication / engineering test for 2021-05-01 to 2026-05-31.
 - This is not final research acceptance evidence.
 - Do not tune after seeing JoinQuant results.
+- Formal candidate guard is required. If bank-quality guard data is missing,
+  the script must stop trading instead of silently degrading to no-guard.
 
 Data policy:
 - PB and ROE: JoinQuant get_fundamentals(date=factor_date).
@@ -33,17 +35,28 @@ def initialize(context):
     )
 
     g.strategy_id = 'bank_high_dividend_sustainability_v3'
+    g.script_version = 'v3_formal_candidate_guard_required_20260716'
     g.selection_count = 8
     g.max_position_weight = 0.15
     g.min_coverage_ratio = 0.80
     g.rebalance_months = [1, 4, 7, 10]
     g.executed_rebalance_keys = set()
     g.debug = True
+    g.require_value_trap_guard = True
 
     g.bank_stocks = build_bank_stock_universe()
     g.quality_data = build_quality_data()
     g.dividend_events = build_dividend_events()
     g.last_used_factors = []
+    quality_snapshot_count = sum(len(items) for items in g.quality_data.values())
+
+    log.info('V3 formal candidate script=%s bank_universe=%d quality_codes=%d quality_snapshots=%d guard_required=%s' % (
+        g.script_version,
+        len(g.bank_stocks),
+        len(g.quality_data),
+        quality_snapshot_count,
+        str(g.require_value_trap_guard),
+    ))
 
     run_daily(maybe_rebalance, time='09:40')
     run_daily(after_trading_end_log, time='after_close')
@@ -168,18 +181,25 @@ def weighted_average_parts(parts):
 def apply_value_trap_guard(score_df):
     required = ['non_performing_loan_ratio', 'provision_coverage_ratio', 'core_tier_1_capital_adequacy_ratio']
     if any(name not in score_df.columns for name in required):
-        log.info('V3 value trap guard degraded: missing quality fields; no guard applied.')
-        return score_df
+        missing = [name for name in required if name not in score_df.columns]
+        log.info('V3 FORMAL GUARD BLOCKED: missing quality fields=%s; no no-guard fallback allowed.' % ','.join(missing))
+        return score_df.iloc[0:0].copy()
     quality = (-pd.to_numeric(score_df['non_performing_loan_ratio'], errors='coerce')
                + pd.to_numeric(score_df['provision_coverage_ratio'], errors='coerce')
                + pd.to_numeric(score_df['core_tier_1_capital_adequacy_ratio'], errors='coerce'))
     if quality.notna().sum() < 3:
-        log.info('V3 value trap guard degraded: insufficient quality values; no guard applied.')
-        return score_df
+        log.info('V3 FORMAL GUARD BLOCKED: insufficient quality values=%d; no no-guard fallback allowed.' % int(quality.notna().sum()))
+        return score_df.iloc[0:0].copy()
     guarded = score_df.copy()
     guarded['quality_guard_score'] = quality
     threshold = guarded['quality_guard_score'].median()
-    return guarded[guarded['quality_guard_score'] >= threshold].copy()
+    result = guarded[guarded['quality_guard_score'] >= threshold].copy()
+    log.info('V3 formal value trap guard applied: candidates=%d guarded=%d threshold=%.4f' % (
+        len(score_df),
+        len(result),
+        float(threshold),
+    ))
+    return result
 
 
 def fetch_valuation_snapshot(stocks, factor_date):

@@ -35,7 +35,7 @@ def initialize(context):
     )
 
     g.strategy_id = 'bank_high_dividend_sustainability_v3'
-    g.script_version = 'v3_formal_candidate_guard_required_20260716'
+    g.script_version = 'v3_formal_candidate_guard_required_20260716_fix_quality_coverage'
     g.selection_count = 8
     g.max_position_weight = 0.15
     g.min_coverage_ratio = 0.80
@@ -148,6 +148,8 @@ def build_score_frame(stocks, factor_date):
     missing = [name for name in ['dividend_yield', 'return_on_equity_ttm', 'low_price_to_book', 'provision_coverage_ratio', 'core_tier_1_capital_adequacy_ratio'] if name not in used]
     if missing:
         log.info('V3 missing factors: %s' % ','.join(missing))
+    if g.debug:
+        log_quality_coverage(df, factor_date)
     return df
 
 
@@ -180,26 +182,62 @@ def weighted_average_parts(parts):
 
 def apply_value_trap_guard(score_df):
     required = ['non_performing_loan_ratio', 'provision_coverage_ratio', 'core_tier_1_capital_adequacy_ratio']
-    if any(name not in score_df.columns for name in required):
-        missing = [name for name in required if name not in score_df.columns]
-        log.info('V3 FORMAL GUARD BLOCKED: missing quality fields=%s; no no-guard fallback allowed.' % ','.join(missing))
+    quality_parts = {}
+    coverage = {}
+    for name in required:
+        series = get_numeric_column(score_df, name)
+        quality_parts[name] = series
+        coverage[name] = int(series.notna().sum())
+
+    weak = [name for name in required if coverage.get(name, 0) < 3]
+    if weak:
+        log.info('V3 FORMAL GUARD BLOCKED: insufficient quality coverage %s; no no-guard fallback allowed.' % format_coverage(coverage, required))
         return score_df.iloc[0:0].copy()
-    quality = (-pd.to_numeric(score_df['non_performing_loan_ratio'], errors='coerce')
-               + pd.to_numeric(score_df['provision_coverage_ratio'], errors='coerce')
-               + pd.to_numeric(score_df['core_tier_1_capital_adequacy_ratio'], errors='coerce'))
+
+    quality = (-quality_parts['non_performing_loan_ratio']
+               + quality_parts['provision_coverage_ratio']
+               + quality_parts['core_tier_1_capital_adequacy_ratio'])
     if quality.notna().sum() < 3:
-        log.info('V3 FORMAL GUARD BLOCKED: insufficient quality values=%d; no no-guard fallback allowed.' % int(quality.notna().sum()))
+        log.info('V3 FORMAL GUARD BLOCKED: insufficient combined quality values=%d coverage=%s; no no-guard fallback allowed.' % (
+            int(quality.notna().sum()),
+            format_coverage(coverage, required),
+        ))
         return score_df.iloc[0:0].copy()
     guarded = score_df.copy()
     guarded['quality_guard_score'] = quality
     threshold = guarded['quality_guard_score'].median()
     result = guarded[guarded['quality_guard_score'] >= threshold].copy()
-    log.info('V3 formal value trap guard applied: candidates=%d guarded=%d threshold=%.4f' % (
+    log.info('V3 formal value trap guard applied: candidates=%d guarded=%d threshold=%.4f coverage=%s' % (
         len(score_df),
         len(result),
         float(threshold),
+        format_coverage(coverage, required),
     ))
     return result
+
+
+def get_numeric_column(df, name):
+    columns = [str(col) for col in list(df.columns)]
+    if name not in columns:
+        return pd.Series(index=df.index, data=np.nan)
+    matched = list(df.columns)[columns.index(name)]
+    return pd.to_numeric(df[matched], errors='coerce')
+
+
+def format_coverage(coverage, names):
+    return ','.join(['%s=%d' % (name, int(coverage.get(name, 0))) for name in names])
+
+
+def log_quality_coverage(df, factor_date):
+    names = ['non_performing_loan_ratio', 'provision_coverage_ratio', 'core_tier_1_capital_adequacy_ratio']
+    coverage = {}
+    for name in names:
+        coverage[name] = int(get_numeric_column(df, name).notna().sum())
+    log.info('V3 quality coverage factor_date=%s rows=%d %s' % (
+        str(factor_date),
+        len(df),
+        format_coverage(coverage, names),
+    ))
 
 
 def fetch_valuation_snapshot(stocks, factor_date):

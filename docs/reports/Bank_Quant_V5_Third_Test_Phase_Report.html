@@ -1,0 +1,226 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>Bank Quant V5 第三次测试阶段性汇报</title><style>
+@page { size: A4; margin: 18mm 16mm; }
+body { font-family: "Microsoft YaHei", "SimHei", "Noto Sans SC", Arial, sans-serif; color: #182230; line-height: 1.55; font-size: 12px; }
+h1 { font-size: 25px; margin: 0 0 12px; color: #111827; border-bottom: 3px solid #245b7a; padding-bottom: 10px; }
+h2 { font-size: 17px; margin: 24px 0 8px; color: #18415a; border-left: 5px solid #2f6f8f; padding-left: 9px; break-after: avoid; }
+h3 { font-size: 14px; margin: 16px 0 6px; color: #334155; }
+p { margin: 5px 0; }
+.bullet { margin: 3px 0 3px 14px; }
+table { width: 100%; border-collapse: collapse; margin: 9px 0 13px; font-size: 10.5px; break-inside: avoid; }
+th { background: #e8f1f6; color: #0f3144; font-weight: 700; }
+th, td { border: 1px solid #cbd5e1; padding: 5px 6px; vertical-align: top; }
+tr:nth-child(even) td { background: #f8fafc; }
+pre { background: #f3f4f6; border: 1px solid #d1d5db; padding: 8px; font-size: 10px; white-space: pre-wrap; }
+code { font-family: Consolas, monospace; }
+</style></head><body><h1>Bank Quant V5 第三次测试阶段性汇报</h1>
+<p>日期：2026-07-15</p>
+<h2>一、阶段定位</h2>
+<p>第三次测试的目标不是继续追求单一策略收益最大化，而是验证 Bank Quant V5 是否已经具备“研究假设 -&gt; 点时点数据 -&gt; 统计验证 -&gt; 本地模拟聚宽 -&gt; 聚宽代码导出”的完整量化研发流程。</p>
+<p>本轮测试围绕“银行高股息可持续性 V3”展开。核心问题是：银行股高股息是否只是价格下跌后的表面高收益，还是在 ROE、拨备覆盖、资本充足、估值合理等条件支持下，具备可解释、可验证、可复现的投资价值。</p>
+<p>本轮所有结论都按实验分层管理：</p>
+<table>
+<tr><td>层级</td><td>用途</td><td>是否可作为策略接受依据</td></tr>
+<tr><td>research_pit_validation</td><td>研究假设与因子验证</td><td>可以作为研究证据</td></tr>
+<tr><td>platform_replication</td><td>本地模拟聚宽与平台对齐</td><td>不能作为研究证据</td></tr>
+<tr><td>engineering_smoke_test</td><td>工程链路测试</td><td>不能作为研究证据</td></tr>
+<tr><td>paper_trading</td><td>未来实盘/模拟跟踪</td><td>作为前瞻观察</td></tr>
+</table>
+<h2>二、本轮做了什么</h2>
+<h3>1. 建立 JQData 点时点研究面板</h3>
+<p>新增 JQData PIT 面板采集流程，使用 DataJQ/JQData 基础接口重建银行板块研究面板。已验证可访问的数据包括：</p>
+<p class="bullet">- A 股证券基础信息；</p>
+<p class="bullet">- 股票真实价格与前复权价格；</p>
+<p class="bullet">- 512800 银行 ETF 基准价格；</p>
+<p class="bullet">- PB、ROE 等基础估值与财务指标；</p>
+<p class="bullet">- 现金分红数据。</p>
+<p>生成面板规模：</p>
+<table>
+<tr><td>项目</td><td>数值</td></tr>
+<tr><td>面板行数</td><td>1547</td></tr>
+<tr><td>调仓日期数</td><td>57</td></tr>
+<tr><td>银行股票数</td><td>42</td></tr>
+<tr><td>采集警告</td><td>0</td></tr>
+</table>
+<p>这个步骤解决了前两轮最大的问题：研究验证不能只依赖 V4 迁移数据，而需要一条 V5 自己可复现的数据路径。</p>
+<h3>2. 修复 notice_date 泄露审计</h3>
+<p>第一版 V3 测试发现正式验证存在 notice_date 缺失：</p>
+<pre><code>missing_notice_date_rows = 1547
+status = needs_review</code></pre>
+<p>第三次测试补入 `factor_visible_date`、`bank_quality_notice_date` 与更严格的泄露审计后，结果变为：</p>
+<pre><code>missing_notice_date_rows = 0
+future_notice_violations = 0
+status = pass</code></pre>
+<p>这意味着当前研究面板已经可以判断每个调仓日能否看到对应信息，避免把未来财报数据提前用于历史回测。</p>
+<h3>3. 接入东方财富银行质量字段，但识别出样本不足</h3>
+<p>本轮尝试把东方财富银行专属质量指标接入本地面板，重点包括：</p>
+<p class="bullet">- 拨备覆盖率；</p>
+<p class="bullet">- 资本充足相关指标；</p>
+<p class="bullet">- 银行资产质量字段；</p>
+<p class="bullet">- 业绩公告时间。</p>
+<p>接入结果：</p>
+<table>
+<tr><td>数据类型</td><td>记录数</td></tr>
+<tr><td>银行质量记录</td><td>139</td></tr>
+<tr><td>拨备记录</td><td>104</td></tr>
+<tr><td>资本记录</td><td>136</td></tr>
+<tr><td>公共样本调仓日</td><td>4</td></tr>
+</table>
+<p>结论：东方财富字段方向正确，但当前公共样本太少，不能作为正式因子有效性的充分证据。它更适合作为后续数据采集方向，而不是现在直接接受为策略核心。</p>
+<h3>4. 迁移 V4 银行质量长样本并做临时验证</h3>
+<p>为了判断银行专属质量因子是否值得继续投入，本轮迁移了 V4 最终版中保存的银行质量数据：</p>
+<table>
+<tr><td>项目</td><td>数值</td></tr>
+<tr><td>质量快照</td><td>310</td></tr>
+<tr><td>银行股票数</td><td>41</td></tr>
+<tr><td>来源年份</td><td>2013-2023</td></tr>
+<tr><td>PIT 质量面板行数</td><td>1365</td></tr>
+<tr><td>公共样本调仓日</td><td>47</td></tr>
+</table>
+<p>基于长样本的主要证据：</p>
+<table>
+<tr><td>因子</td><td>IC</td><td>RankIC</td><td>正 IC 占比</td></tr>
+<tr><td>dividend_yield</td><td>0.1731</td><td>0.1735</td><td>77.55%</td></tr>
+<tr><td>provision_coverage</td><td>正向但较弱</td><td>正向但较弱</td><td>高于随机</td></tr>
+<tr><td>core_tier1_capital_ratio</td><td>单独解释力弱</td><td>单独解释力弱</td><td>不稳定</td></tr>
+</table>
+<p>组合层面，高股息叠加质量支持字段略好于单纯高股息，但该结论依赖 V4 遗留数据的来源日期假设，因此只能作为研究线索，不能直接作为正式策略接受依据。</p>
+<h3>5. 建立本地模拟聚宽测试流程</h3>
+<p>本轮继续完善本地模拟聚宽，用真实 open/close、现金、分红、调仓、100 手限制、银行 ETF 基准等规则，复刻聚宽近 5 年测试口径。</p>
+<p>本地平台复刻结果：</p>
+<table>
+<tr><td>指标</td><td>数值</td></tr>
+<tr><td>策略收益</td><td>65.36%</td></tr>
+<tr><td>年化收益</td><td>10.87%</td></tr>
+<tr><td>基准收益</td><td>25.16%</td></tr>
+<tr><td>超额收益</td><td>40.20%</td></tr>
+<tr><td>最大回撤</td><td>15.84%</td></tr>
+<tr><td>调仓信号</td><td>19</td></tr>
+<tr><td>买入记录</td><td>117</td></tr>
+<tr><td>卖出记录</td><td>88</td></tr>
+<tr><td>分红事件</td><td>44</td></tr>
+<tr><td>分红现金</td><td>439,634.84</td></tr>
+</table>
+<p>注意：这部分属于 `platform_replication`，目的是对齐平台和减少聚宽试错成本，不能替代正式统计验证。</p>
+<h3>6. 导出聚宽 V3 策略代码</h3>
+<p>本轮已输出可在聚宽运行的 V3 代码，位置：</p>
+<pre><code>exports/joinquant/bank_high_dividend_sustainability_v3_joinquant_near5y.py</code></pre>
+<p>该代码用于和本地模拟结果做逐日归因对比，检查差异来自：</p>
+<p class="bullet">- 价格口径；</p>
+<p class="bullet">- 调仓日；</p>
+<p class="bullet">- 成交价；</p>
+<p class="bullet">- 100 手限制；</p>
+<p class="bullet">- 分红到账；</p>
+<p class="bullet">- 停牌/涨跌停；</p>
+<p class="bullet">- 现金余额；</p>
+<p class="bullet">- 基准口径。</p>
+<h2>三、达成的目的</h2>
+<h3>1. 从“策略回测”升级为“研究流程验证”</h3>
+<p>V5 第三次测试的最大成果不是某一个收益数字，而是建立了一个可以反复使用的研究闭环：</p>
+<pre><code>研究假设
+-&gt; 点时点数据采集
+-&gt; 泄露审计
+-&gt; 因子统计验证
+-&gt; 本地平台复刻
+-&gt; 聚宽代码导出
+-&gt; 逐日归因
+-&gt; 未来 paper trading</code></pre>
+<p>这说明 V5 已经不再只是一个策略脚本，而开始具备 AI 驱动量化研究平台的雏形。</p>
+<h3>2. 明确区分“研究成立”和“工程复刻成功”</h3>
+<p>本轮把实验结果分成多个层级，避免把不同性质的结果混在一起：</p>
+<p class="bullet">- 本地模拟聚宽跑得好，只能说明工程流程可以运行；</p>
+<p class="bullet">- 聚宽近 5 年表现好，只能说明平台口径下结果存在；</p>
+<p class="bullet">- 因子在 rolling / ablation / baseline / robustness 中稳定，才可能说明研究假设成立；</p>
+<p class="bullet">- 未来 paper trading 记录，才是对真实未来表现的前瞻观察。</p>
+<p>这对后续减少过拟合非常关键。</p>
+<h3>3. 发现高股息因子确实值得继续研究</h3>
+<p>长样本初步显示，银行股股息率具有较稳定的正向预测关系，RankIC 与正 IC 占比都优于随机水平。它不是最终结论，但已经足以支持继续投入第三阶段研究。</p>
+<h3>4. 发现银行专属质量因子的数据瓶颈</h3>
+<p>东方财富字段方向正确，但当前公共样本不足。V4 质量数据能提供长样本线索，但来源日期还要进一步审计。因此下一步重点不是马上优化策略，而是补齐银行专属质量数据的可靠来源与可见日期。</p>
+<h2>四、相比 V4 的提升</h2>
+<table>
+<tr><td>维度</td><td>V4</td><td>V5 第三次测试后的状态</td></tr>
+<tr><td>项目定位</td><td>更接近单策略开发</td><td>量化研究框架</td></tr>
+<tr><td>数据处理</td><td>依赖已有数据与脚本经验</td><td>建立 JQData PIT 面板</td></tr>
+<tr><td>泄露控制</td><td>主要靠人工经验</td><td>notice_date 审计纳入流程</td></tr>
+<tr><td>实验管理</td><td>结果容易混用</td><td>明确实验分层</td></tr>
+<tr><td>因子验证</td><td>偏回测结果导向</td><td>增加 IC、RankIC、公共样本、ablation 思路</td></tr>
+<tr><td>平台对齐</td><td>主要去聚宽反复试</td><td>建立本地模拟聚宽 runner</td></tr>
+<tr><td>Agent 分工</td><td>经验驱动</td><td>PM / Research / Quant / Engineering 职责拆分</td></tr>
+<tr><td>复现能力</td><td>依赖个人记忆和流程</td><td>形成文档、脚本、runner、导出代码</td></tr>
+</table>
+<p>总结来说，V4 的优势是积累了可用经验和策略雏形；V5 的提升是把这些经验变成可复用、可审计、可迭代的研究系统。</p>
+<h2>五、当前仍存在的问题</h2>
+<h3>1. 本地模拟聚宽还没有完成逐日归因闭环</h3>
+<p>当前本地模拟已经能输出收益、持仓、交易、现金和分红日志，但还需要用户从聚宽导出每日收益 CSV 后做逐日归因。只有完成逐日对账，才能判断本地模拟是否真正贴近聚宽。</p>
+<p>需要继续比较：</p>
+<p class="bullet">- 每日净值差异；</p>
+<p class="bullet">- 调仓日股票名单差异；</p>
+<p class="bullet">- 买卖数量差异；</p>
+<p class="bullet">- 成交价格差异；</p>
+<p class="bullet">- 分红到账日期与税费差异；</p>
+<p class="bullet">- 基准收益差异。</p>
+<h3>2. V4 遗留质量数据仍需来源日期审计</h3>
+<p>V4 长样本质量数据给出了积极线索，但正式使用前必须确认：</p>
+<p class="bullet">- 每个字段来自哪个公告；</p>
+<p class="bullet">- 何时可见；</p>
+<p class="bullet">- 是否存在后来修正；</p>
+<p class="bullet">- 是否在调仓日之前已经披露。</p>
+<p>否则它只能作为探索性研究线索。</p>
+<h3>3. 东方财富银行专属字段需要扩展采集</h3>
+<p>当前东方财富质量字段样本太少。下一步需要研究员继续扩展：</p>
+<p class="bullet">- 更多年份；</p>
+<p class="bullet">- 更多财报期；</p>
+<p class="bullet">- 更完整的公告日期；</p>
+<p class="bullet">- 字段定义与财报来源；</p>
+<p class="bullet">- 与 JQData / 聚宽数据的交叉验证。</p>
+<h3>4. V3 还不能被正式接受为最终策略</h3>
+<p>当前 V3 可以进入下一轮测试，但不能直接定义为正式策略。原因是：</p>
+<p class="bullet">- 正式 rolling 验证仍需补全；</p>
+<p class="bullet">- baseline / ablation / robustness 还需系统跑完；</p>
+<p class="bullet">- 高股息与质量因子交互关系仍需更多样本；</p>
+<p class="bullet">- 本地与聚宽逐日归因尚未完成；</p>
+<p class="bullet">- 未来 paper trading 尚未积累。</p>
+<h2>六、下一步改进建议</h2>
+<h3>1. 先完成本地 vs 聚宽逐日归因</h3>
+<p>这是最优先事项。目标不是提高收益，而是确认工程平台可信：</p>
+<pre><code>本地每日净值
+vs
+聚宽每日净值</code></pre>
+<p>如果误差能被解释并稳定收敛，本地模拟聚宽 runner 才能作为后续主要测试工具，减少反复消耗聚宽积分和人工时间。</p>
+<h3>2. 补正式因子验证 runner</h3>
+<p>Quant Validation Agent 下一步应补齐：</p>
+<p class="bullet">- rolling validation；</p>
+<p class="bullet">- ablation；</p>
+<p class="bullet">- baseline；</p>
+<p class="bullet">- robustness；</p>
+<p class="bullet">- factor turnover；</p>
+<p class="bullet">- correlation；</p>
+<p class="bullet">- overfitting check。</p>
+<p>这些结果决定 V3 是“研究假设成立”，还是只是“工程复刻成功”。</p>
+<h3>3. 重建银行质量数据的正式 PIT 来源</h3>
+<p>Research Agent 和 Data Collection Skill 需要继续补：</p>
+<p class="bullet">- 银行拨备覆盖率；</p>
+<p class="bullet">- 不良贷款率；</p>
+<p class="bullet">- 核心一级资本充足率；</p>
+<p class="bullet">- 净息差；</p>
+<p class="bullet">- ROE；</p>
+<p class="bullet">- 分红率；</p>
+<p class="bullet">- 公告日期；</p>
+<p class="bullet">- 数据来源引用。</p>
+<p>每个字段必须记录 `source`、`report_date`、`notice_date`、`collected_at`。</p>
+<h3>4. 开始 paper trading 记录</h3>
+<p>从当前候选策略开始记录未来模拟信号，不用它做参数优化，只观察：</p>
+<p class="bullet">- 信号是否稳定；</p>
+<p class="bullet">- 调仓是否可执行；</p>
+<p class="bullet">- 持仓是否符合金融解释；</p>
+<p class="bullet">- 未来收益是否和历史统计方向一致。</p>
+<h2>七、阶段结论</h2>
+<p>第三次测试已经证明：Bank Quant V5 的价值不在于一次性找到“最优策略”，而在于建立了一个更接近真实量化团队的研究系统。</p>
+<p>本轮最重要的进展是：</p>
+<p class="bullet">- 建立了 JQData PIT 研究面板；</p>
+<p class="bullet">- 修复了 notice_date 泄露审计；</p>
+<p class="bullet">- 区分了研究验证与平台复刻；</p>
+<p class="bullet">- 发现高股息银行策略值得继续研究；</p>
+<p class="bullet">- 发现银行质量数据是下一阶段核心瓶颈；</p>
+<p class="bullet">- 建立了本地模拟聚宽与聚宽代码导出的工程链路。</p>
+<p>因此，V3 可以继续推进为候选研究方向，但还不能作为正式可接受策略。下一阶段应优先完成本地 vs 聚宽逐日归因、正式 rolling/ablation/baseline/robustness 验证，以及银行专属质量数据的 PIT 化。</p></body></html>

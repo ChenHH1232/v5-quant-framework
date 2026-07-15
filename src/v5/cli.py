@@ -23,9 +23,11 @@ from v5.engine import RunBlockedError, run_strategy, validate_spec_file
 from v5.joinquant_real_data_runner import collect_joinquant_real_data
 from v5.joinquant_capability_probe import run_joinquant_capability_probe
 from v5.joinquant_pit_panel_runner import collect_joinquant_basic_pit_panel
+from v5.joinquant_availability_runner import build_joinquant_availability_proxy
 from v5.local_backtest import DEFAULT_BACKTEST_END, DEFAULT_BACKTEST_START, BacktestOptions, run_local_backtest
 from v5.formal_validation_runner import run_formal_validation
 from v5.platform_attribution_runner import run_platform_attribution, run_position_attribution, run_transaction_attribution
+from v5.tushare_disclosure_runner import collect_tushare_disclosure_dates
 from v5.universe_runner import build_point_in_time_universe
 from v5.validation_runner import validate_panel
 from v5.v4_quality_source_date_audit_runner import audit_v4_quality_source_dates
@@ -180,6 +182,16 @@ def main(argv: list[str] | None = None) -> int:
     jq_probe_parser = subparsers.add_parser("probe-joinquant-capabilities")
     jq_probe_parser.add_argument("--out-dir", type=Path, default=DEFAULT_DATABASE_DIR / "manifests")
 
+    jq_availability_parser = subparsers.add_parser("build-joinquant-availability-proxy")
+    jq_availability_parser.add_argument("--v4-quality-csv", type=Path, default=DATE_ALIGNMENT_DATABASE_DIR / "processed" / "v4_legacy_bank_quality.csv")
+    jq_availability_parser.add_argument("--out-dir", type=Path, default=DATE_ALIGNMENT_DATABASE_DIR / "processed" / "joinquant_availability")
+
+    tushare_parser = subparsers.add_parser("collect-tushare-disclosure-dates")
+    tushare_parser.add_argument("--quality-csv", type=Path, default=DATE_ALIGNMENT_DATABASE_DIR / "processed" / "v4_legacy_bank_quality.csv")
+    tushare_parser.add_argument("--out-dir", type=Path, default=DATE_ALIGNMENT_DATABASE_DIR / "processed" / "tushare_disclosure_dates")
+    tushare_parser.add_argument("--credential-file", type=Path)
+    tushare_parser.add_argument("--token-env", default="TUSHARE_TOKEN")
+
     jq_pit_parser = subparsers.add_parser("collect-joinquant-basic-pit-panel")
     jq_pit_parser.add_argument("scaffold_panel", type=Path)
     jq_pit_parser.add_argument("--out-dir", type=Path, default=DEFAULT_DATABASE_DIR / "processed" / "joinquant_basic_pit_panel")
@@ -222,6 +234,7 @@ def main(argv: list[str] | None = None) -> int:
     date_alignment_parser.add_argument("--v4-quality-csv", type=Path, default=DATE_ALIGNMENT_DATABASE_DIR / "processed" / "v4_legacy_bank_quality.csv")
     date_alignment_parser.add_argument("--eastmoney-quality-csv", type=Path, default=DATE_ALIGNMENT_DATABASE_DIR / "processed" / "eastmoney_bank_quality_manual_csv.csv")
     date_alignment_parser.add_argument("--joinquant-availability-csv", type=Path)
+    date_alignment_parser.add_argument("--external-notice-csv", type=Path)
 
     position_attribution_parser = subparsers.add_parser("platform-position-attribution")
     position_attribution_parser.add_argument("joinquant_position_csv", type=Path)
@@ -364,6 +377,17 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "probe-joinquant-capabilities":
             print(run_joinquant_capability_probe(args.out_dir))
             return 0
+        if args.command == "build-joinquant-availability-proxy":
+            result = build_joinquant_availability_proxy(args.v4_quality_csv, args.out_dir)
+            print(result.availability_path)
+            return 0
+        if args.command == "collect-tushare-disclosure-dates":
+            kwargs = {}
+            if args.credential_file:
+                kwargs["credential_file"] = args.credential_file
+            result = collect_tushare_disclosure_dates(args.quality_csv, args.out_dir, token_env=args.token_env, **kwargs)
+            print(result.disclosure_path)
+            return 0
         if args.command == "collect-joinquant-basic-pit-panel":
             result = collect_joinquant_basic_pit_panel(
                 args.scaffold_panel,
@@ -405,6 +429,7 @@ def main(argv: list[str] | None = None) -> int:
                 v4_quality_csv=args.v4_quality_csv,
                 eastmoney_quality_csv=args.eastmoney_quality_csv,
                 joinquant_availability_csv=args.joinquant_availability_csv,
+                external_notice_csv=args.external_notice_csv,
             )
             print(result.alignment_path)
             return 0

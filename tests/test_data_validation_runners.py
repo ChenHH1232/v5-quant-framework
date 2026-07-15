@@ -10,6 +10,8 @@ from pathlib import Path
 from v5.data_runner import collect_panel_from_v4_raw, write_collection_manifest
 from v5.daily_backtest import _defensive_state
 from v5.bank_quality_date_alignment_runner import align_bank_quality_dates
+from v5.credential_loader import load_tushare_token
+from v5.joinquant_availability_runner import build_joinquant_availability_proxy
 from v5.benchmark_runner import _normalize_benchmark_row
 from v5.dividend_runner import _normalize_akshare_dividend_row
 from v5.joinquant_pit_panel_runner import _latest_visible_bank_quality, _load_bank_quality_snapshots
@@ -34,6 +36,14 @@ class DataValidationRunnerTests(unittest.TestCase):
         self.assertNotIn("password_value", serialized)
         self.assertNotIn("secret_value", serialized)
         self.assertNotIn("token_value", serialized)
+
+    def test_tushare_token_can_load_from_labeled_next_line(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "credentials.txt"
+            path.write_text("Tushare Token:\nabc123\n", encoding="utf-8")
+            token = load_tushare_token("MISSING_TUSHARE_TOKEN_ENV", path)
+
+        self.assertEqual(token, "abc123")
 
     def test_validate_panel_writes_summary(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -362,6 +372,36 @@ class DataValidationRunnerTests(unittest.TestCase):
         self.assertEqual(rows[0]["formal_pit_usable"], "true")
         self.assertEqual(rows[0]["date_alignment_status"], "aligned_formal_pit_ready")
         self.assertEqual(rows[0]["conservative_visible_date"], "2025-04-01")
+
+    def test_joinquant_proxy_date_does_not_make_formal_pit_usable(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            v4_quality = tmp_path / "v4_quality.csv"
+            external_notice = tmp_path / "tushare_notice.csv"
+            self._write_csv(
+                v4_quality,
+                ["code", "source_year", "notice_date", "review_status", "confidence", "source_note"],
+                [{"code": "000001.XSHE", "source_year": "2024", "notice_date": "2025-04-01"}],
+            )
+            self._write_csv(
+                external_notice,
+                ["code", "source_year", "notice_date", "review_status", "confidence", "source_note"],
+                [{"code": "000001.XSHE", "source_year": "2024", "notice_date": "2025-03-15", "source_note": "tushare"}],
+            )
+
+            proxy = build_joinquant_availability_proxy(v4_quality, tmp_path / "jq")
+            result = align_bank_quality_dates(
+                tmp_path / "aligned",
+                v4_quality_csv=v4_quality,
+                eastmoney_quality_csv=tmp_path / "missing_eastmoney.csv",
+                joinquant_availability_csv=proxy.availability_path,
+                external_notice_csv=external_notice,
+            )
+            rows = self._read_csv(result.alignment_path)
+
+        self.assertEqual(rows[0]["conservative_visible_date"], "2025-04-01")
+        self.assertEqual(rows[0]["formal_pit_usable"], "false")
+        self.assertEqual(rows[0]["date_alignment_status"], "aligned_with_joinquant_proxy_not_formal")
 
     def test_benchmark_row_normalizes_close_series(self) -> None:
         spec = {

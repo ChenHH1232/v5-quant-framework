@@ -2,10 +2,11 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable
+
+from v5.credential_loader import load_joinquant_credentials
 
 
 def run_joinquant_capability_probe(
@@ -63,8 +64,7 @@ def _load_authenticated_jqdata(username_env: str, password_env: str):
         import jqdatasdk as jq
     except Exception as exc:
         raise RuntimeError("jqdatasdk is required for JoinQuant capability probing") from exc
-    username = os.environ.get(username_env)
-    password = os.environ.get(password_env)
+    username, password = load_joinquant_credentials(username_env, password_env)
     if username and password:
         jq.auth(username, password)
     if not jq.is_auth():

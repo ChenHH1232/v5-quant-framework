@@ -45,6 +45,7 @@ def align_bank_quality_dates(
     v4_quality_csv: Path = DEFAULT_V4_QUALITY_CSV,
     eastmoney_quality_csv: Path = DEFAULT_EASTMONEY_QUALITY_CSV,
     joinquant_availability_csv: Path | None = None,
+    external_notice_csv: Path | None = None,
 ) -> BankQualityDateAlignmentResult:
     out_dir.mkdir(parents=True, exist_ok=True)
     sources: dict[tuple[str, str], dict[str, Any]] = {}
@@ -71,6 +72,19 @@ def align_bank_quality_dates(
         item["confidences"].add(row.get("confidence") or "")
         item["source_notes"].add(row.get("source_note") or "eastmoney_bank_quality")
 
+    if external_notice_csv:
+        for row in _read_csv_if_exists(external_notice_csv):
+            code = _normalize_code(row.get("code"))
+            year = _normalize_year(row.get("source_year") or row.get("report_year"))
+            notice = row.get("notice_date") or row.get("announce_date") or row.get("actual_date") or row.get("ann_date")
+            if not code or not year:
+                continue
+            item = sources.setdefault((code, year), _empty_item(code, year))
+            item["eastmoney_notice_date"] = _latest_date(item.get("eastmoney_notice_date"), notice)
+            item["review_statuses"].add(row.get("review_status") or "needs_check")
+            item["confidences"].add(row.get("confidence") or "")
+            item["source_notes"].add(row.get("source_note") or "external_notice_csv")
+
     if joinquant_availability_csv:
         for row in _read_csv_if_exists(joinquant_availability_csv):
             code = _normalize_code(row.get("code"))
@@ -88,6 +102,8 @@ def align_bank_quality_dates(
             item["review_statuses"].add(row.get("review_status") or "needs_check")
             item["confidences"].add(row.get("confidence") or "")
             item["source_notes"].add(row.get("source_note") or "joinquant_availability_csv")
+            if (row.get("review_status") or "").lower() == "proxy" or (row.get("availability_type") or "").lower().endswith("proxy"):
+                item["joinquant_proxy"] = True
 
     rows = [_finalize_item(item) for _, item in sorted(sources.items())]
     alignment_path = out_dir / "bank_quality_date_alignment.csv"
@@ -107,6 +123,7 @@ def align_bank_quality_dates(
         "v4_quality_csv": str(v4_quality_csv),
         "eastmoney_quality_csv": str(eastmoney_quality_csv),
         "joinquant_availability_csv": str(joinquant_availability_csv) if joinquant_availability_csv else "",
+        "external_notice_csv": str(external_notice_csv) if external_notice_csv else "",
         "row_count": len(rows),
         "formal_usable_count": formal_usable_count,
         "blocked_count": blocked_count,
@@ -138,6 +155,7 @@ def _empty_item(code: str, year: str) -> dict[str, Any]:
         "review_statuses": set(),
         "confidences": set(),
         "source_notes": set(),
+        "joinquant_proxy": False,
     }
 
 
@@ -167,7 +185,12 @@ def _finalize_item(item: dict[str, Any]) -> dict[str, str]:
         delta = (_parse_date(local_date) - _parse_date(jq_date)).days
         notes.append(f"local_minus_joinquant_days={delta}")
 
-    if not missing:
+    is_jq_proxy = bool(item.get("joinquant_proxy"))
+    if not missing and is_jq_proxy:
+        status = "aligned_with_joinquant_proxy_not_formal"
+        formal_usable = "false"
+        notes.append("joinquant_available_date_is_proxy")
+    elif not missing:
         status = "aligned_formal_pit_ready"
         formal_usable = "true"
     elif len(missing) == 3:
@@ -206,7 +229,7 @@ def _write_report(path: Path, manifest: dict[str, Any], rows: list[dict[str, str
         "",
         "`conservative_visible_date = max(eastmoney_notice_date, joinquant_available_date, local_first_use_date)`",
         "",
-        "A row is formal PIT usable only when all three dates are known. Missing dates are kept explicit instead of being filled from another source.",
+        "A row is formal PIT usable only when all three dates are known and JoinQuant availability is not a proxy. Missing dates are kept explicit instead of being filled from another source.",
         "",
         "## Summary",
         "",
@@ -299,12 +322,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--v4-quality-csv", type=Path, default=DEFAULT_V4_QUALITY_CSV)
     parser.add_argument("--eastmoney-quality-csv", type=Path, default=DEFAULT_EASTMONEY_QUALITY_CSV)
     parser.add_argument("--joinquant-availability-csv", type=Path)
+    parser.add_argument("--external-notice-csv", type=Path)
     args = parser.parse_args(argv)
     result = align_bank_quality_dates(
         args.out_dir,
         v4_quality_csv=args.v4_quality_csv,
         eastmoney_quality_csv=args.eastmoney_quality_csv,
         joinquant_availability_csv=args.joinquant_availability_csv,
+        external_notice_csv=args.external_notice_csv,
     )
     print(result.alignment_path)
     return 0

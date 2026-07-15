@@ -3,11 +3,12 @@ from __future__ import annotations
 import argparse
 import csv
 import json
-import os
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
+
+from v5.credential_loader import load_joinquant_credentials
 
 
 DEFAULT_DATABASE_DIR = Path("数据库")
@@ -171,8 +172,7 @@ def _load_authenticated_jqdata(username_env: str, password_env: str):
     except Exception as exc:
         raise RuntimeError("jqdatasdk is required for JoinQuant real data collection") from exc
 
-    username = os.environ.get(username_env)
-    password = os.environ.get(password_env)
+    username, password = load_joinquant_credentials(username_env, password_env)
     if username and password:
         jq.auth(username, password)
     if not jq.is_auth():

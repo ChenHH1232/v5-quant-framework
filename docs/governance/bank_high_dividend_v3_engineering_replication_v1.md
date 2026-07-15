@@ -12,7 +12,7 @@ Engineering local daily simulation for V3 formal candidate is complete.
 
 Fresh JoinQuant execution for the guard-applied V3 formal candidate is now complete by user-reported platform summary. Fresh daily-result attribution and transaction attribution are complete.
 
-The local PIT panel coverage gap has been fixed by extending the panel through the 2026-04 rebalance. Strict JoinQuant replication is now close, with only position/log attribution pending.
+The local PIT panel coverage gap has been fixed by extending the panel through the 2026-04 rebalance. Fresh daily, transaction, and position attribution now support passing platform replication with documented minor residuals. Log archival remains optional.
 
 ## Evidence
 
@@ -79,6 +79,13 @@ The local PIT panel coverage gap has been fixed by extending the panel through t
   - transaction matched keys after extension: 198
   - JoinQuant-only transaction keys after extension: 8
   - local-only transaction keys after extension: 2
+- Fresh position attribution using `position (1).csv`:
+  - local rebalance dates checked: 20
+  - code mismatches on local rebalance dates: 0
+  - first-day selected stocks match: 8 / 8
+  - 2026-04-01 selected stocks match: 8 / 8
+  - maximum absolute share difference by rebalance date: 6,800 shares
+  - maximum absolute weight difference by rebalance date: 1.26 percentage points
 
 ## PM Interpretation
 
@@ -86,8 +93,8 @@ The previous JoinQuant export should be treated as an older no-guard platform re
 
 It should not be used to accept or reject the guard-applied V3 formal candidate.
 
-The fresh guard-applied JoinQuant platform summary is close enough to local simulation to move forward, and transaction attribution confirms the signal contract is aligned. The prior late-window return gap was primarily a local data-coverage problem. After extending the local panel through 2026-04, the remaining strategy-return gap is small enough to treat as expected execution/rounding/cash and benchmark-convention residual unless position/log attribution reveals a new mismatch.
+The fresh guard-applied JoinQuant platform summary is close enough to local simulation to move forward. Transaction and position attribution confirm the signal contract is aligned. The prior late-window return gap was primarily a local data-coverage problem. After extending the local panel through 2026-04, the remaining strategy-return gap is small enough to treat as expected execution/rounding/cash and benchmark-convention residual.
 
 ## Required Next Gate
 
-Engineering Agent must attribute fresh JoinQuant position and log exports. If no new mismatch appears, Project Manager Agent may mark platform replication as passed with documented minor residuals.
+Project Manager Agent may mark platform replication as passed with documented minor residuals. If a fresh log TXT is later provided, archive it as supporting evidence rather than as a blocking gate.

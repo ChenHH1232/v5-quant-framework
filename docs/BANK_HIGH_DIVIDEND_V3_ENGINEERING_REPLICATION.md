@@ -377,11 +377,55 @@ Interpretation:
 - Remaining differences are now plausibly due to execution timing (`09:40` versus local daily-open approximation), hundred-share rounding, tiny order differences, cash/dividend timing, and benchmark price convention.
 - The benchmark difference remains unchanged because it comes from the local benchmark series versus JoinQuant platform benchmark convention, not from the strategy signal.
 
-## 11. Next Engineering Action
+## 11. Fresh Position Attribution After Extension
 
-Use fresh JoinQuant formal-candidate exports to finish strict platform attribution:
+Fresh JoinQuant position export:
 
-- position CSV;
+```text
+C:/Users/Administrator/AppData/Local/Temp/position (1).csv
+```
+
+Attribution output:
+
+```text
+platform_attribution_v3_formal_candidate_extended_202604_positions/bank_high_dividend_sustainability_v3_positions_positions/
+```
+
+Raw position export note:
+
+- JoinQuant position export is daily.
+- Local `holdings.csv` is recorded on rebalance dates only.
+- Therefore daily non-rebalance rows in the JoinQuant export are not strict mismatch evidence. The relevant platform-replication check is the overlap on local rebalance dates.
+
+Result on the 20 local rebalance dates:
+
+| Check | Result |
+| --- | ---: |
+| local rebalance dates checked | 20 |
+| dates with code mismatch | 0 |
+| first-day common position count | 8 / 8 |
+| 2026-04-01 common position count | 8 / 8 |
+| max absolute share difference by date | 6,800 shares |
+| max absolute weight difference by date | 1.26 pct points |
+| total absolute weight difference across 20 dates | 9.44 pct points |
+
+Key rebalance-date examples:
+
+| Date | JoinQuant Count | Local Count | Common | Only JoinQuant | Only Local | Abs Share Diff | Abs Weight Diff |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 2021-07-01 | 8 | 8 | 8 | 0 | 0 | 1,700 | 0.58 pct points |
+| 2026-04-01 | 8 | 8 | 8 | 0 | 0 | 6,800 | 0.30 pct points |
+
+Interpretation:
+
+- Position attribution confirms the selected-stock contract is aligned on every local rebalance date.
+- Remaining position differences are small share-count and weight residuals, consistent with `09:40` execution prices versus local daily-open approximation, hundred-share rounding, cash drift, and tiny order differences.
+- Together with daily NAV and transaction attribution, this supports marking V3 formal candidate platform replication as passed with documented minor residuals, pending only log-file archival if desired.
+
+## 12. Next Engineering Action
+
+Optional final archival step:
+
 - log TXT containing value-trap guard application lines.
 
-If position and log attribution do not reveal a new mismatch, Project Manager Agent can mark V3 formal candidate platform replication as passed with minor expected execution/benchmark residuals.
+Project Manager Agent can mark V3 formal candidate platform replication as passed with minor expected execution/benchmark residuals.

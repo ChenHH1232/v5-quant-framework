@@ -32,7 +32,7 @@ from v5.sector_rank_panel_runner import build_sector_rank_panel
 from v5.tushare_disclosure_runner import collect_tushare_disclosure_dates
 from v5.universe_runner import build_point_in_time_universe
 from v5.utilities_model_panel_runner import build_utilities_cashflow_value_panel
-from v5.utilities_external_state_runner import validate_utilities_external_state, write_utilities_external_state_template
+from v5.utilities_external_state_runner import collect_utilities_external_state, validate_utilities_external_state, write_utilities_external_state_template
 from v5.utilities_pit_panel_runner import collect_utilities_pit_panel
 from v5.validation_runner import validate_panel
 from v5.v4_quality_source_date_audit_runner import audit_v4_quality_source_dates
@@ -240,6 +240,8 @@ def main(argv: list[str] | None = None) -> int:
     utilities_state_subparsers = utilities_state_parser.add_subparsers(dest="state_command", required=True)
     utilities_state_template = utilities_state_subparsers.add_parser("template")
     utilities_state_template.add_argument("--out-dir", type=Path, default=Path("数据库") / "processed" / "utilities_external_state")
+    utilities_state_collect = utilities_state_subparsers.add_parser("collect")
+    utilities_state_collect.add_argument("--out-dir", type=Path, default=Path("数据库") / "processed" / "utilities_external_state")
     utilities_state_validate = utilities_state_subparsers.add_parser("validate")
     utilities_state_validate.add_argument("csv_path", type=Path)
 
@@ -481,6 +483,9 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "utilities-external-state":
             if args.state_command == "template":
                 print(write_utilities_external_state_template(args.out_dir))
+                return 0
+            if args.state_command == "collect":
+                print(collect_utilities_external_state(args.out_dir))
                 return 0
             if args.state_command == "validate":
                 print(json.dumps(validate_utilities_external_state(args.csv_path), ensure_ascii=False, indent=2))

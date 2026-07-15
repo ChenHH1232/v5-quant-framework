@@ -17,7 +17,12 @@ from v5.dividend_runner import _normalize_akshare_dividend_row
 from v5.joinquant_pit_panel_runner import _latest_visible_bank_quality, _load_bank_quality_snapshots
 from v5.local_backtest import BacktestOptions, run_local_backtest
 from v5.sector_rank_panel_runner import build_sector_rank_panel
-from v5.utilities_external_state_runner import validate_utilities_external_state, write_utilities_external_state_template
+import v5.utilities_external_state_runner as utilities_external_state_runner
+from v5.utilities_external_state_runner import (
+    collect_utilities_external_state,
+    validate_utilities_external_state,
+    write_utilities_external_state_template,
+)
 from v5.utilities_pit_panel_runner import _interest_coverage, _market_cap_cny, _ratio
 from v5.validation_runner import validate_panel
 from v5.v4_legacy_bank_quality_runner import collect_v4_legacy_bank_quality
@@ -85,6 +90,66 @@ class DataValidationRunnerTests(unittest.TestCase):
         self.assertEqual(result["status"], "needs_review")
         self.assertEqual(result["pit_usable_count"], 0)
         self.assertGreater(len(result["missing_required"]), 0)
+
+    def test_collect_utilities_external_state_writes_valid_panel_and_manifest(self) -> None:
+        def fake_electricity_rows() -> list[dict[str, str]]:
+            return [
+                {
+                    "visible_date": "2025-02-25",
+                    "state_date": "2025-01-31",
+                    "state_scope": "national",
+                    "sub_industry": "all_power",
+                    "metric": "electricity_consumption_yoy",
+                    "value": "6.8",
+                    "unit": "percent",
+                    "source_name": "fake akshare",
+                    "source_url": "https://example.test/akshare",
+                    "source_publication_date": "2025-02-25",
+                    "pit_usable": "true",
+                    "review_status": "conservative_proxy",
+                    "notes": "test row",
+                }
+            ]
+
+        def fake_nea_rows() -> list[dict[str, str]]:
+            return [
+                {
+                    "visible_date": "2025-01-21",
+                    "state_date": "2024-12-31",
+                    "state_scope": "national",
+                    "sub_industry": "all_power",
+                    "metric": "generation_utilization_hours_total",
+                    "value": "3442",
+                    "unit": "hours",
+                    "source_name": "fake NEA",
+                    "source_url": "https://example.test/nea",
+                    "source_publication_date": "2025-01-21",
+                    "pit_usable": "true",
+                    "review_status": "source_anchored",
+                    "notes": "test row",
+                }
+            ]
+
+        original_electricity = utilities_external_state_runner._collect_society_electricity_rows
+        original_nea = utilities_external_state_runner._manual_nea_state_rows
+        utilities_external_state_runner._collect_society_electricity_rows = fake_electricity_rows
+        utilities_external_state_runner._manual_nea_state_rows = fake_nea_rows
+        try:
+            with tempfile.TemporaryDirectory() as tmp:
+                panel = collect_utilities_external_state(Path(tmp))
+                result = validate_utilities_external_state(panel)
+                manifest = json.loads((Path(tmp) / "collection_manifest.json").read_text(encoding="utf-8"))
+                rows = self._read_csv(panel)
+        finally:
+            utilities_external_state_runner._collect_society_electricity_rows = original_electricity
+            utilities_external_state_runner._manual_nea_state_rows = original_nea
+
+        self.assertEqual(result["status"], "pass")
+        self.assertEqual(result["row_count"], 2)
+        self.assertEqual(result["pit_usable_count"], 2)
+        self.assertEqual(manifest["dataset"], "utilities_external_state")
+        self.assertEqual(manifest["validation"]["status"], "pass")
+        self.assertEqual([row["metric"] for row in rows], ["generation_utilization_hours_total", "electricity_consumption_yoy"])
 
     def test_validate_panel_writes_summary(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

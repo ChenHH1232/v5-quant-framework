@@ -163,6 +163,7 @@ def _baseline_tests(rows: list[dict[str, Any]], raw: dict[str, Any]) -> list[dic
                     mode=mode,
                     factor=item.get("factor"),
                     selection_count=item.get("selection_count"),
+                    factor_direction=item.get("direction"),
                 )
             )
         return result
@@ -369,6 +370,7 @@ def _strategy_case(
     selection_count: int | None = None,
     weight_scale: dict[str, float] | None = None,
     use_factors: list[str] | None = None,
+    factor_direction: str | None = None,
 ) -> dict[str, Any]:
     by_date: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in rows:
@@ -392,11 +394,11 @@ def _strategy_case(
         if mode == "equal_all":
             selected = date_rows
         elif mode == "single_factor" and factor:
-            factor_direction = _factor_direction(raw, factor)
+            current_factor_direction = factor_direction or _factor_direction(raw, factor)
             selected = sorted(
                 [row for row in date_rows if _to_float(row.get(factor)) is not None],
                 key=lambda row: _to_float(row.get(factor)) or 0.0,
-                reverse=factor_direction == "higher_is_better",
+                reverse=current_factor_direction == "higher_is_better",
             )[:current_selection_count]
         else:
             scored = _score_date_rows(date_rows, factors, weights)

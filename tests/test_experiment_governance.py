@@ -186,6 +186,35 @@ class ExperimentGovernanceTests(unittest.TestCase):
         self.assertEqual(result[0]["case"], "high_dividend_utilities_top1")
         self.assertEqual(result[0]["mean_return"], 0.07)
 
+    def test_configured_baseline_direction_can_cover_raw_factor_not_in_spec(self):
+        raw = {
+            "signals": {
+                "factors": [{"name": "cashflow_yield_subindustry_score", "direction": "higher_is_better"}],
+                "scoring": {"weights": {"cashflow_yield_subindustry_score": 1.0}},
+            },
+            "portfolio": {"selection_count": 1},
+            "validation": {
+                "baselines": [
+                    {
+                        "name": "raw_low_pb_top1",
+                        "mode": "single_factor",
+                        "factor": "low_price_to_book",
+                        "direction": "lower_is_better",
+                        "selection_count": 1,
+                    }
+                ]
+            },
+        }
+        rows = [
+            {"trade_date": "2025-04-01", "code": "LOW_PB", "future_return": 0.06, "low_price_to_book": 0.5},
+            {"trade_date": "2025-04-01", "code": "HIGH_PB", "future_return": -0.04, "low_price_to_book": 2.0},
+        ]
+
+        result = _baseline_tests(rows, raw)
+
+        self.assertEqual(result[0]["case"], "raw_low_pb_top1")
+        self.assertEqual(result[0]["mean_return"], 0.06)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -9,6 +9,7 @@
 - [Bank sector research references](references/bank_sector_references.md)
 - [Bank knowledge collection source register](references/source_register_bank_sector.md) - first-pass official/regulatory and academic source register completed; market/industry protected sources marked for manual review.
 - [Utilities source collection plan](references/utilities_source_collection_plan.md) - V5.1 preparation source order and source-risk guardrails.
+- [Utilities special information sources](references/utilities_special_information_sources.md) - sector-specific data layers for power, gas and water utilities.
 - [Bank regulatory definitions](references/bank_regulatory_definitions.md) - first-pass official definition layer completed.
 - [Bank academic theory sources](references/bank_academic_theory_sources.md) - first-pass theory source layer completed.
 - [Bank disclosure field map](references/bank_disclosure_field_map.md) - pending collection.
@@ -33,6 +34,7 @@
 
 - [Bank Value 15Y defensive overlay](strategy_cases/bank_value_15y_defensive_overlay.md)
 - [Utilities V5.1 Test-1 initial result](strategy_cases/utilities_v51_test1_initial_result.md) - process portability passed, current composite rejected for formal-candidate promotion.
+- [Utilities V5.1b cashflow value result](strategy_cases/utilities_v51b_cashflow_value_result.md) - sub-industry cash-flow value improved clarity but still failed candidate promotion.
 
 ## Open Research Questions
 

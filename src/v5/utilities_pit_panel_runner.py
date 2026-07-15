@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import math
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
@@ -396,9 +397,12 @@ def _to_float(value: Any) -> float | None:
     if value in {None, "", "nan", "NaN", "None"}:
         return None
     try:
-        return float(value)
+        numeric = float(value)
     except (TypeError, ValueError):
         return None
+    if math.isnan(numeric) or math.isinf(numeric):
+        return None
+    return numeric
 
 
 def _fmt_float(value: Any) -> str:

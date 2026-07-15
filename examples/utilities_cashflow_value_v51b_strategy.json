@@ -1,0 +1,263 @@
+{
+  "meta": {
+    "strategy_id": "utilities_cashflow_value_v51b",
+    "name": "Utilities Cashflow Value V5.1b",
+    "objective": "Retest A-share utilities with a sub-industry-aware cash-flow value model after V5.1 Test-1 showed that the generic composite did not beat low-PB and high-dividend baselines.",
+    "status": "research_pit_validation_ready"
+  },
+  "universe": {
+    "name": "A-share utilities operating companies",
+    "construction": "point_in_time_core_utilities_operating_company_membership_with_sub_industry_scoring",
+    "point_in_time": true,
+    "minimum_rebalance_coverage_ratio": 0.8
+  },
+  "data": {
+    "vendor": "JoinQuant/DataJQ PIT utilities panel plus V5 sub-industry score enhancement",
+    "price_frequency": "quarterly_signal_panel",
+    "financial_as_of_policy": "announcement_date",
+    "price_adjustment": {
+      "research_panel": "pre_adjusted_total_return",
+      "status": "research_pit_validation_only"
+    },
+    "window": {
+      "research_start": "2017-01-01",
+      "research_end": "2026-05-31"
+    },
+    "source_warning": "External variables such as coal prices, tariff policy and utilization hours are not yet joined. This is a cash-flow value retest, not a formal candidate."
+  },
+  "signals": {
+    "factors": [
+      {
+        "name": "cashflow_yield_subindustry_score",
+        "source": "derived_from_operating_cash_flow_yield",
+        "role": "main_cashflow_value_signal",
+        "direction": "higher_is_better",
+        "definition": "Within-date and within-sub-industry percentile score of operating cash-flow yield.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 90,
+        "missing_policy": "drop_security",
+        "winsorize": "already_ranked",
+        "normalize": "rebalance_cross_section_zscore",
+        "evidence_status": "hypothesis_only"
+      },
+      {
+        "name": "low_pb_subindustry_score",
+        "source": "derived_from_pb_ratio",
+        "role": "subindustry_relative_valuation_support",
+        "direction": "higher_is_better",
+        "definition": "Within-date and within-sub-industry percentile score where lower PB receives higher score.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security",
+        "winsorize": "already_ranked",
+        "normalize": "rebalance_cross_section_zscore",
+        "evidence_status": "hypothesis_only"
+      },
+      {
+        "name": "dividend_cashflow_support_score",
+        "source": "derived_from_dividend_yield_and_cashflow_quality",
+        "role": "sustainable_dividend_support",
+        "direction": "higher_is_better",
+        "definition": "Average percentile support from dividend yield, operating cash-flow yield and OCF/net profit.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 90,
+        "missing_policy": "drop_security",
+        "winsorize": "already_ranked",
+        "normalize": "rebalance_cross_section_zscore",
+        "evidence_status": "hypothesis_only"
+      },
+      {
+        "name": "capex_control_score",
+        "source": "derived_from_capex_burden",
+        "role": "capex_pressure_control",
+        "direction": "higher_is_better",
+        "definition": "Within-date and within-sub-industry percentile score where lower capex burden receives higher score.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 90,
+        "missing_policy": "drop_security",
+        "winsorize": "already_ranked",
+        "normalize": "rebalance_cross_section_zscore",
+        "evidence_status": "risk_control_candidate"
+      },
+      {
+        "name": "leverage_control_score",
+        "source": "derived_from_asset_liability_ratio",
+        "role": "balance_sheet_pressure_control",
+        "direction": "higher_is_better",
+        "definition": "Within-date and within-sub-industry percentile score where lower asset-liability ratio receives higher score.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 90,
+        "missing_policy": "drop_security",
+        "winsorize": "already_ranked",
+        "normalize": "rebalance_cross_section_zscore",
+        "evidence_status": "risk_control_candidate"
+      }
+    ],
+    "scoring": {
+      "method": "weighted_composite_score",
+      "normalization_scope": "rebalance_cross_section",
+      "weights": {
+        "cashflow_yield_subindustry_score": 0.4,
+        "low_pb_subindustry_score": 0.25,
+        "dividend_cashflow_support_score": 0.2,
+        "capex_control_score": 0.1,
+        "leverage_control_score": 0.05
+      },
+      "min_factor_count": 4,
+      "value_trap_guard": "Dividend is accepted only as cash-flow-supported dividend support, not as standalone high yield."
+    }
+  },
+  "schedule": {
+    "signal_frequency": "quarterly_after_financial_disclosure",
+    "rebalance_frequency": "quarterly",
+    "rebalance_rule": "first_tradable_day_after_required_financial_data_visibility_check"
+  },
+  "portfolio": {
+    "selection_count": 10,
+    "weighting": "equal_weight_after_cashflow_value_score",
+    "max_position_weight": 0.12,
+    "cash_policy": "hold_residual_cash_when_fewer_than_10_utilities_pass_filters"
+  },
+  "risk": {
+    "defensive_asset": "cash",
+    "defensive_rule": {
+      "enabled": false,
+      "reason": "V5.1b still tests research factors only."
+    },
+    "individual_stop_loss_take_profit": {
+      "enabled": false,
+      "reason": "Fixed exits are not part of the cash-flow value hypothesis."
+    }
+  },
+  "validation": {
+    "method": "rolling",
+    "train_years": 5,
+    "test_years": 2,
+    "review_years": 1,
+    "weak_years": [
+      "2018",
+      "2019",
+      "2020",
+      "2021",
+      "2022"
+    ],
+    "baselines": [
+      {
+        "name": "equal_weight_utilities",
+        "mode": "equal_all"
+      },
+      {
+        "name": "raw_low_pb_utilities_top10",
+        "mode": "single_factor",
+        "factor": "low_price_to_book",
+        "direction": "lower_is_better",
+        "selection_count": 10
+      },
+      {
+        "name": "raw_high_dividend_utilities_top10",
+        "mode": "single_factor",
+        "factor": "dividend_yield",
+        "direction": "higher_is_better",
+        "selection_count": 10
+      },
+      {
+        "name": "raw_cashflow_yield_utilities_top10",
+        "mode": "single_factor",
+        "factor": "operating_cash_flow_yield",
+        "direction": "higher_is_better",
+        "selection_count": 10
+      },
+      {
+        "name": "cashflow_value_composite_v51b",
+        "mode": "composite"
+      }
+    ],
+    "common_sample_fields": [
+      "cashflow_yield_subindustry_score",
+      "low_pb_subindustry_score",
+      "dividend_cashflow_support_score",
+      "capex_control_score",
+      "leverage_control_score"
+    ],
+    "common_sample_interactions": [
+      {
+        "name": "common_cashflow_only",
+        "factors": [
+          "cashflow_yield_subindustry_score"
+        ]
+      },
+      {
+        "name": "common_cashflow_plus_low_pb",
+        "factors": [
+          "cashflow_yield_subindustry_score",
+          "low_pb_subindustry_score"
+        ]
+      },
+      {
+        "name": "common_cashflow_plus_dividend_support",
+        "factors": [
+          "cashflow_yield_subindustry_score",
+          "dividend_cashflow_support_score"
+        ]
+      },
+      {
+        "name": "common_cashflow_value_all_support",
+        "factors": [
+          "cashflow_yield_subindustry_score",
+          "low_pb_subindustry_score",
+          "dividend_cashflow_support_score",
+          "capex_control_score",
+          "leverage_control_score"
+        ]
+      }
+    ],
+    "robustness": {
+      "selection_counts": [
+        8,
+        10,
+        12
+      ],
+      "weight_scale_factors": [
+        "cashflow_yield_subindustry_score",
+        "low_pb_subindustry_score",
+        "dividend_cashflow_support_score"
+      ],
+      "weight_scales": [
+        0.8,
+        1.0,
+        1.2
+      ]
+    },
+    "required_tests": [
+      "subindustry_pit_panel_check",
+      "IC_and_RankIC_by_factor",
+      "raw_low_pb_baseline",
+      "raw_high_dividend_baseline",
+      "raw_cashflow_yield_baseline",
+      "ablation",
+      "rolling_validation",
+      "selection_count_robustness",
+      "subindustry_failure_mode_review"
+    ],
+    "acceptance_rule": "Do not promote unless V5.1b beats raw cash-flow yield, raw low-PB and high-dividend baselines under PIT rolling validation."
+  },
+  "execution": {
+    "status": "blocked_until_research_pit_validation_passes",
+    "next_gate": "research_pit_validation",
+    "not_status": "formal_strategy_candidate",
+    "commission_bps": 3,
+    "slippage_bps": 5,
+    "suspension_policy": "skip_untradeable",
+    "limit_policy": "skip_limit_blocked"
+  },
+  "outputs": {
+    "save_holdings": true,
+    "save_rebalance_signals": true,
+    "report": "markdown",
+    "required_reports": [
+      "factor_validation_report",
+      "formal_validation_report",
+      "project_manager_decision_note"
+    ]
+  }
+}

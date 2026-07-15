@@ -193,24 +193,44 @@ Decision:
 
 ```text
 formal_candidate_local_daily_simulation = completed
-existing_joinquant_export_replication = no_guard_contract
-formal_candidate_joinquant_replication = requires_new_joinquant_run
+old_joinquant_export_replication = no_guard_contract
+fresh_formal_candidate_joinquant_run = completed_by_user_summary
+formal_candidate_joinquant_attribution = pending_fresh_exports
 ```
 
-The formal candidate simulation is complete locally. However, existing JoinQuant exports are not a strict replication target for the formal candidate because the old JoinQuant run did not apply the value-trap guard.
+The formal candidate simulation is complete locally. The old JoinQuant exports are not a strict replication target for the formal candidate because the old JoinQuant run did not apply the value-trap guard.
+
+After the JoinQuant script was changed to fail closed when the value-trap guard cannot be applied, the user reran the fresh guard-applied formal-candidate script in JoinQuant. The run placed orders normally and produced a platform summary close to the local formal-candidate simulation.
+
+Fresh JoinQuant formal-candidate summary reported by user:
+
+| Metric | Fresh JoinQuant Formal Candidate | Local Formal Candidate | Difference |
+| --- | ---: | ---: | ---: |
+| strategy return | 57.35% | 61.76% | -4.41 pct points |
+| annualized return | 9.67% | 10.37% | -0.70 pct points |
+| benchmark return | 26.51% | 25.16% | +1.35 pct points |
+| excess return | 24.38% | 36.60% | -12.22 pct points |
+| max drawdown | 17.06% | 17.24% | -0.18 pct points |
+| beta | 0.864 | 0.863 | +0.001 |
+| strategy volatility | 0.163 | 0.163 | +0.000 |
+| benchmark volatility | 0.168 | 0.169 | -0.001 |
+| max drawdown interval | 2021/07/07,2022/10/31 | 2021-07-07,2022-10-31 | aligned |
+
+Interpretation:
+
+- The fresh JoinQuant result is now directionally aligned with the local formal-candidate run.
+- Risk path is very close: max drawdown, drawdown interval, beta, and volatility are all near local simulation.
+- Strategy final return is lower on JoinQuant by 4.41 percentage points; this is plausible but still requires daily attribution.
+- Excess return differs more because benchmark return differs by 1.35 percentage points and JoinQuant reports excess on its platform convention.
+- This run supports "engineering smoke passed" for the guard-applied script, but strict platform replication remains pending until fresh daily result, position, transaction, and log exports are attributed.
 
 ## 8. Next Engineering Action
 
-Run a fresh JoinQuant backtest using a frozen formal-candidate script where:
+Use the fresh JoinQuant formal-candidate export to run attribution:
 
-- value-trap guard is expected to apply;
-- quality fields include NPL, provision coverage, and core tier 1 capital;
-- log output confirms `guarded < candidates` when the quality guard filters the universe;
-- the first rebalance should match local formal-candidate selected codes:
+- daily result CSV;
+- position CSV;
+- transaction CSV;
+- log TXT containing value-trap guard application lines.
 
-```text
-601077.XSHG;601997.XSHG;601009.XSHG;601128.XSHG;600928.XSHG;002966.XSHE;601838.XSHG;603323.XSHG
-```
-
-Only after that fresh JoinQuant run should Project Manager Agent decide whether engineering replication passes for the formal candidate.
-
+Only after that fresh attribution should Project Manager Agent decide whether platform replication passes for the formal candidate.

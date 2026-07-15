@@ -10,7 +10,9 @@ Experiment layer:
 
 Engineering local daily simulation for V3 formal candidate is complete.
 
-Strict JoinQuant replication is not complete yet because the available JoinQuant export corresponds to a no-guard contract, while the formal candidate uses the value-trap guard.
+Fresh JoinQuant execution for the guard-applied V3 formal candidate is now complete by user-reported platform summary.
+
+Strict JoinQuant replication is not complete yet because fresh daily result, position, transaction, and log exports still need attribution against local simulation.
 
 ## Evidence
 
@@ -29,6 +31,22 @@ Strict JoinQuant replication is not complete yet because the available JoinQuant
   - matched transaction keys: 215;
   - JoinQuant-only transaction keys: 17;
   - local-only transaction keys: 5.
+- Fresh guard-applied JoinQuant formal-candidate summary reported by user:
+  - strategy return: 57.35%
+  - annualized return: 9.67%
+  - benchmark return: 26.51%
+  - max drawdown: 17.06%
+  - beta: 0.864
+  - strategy volatility: 0.163
+  - max drawdown interval: 2021/07/07,2022/10/31
+- Local formal-candidate comparison:
+  - strategy return: 61.76%
+  - annualized return: 10.37%
+  - benchmark return: 25.16%
+  - max drawdown: 17.24%
+  - beta: 0.863
+  - strategy volatility: 0.163
+  - max drawdown interval: 2021-07-07,2022-10-31
 
 ## PM Interpretation
 
@@ -36,7 +54,8 @@ The previous JoinQuant export should be treated as an older no-guard platform re
 
 It should not be used to accept or reject the guard-applied V3 formal candidate.
 
+The fresh guard-applied JoinQuant platform summary is close enough to local simulation to move to formal attribution. Risk path alignment is strong, while return difference still requires daily decomposition.
+
 ## Required Next Gate
 
-Engineering Agent must provide a fresh JoinQuant run for the guard-applied formal candidate before Project Manager Agent can mark engineering replication as passed.
-
+Engineering Agent must attribute fresh JoinQuant daily result, position, transaction, and log exports before Project Manager Agent can mark platform replication as passed.

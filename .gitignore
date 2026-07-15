@@ -17,6 +17,8 @@ local_daily_backtests/
 local_daily_backtests_*/
 platform_attribution/
 platform_attribution*/
+platform_replication_packets/
+platform_replication_packets*/
 snapshots/
 universes/
 validation_formal/

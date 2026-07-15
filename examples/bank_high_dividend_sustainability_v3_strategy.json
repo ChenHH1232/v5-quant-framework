@@ -148,7 +148,9 @@
     "acceptance_rule": "Do not accept unless sustainable dividend composite beats low-PB and equal-bank baselines under rolling common-sample validation without relying on 2021-2026 platform confirmation."
   },
   "execution": {
-    "status": "not_for_platform_replication_yet",
+    "status": "platform_replication_passed",
+    "next_gate": "forward_paper_trading",
+    "not_status": "accepted_strategy",
     "commission_bps": 3,
     "slippage_bps": 5,
     "suspension_policy": "skip_untradeable",

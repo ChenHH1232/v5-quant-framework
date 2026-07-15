@@ -22,7 +22,19 @@ Not status:
 
 Bank High Dividend Sustainability V3 is promoted to formal strategy candidate.
 
-It is not accepted as a production or paper-trading strategy yet.
+It is not accepted as a production strategy.
+
+Later platform replication status:
+
+```text
+platform_replication_passed
+```
+
+Next evidence layer:
+
+```text
+paper_trading
+```
 
 ## Evidence
 
@@ -74,5 +86,6 @@ Quant Validation Agent:
 
 Project Manager Agent:
 
-- block near-sector testing until V3 formal candidate engineering replication is complete.
-
+- V3 engineering replication is complete;
+- start forward / paper trading records before any strategy acceptance;
+- do not allow near-sector testing to reuse V3 platform replication as research evidence.

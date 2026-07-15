@@ -27,6 +27,7 @@ from v5.joinquant_availability_runner import build_joinquant_availability_proxy,
 from v5.local_backtest import DEFAULT_BACKTEST_END, DEFAULT_BACKTEST_START, BacktestOptions, run_local_backtest
 from v5.formal_validation_runner import run_formal_validation
 from v5.platform_attribution_runner import run_platform_attribution, run_position_attribution, run_transaction_attribution
+from v5.platform_replication_runner import run_platform_replication_packet
 from v5.tushare_disclosure_runner import collect_tushare_disclosure_dates
 from v5.universe_runner import build_point_in_time_universe
 from v5.validation_runner import validate_panel
@@ -252,6 +253,18 @@ def main(argv: list[str] | None = None) -> int:
     transaction_attribution_parser.add_argument("--out", type=Path, default=Path("platform_attribution"))
     transaction_attribution_parser.add_argument("--strategy-id", default="bank_value_15y")
 
+    platform_replication_parser = subparsers.add_parser("platform-replication-packet")
+    platform_replication_parser.add_argument("local_run_dir", type=Path)
+    platform_replication_parser.add_argument("--out", type=Path, default=Path("platform_replication_packets"))
+    platform_replication_parser.add_argument("--strategy-id", default="bank_value_15y")
+    platform_replication_parser.add_argument("--panel-csv", type=Path)
+    platform_replication_parser.add_argument("--joinquant-daily-csv", type=Path)
+    platform_replication_parser.add_argument("--joinquant-transaction-csv", type=Path)
+    platform_replication_parser.add_argument("--joinquant-position-csv", type=Path)
+    platform_replication_parser.add_argument("--expected-rebalance-date", action="append", default=[])
+    platform_replication_parser.add_argument("--final-strategy-diff-threshold", type=float, default=0.01)
+    platform_replication_parser.add_argument("--max-strategy-diff-threshold", type=float, default=0.03)
+
     args = parser.parse_args(argv)
 
     try:
@@ -458,6 +471,22 @@ def main(argv: list[str] | None = None) -> int:
                     args.local_trades_csv,
                     args.out,
                     args.strategy_id,
+                )
+            )
+            return 0
+        if args.command == "platform-replication-packet":
+            print(
+                run_platform_replication_packet(
+                    args.local_run_dir,
+                    args.joinquant_daily_csv,
+                    args.out,
+                    args.strategy_id,
+                    panel_csv=args.panel_csv,
+                    joinquant_transaction_csv=args.joinquant_transaction_csv,
+                    joinquant_position_csv=args.joinquant_position_csv,
+                    expected_rebalance_dates=args.expected_rebalance_date,
+                    final_strategy_diff_threshold=args.final_strategy_diff_threshold,
+                    max_strategy_diff_threshold=args.max_strategy_diff_threshold,
                 )
             )
             return 0

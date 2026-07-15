@@ -91,7 +91,7 @@ def _notice_date_leakage_audit(rows: list[dict[str, Any]]) -> list[dict[str, Any
         if not fields_present:
             continue
         checked += 1
-        notice = row.get("eastmoney_quality_notice_date") or row.get("notice_date") or row.get("announce_date")
+        notice = row.get("factor_visible_date") or row.get("eastmoney_quality_notice_date") or row.get("notice_date") or row.get("announce_date")
         if not notice:
             missing_notice += 1
             continue

@@ -20,6 +20,7 @@ from v5.eastmoney_bank_indicator_runner import (
 from v5.engine import RunBlockedError, run_strategy, validate_spec_file
 from v5.joinquant_real_data_runner import collect_joinquant_real_data
 from v5.joinquant_capability_probe import run_joinquant_capability_probe
+from v5.joinquant_pit_panel_runner import collect_joinquant_basic_pit_panel
 from v5.local_backtest import DEFAULT_BACKTEST_END, DEFAULT_BACKTEST_START, BacktestOptions, run_local_backtest
 from v5.formal_validation_runner import run_formal_validation
 from v5.platform_attribution_runner import run_platform_attribution
@@ -162,6 +163,17 @@ def main(argv: list[str] | None = None) -> int:
     jq_probe_parser = subparsers.add_parser("probe-joinquant-capabilities")
     jq_probe_parser.add_argument("--out-dir", type=Path, default=DEFAULT_DATABASE_DIR / "manifests")
 
+    jq_pit_parser = subparsers.add_parser("collect-joinquant-basic-pit-panel")
+    jq_pit_parser.add_argument("scaffold_panel", type=Path)
+    jq_pit_parser.add_argument("--out-dir", type=Path, default=DEFAULT_DATABASE_DIR / "processed" / "joinquant_basic_pit_panel")
+    jq_pit_parser.add_argument("--database-dir", type=Path, default=DEFAULT_DATABASE_DIR)
+    jq_pit_parser.add_argument("--start-date", default="2014-01-01")
+    jq_pit_parser.add_argument("--end-date", default="2026-05-31")
+    jq_pit_parser.add_argument("--benchmark", default="512800.XSHG")
+    jq_pit_parser.add_argument("--benchmark-fq", default="pre", choices=["pre", "post", "none"])
+    jq_pit_parser.add_argument("--dividend-csv", type=Path)
+    jq_pit_parser.add_argument("--dividend-tax-rate", type=float, default=0.2)
+
     universe_parser = subparsers.add_parser("build-universe")
     universe_parser.add_argument("panel", type=Path)
     universe_parser.add_argument("execution_price_csv", type=Path)
@@ -299,6 +311,20 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         if args.command == "probe-joinquant-capabilities":
             print(run_joinquant_capability_probe(args.out_dir))
+            return 0
+        if args.command == "collect-joinquant-basic-pit-panel":
+            result = collect_joinquant_basic_pit_panel(
+                args.scaffold_panel,
+                args.out_dir,
+                database_dir=args.database_dir,
+                start_date=args.start_date,
+                end_date=args.end_date,
+                benchmark=args.benchmark,
+                benchmark_fq=None if args.benchmark_fq == "none" else args.benchmark_fq,
+                dividend_csv=args.dividend_csv,
+                dividend_tax_rate=args.dividend_tax_rate,
+            )
+            print(result.panel_path)
             return 0
         if args.command == "build-universe":
             print(build_point_in_time_universe(args.panel, args.execution_price_csv, args.out, args.strategy_id))

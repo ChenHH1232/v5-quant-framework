@@ -32,6 +32,7 @@
 ## Strategy Cases
 
 - [Bank Value 15Y defensive overlay](strategy_cases/bank_value_15y_defensive_overlay.md)
+- [Utilities V5.1 Test-1 initial result](strategy_cases/utilities_v51_test1_initial_result.md) - process portability passed, current composite rejected for formal-candidate promotion.
 
 ## Open Research Questions
 

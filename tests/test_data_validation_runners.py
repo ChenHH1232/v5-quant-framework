@@ -16,6 +16,7 @@ from v5.benchmark_runner import _normalize_benchmark_row
 from v5.dividend_runner import _normalize_akshare_dividend_row
 from v5.joinquant_pit_panel_runner import _latest_visible_bank_quality, _load_bank_quality_snapshots
 from v5.local_backtest import BacktestOptions, run_local_backtest
+from v5.utilities_pit_panel_runner import _interest_coverage, _market_cap_cny, _ratio
 from v5.validation_runner import validate_panel
 from v5.v4_legacy_bank_quality_runner import collect_v4_legacy_bank_quality
 
@@ -44,6 +45,12 @@ class DataValidationRunnerTests(unittest.TestCase):
             token = load_tushare_token("MISSING_TUSHARE_TOKEN_ENV", path)
 
         self.assertEqual(token, "abc123")
+
+    def test_utilities_factor_formulas_handle_units_and_missing_interest(self) -> None:
+        self.assertEqual(_market_cap_cny(12.5), 1_250_000_000.0)
+        self.assertAlmostEqual(_ratio(50.0, 200.0) or 0.0, 0.25)
+        self.assertAlmostEqual(_interest_coverage(100.0, 80.0, None, 20.0) or 0.0, 5.0)
+        self.assertIsNone(_interest_coverage(100.0, 80.0, None, 0.0))
 
     def test_validate_panel_writes_summary(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

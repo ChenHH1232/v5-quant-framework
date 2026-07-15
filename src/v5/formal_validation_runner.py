@@ -126,12 +126,12 @@ def _notice_date_leakage_audit(rows: list[dict[str, Any]]) -> list[dict[str, Any
     status = "pass" if violations == 0 and missing_notice == 0 else "needs_review"
     return [
         {
-            "check": "bank_quality_notice_date_visibility",
+            "check": "pit_factor_visible_date_audit",
             "status": status,
             "checked_rows": checked,
             "missing_notice_date_rows": missing_notice,
             "future_notice_violations": violations,
-            "detail": "Quality fields used in formal validation must have notice_date <= trade_date.",
+            "detail": "PIT-sensitive factor fields used in formal validation must have visible_date <= trade_date.",
         }
     ]
 
@@ -347,9 +347,9 @@ def _failure_mode_analysis(rows: list[dict[str, Any]], raw: dict[str, Any], weak
                 "selected_cum_return": _compound(selected_returns),
                 "selected_mean_return": mean(selected_returns) if selected_returns else None,
                 "selected_positive_ratio": _positive_ratio(selected_returns),
-                "all_bank_mean_return": mean(all_returns) if all_returns else None,
+                "all_universe_mean_return": mean(all_returns) if all_returns else None,
                 "low_pb_mean_return": mean(low_pb_returns) if low_pb_returns else None,
-                "relative_to_all_bank_mean": (mean(selected_returns) - mean(all_returns)) if selected_returns and all_returns else None,
+                "relative_to_all_universe_mean": (mean(selected_returns) - mean(all_returns)) if selected_returns and all_returns else None,
                 "relative_to_low_pb_mean": (mean(selected_returns) - mean(low_pb_returns)) if selected_returns and low_pb_returns else None,
                 "selected_codes_by_date": " | ".join(selected_codes_by_date),
                 "factor_mean_notes": " ; ".join(factor_notes),
@@ -493,7 +493,7 @@ def _failure_interpretation(year: str, selected_returns: list[float], all_return
     low_pb_mean = mean(low_pb_returns) if low_pb_returns else None
     notes = []
     if all_mean is not None:
-        notes.append("underperformed_all_banks" if selected_mean < all_mean else "outperformed_all_banks")
+        notes.append("underperformed_all_universe" if selected_mean < all_mean else "outperformed_all_universe")
     if low_pb_mean is not None:
         notes.append("underperformed_low_pb" if selected_mean < low_pb_mean else "outperformed_low_pb")
     if _positive_ratio(selected_returns) is not None and (_positive_ratio(selected_returns) or 0) < 0.5:

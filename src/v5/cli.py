@@ -30,6 +30,7 @@ from v5.platform_attribution_runner import run_platform_attribution, run_positio
 from v5.platform_replication_runner import run_platform_replication_packet
 from v5.tushare_disclosure_runner import collect_tushare_disclosure_dates
 from v5.universe_runner import build_point_in_time_universe
+from v5.utilities_pit_panel_runner import collect_utilities_pit_panel
 from v5.validation_runner import validate_panel
 from v5.v4_quality_source_date_audit_runner import audit_v4_quality_source_dates
 from v5.v4_legacy_bank_quality_runner import (
@@ -213,6 +214,12 @@ def main(argv: list[str] | None = None) -> int:
         choices=["reviewed", "needs_check", "unreviewed"],
         default="needs_check",
     )
+
+    utilities_pit_parser = subparsers.add_parser("collect-utilities-pit-panel")
+    utilities_pit_parser.add_argument("--out-dir", type=Path, default=Path("数据库") / "processed" / "utilities_pit_panel")
+    utilities_pit_parser.add_argument("--start-date", default="2017-01-01")
+    utilities_pit_parser.add_argument("--end-date", default="2026-05-31")
+    utilities_pit_parser.add_argument("--listing-age-days", type=int, default=180)
 
     universe_parser = subparsers.add_parser("build-universe")
     universe_parser.add_argument("panel", type=Path)
@@ -422,6 +429,15 @@ def main(argv: list[str] | None = None) -> int:
                 dividend_tax_rate=args.dividend_tax_rate,
                 bank_quality_csv=args.bank_quality_csv,
                 bank_quality_min_review_status=args.bank_quality_min_review_status,
+            )
+            print(result.panel_path)
+            return 0
+        if args.command == "collect-utilities-pit-panel":
+            result = collect_utilities_pit_panel(
+                out_dir=args.out_dir,
+                start_date=args.start_date,
+                end_date=args.end_date,
+                listing_age_days=args.listing_age_days,
             )
             print(result.panel_path)
             return 0

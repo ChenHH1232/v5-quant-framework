@@ -10,7 +10,10 @@ No cards yet.
 
 ## Factor Theory
 
-No cards yet.
+- [Bank stock value investing framework](factor_theory/bank_value_investing_framework.md)
+- [Bank stock core factor hypothesis list](factor_theory/bank_core_factor_hypotheses.md)
+- [Bank stock value trap identification](factor_theory/bank_value_trap_identification.md)
+- [Bank defensive and macro state variables](factor_theory/bank_defensive_macro_state_variables.md)
 
 ## Strategy Cases
 

@@ -7,3 +7,17 @@ dist/
 build/
 *.egg-info/
 
+data/
+validation/
+experiments/
+local_backtests/
+local_backtests_*/
+local_daily_backtests/
+local_daily_backtests_*/
+platform_attribution/
+universes/
+validation_formal/
+
+数据库/raw/
+数据库/processed/
+数据库/manifests/*.json

@@ -108,6 +108,44 @@ python -m v5.cli validate examples/v4_bank_candidate1.json
 python -m v5.cli run examples/v4_bank_candidate1.json --out experiments
 ```
 
+For a research-data and validation pass:
+
+```powershell
+$env:PYTHONPATH="src"
+python -m v5.cli collect-data examples/bank_value_15y_strategy.json --mode plan --out data/processed
+python -m v5.cli collect-dividends data/processed/bank_value_15y/panel.csv --database-dir 数据库
+python -m v5.cli collect-benchmarks --database-dir 数据库 --start-date 2011-01-01 --end-date 2026-07-14
+python -m v5.cli collect-data examples/bank_value_15y_strategy.json --mode v4-raw --out data/processed --price-adjustment pre_adjusted
+python -m v5.cli validate-research examples/bank_value_15y_strategy.json data/processed/bank_value_15y/panel.csv --out validation
+python -m v5.cli local-backtest examples/bank_value_15y_strategy.json data/processed/bank_value_15y/panel.csv --out local_backtests
+```
+
+The local database lives in `数据库/`. `collect-dividends` writes real cash dividend data to `数据库/processed/bank_cash_dividends.csv`. `collect-data` automatically uses that file when it exists unless `--dividend-csv` is provided explicitly.
+
+`collect-benchmarks` writes real bank benchmark data to `数据库/processed/bank_benchmarks.csv`. `collect-data` automatically uses `bank_etf_512800_qfq` as the default tradable benchmark when that file exists; use `--benchmark-id csi_bank_399986` to compare against the bank index instead.
+
+The data panel records `price_adjustment`, `price_return`, `dividend_return`, `total_return`, `return_source`, `benchmark_return`, and `benchmark_source`. Validation and local backtests prefer `total_return` and fall back to legacy `future_return` only for old panels.
+
+`collect-data` defaults to `--total-return-mode adjusted_total_return`. This is the correct comparison mode when migrated prices are already adjusted, because adding cash dividends again can double-count distributions. When a raw unadjusted price source is confirmed, use `--total-return-mode price_plus_net_cash_dividend`; V5 applies the JoinQuant-style default dividend tax assumption with `--dividend-tax-rate 0.2`.
+
+For JoinQuant execution-matching local backtests, collect real unadjusted daily prices and cash-dividend events first:
+
+```powershell
+$env:JQDATA_USERNAME="..."
+$env:JQDATA_PASSWORD="..."
+$env:PYTHONPATH="src"
+python -m v5.cli collect-joinquant-real-data data/processed_adjusted/bank_value_15y/panel.csv --database-dir 数据库 --start-date 2021-05-01 --end-date 2026-05-31
+python -m v5.cli daily-backtest examples/bank_value_15y_strategy.json data/processed_adjusted/bank_value_15y/panel.csv --execution-price-csv 数据库/processed/joinquant_real_daily_prices.csv --benchmark-csv 数据库/processed/joinquant_real_benchmark_prices.csv --benchmark-id 512800.XSHG --dividend-cash-csv 数据库/processed/joinquant_cash_dividends.csv --out local_daily_backtests
+```
+
+The JoinQuant real-data collector writes `fq=None` daily stock open/close, `512800.XSHG` open/close, ex-dividend/payment cash events, and net cash dividends after the configured dividend tax rate. Credentials are read only from environment variables or an existing authenticated `jqdatasdk` session and are never persisted.
+
+`local-backtest` defaults to the V4 comparison window: `2021-05-01` to `2026-05-31`. Use `--start-date` and `--end-date` only when a different research window is required.
+
+`local-backtest` also defaults to `--min-coverage-ratio 0.8`. A rebalance period is skipped when its security count is below 80% of the maximum date coverage in the selected window.
+
+Use `--save-periods` and `--save-holdings` on `local-backtest` only when detailed period returns or holding files are needed.
+
 For local development:
 
 ```powershell

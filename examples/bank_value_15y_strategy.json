@@ -1,0 +1,171 @@
+{
+  "meta": {
+    "strategy_id": "bank_value_15y",
+    "name": "Bank Value 15Y Strategy",
+    "objective": "Test the V5 agent and skill workflow by defining a bank-sector value-investing quantitative strategy over the past 15 years, from 2011-07-14 to 2026-07-14."
+  },
+  "universe": {
+    "name": "A-share listed banks",
+    "construction": "point_in_time_sw_or_csrc_bank_industry_membership_excluding_st_suspended_and_newly_listed_under_180_days",
+    "point_in_time": true
+  },
+  "data": {
+    "vendor": "JoinQuant market and valuation data with reconstructed bank indicators and annual report fallback",
+    "price_frequency": "daily",
+    "financial_as_of_policy": "announcement_date",
+    "window": {
+      "start": "2011-07-14",
+      "end": "2026-07-14",
+      "lookback_years": 15
+    },
+    "bank_indicator_policy": "Do not use direct JoinQuant bank_indicator. Use reconstructed ratios, ordinary financial statements, and annual-report extraction with source labels."
+  },
+  "signals": {
+    "factors": [
+      {
+        "name": "low_price_to_book",
+        "source": "valuation",
+        "direction": "lower_is_better",
+        "definition": "Price-to-book ratio using point-in-time market capitalization and latest visible net assets.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security",
+        "winsorize": "cross_sectional_mad_3",
+        "normalize": "rebalance_cross_section_zscore"
+      },
+      {
+        "name": "dividend_yield",
+        "source": "valuation_and_dividend_records",
+        "direction": "higher_is_better",
+        "definition": "Trailing cash dividend yield using only dividends announced before the rebalance date.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 1,
+        "missing_policy": "set_to_zero_if_no_announced_cash_dividend",
+        "winsorize": "cross_sectional_mad_3",
+        "normalize": "rebalance_cross_section_zscore"
+      },
+      {
+        "name": "return_on_equity_ttm",
+        "source": "financial_statement",
+        "direction": "higher_is_better",
+        "definition": "Trailing return on equity from financial statements visible by announcement date.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 90,
+        "missing_policy": "drop_security",
+        "winsorize": "cross_sectional_mad_3",
+        "normalize": "rebalance_cross_section_zscore"
+      },
+      {
+        "name": "non_performing_loan_ratio",
+        "source": "reconstructed_bank_indicator",
+        "direction": "lower_is_better",
+        "definition": "Non-performing loan ratio from reconstructed bank indicators or annual report extraction with explicit source label.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 90,
+        "missing_policy": "drop_security_if_unavailable_after_source_review",
+        "winsorize": "cross_sectional_mad_3",
+        "normalize": "rebalance_cross_section_zscore"
+      },
+      {
+        "name": "provision_coverage_ratio",
+        "source": "reconstructed_bank_indicator",
+        "direction": "higher_is_better",
+        "definition": "Provision coverage ratio from reconstructed bank indicators or annual report extraction with explicit source label.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 90,
+        "missing_policy": "drop_security_if_unavailable_after_source_review",
+        "winsorize": "cross_sectional_mad_3",
+        "normalize": "rebalance_cross_section_zscore"
+      },
+      {
+        "name": "core_tier_1_capital_adequacy_ratio",
+        "source": "annual_report_bank_indicator",
+        "direction": "higher_is_better",
+        "definition": "Core tier 1 capital adequacy ratio extracted from bank annual or interim reports and aligned by announcement date.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 90,
+        "missing_policy": "drop_security_if_unavailable_after_source_review",
+        "winsorize": "cross_sectional_mad_3",
+        "normalize": "rebalance_cross_section_zscore"
+      }
+    ],
+    "scoring": {
+      "method": "weighted_composite_score",
+      "normalization_scope": "rebalance_cross_section",
+      "weights": {
+        "low_price_to_book": 0.25,
+        "dividend_yield": 0.15,
+        "return_on_equity_ttm": 0.2,
+        "non_performing_loan_ratio": 0.15,
+        "provision_coverage_ratio": 0.15,
+        "core_tier_1_capital_adequacy_ratio": 0.1
+      },
+      "value_trap_guard": "Require asset-quality composite to be above the universe median before a low-PB stock can enter the final portfolio."
+    }
+  },
+  "schedule": {
+    "signal_frequency": "quarterly_after_financial_disclosure",
+    "rebalance_frequency": "quarterly",
+    "rebalance_rule": "first_tradable_day_after_required_financial_data_visibility_check"
+  },
+  "portfolio": {
+    "selection_count": 8,
+    "weighting": "equal_weight_after_value_trap_guard",
+    "max_position_weight": 0.15,
+    "cash_policy": "hold_residual_cash_when_fewer_than_8_banks_pass_filters"
+  },
+  "risk": {
+    "defensive_asset": "cash_or_short_duration_bond_fund",
+    "defensive_rule": {
+      "enabled": true,
+      "name": "bank_sector_valuation_and_credit_quality_guard",
+      "description": "Reduce target exposure by 50% when the bank ETF trades below its 12-month moving average. Individual stop-loss and take-profit rules are not enabled by default because this is a value-investing strategy.",
+      "implemented_overlay": {
+        "mode": "benchmark_ma",
+        "benchmark": "512800.XSHG",
+        "ma_days": 252,
+        "normal_target_exposure": 0.995,
+        "risk_off_exposure_multiplier": 0.5,
+        "defensive_asset": "cash",
+        "decision_price": "previous_close",
+        "execution_policy": "reduce_or_restore_stock_exposure_without_changing_factor_ranks_or_selected_stocks"
+      },
+      "stop_loss_take_profit_policy": {
+        "enabled": false,
+        "reason": "Fixed individual price stops can conflict with value-investing logic and require separate evidence before activation."
+      }
+    }
+  },
+  "validation": {
+    "method": "rolling",
+    "train_years": 5,
+    "test_years": 2,
+    "review_years": 1,
+    "full_window": "2011-07-14 to 2026-07-14",
+    "acceptance_rule": "Accept only if factor IC, grouped returns, rolling fold stability, drawdown behavior, and execution stress tests support the financial thesis."
+  },
+  "execution": {
+    "commission_bps": 3,
+    "slippage_bps": 5,
+    "suspension_policy": "skip_untradeable",
+    "limit_policy": "skip_limit_blocked",
+    "stress_scenarios": [
+      "immediate_cost10bps",
+      "delay_1d_cost10bps",
+      "delay_3d_cost10bps",
+      "immediate_cost30bps"
+    ]
+  },
+  "outputs": {
+    "save_holdings": true,
+    "save_rebalance_signals": true,
+    "report": "markdown",
+    "required_reports": [
+      "agent_workflow_report",
+      "data_routing_report",
+      "factor_validation_report",
+      "leakage_audit_report",
+      "execution_stress_report"
+    ]
+  }
+}

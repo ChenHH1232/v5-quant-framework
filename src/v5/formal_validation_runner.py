@@ -3,7 +3,9 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import math
 from collections import defaultdict
+from datetime import date
 from pathlib import Path
 from statistics import mean
 from typing import Any
@@ -31,12 +33,16 @@ def run_formal_validation(
     ablation_rows = _ablation_tests(rows, spec.raw)
     robustness_rows = _robustness_tests(rows, spec.raw)
     interaction_rows = _common_sample_interaction_tests(rows, spec.raw)
+    factor_rows = _factor_ic_rankic(rows, spec.raw)
+    failure_rows = _failure_mode_analysis(rows, spec.raw, weak_years=["2018", "2021"])
     _write_csv(out / "notice_date_leakage_audit.csv", list(leakage_rows[0].keys()) if leakage_rows else ["check", "status", "detail"], leakage_rows)
     _write_csv(out / "rolling_validation.csv", list(rolling_rows[0].keys()) if rolling_rows else ["window", "status"], rolling_rows)
     _write_csv(out / "baseline_tests.csv", list(baseline_rows[0].keys()), baseline_rows)
     _write_csv(out / "ablation_tests.csv", list(ablation_rows[0].keys()), ablation_rows)
     _write_csv(out / "robustness_tests.csv", list(robustness_rows[0].keys()), robustness_rows)
     _write_csv(out / "common_sample_interaction_tests.csv", list(interaction_rows[0].keys()), interaction_rows)
+    _write_csv(out / "factor_ic_rankic.csv", list(factor_rows[0].keys()) if factor_rows else ["factor"], factor_rows)
+    _write_csv(out / "failure_mode_analysis.csv", list(failure_rows[0].keys()) if failure_rows else ["year"], failure_rows)
     summary = {
         "strategy_id": spec.strategy_id,
         "experiment_layer": experiment_layer,
@@ -50,6 +56,8 @@ def run_formal_validation(
         "ablation_tests": ablation_rows,
         "robustness_tests": robustness_rows,
         "common_sample_interaction_tests": interaction_rows,
+        "factor_ic_rankic": factor_rows,
+        "failure_mode_analysis": failure_rows,
         "governance": "Do not use 2021-2026 platform-confirmation results for tuning. Single-model acceptance requires rolling validation.",
     }
     _write_json(out / "formal_validation_summary.json", summary)
@@ -68,6 +76,8 @@ def run_formal_validation(
                 "ablation_tests": "ablation_tests.csv",
                 "robustness_tests": "robustness_tests.csv",
                 "common_sample_interaction_tests": "common_sample_interaction_tests.csv",
+                "factor_ic_rankic": "factor_ic_rankic.csv",
+                "failure_mode_analysis": "failure_mode_analysis.csv",
             },
             warnings=["Formal validation output is evidence, not automatic strategy acceptance."],
         ),
@@ -200,6 +210,119 @@ def _common_sample_interaction_tests(rows: list[dict[str, Any]], raw: dict[str, 
     return result
 
 
+def _factor_ic_rankic(rows: list[dict[str, Any]], raw: dict[str, Any]) -> list[dict[str, Any]]:
+    result = []
+    factors = raw["signals"]["factors"]
+    for factor in factors:
+        name = factor["name"]
+        direction = factor.get("direction", "higher_is_better")
+        by_date: dict[str, list[tuple[float, float]]] = defaultdict(list)
+        observations = 0
+        for row in rows:
+            value = _to_float(row.get(name))
+            ret = _to_float(row.get("future_return"))
+            if value is None or ret is None:
+                continue
+            adjusted = -value if direction == "lower_is_better" else value
+            by_date[row["trade_date"]].append((adjusted, ret))
+            observations += 1
+        ic_values = []
+        rank_ic_values = []
+        spreads = []
+        for pairs in by_date.values():
+            if len(pairs) < 3:
+                continue
+            x = [item[0] for item in pairs]
+            y = [item[1] for item in pairs]
+            ic = _pearson(x, y)
+            rank_ic = _pearson(_ranks(x), _ranks(y))
+            spread = _top_bottom_spread(pairs)
+            if ic is not None:
+                ic_values.append(ic)
+            if rank_ic is not None:
+                rank_ic_values.append(rank_ic)
+            if spread is not None:
+                spreads.append(spread)
+        result.append(
+            {
+                "factor": name,
+                "direction": direction,
+                "observations": observations,
+                "dates": len(ic_values),
+                "mean_ic": mean(ic_values) if ic_values else None,
+                "mean_rankic": mean(rank_ic_values) if rank_ic_values else None,
+                "positive_ic_ratio": _positive_ratio(ic_values),
+                "top_minus_bottom_mean_return": mean(spreads) if spreads else None,
+            }
+        )
+    return result
+
+
+def _failure_mode_analysis(rows: list[dict[str, Any]], raw: dict[str, Any], weak_years: list[str]) -> list[dict[str, Any]]:
+    result = []
+    factors = raw["signals"]["factors"]
+    weights = dict(raw["signals"]["scoring"].get("weights", {}))
+    selection_count = int(raw["portfolio"]["selection_count"])
+    for year in weak_years:
+        year_rows = [row for row in rows if str(row.get("trade_date", "")).startswith(year)]
+        by_date: dict[str, list[dict[str, Any]]] = defaultdict(list)
+        for row in year_rows:
+            by_date[row["trade_date"]].append(row)
+        selected_returns = []
+        all_returns = []
+        low_pb_returns = []
+        selected_factor_values: dict[str, list[float]] = defaultdict(list)
+        all_factor_values: dict[str, list[float]] = defaultdict(list)
+        selected_codes_by_date = []
+        for trade_date, date_rows in sorted(by_date.items()):
+            scored = _score_date_rows(date_rows, factors, weights)
+            selected = sorted(_apply_value_trap_guard(scored), key=lambda item: item["score"], reverse=True)[:selection_count]
+            low_pb = sorted(
+                [row for row in date_rows if _to_float(row.get("low_price_to_book")) is not None],
+                key=lambda row: _to_float(row.get("low_price_to_book")) or 0.0,
+            )[:selection_count]
+            if selected:
+                selected_returns.append(mean(float(row["future_return"]) for row in selected))
+                selected_codes_by_date.append(f"{trade_date}:{';'.join(row['code'] for row in selected)}")
+            if date_rows:
+                all_returns.append(mean(float(row["future_return"]) for row in date_rows))
+            if low_pb:
+                low_pb_returns.append(mean(float(row["future_return"]) for row in low_pb))
+            for row in date_rows:
+                for factor in factors:
+                    value = _to_float(row.get(factor["name"]))
+                    if value is not None:
+                        all_factor_values[factor["name"]].append(value)
+            for row in selected:
+                for factor in factors:
+                    value = _to_float(row.get(factor["name"]))
+                    if value is not None:
+                        selected_factor_values[factor["name"]].append(value)
+        factor_notes = []
+        for factor in factors:
+            name = factor["name"]
+            selected_mean = mean(selected_factor_values[name]) if selected_factor_values[name] else None
+            all_mean = mean(all_factor_values[name]) if all_factor_values[name] else None
+            factor_notes.append(f"{name}:selected_mean={selected_mean},all_mean={all_mean}")
+        result.append(
+            {
+                "year": year,
+                "periods": len(by_date),
+                "selected_cum_return": _compound(selected_returns),
+                "selected_mean_return": mean(selected_returns) if selected_returns else None,
+                "selected_positive_ratio": _positive_ratio(selected_returns),
+                "all_bank_mean_return": mean(all_returns) if all_returns else None,
+                "low_pb_mean_return": mean(low_pb_returns) if low_pb_returns else None,
+                "relative_to_all_bank_mean": (mean(selected_returns) - mean(all_returns)) if selected_returns and all_returns else None,
+                "relative_to_low_pb_mean": (mean(selected_returns) - mean(low_pb_returns)) if selected_returns and low_pb_returns else None,
+                "selected_codes_by_date": " | ".join(selected_codes_by_date),
+                "factor_mean_notes": " ; ".join(factor_notes),
+                "interpretation": _failure_interpretation(year, selected_returns, all_returns, low_pb_returns),
+            }
+        )
+    return result
+
+
 def _strategy_case(
     name: str,
     rows: list[dict[str, Any]],
@@ -280,15 +403,77 @@ def _compound(returns: list[float]) -> float | None:
     return value - 1.0
 
 
+def _positive_ratio(values: list[float]) -> float | None:
+    if not values:
+        return None
+    return sum(1 for value in values if value > 0) / len(values)
+
+
+def _pearson(x: list[float], y: list[float]) -> float | None:
+    if len(x) != len(y) or len(x) < 2:
+        return None
+    mx = mean(x)
+    my = mean(y)
+    numerator = sum((a - mx) * (b - my) for a, b in zip(x, y))
+    denom_x = math.sqrt(sum((a - mx) ** 2 for a in x))
+    denom_y = math.sqrt(sum((b - my) ** 2 for b in y))
+    if denom_x == 0 or denom_y == 0:
+        return None
+    return numerator / (denom_x * denom_y)
+
+
+def _ranks(values: list[float]) -> list[float]:
+    ordered = sorted((value, index) for index, value in enumerate(values))
+    ranks = [0.0] * len(values)
+    index = 0
+    while index < len(ordered):
+        end = index
+        while end + 1 < len(ordered) and ordered[end + 1][0] == ordered[index][0]:
+            end += 1
+        avg_rank = (index + end + 2) / 2.0
+        for pos in range(index, end + 1):
+            ranks[ordered[pos][1]] = avg_rank
+        index = end + 1
+    return ranks
+
+
+def _top_bottom_spread(pairs: list[tuple[float, float]]) -> float | None:
+    if len({value for value, _ret in pairs}) < 2:
+        return None
+    ordered = sorted(pairs, key=lambda item: item[0])
+    group_size = max(1, len(ordered) // 3)
+    bottom = ordered[:group_size]
+    top = ordered[-group_size:]
+    return mean(ret for _value, ret in top) - mean(ret for _value, ret in bottom)
+
+
+def _failure_interpretation(year: str, selected_returns: list[float], all_returns: list[float], low_pb_returns: list[float]) -> str:
+    if not selected_returns:
+        return "No selected periods."
+    selected_mean = mean(selected_returns)
+    all_mean = mean(all_returns) if all_returns else None
+    low_pb_mean = mean(low_pb_returns) if low_pb_returns else None
+    notes = []
+    if all_mean is not None:
+        notes.append("underperformed_all_banks" if selected_mean < all_mean else "outperformed_all_banks")
+    if low_pb_mean is not None:
+        notes.append("underperformed_low_pb" if selected_mean < low_pb_mean else "outperformed_low_pb")
+    if _positive_ratio(selected_returns) is not None and (_positive_ratio(selected_returns) or 0) < 0.5:
+        notes.append("low_positive_period_ratio")
+    return f"{year}: " + ",".join(notes)
+
+
 def _write_report(path: Path, summary: dict[str, Any]) -> None:
     lines = [f"# Formal Validation Report: {summary['strategy_id']}", "", f"- Status: `{summary['status']}`", ""]
     for section in [
         "notice_date_leakage_audit",
+        "factor_ic_rankic",
         "rolling_validation",
         "baseline_tests",
         "ablation_tests",
         "robustness_tests",
         "common_sample_interaction_tests",
+        "failure_mode_analysis",
     ]:
         lines.extend([f"## {section}", ""])
         for row in summary[section]:

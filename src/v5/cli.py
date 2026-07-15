@@ -26,6 +26,7 @@ from v5.formal_validation_runner import run_formal_validation
 from v5.platform_attribution_runner import run_platform_attribution, run_position_attribution, run_transaction_attribution
 from v5.universe_runner import build_point_in_time_universe
 from v5.validation_runner import validate_panel
+from v5.v4_quality_source_date_audit_runner import audit_v4_quality_source_dates
 from v5.v4_legacy_bank_quality_runner import (
     DEFAULT_V4_PHASE1_PANEL,
     collect_v4_legacy_bank_quality,
@@ -209,6 +210,11 @@ def main(argv: list[str] | None = None) -> int:
     attribution_parser.add_argument("--local-trades-csv", type=Path)
     attribution_parser.add_argument("--local-dividends-csv", type=Path)
 
+    source_date_audit_parser = subparsers.add_parser("audit-v4-quality-source-dates")
+    source_date_audit_parser.add_argument("quality_csv", type=Path)
+    source_date_audit_parser.add_argument("--out", type=Path, default=Path("validation_formal"))
+    source_date_audit_parser.add_argument("--strategy-id", default="bank_high_dividend_sustainability_v3")
+
     position_attribution_parser = subparsers.add_parser("platform-position-attribution")
     position_attribution_parser.add_argument("joinquant_position_csv", type=Path)
     position_attribution_parser.add_argument("local_holdings_csv", type=Path)
@@ -381,6 +387,9 @@ def main(argv: list[str] | None = None) -> int:
                     local_dividends_csv=args.local_dividends_csv,
                 )
             )
+            return 0
+        if args.command == "audit-v4-quality-source-dates":
+            print(audit_v4_quality_source_dates(args.quality_csv, args.out, args.strategy_id))
             return 0
         if args.command == "platform-position-attribution":
             print(

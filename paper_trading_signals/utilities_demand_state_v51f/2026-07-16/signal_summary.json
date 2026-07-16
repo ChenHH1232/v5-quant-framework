@@ -1,0 +1,38 @@
+{
+  "asof_date": "2026-07-16",
+  "factor_date": "2026-07-15",
+  "state_visible_date": "2026-07-15",
+  "state_date": "2026-06-30",
+  "state_value": 3.7,
+  "history_count": 22,
+  "q33": 5.0,
+  "q67": 6.9,
+  "bucket": "weak",
+  "factor": "dividend_yield",
+  "candidate_count": 117,
+  "selected_count": 10,
+  "selected_codes": [
+    "600803.XSHG",
+    "001299.XSHE",
+    "600575.XSHG",
+    "605368.XSHG",
+    "600011.XSHG",
+    "000899.XSHE",
+    "600098.XSHG",
+    "600642.XSHG",
+    "000690.XSHE",
+    "600475.XSHG"
+  ],
+  "selected_names": [
+    "新奥股份",
+    "美能能源",
+    "淮河能源",
+    "蓝天燃气",
+    "华能国际",
+    "赣能股份",
+    "广州发展",
+    "申能股份",
+    "宝新能源",
+    "华光环能"
+  ]
+}

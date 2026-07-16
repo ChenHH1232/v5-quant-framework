@@ -30,6 +30,7 @@ def run_coal_cycle_state_validation(
     metric: str = "coking_coal_price_state",
     selection_count: int = 8,
     min_history: int = 8,
+    strategy_id: str = "coal_high_dividend_cycle_value_v52",
 ) -> Path:
     rows = _read_csv(panel_path)
     by_date = _group_by_date(rows)
@@ -37,7 +38,7 @@ def run_coal_cycle_state_validation(
     if not state_by_date:
         raise RuntimeError(f"no usable state values found for metric={metric}")
 
-    out = out_dir / "coal_high_dividend_cycle_value_v52" / f"cycle_state_{metric}"
+    out = out_dir / strategy_id / f"cycle_state_{metric}"
     out.mkdir(parents=True, exist_ok=True)
 
     coverage_rows = _coverage_rows(by_date, state_by_date, metric)
@@ -46,7 +47,7 @@ def run_coal_cycle_state_validation(
     state_conditioned_ic = _state_conditioned_factor_ic(by_date, bucket_rows)
     year_rows = _yearly_state_summary(by_date, bucket_rows, selection_count)
     robustness_rows = _selection_count_robustness(by_date, bucket_rows, [5, 8, 10, 12])
-    summary = _decision_summary(panel_path, metric, coverage_rows, state_bucket_tests, state_conditioned_ic, year_rows, robustness_rows)
+    summary = _decision_summary(panel_path, metric, coverage_rows, state_bucket_tests, state_conditioned_ic, year_rows, robustness_rows, strategy_id)
 
     _write_csv(out / "state_coverage.csv", coverage_rows[0].keys(), coverage_rows)
     _write_csv(out / "rolling_state_buckets.csv", bucket_rows[0].keys(), bucket_rows)
@@ -215,6 +216,7 @@ def _decision_summary(
     state_conditioned_ic: list[dict[str, Any]],
     year_rows: list[dict[str, Any]],
     robustness_rows: list[dict[str, Any]],
+    strategy_id: str,
 ) -> dict[str, Any]:
     all_bucket_cases = [row for row in state_bucket_tests if row["bucket"] == "all"]
     weak_cases = [row for row in state_bucket_tests if row["bucket"] == "weak"]
@@ -223,7 +225,7 @@ def _decision_summary(
     best_weak = _best_case(weak_cases)
     best_strong = _best_case(strong_cases)
     return {
-        "strategy_id": "coal_high_dividend_cycle_value_v52",
+        "strategy_id": strategy_id,
         "experiment_layer": "research_pit_validation",
         "status": "cycle_state_validation_completed_not_acceptance",
         "not_status": ["formal_strategy_candidate", "platform_replication", "accepted_strategy"],
@@ -434,8 +436,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--metric", default="coking_coal_price_state")
     parser.add_argument("--selection-count", type=int, default=8)
     parser.add_argument("--min-history", type=int, default=8)
+    parser.add_argument("--strategy-id", default="coal_high_dividend_cycle_value_v52")
     args = parser.parse_args(argv)
-    print(run_coal_cycle_state_validation(args.panel, args.out, args.metric, args.selection_count, args.min_history))
+    print(run_coal_cycle_state_validation(args.panel, args.out, args.metric, args.selection_count, args.min_history, args.strategy_id))
     return 0
 
 

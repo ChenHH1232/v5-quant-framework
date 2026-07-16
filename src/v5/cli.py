@@ -285,6 +285,7 @@ def main(argv: list[str] | None = None) -> int:
     coal_cycle_state_parser.add_argument("--metric", default="coking_coal_price_state")
     coal_cycle_state_parser.add_argument("--selection-count", type=int, default=8)
     coal_cycle_state_parser.add_argument("--min-history", type=int, default=8)
+    coal_cycle_state_parser.add_argument("--strategy-id", default="coal_high_dividend_cycle_value_v52")
 
     utilities_daily_parser = subparsers.add_parser("utilities-daily-backtest")
     utilities_daily_subparsers = utilities_daily_parser.add_subparsers(dest="utilities_daily_command", required=True)
@@ -599,7 +600,7 @@ def main(argv: list[str] | None = None) -> int:
             print(result.panel_path)
             return 0
         if args.command == "validate-coal-cycle-state":
-            print(run_coal_cycle_state_validation(args.panel, args.out, args.metric, args.selection_count, args.min_history))
+            print(run_coal_cycle_state_validation(args.panel, args.out, args.metric, args.selection_count, args.min_history, args.strategy_id))
             return 0
         if args.command == "utilities-daily-backtest":
             if args.utilities_daily_command == "ready":

@@ -119,6 +119,7 @@ def collect_coal_external_state(
     rows: list[dict[str, Any]] = []
     warnings: list[str] = []
     rows.extend(_collect_futures_state_rows(start_date, end_date, warnings))
+    rows.extend(_collect_coal_oil_power_index_rows(start_date, end_date, warnings))
     rows.extend(_unavailable_required_state_rows(end_date))
     rows = sorted(rows, key=lambda item: (item["visible_date"], item["metric"], item["sub_industry"]))
 
@@ -137,12 +138,14 @@ def collect_coal_external_state(
                 "akshare.futures_main_sina ZC0 thermal-coal proxy",
                 "akshare.futures_main_sina JM0 coking-coal proxy",
                 "akshare.futures_main_sina J0 coke proxy for coal-power spread proxy review",
+                "akshare.macro_china_qyspjg coal-oil-power price index proxy",
             ],
             "warnings": warnings,
             "pit_policy": "Daily futures rows are reduced to month-end state rows and assigned visible_date = next calendar day. This is usable only as preliminary proxy evidence, not final accepted spot-state evidence.",
             "limitations": [
                 "Thermal coal futures proxy ZC0 ends in 2022 and cannot cover 2023-2026 formal PIT state.",
                 "Inventory/output and coal-power spread rows are templates until official or licensed sources are collected.",
+                "Coal-oil-power price index is a broad macro proxy, not a direct coal-power spread.",
                 "Futures prices are market proxies and must not be confused with physical spot or long-contract coal prices.",
             ],
             "created_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
@@ -178,6 +181,7 @@ def validate_coal_external_state(path: Path) -> dict[str, Any]:
         "coking_coal_price_state",
         "coal_inventory_or_output_state",
         "coal_power_spread_state",
+        "coal_oil_power_price_index_state",
     ]
     missing_usable_required_metrics = [metric for metric in required_metrics if usable_metric_counts.get(metric, 0) == 0]
     status = "pass" if not missing_required and future_or_invalid == 0 and not missing_usable_required_metrics else "needs_review"
@@ -237,6 +241,67 @@ def _collect_futures_state_rows(start_date: str, end_date: str, warnings: list[s
             continue
         rows.extend(_month_end_futures_rows(df, symbol, metric, sub_industry, notes))
     rows.extend(_derived_spread_rows(rows))
+    return rows
+
+
+def _collect_coal_oil_power_index_rows(start_date: str, end_date: str, warnings: list[str]) -> list[dict[str, Any]]:
+    try:
+        import akshare as ak
+    except Exception as exc:  # pragma: no cover - optional dependency.
+        raise RuntimeError("collecting coal external state requires akshare") from exc
+
+    try:
+        df = ak.macro_china_qyspjg()
+    except Exception as exc:
+        warnings.append(f"macro_china_qyspjg: collection failed: {repr(exc)}")
+        return []
+
+    start = _parse_date(start_date) or date.min
+    end = _parse_date(end_date) or date.max
+    rows = []
+    for record in df.to_dict("records"):
+        state_day = _parse_chinese_month(record.get("月份"))
+        value = _to_float(record.get("煤油电-指数值"))
+        yoy = _to_float(record.get("煤油电-同比增长"))
+        if state_day is None or state_day < start or state_day > end:
+            continue
+        visible = _next_month_25(state_day)
+        if value is not None:
+            rows.append(
+                _state_row(
+                    visible,
+                    state_day,
+                    "china_macro",
+                    "coal_oil_power",
+                    "coal_oil_power_price_index_state",
+                    value,
+                    "index",
+                    "AkShare macro_china_qyspjg / Eastmoney macro data",
+                    "https://data.eastmoney.com/cjsj/qyspjg.html",
+                    visible,
+                    "macro_proxy",
+                    "Broad coal-oil-power enterprise commodity price index. Use as exploratory state proxy only.",
+                    pit_usable=True,
+                )
+            )
+        if yoy is not None:
+            rows.append(
+                _state_row(
+                    visible,
+                    state_day,
+                    "china_macro",
+                    "coal_oil_power",
+                    "coal_oil_power_price_yoy_state",
+                    yoy,
+                    "percent",
+                    "AkShare macro_china_qyspjg / Eastmoney macro data",
+                    "https://data.eastmoney.com/cjsj/qyspjg.html",
+                    visible,
+                    "macro_proxy",
+                    "Broad coal-oil-power enterprise commodity price YoY. Use as exploratory state proxy only.",
+                    pit_usable=True,
+                )
+            )
     return rows
 
 
@@ -381,6 +446,32 @@ def _parse_date(value: Any) -> date | None:
     if hasattr(value, "date"):
         return value.date()
     return datetime.strptime(str(value)[:10], "%Y-%m-%d").date()
+
+
+def _parse_chinese_month(value: Any) -> date | None:
+    if value in {None, ""}:
+        return None
+    text = str(value).strip().replace("月份", "")
+    try:
+        year_text, month_text = text.split("年", 1)
+        year = int(year_text)
+        month = int(month_text)
+    except (ValueError, TypeError):
+        return None
+    if month < 1 or month > 12:
+        return None
+    if month == 12:
+        return date(year, month, 31)
+    return date(year, month + 1, 1) - timedelta(days=1)
+
+
+def _next_month_25(day: date) -> date:
+    year = day.year
+    month = day.month + 1
+    if month == 13:
+        year += 1
+        month = 1
+    return date(year, month, 25)
 
 
 def _to_float(value: Any) -> float | None:

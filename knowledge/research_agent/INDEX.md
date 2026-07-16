@@ -48,6 +48,7 @@
 - [Utilities V5.1e demand-state preliminary model](strategy_cases/utilities_v51e_demand_state_preliminary_model.md) - external demand state supports an initial cash-flow / low-PB switching model, not yet a formal strategy.
 - [Utilities V5.1f formal candidate](strategy_cases/utilities_v51f_quant_ready_candidate.md) - weak/mid/strong demand-state rule passed Quant, engineering contract audit, and smoke test; platform replication is still blocked.
 - [Coal V5.2 quant validation result](strategy_cases/coal_v52_quant_validation_result.md) - first coal process-portability validation; cash-flow value evidence stronger than high dividend, formal candidacy blocked by state-data gaps.
+- [Coal V5.2b cash-flow cycle value result](strategy_cases/coal_v52b_cashflow_cycle_value_result.md) - revised coal model improved evidence, but formal candidacy remains blocked by data audits and 2018 failure.
 
 ## Open Research Questions
 

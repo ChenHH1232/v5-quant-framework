@@ -1,0 +1,216 @@
+{
+  "meta": {
+    "strategy_id": "insurance_low_pb_dividend_v53b",
+    "name": "Insurance Low-PB Dividend V5.3b",
+    "objective": "Repair V5.3 Test-1 by removing profit growth, not treating ROE as a positive quality factor, and testing a simpler low-PB plus dividend insurance value hypothesis with real PIT 10Y government bond yield state.",
+    "status": "research_revision_candidate_v53b"
+  },
+  "universe": {
+    "name": "A-share core listed insurance operating companies and groups",
+    "construction": "pm_reviewed_core_insurance_universe_v53_test1",
+    "point_in_time": true,
+    "minimum_rebalance_coverage_ratio": 0.8,
+    "exclude": [
+      "banks",
+      "brokers",
+      "asset_managers",
+      "financial_holding_contamination",
+      "st_or_delisted_special_cases_for_test1"
+    ]
+  },
+  "data": {
+    "vendor": "JoinQuant/DataJQ PIT valuation and finance fields plus ChinaBond 10Y government yield state",
+    "price_frequency": "quarterly_signal_panel",
+    "financial_as_of_policy": "announcement_date",
+    "price_adjustment": {
+      "research_panel": "pre_adjusted_total_return",
+      "status": "research_pit_validation_only"
+    },
+    "insurance_indicator_policy": {
+      "status": "diagnostic_not_required_for_v53b_scoring",
+      "reason": "DataJQ insurance_indicator 2024-2025 coverage remains unrepaired, so it is not used as a required score factor."
+    },
+    "ev_nbv_policy": {
+      "status": "deferred_enhancement",
+      "reason": "EV/NBV require annual-report or reviewed vendor extraction before formal use."
+    },
+    "external_state_policy": {
+      "rate_state": "ChinaBond 10Y government bond yield via akshare.bond_china_yield",
+      "rate_visibility": "latest visible_date <= rebalance date",
+      "equity_state": "CSI300 trailing return before rebalance"
+    },
+    "window": {
+      "research_start": "2015-07-01",
+      "research_end": "2026-05-31"
+    }
+  },
+  "signals": {
+    "factors": [
+      {
+        "name": "low_price_to_book",
+        "source": "jqdatasdk.valuation",
+        "role": "balance_sheet_value",
+        "direction": "lower_is_better",
+        "definition": "PB ratio. Lower PB is preferred if not explained by franchise deterioration or solvency pressure.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security",
+        "winsorize": "rebalance_cross_section",
+        "normalize": "rank_within_rebalance_date",
+        "evidence_status": "v53_test1_strongest_factor"
+      },
+      {
+        "name": "dividend_yield",
+        "source": "jqdatasdk.valuation",
+        "role": "shareholder_return_support",
+        "direction": "higher_is_better",
+        "definition": "Dividend yield visible from valuation data. It is a support factor, not proof of quality without solvency and EV/NBV review.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security",
+        "winsorize": "rebalance_cross_section",
+        "normalize": "rank_within_rebalance_date",
+        "evidence_status": "v53_test1_positive_support"
+      }
+    ],
+    "scoring": {
+      "method": "insurance_low_pb_dividend_composite_v53b",
+      "normalization_scope": "rebalance_cross_section",
+      "weights": {
+        "low_price_to_book": 0.6,
+        "dividend_yield": 0.4
+      },
+      "min_factor_count": 2,
+      "value_trap_guard": "No hard insurance guard is approved. ROE and profit growth are audit fields only, not positive quality factors."
+    }
+  },
+  "schedule": {
+    "signal_frequency": "quarterly",
+    "rebalance_frequency": "quarterly",
+    "rebalance_rule": "first_tradable_day_of_quarter_for_research_validation"
+  },
+  "portfolio": {
+    "selection_count": 3,
+    "weighting": "equal_weight_research_candidate",
+    "max_position_weight": 0.34,
+    "cash_policy": "hold_residual_cash_when_fewer_than_three_names_pass_filters"
+  },
+  "risk": {
+    "defensive_asset": "cash",
+    "defensive_rule": {
+      "enabled": false,
+      "reason": "V5.3b validates low-PB + dividend factor evidence, not market timing."
+    },
+    "individual_stop_loss_take_profit": {
+      "enabled": false,
+      "reason": "Fixed exits are not part of the research hypothesis."
+    }
+  },
+  "validation": {
+    "method": "rolling",
+    "train_years": 5,
+    "test_years": 2,
+    "review_years": 1,
+    "required_tests": [
+      "pit_leakage_audit",
+      "baseline_comparison",
+      "single_factor_ic_rankic",
+      "rolling_validation",
+      "ablation_by_module",
+      "selection_count_2_3_4_5_robustness",
+      "real_rate_state_review",
+      "failure_year_analysis_2021_2022_2026"
+    ],
+    "baselines": [
+      {
+        "name": "equal_weight_core_insurance",
+        "mode": "equal_all"
+      },
+      {
+        "name": "low_pb_core_insurance_top3",
+        "mode": "single_factor",
+        "factor": "low_price_to_book",
+        "direction": "lower_is_better",
+        "selection_count": 3
+      },
+      {
+        "name": "high_dividend_core_insurance_top3",
+        "mode": "single_factor",
+        "factor": "dividend_yield",
+        "direction": "higher_is_better",
+        "selection_count": 3
+      },
+      {
+        "name": "low_pb_plus_dividend_v53b",
+        "mode": "composite",
+        "selection_count": 3
+      }
+    ],
+    "common_sample_fields": [
+      "low_price_to_book",
+      "dividend_yield"
+    ],
+    "common_sample_interactions": [
+      {
+        "name": "common_insurance_low_pb_only",
+        "factors": [
+          "low_price_to_book"
+        ]
+      },
+      {
+        "name": "common_insurance_dividend_only",
+        "factors": [
+          "dividend_yield"
+        ]
+      },
+      {
+        "name": "common_insurance_low_pb_dividend",
+        "factors": [
+          "low_price_to_book",
+          "dividend_yield"
+        ]
+      }
+    ],
+    "robustness": {
+      "selection_counts": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "weight_scale_factors": [
+        "low_price_to_book",
+        "dividend_yield"
+      ],
+      "weight_scales": [
+        0.8,
+        1.0,
+        1.2
+      ]
+    },
+    "weak_years": [
+      "2021",
+      "2022",
+      "2026"
+    ],
+    "acceptance_rule": "PM may approve formal strategy candidacy only if the rule remains evidence-driven, financially explainable, statistically validated, reproducible and maintainable. Historical performance alone is insufficient."
+  },
+  "execution": {
+    "status": "blocked_until_research_and_quant_validation_pass",
+    "next_gate": "research_pit_validation",
+    "commission_bps": 3,
+    "slippage_bps": 5,
+    "suspension_policy": "skip_untradeable",
+    "limit_policy": "skip_limit_blocked"
+  },
+  "outputs": {
+    "save_holdings": true,
+    "save_rebalance_signals": true,
+    "report": "markdown",
+    "required_reports": [
+      "formal_validation_packet",
+      "real_rate_state_review",
+      "pm_formal_candidate_decision"
+    ]
+  }
+}

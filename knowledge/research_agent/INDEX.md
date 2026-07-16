@@ -63,6 +63,7 @@
 - [Coal V5.2b segment reviewed repair result](strategy_cases/coal_v52b_segment_reviewed_repair_result.md) - Tushare fallback repairs 37/37 segment coverage and rebuilds a formal PIT coal universe panel.
 - [Coal V5.2b final inputs audit result](strategy_cases/coal_v52b_final_inputs_audit_result.md) - daily returns and rebalance signals repaired; external raw-coal output / inventory state remains blocked, so V5.2b is not promoted.
 - [Coal V5.2b PM closeout and V5.3 selection](strategy_cases/coal_v52b_pm_closeout_and_v53_selection.md) - coal paused as data-completion watchlist; insurance selected as V5.3 research-preparation track.
+- [Insurance V5.3 research preparation execution](strategy_cases/insurance_v53_research_preparation_execution.md) - first universe and data-field probe completed; Quant validation blocked until universe review, 2024-2025 indicator coverage repair, EV/NBV source decision, and state panel build.
 
 ## Open Research Questions
 

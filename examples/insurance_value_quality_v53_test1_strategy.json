@@ -1,0 +1,266 @@
+{
+  "meta": {
+    "strategy_id": "insurance_value_quality_v53_test1",
+    "name": "Insurance Value Quality V5.3 Test-1",
+    "objective": "Run the first formal research validation for a core A-share insurance universe using PIT-available generic valuation, dividend, profitability and growth factors while treating insurance_indicator, EV and NBV as audited diagnostics or later enhancements.",
+    "status": "research_pit_validation_test1"
+  },
+  "universe": {
+    "name": "A-share core listed insurance operating companies and groups",
+    "construction": "pm_reviewed_core_insurance_universe_v53_test1",
+    "point_in_time": true,
+    "minimum_rebalance_coverage_ratio": 0.8,
+    "exclude": [
+      "banks",
+      "brokers",
+      "asset_managers",
+      "insurance_technology_vendors",
+      "financial_holding_contamination",
+      "st_or_delisted_special_cases_for_test1"
+    ]
+  },
+  "data": {
+    "vendor": "JoinQuant/DataJQ PIT valuation and finance fields plus V5 insurance data probe",
+    "price_frequency": "quarterly_signal_panel",
+    "financial_as_of_policy": "announcement_date",
+    "price_adjustment": {
+      "research_panel": "pre_adjusted_total_return",
+      "status": "research_pit_validation_only"
+    },
+    "insurance_indicator_policy": {
+      "status": "diagnostic_not_required_for_test1_scoring",
+      "reason": "DataJQ insurance_indicator has useful pubDate/statDate fields but returned zero coverage for 2024-2025 in the first probe.",
+      "required_before_formal_candidate": [
+        "repair_2024_2025_coverage",
+        "or_replace_with_report_extracted_visible_date_fields"
+      ]
+    },
+    "ev_nbv_policy": {
+      "status": "deferred_enhancement",
+      "reason": "Embedded value and new business value were not detected in insurance_indicator and require annual-report/manual extraction before formal use."
+    },
+    "external_state_policy": {
+      "rate_state": "bond_etf_proxy_511010_trailing_return_for_test1_only",
+      "equity_state": "CSI300 trailing return before rebalance",
+      "promotion_requirement": "Replace rate proxy with real PIT 10Y government bond yield before formal strategy candidacy."
+    },
+    "window": {
+      "research_start": "2015-07-01",
+      "research_end": "2026-05-31"
+    }
+  },
+  "signals": {
+    "factors": [
+      {
+        "name": "low_price_to_book",
+        "source": "jqdatasdk.valuation",
+        "role": "balance_sheet_value",
+        "direction": "lower_is_better",
+        "definition": "PB ratio. Lower PB is preferred if not explained by solvency or franchise deterioration.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security",
+        "winsorize": "rebalance_cross_section",
+        "normalize": "rank_within_rebalance_date",
+        "evidence_status": "test1_candidate"
+      },
+      {
+        "name": "dividend_yield",
+        "source": "jqdatasdk.valuation",
+        "role": "shareholder_return_support",
+        "direction": "higher_is_better",
+        "definition": "Dividend yield visible from valuation data. Must be interpreted with solvency and franchise quality later.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security",
+        "winsorize": "rebalance_cross_section",
+        "normalize": "rank_within_rebalance_date",
+        "evidence_status": "test1_candidate"
+      },
+      {
+        "name": "return_on_equity_ttm",
+        "source": "jqdatasdk.indicator",
+        "role": "profitability_quality_proxy",
+        "direction": "higher_is_better",
+        "definition": "ROE TTM. Used as a generic profitability proxy until insurance-specific quality fields are repaired.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security",
+        "winsorize": "rebalance_cross_section",
+        "normalize": "rank_within_rebalance_date",
+        "evidence_status": "test1_candidate"
+      },
+      {
+        "name": "profit_growth_yoy",
+        "source": "jqdatasdk.indicator",
+        "role": "earnings_growth_proxy",
+        "direction": "higher_is_better",
+        "definition": "Net profit YoY growth. A fragile proxy because investment gains can distort accounting profit.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security",
+        "winsorize": "rebalance_cross_section",
+        "normalize": "rank_within_rebalance_date",
+        "evidence_status": "test1_candidate_fragile"
+      }
+    ],
+    "scoring": {
+      "method": "insurance_value_quality_test1_composite",
+      "normalization_scope": "rebalance_cross_section",
+      "weights": {
+        "low_price_to_book": 0.35,
+        "dividend_yield": 0.25,
+        "return_on_equity_ttm": 0.25,
+        "profit_growth_yoy": 0.15
+      },
+      "min_factor_count": 2,
+      "value_trap_guard": "No hard insurance guard is approved in Test-1. Solvency and EV/NBV remain validation gates."
+    }
+  },
+  "schedule": {
+    "signal_frequency": "quarterly",
+    "rebalance_frequency": "quarterly",
+    "rebalance_rule": "first_tradable_day_of_quarter_for_research_validation"
+  },
+  "portfolio": {
+    "selection_count": 3,
+    "weighting": "equal_weight_research_candidate",
+    "max_position_weight": 0.34,
+    "cash_policy": "hold_residual_cash_when_fewer_than_three_names_pass_filters"
+  },
+  "risk": {
+    "defensive_asset": "cash",
+    "defensive_rule": {
+      "enabled": false,
+      "reason": "V5.3 Test-1 validates insurance factor evidence, not market timing."
+    },
+    "individual_stop_loss_take_profit": {
+      "enabled": false,
+      "reason": "Fixed exits are not part of the research hypothesis."
+    }
+  },
+  "validation": {
+    "method": "rolling",
+    "train_years": 5,
+    "test_years": 2,
+    "review_years": 1,
+    "required_tests": [
+      "pit_leakage_audit",
+      "baseline_comparison",
+      "single_factor_ic_rankic",
+      "rolling_validation",
+      "ablation_by_module",
+      "selection_count_2_3_4_5_robustness",
+      "rate_equity_state_review",
+      "weak_year_analysis"
+    ],
+    "baselines": [
+      {
+        "name": "equal_weight_core_insurance",
+        "mode": "equal_all"
+      },
+      {
+        "name": "low_pb_core_insurance_top3",
+        "mode": "single_factor",
+        "factor": "low_price_to_book",
+        "direction": "lower_is_better",
+        "selection_count": 3
+      },
+      {
+        "name": "high_dividend_core_insurance_top3",
+        "mode": "single_factor",
+        "factor": "dividend_yield",
+        "direction": "higher_is_better",
+        "selection_count": 3
+      },
+      {
+        "name": "high_roe_core_insurance_top3",
+        "mode": "single_factor",
+        "factor": "return_on_equity_ttm",
+        "direction": "higher_is_better",
+        "selection_count": 3
+      },
+      {
+        "name": "high_profit_growth_core_insurance_top3",
+        "mode": "single_factor",
+        "factor": "profit_growth_yoy",
+        "direction": "higher_is_better",
+        "selection_count": 3
+      }
+    ],
+    "common_sample_fields": [
+      "low_price_to_book",
+      "dividend_yield",
+      "return_on_equity_ttm",
+      "profit_growth_yoy"
+    ],
+    "common_sample_interactions": [
+      {
+        "name": "common_insurance_low_pb_dividend",
+        "factors": [
+          "low_price_to_book",
+          "dividend_yield"
+        ]
+      },
+      {
+        "name": "common_insurance_low_pb_roe",
+        "factors": [
+          "low_price_to_book",
+          "return_on_equity_ttm"
+        ]
+      },
+      {
+        "name": "common_insurance_all_test1",
+        "factors": [
+          "low_price_to_book",
+          "dividend_yield",
+          "return_on_equity_ttm",
+          "profit_growth_yoy"
+        ]
+      }
+    ],
+    "robustness": {
+      "selection_counts": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "weight_scale_factors": [
+        "low_price_to_book",
+        "dividend_yield",
+        "return_on_equity_ttm"
+      ],
+      "weight_scales": [
+        0.8,
+        1.0,
+        1.2
+      ]
+    },
+    "weak_years": [
+      "2018",
+      "2021",
+      "2022",
+      "2024"
+    ],
+    "acceptance_rule": "PM may approve formal strategy candidacy only if the rule remains evidence-driven, financially explainable, statistically validated, reproducible and maintainable. Historical performance alone is insufficient."
+  },
+  "execution": {
+    "status": "blocked_until_research_and_quant_validation_pass",
+    "next_gate": "research_pit_validation",
+    "commission_bps": 3,
+    "slippage_bps": 5,
+    "suspension_policy": "skip_untradeable",
+    "limit_policy": "skip_limit_blocked"
+  },
+  "outputs": {
+    "save_holdings": true,
+    "save_rebalance_signals": true,
+    "report": "markdown",
+    "required_reports": [
+      "formal_validation_packet",
+      "state_review",
+      "pm_formal_candidate_decision"
+    ]
+  }
+}

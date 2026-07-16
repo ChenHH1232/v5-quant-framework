@@ -12,10 +12,14 @@ from v5.daily_backtest import _defensive_state
 from v5.bank_quality_date_alignment_runner import align_bank_quality_dates
 from v5.coal_cycle_state_validation_runner import run_coal_cycle_state_validation
 from v5.coal_data_audit_runner import (
+    _target_report_years,
     audit_coal_business_tags,
     audit_coal_capex_fcf,
+    build_coal_capex_policy_panel,
     merge_coal_manual_state,
+    write_coal_business_tag_visible_date_template,
     write_coal_manual_state_template,
+    write_coal_official_state_seed,
 )
 from v5.coal_external_state_runner import latest_visible_state_values, validate_coal_external_state, write_coal_external_state_template
 from v5.coal_pit_panel_runner import MANUAL_BUSINESS_TAGS
@@ -166,6 +170,17 @@ class DataValidationRunnerTests(unittest.TestCase):
         self.assertEqual(result["status"], "pass")
         self.assertEqual(result["pit_usable_count"], 5)
 
+    def test_coal_official_state_seed_records_reviewed_nbs_rows(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            seed = write_coal_official_state_seed(Path(tmp))
+            result = validate_coal_external_state(seed)
+            rows = self._read_csv(seed)
+
+        self.assertEqual(result["pit_usable_count"], 3)
+        self.assertEqual({row["review_status"] for row in rows}, {"official_seed_reviewed"})
+        self.assertIn("coal_inventory_or_output_state", {row["metric"] for row in rows})
+        self.assertIn("thermal_coal_price_state", {row["metric"] for row in rows})
+
     def test_coal_latest_visible_state_uses_prior_visible_rows(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             state = Path(tmp) / "coal_state.csv"
@@ -250,6 +265,41 @@ class DataValidationRunnerTests(unittest.TestCase):
         self.assertEqual(summary["formal_pit_usable_count"], 0)
         self.assertEqual(rows[0]["audit_status"], "blocked_manual_current_classification")
 
+    def test_coal_business_tag_visible_date_template_requires_segment_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            panel = tmp_path / "panel.csv"
+            self._write_csv(
+                panel,
+                ["trade_date", "code", "company_name", "coal_business_tag"],
+                [
+                    {"trade_date": "2021-01-04", "code": "601225.XSHG", "company_name": "test coal", "coal_business_tag": "core_coal"},
+                    {"trade_date": "2021-04-01", "code": "601225.XSHG", "company_name": "test coal", "coal_business_tag": "core_coal"},
+                ],
+            )
+
+            template = write_coal_business_tag_visible_date_template(panel, tmp_path / "tags")
+            rows = self._read_csv(template)
+            manifest = json.loads((template.parent / "coal_business_tag_visible_date_manifest.json").read_text(encoding="utf-8"))
+
+        self.assertEqual(manifest["company_count"], 1)
+        self.assertEqual(manifest["pit_usable_count"], 0)
+        self.assertEqual(rows[0]["pit_usable"], "false")
+        self.assertEqual(rows[0]["review_status"], "template_requires_company_report_evidence")
+
+    def test_coal_report_disclosure_target_years_cover_prior_reporting_year(self) -> None:
+        years = _target_report_years(
+            [
+                {"trade_date": "2021-07-01"},
+                {"trade_date": "2026-04-01"},
+            ]
+        )
+
+        self.assertIn("2020", years)
+        self.assertIn("2021", years)
+        self.assertIn("2025", years)
+        self.assertIn("2026", years)
+
     def test_coal_capex_fcf_audit_flags_unstable_fcf_rows(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             tmp_path = Path(tmp)
@@ -271,6 +321,28 @@ class DataValidationRunnerTests(unittest.TestCase):
         self.assertEqual(summary["flagged_rows"], 1)
         self.assertIn("negative_fcf_yield", rows[0]["flags"])
         self.assertIn("capex_exceeds_ocf", rows[0]["flags"])
+
+    def test_coal_capex_policy_panel_marks_fcf_auxiliary(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            panel = tmp_path / "panel.csv"
+            self._write_csv(
+                panel,
+                ["trade_date", "code", "operating_cash_flow_yield", "free_cash_flow_yield", "capex_burden"],
+                [
+                    {"trade_date": "2021-01-04", "code": "A", "operating_cash_flow_yield": "0.10", "free_cash_flow_yield": "0.06", "capex_burden": "0.4"},
+                    {"trade_date": "2021-01-04", "code": "B", "operating_cash_flow_yield": "0.05", "free_cash_flow_yield": "-0.03", "capex_burden": "1.6"},
+                ],
+            )
+
+            policy_panel = build_coal_capex_policy_panel(panel, tmp_path / "policy")
+            rows = self._read_csv(policy_panel)
+            manifest = json.loads((policy_panel.parent / "capex_policy_manifest.json").read_text(encoding="utf-8"))
+
+        self.assertEqual(manifest["flagged_rows"], 1)
+        self.assertEqual(rows[0]["ocf_use_policy"], "primary_cashflow_factor_candidate")
+        self.assertEqual(rows[1]["fcf_policy_score"], "")
+        self.assertIn("negative_fcf_yield", rows[1]["capex_policy_flags"])
 
     def test_coal_cycle_state_validation_writes_bucket_evidence(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

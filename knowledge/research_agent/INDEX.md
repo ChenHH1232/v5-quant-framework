@@ -50,6 +50,7 @@
 - [Coal V5.2 quant validation result](strategy_cases/coal_v52_quant_validation_result.md) - first coal process-portability validation; cash-flow value evidence stronger than high dividend, formal candidacy blocked by state-data gaps.
 - [Coal V5.2b cash-flow cycle value result](strategy_cases/coal_v52b_cashflow_cycle_value_result.md) - revised coal model improved evidence, but formal candidacy remains blocked by data audits and 2018 failure.
 - [Coal V5.2b data audit blocker repair](strategy_cases/coal_v52b_data_audit_blocker_repair.md) - source import template, business-tag PIT audit, FCF/capex audit, and PM decision to keep V5.2b in the data-audit loop.
+- [Coal V5.2b formal data repair result](strategy_cases/coal_v52b_formal_data_repair_result.md) - official state seed, report disclosure dates, capex-policy branch, and PM decision to keep candidacy blocked.
 
 ## Open Research Questions
 

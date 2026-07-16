@@ -1,0 +1,263 @@
+{
+  "meta": {
+    "strategy_id": "coal_high_dividend_cycle_value_v52",
+    "name": "Coal High-Dividend Cycle Value V5.2",
+    "objective": "Test whether coal-sector dividend, valuation, cash-flow and external cycle-state factors can form a PIT-valid research candidate for A-share coal mining and coal operating companies.",
+    "status": "pre_research_candidate"
+  },
+  "universe": {
+    "name": "A-share coal mining and coal operating companies",
+    "construction": "point_in_time_core_coal_mining_and_operating_company_membership",
+    "point_in_time": true,
+    "minimum_rebalance_coverage_ratio": 0.8,
+    "exclude": [
+      "pure_coal_chemical",
+      "coal_machinery_equipment",
+      "non_coal_mining",
+      "broad_high_dividend_soe_style_basket"
+    ]
+  },
+  "data": {
+    "vendor": "JoinQuant/DataJQ PIT stock panel plus V5 coal external state panel",
+    "price_frequency": "quarterly_signal_panel",
+    "financial_as_of_policy": "announcement_date",
+    "price_adjustment": {
+      "research_panel": "pre_adjusted_total_return",
+      "status": "research_pit_validation_only"
+    },
+    "external_state_policy": {
+      "required_metrics": [
+        "thermal_coal_price_state",
+        "coking_coal_price_state",
+        "coal_inventory_or_output_state",
+        "coal_power_spread_state"
+      ],
+      "visibility": "latest_visible_state_row_with_visible_date_lte_trade_date",
+      "bucket_method": "expanding_historical_tertiles_or_percentiles",
+      "missing_policy": "block_state_conditioned_rebalance"
+    },
+    "window": {
+      "research_start": "2013-01-01",
+      "research_end": "2026-05-31"
+    }
+  },
+  "signals": {
+    "factors": [
+      {
+        "name": "dividend_yield",
+        "source": "jqdatasdk.valuation_or_dividend_records",
+        "role": "shareholder_return",
+        "direction": "higher_is_better",
+        "definition": "Cash dividend yield with dividend announcement, ex-dividend and cash payment dates separated.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security",
+        "winsorize": "rebalance_cross_section",
+        "normalize": "rank_within_rebalance_date",
+        "evidence_status": "candidate_not_validated"
+      },
+      {
+        "name": "low_price_to_book",
+        "source": "jqdatasdk.valuation",
+        "role": "asset_value",
+        "direction": "lower_is_better",
+        "definition": "PB ratio. Lower PB is preferred only if robustness shows it is not merely impaired-asset risk.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security",
+        "winsorize": "rebalance_cross_section",
+        "normalize": "rank_within_rebalance_date",
+        "evidence_status": "candidate_not_validated"
+      },
+      {
+        "name": "low_price_to_earnings",
+        "source": "jqdatasdk.valuation",
+        "role": "earnings_value",
+        "direction": "lower_is_better",
+        "definition": "PE ratio. Must be tested with coal-price state because low PE can occur at profit-cycle peaks.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security",
+        "winsorize": "rebalance_cross_section",
+        "normalize": "rank_within_rebalance_date",
+        "evidence_status": "exploratory_candidate"
+      },
+      {
+        "name": "operating_cash_flow_yield",
+        "source": "derived_from_cash_flow_statement_and_market_cap",
+        "role": "cashflow_value",
+        "direction": "higher_is_better",
+        "definition": "Operating cash flow divided by market capitalization.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 90,
+        "missing_policy": "drop_security",
+        "winsorize": "rebalance_cross_section",
+        "normalize": "rank_within_rebalance_date",
+        "evidence_status": "candidate_not_validated"
+      },
+      {
+        "name": "free_cash_flow_yield",
+        "source": "derived_from_cash_flow_statement_capex_and_market_cap",
+        "role": "distributable_cashflow",
+        "direction": "higher_is_better",
+        "definition": "Operating cash flow less capex divided by market capitalization, used only if capex coverage and definition pass audit.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 90,
+        "missing_policy": "optional_drop_or_report_coverage",
+        "winsorize": "rebalance_cross_section",
+        "normalize": "rank_within_rebalance_date",
+        "evidence_status": "exploratory_candidate"
+      },
+      {
+        "name": "operating_cash_flow_to_net_profit",
+        "source": "derived_from_financial_statements",
+        "role": "cash_conversion_quality",
+        "direction": "higher_is_better",
+        "definition": "Operating cash flow divided by net profit, used as a support or filter candidate.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 90,
+        "missing_policy": "drop_security",
+        "winsorize": "rebalance_cross_section",
+        "normalize": "rank_within_rebalance_date",
+        "evidence_status": "candidate_not_validated"
+      },
+      {
+        "name": "asset_liability_ratio",
+        "source": "derived_from_balance_sheet",
+        "role": "down_cycle_risk",
+        "direction": "lower_is_better",
+        "definition": "Total liabilities divided by total assets. Initially a risk-control candidate.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 90,
+        "missing_policy": "drop_security",
+        "winsorize": "rebalance_cross_section",
+        "normalize": "rank_within_rebalance_date",
+        "evidence_status": "risk_control_candidate"
+      },
+      {
+        "name": "thermal_coal_price_state",
+        "source": "coal_external_state_panel",
+        "role": "external_cycle_state",
+        "direction": "higher_is_better",
+        "definition": "Latest visible thermal coal price state. Used for state conditioning, not accepted as standalone stock-level alpha.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 25,
+        "missing_policy": "block_state_conditioned_rebalance",
+        "winsorize": "not_applicable",
+        "normalize": "expanding_state_bucket",
+        "evidence_status": "required_external_state_not_yet_validated"
+      },
+      {
+        "name": "coking_coal_price_state",
+        "source": "coal_external_state_panel",
+        "role": "external_cycle_state",
+        "direction": "higher_is_better",
+        "definition": "Latest visible coking coal price state. Must be tested by producer subgroup.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 25,
+        "missing_policy": "block_state_conditioned_rebalance",
+        "winsorize": "not_applicable",
+        "normalize": "expanding_state_bucket",
+        "evidence_status": "required_external_state_not_yet_validated"
+      },
+      {
+        "name": "coal_inventory_or_output_state",
+        "source": "coal_external_state_panel",
+        "role": "external_supply_state",
+        "direction": "higher_is_better",
+        "definition": "Latest visible inventory, inventory-days, or raw-coal-output state. Direction is context-dependent in validation.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 25,
+        "missing_policy": "block_state_conditioned_rebalance",
+        "winsorize": "not_applicable",
+        "normalize": "expanding_state_bucket",
+        "evidence_status": "required_external_state_not_yet_validated"
+      },
+      {
+        "name": "coal_power_spread_state",
+        "source": "coal_external_state_panel",
+        "role": "external_margin_state",
+        "direction": "higher_is_better",
+        "definition": "Latest visible coal-electricity spread proxy, mainly for mixed coal-power companies and state conditioning.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 25,
+        "missing_policy": "block_state_conditioned_rebalance",
+        "winsorize": "not_applicable",
+        "normalize": "expanding_state_bucket",
+        "evidence_status": "required_external_state_not_yet_validated"
+      }
+    ],
+    "scoring": {
+      "method": "research_candidate_only_no_approved_weights",
+      "normalization_scope": "rebalance_cross_section",
+      "candidate_modules": [
+        "shareholder_return",
+        "valuation",
+        "cashflow",
+        "leverage_risk",
+        "external_cycle_state"
+      ],
+      "min_factor_count": 3,
+      "value_trap_guard": "No guard is approved. Dividend coverage, leverage and cycle-state variables are candidates for validation only."
+    }
+  },
+  "schedule": {
+    "signal_frequency": "quarterly_after_financial_disclosure_and_external_state_visibility",
+    "rebalance_frequency": "quarterly",
+    "rebalance_rule": "first_tradable_day_after_required_financial_data_and_state_visibility_check"
+  },
+  "portfolio": {
+    "selection_count": 8,
+    "weighting": "equal_weight_research_candidate",
+    "max_position_weight": 0.15,
+    "cash_policy": "hold_residual_cash_when_fewer_than_required_names_pass_filters"
+  },
+  "risk": {
+    "defensive_asset": "cash",
+    "defensive_rule": {
+      "enabled": false,
+      "reason": "V5.2 first validates coal factor and state logic, not market-timing defense."
+    },
+    "individual_stop_loss_take_profit": {
+      "enabled": false,
+      "reason": "Fixed exits are not part of the research hypothesis."
+    }
+  },
+  "validation": {
+    "method": "rolling",
+    "train_years": 5,
+    "test_years": 2,
+    "review_years": 1,
+    "required_tests": [
+      "pit_leakage_audit",
+      "baseline_equal_high_dividend_low_pb_cashflow",
+      "single_factor_ic_rankic",
+      "rolling_validation",
+      "ablation_by_module",
+      "selection_count_5_8_10_12_robustness",
+      "state_threshold_robustness",
+      "mixed_business_exclusion_robustness",
+      "thermal_vs_coking_subgroup_review",
+      "down_cycle_failure_analysis"
+    ],
+    "acceptance_rule": "PM may approve formal strategy candidacy only if the rule remains evidence-driven, financially explainable, statistically validated, reproducible and maintainable. Historical performance alone is insufficient."
+  },
+  "execution": {
+    "status": "blocked_until_research_and_quant_validation_pass",
+    "next_gate": "research_pit_validation",
+    "commission_bps": 3,
+    "slippage_bps": 5,
+    "suspension_policy": "skip_untradeable",
+    "limit_policy": "skip_limit_blocked"
+  },
+  "outputs": {
+    "save_holdings": true,
+    "save_rebalance_signals": true,
+    "report": "markdown",
+    "required_reports": [
+      "research_preparation_packet",
+      "formal_validation_packet_if_pit_panel_passes",
+      "pm_formal_candidate_decision"
+    ]
+  }
+}

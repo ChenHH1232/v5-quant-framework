@@ -19,6 +19,10 @@
 - [Utilities universe definition](references/utilities_universe_definition.md) - V5.1 operating-company universe boundary.
 - [Utilities data field map](references/utilities_data_field_map.md) - required PIT fields and source risks.
 - [Utilities validation handoff](references/utilities_validation_handoff.md) - Quant Validation Agent task requirements for Test-1.
+- [Coal universe definition](references/coal_universe_definition.md) - V5.2 coal mining and operating-company boundary.
+- [Coal data field map](references/coal_data_field_map.md) - stock-level and external coal-cycle PIT field requirements.
+- [Coal source collection plan](references/coal_source_collection_plan.md) - candidate sources for coal price, output, inventory and spread state.
+- [Coal validation handoff](references/coal_validation_handoff.md) - Quant Validation Agent requirements for V5.2 Test-1.
 
 ## Factor Theory
 
@@ -29,6 +33,8 @@
 - [Utilities value investing preparation note](factor_theory/utilities_value_investing_preparation_note.md) - initial V5.1 utilities economic logic, not validated factors.
 - [Utilities value investing framework](factor_theory/utilities_value_investing_framework.md) - V5.1 formal research-preparation framework.
 - [Utilities core factor hypotheses](factor_theory/utilities_core_factor_hypotheses.md) - candidate hypotheses for PIT validation, not accepted factors.
+- [Coal value investing framework](factor_theory/coal_value_investing_framework.md) - V5.2 cycle-aware high-dividend / value framework.
+- [Coal core factor hypotheses](factor_theory/coal_core_factor_hypotheses.md) - candidate coal factors and external state hypotheses, not accepted factors.
 
 ## Strategy Cases
 
@@ -50,3 +56,4 @@
 - Which bank-sector variables remain significant under rolling IC/RankIC, baseline, ablation and robustness validation?
 - Which macro/defensive variables reduce drawdown out of sample without becoming hidden sector-timing overfit?
 - Can V5.1 utilities factors remain financially explainable and statistically stable without bank-specific indicators?
+- Can V5.2 coal value factors survive PIT validation after controlling for commodity-cycle state?

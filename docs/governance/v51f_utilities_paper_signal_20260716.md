@@ -94,3 +94,42 @@ This is a V5.1f forward paper-trading signal.
 It should be monitored, not treated as an accepted strategy or personal trading instruction.
 
 The signal is concentrated in high-dividend electricity/gas/public-utility operators because the latest electricity-demand state is weak.
+
+## Q1 Quality Review
+
+User review flagged that several selected companies have weak latest quarterly fundamentals.
+
+Engineering/Quant follow-up pulled latest visible JoinQuant/DataJQ fundamentals as of 2026-07-15 and found the concern valid:
+
+| Code | Name | Q1 Revenue YoY | Q1 Net Profit YoY | ROE | OCF/Revenue | Review |
+|---|---|---:|---:|---:|---:|---|
+| 600803.XSHG | 新奥股份 | -7.65% | -3.62% | 2.68 | 0.03 | profit/revenue decline |
+| 001299.XSHE | 美能能源 | -9.98% | 5.61% | 2.26 | 6.51 | revenue decline |
+| 600575.XSHG | 淮河能源 | 35.45% | 49.78% | 1.46 | 8.39 | ROE low |
+| 605368.XSHG | 蓝天燃气 | -12.30% | -34.86% | 2.58 | 9.17 | profit/revenue decline |
+| 600011.XSHG | 华能国际 | -5.89% | -6.50% | 3.24 | 21.90 | profit/revenue decline |
+| 000899.XSHE | 赣能股份 | 52.44% | 35.98% | 3.08 | 48.24 | relatively stronger |
+| 600098.XSHG | 广州发展 | 7.81% | 20.26% | 1.95 | 5.16 | ROE low |
+| 600642.XSHG | 申能股份 | -7.08% | -15.32% | 1.87 | 34.93 | profit/revenue decline and ROE low |
+| 000690.XSHE | 宝新能源 | 5.98% | 3.43% | 2.40 | 37.83 | acceptable but not strong |
+| 600475.XSHG | 华光环能 | -6.39% | -8.51% | 1.35 | -10.69 | profit/revenue decline, ROE low, negative OCF/revenue |
+
+PM update:
+
+```text
+paper_signal_status = needs_quality_review
+```
+
+Interpretation:
+
+The weak-demand high-dividend branch is behaving as designed, but it does not yet include a latest-quarter quality guard. This can select high-dividend companies whose recent operations are deteriorating. The signal remains a paper-trading observation and should not be upgraded to a buy list.
+
+Recommended next Quant task:
+
+```text
+Test a V5.1f quality guard candidate:
+- keep weak-state high-dividend ranking,
+- add latest-quarter deterioration flags,
+- do not tune on 2021-2026 platform window,
+- evaluate only through formal rolling / forward records.
+```

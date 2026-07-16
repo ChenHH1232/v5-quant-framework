@@ -10,6 +10,9 @@ from pathlib import Path
 from v5.data_runner import collect_panel_from_v4_raw, write_collection_manifest
 from v5.daily_backtest import _defensive_state
 from v5.bank_quality_date_alignment_runner import align_bank_quality_dates
+from v5.coal_cycle_state_validation_runner import run_coal_cycle_state_validation
+from v5.coal_external_state_runner import latest_visible_state_values, validate_coal_external_state, write_coal_external_state_template
+from v5.coal_pit_panel_runner import MANUAL_BUSINESS_TAGS
 from v5.credential_loader import load_tushare_token
 from v5.joinquant_availability_runner import build_joinquant_availability_proxy
 from v5.benchmark_runner import _normalize_benchmark_row
@@ -93,6 +96,111 @@ class DataValidationRunnerTests(unittest.TestCase):
         self.assertEqual(result["status"], "needs_review")
         self.assertEqual(result["pit_usable_count"], 0)
         self.assertGreater(len(result["missing_required"]), 0)
+
+    def test_coal_external_state_template_is_not_pit_usable_until_filled(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            template = write_coal_external_state_template(Path(tmp))
+            result = validate_coal_external_state(template)
+
+        self.assertEqual(result["status"], "needs_review")
+        self.assertEqual(result["pit_usable_count"], 0)
+        self.assertIn("thermal_coal_price_state", result["missing_usable_required_metrics"])
+
+    def test_coal_latest_visible_state_uses_prior_visible_rows(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            state = Path(tmp) / "coal_state.csv"
+            self._write_csv(
+                state,
+                [
+                    "visible_date",
+                    "state_date",
+                    "state_scope",
+                    "sub_industry",
+                    "metric",
+                    "value",
+                    "unit",
+                    "source_name",
+                    "source_url",
+                    "source_publication_date",
+                    "pit_usable",
+                    "review_status",
+                    "notes",
+                ],
+                [
+                    {
+                        "visible_date": "2021-01-02",
+                        "state_date": "2021-01-01",
+                        "state_scope": "market",
+                        "sub_industry": "thermal_coal",
+                        "metric": "thermal_coal_price_state",
+                        "value": "600",
+                        "unit": "proxy",
+                        "source_name": "test",
+                        "source_url": "https://example.test",
+                        "source_publication_date": "2021-01-02",
+                        "pit_usable": "true",
+                        "review_status": "test",
+                        "notes": "",
+                    },
+                    {
+                        "visible_date": "2021-04-02",
+                        "state_date": "2021-04-01",
+                        "state_scope": "market",
+                        "sub_industry": "thermal_coal",
+                        "metric": "thermal_coal_price_state",
+                        "value": "700",
+                        "unit": "proxy",
+                        "source_name": "test",
+                        "source_url": "https://example.test",
+                        "source_publication_date": "2021-04-02",
+                        "pit_usable": "true",
+                        "review_status": "test",
+                        "notes": "",
+                    },
+                ],
+            )
+
+            values = latest_visible_state_values(state, ["2021-04-01", "2021-04-03"])
+
+        self.assertEqual(values["2021-04-01"]["thermal_coal_price_state"], "600")
+        self.assertEqual(values["2021-04-03"]["thermal_coal_price_state"], "700")
+
+    def test_coal_manual_tags_mark_mixed_companies_for_robustness(self) -> None:
+        self.assertEqual(MANUAL_BUSINESS_TAGS["600997.XSHG"], "mixed_coal_chemical")
+        self.assertEqual(MANUAL_BUSINESS_TAGS["601225.XSHG"], "core_coal")
+
+    def test_coal_cycle_state_validation_writes_bucket_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            panel = tmp_path / "coal_panel.csv"
+            self._write_csv(
+                panel,
+                [
+                    "trade_date",
+                    "code",
+                    "future_return",
+                    "coking_coal_price_state",
+                    "dividend_yield",
+                    "low_price_to_book",
+                    "low_price_to_earnings",
+                    "operating_cash_flow_yield",
+                    "free_cash_flow_yield",
+                ],
+                [
+                    {"trade_date": "2021-01-04", "code": "A", "future_return": "0.01", "coking_coal_price_state": "100", "dividend_yield": "0.03", "low_price_to_book": "1.0", "low_price_to_earnings": "8", "operating_cash_flow_yield": "0.05", "free_cash_flow_yield": "0.04"},
+                    {"trade_date": "2021-01-04", "code": "B", "future_return": "0.03", "coking_coal_price_state": "100", "dividend_yield": "0.04", "low_price_to_book": "0.8", "low_price_to_earnings": "6", "operating_cash_flow_yield": "0.08", "free_cash_flow_yield": "0.06"},
+                    {"trade_date": "2021-04-01", "code": "A", "future_return": "0.02", "coking_coal_price_state": "120", "dividend_yield": "0.03", "low_price_to_book": "1.0", "low_price_to_earnings": "8", "operating_cash_flow_yield": "0.05", "free_cash_flow_yield": "0.04"},
+                    {"trade_date": "2021-04-01", "code": "B", "future_return": "0.04", "coking_coal_price_state": "120", "dividend_yield": "0.04", "low_price_to_book": "0.8", "low_price_to_earnings": "6", "operating_cash_flow_yield": "0.08", "free_cash_flow_yield": "0.06"},
+                ],
+            )
+
+            report = run_coal_cycle_state_validation(panel, tmp_path / "validation", min_history=1, selection_count=1)
+            summary = json.loads((report.parent / "cycle_state_validation_summary.json").read_text(encoding="utf-8"))
+            report_exists = report.exists()
+
+        self.assertTrue(report_exists)
+        self.assertEqual(summary["strategy_id"], "coal_high_dividend_cycle_value_v52")
+        self.assertEqual(summary["coverage"]["state_covered_dates"], 2)
 
     def test_collect_utilities_external_state_writes_valid_panel_and_manifest(self) -> None:
         def fake_electricity_rows() -> list[dict[str, str]]:

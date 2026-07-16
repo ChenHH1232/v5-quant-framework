@@ -190,6 +190,15 @@
     "scoring": {
       "method": "research_candidate_only_no_approved_weights",
       "normalization_scope": "rebalance_cross_section",
+      "weights": {
+        "dividend_yield": 0.2,
+        "low_price_to_book": 0.2,
+        "low_price_to_earnings": 0.1,
+        "operating_cash_flow_yield": 0.2,
+        "free_cash_flow_yield": 0.1,
+        "operating_cash_flow_to_net_profit": 0.1,
+        "asset_liability_ratio": 0.1
+      },
       "candidate_modules": [
         "shareholder_return",
         "valuation",
@@ -239,6 +248,120 @@
       "mixed_business_exclusion_robustness",
       "thermal_vs_coking_subgroup_review",
       "down_cycle_failure_analysis"
+    ],
+    "baselines": [
+      {
+        "name": "equal_weight_coal",
+        "mode": "equal_all"
+      },
+      {
+        "name": "high_dividend_coal_top8",
+        "mode": "single_factor",
+        "factor": "dividend_yield",
+        "direction": "higher_is_better",
+        "selection_count": 8
+      },
+      {
+        "name": "low_pb_coal_top8",
+        "mode": "single_factor",
+        "factor": "low_price_to_book",
+        "direction": "lower_is_better",
+        "selection_count": 8
+      },
+      {
+        "name": "low_pe_coal_top8",
+        "mode": "single_factor",
+        "factor": "low_price_to_earnings",
+        "direction": "lower_is_better",
+        "selection_count": 8
+      },
+      {
+        "name": "high_ocf_yield_coal_top8",
+        "mode": "single_factor",
+        "factor": "operating_cash_flow_yield",
+        "direction": "higher_is_better",
+        "selection_count": 8
+      },
+      {
+        "name": "high_fcf_yield_coal_top8",
+        "mode": "single_factor",
+        "factor": "free_cash_flow_yield",
+        "direction": "higher_is_better",
+        "selection_count": 8
+      },
+      {
+        "name": "core_coal_high_dividend_top8",
+        "mode": "single_factor",
+        "factor": "dividend_yield",
+        "direction": "higher_is_better",
+        "selection_count": 8,
+        "condition": {
+          "field": "is_core_coal_numeric",
+          "direction": "higher_is_better",
+          "quantile": 0.75,
+          "keep": "top"
+        }
+      }
+    ],
+    "common_sample_fields": [
+      "dividend_yield",
+      "low_price_to_book",
+      "low_price_to_earnings",
+      "operating_cash_flow_yield",
+      "operating_cash_flow_to_net_profit",
+      "asset_liability_ratio"
+    ],
+    "common_sample_interactions": [
+      {
+        "name": "common_coal_dividend_value",
+        "factors": [
+          "dividend_yield",
+          "low_price_to_book"
+        ]
+      },
+      {
+        "name": "common_coal_cashflow_value",
+        "factors": [
+          "operating_cash_flow_yield",
+          "low_price_to_book"
+        ]
+      },
+      {
+        "name": "common_coal_all_stock_factors",
+        "factors": [
+          "dividend_yield",
+          "low_price_to_book",
+          "low_price_to_earnings",
+          "operating_cash_flow_yield",
+          "operating_cash_flow_to_net_profit",
+          "asset_liability_ratio"
+        ]
+      }
+    ],
+    "robustness": {
+      "selection_counts": [
+        5,
+        8,
+        10,
+        12
+      ],
+      "weight_scale_factors": [
+        "dividend_yield",
+        "low_price_to_book",
+        "operating_cash_flow_yield"
+      ],
+      "weight_scales": [
+        0.8,
+        1.0,
+        1.2
+      ]
+    },
+    "weak_years": [
+      "2015",
+      "2018",
+      "2021",
+      "2022",
+      "2024"
     ],
     "acceptance_rule": "PM may approve formal strategy candidacy only if the rule remains evidence-driven, financially explainable, statistically validated, reproducible and maintainable. Historical performance alone is insufficient."
   },

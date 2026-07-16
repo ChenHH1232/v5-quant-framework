@@ -12,6 +12,9 @@ from v5.benchmark_runner import (
 )
 from v5.bank_quality_date_alignment_runner import DEFAULT_DATABASE_DIR as DATE_ALIGNMENT_DATABASE_DIR
 from v5.bank_quality_date_alignment_runner import align_bank_quality_dates
+from v5.coal_cycle_state_validation_runner import run_coal_cycle_state_validation
+from v5.coal_external_state_runner import collect_coal_external_state, validate_coal_external_state, write_coal_external_state_template
+from v5.coal_pit_panel_runner import collect_coal_pit_panel
 from v5.data_runner import collect_panel_from_v4_raw, write_collection_manifest
 from v5.daily_backtest import run_daily_joinquant_like_backtest
 from v5.dividend_runner import DEFAULT_DATABASE_DIR, DEFAULT_DIVIDEND_PROCESSED, collect_bank_dividends
@@ -257,6 +260,31 @@ def main(argv: list[str] | None = None) -> int:
     utilities_demand_state_parser.add_argument("--metric", default="electricity_consumption_yoy")
     utilities_demand_state_parser.add_argument("--selection-count", type=int, default=10)
     utilities_demand_state_parser.add_argument("--min-history", type=int, default=8)
+
+    coal_pit_parser = subparsers.add_parser("collect-coal-pit-panel")
+    coal_pit_parser.add_argument("--out-dir", type=Path, default=Path("数据库") / "processed" / "coal_pit_panel")
+    coal_pit_parser.add_argument("--state-panel", type=Path, default=Path("数据库") / "processed" / "coal_external_state" / "coal_external_state.csv")
+    coal_pit_parser.add_argument("--start-date", default="2015-07-01")
+    coal_pit_parser.add_argument("--end-date", default="2026-05-31")
+    coal_pit_parser.add_argument("--listing-age-days", type=int, default=180)
+
+    coal_state_parser = subparsers.add_parser("coal-external-state")
+    coal_state_subparsers = coal_state_parser.add_subparsers(dest="state_command", required=True)
+    coal_state_template = coal_state_subparsers.add_parser("template")
+    coal_state_template.add_argument("--out-dir", type=Path, default=Path("数据库") / "processed" / "coal_external_state")
+    coal_state_collect = coal_state_subparsers.add_parser("collect")
+    coal_state_collect.add_argument("--out-dir", type=Path, default=Path("数据库") / "processed" / "coal_external_state")
+    coal_state_collect.add_argument("--start-date", default="2013-01-01")
+    coal_state_collect.add_argument("--end-date", default="2026-05-31")
+    coal_state_validate = coal_state_subparsers.add_parser("validate")
+    coal_state_validate.add_argument("csv_path", type=Path)
+
+    coal_cycle_state_parser = subparsers.add_parser("validate-coal-cycle-state")
+    coal_cycle_state_parser.add_argument("--panel", type=Path, default=Path("数据库") / "processed" / "coal_pit_panel" / "panel.csv")
+    coal_cycle_state_parser.add_argument("--out", type=Path, default=Path("validation_formal_v52"))
+    coal_cycle_state_parser.add_argument("--metric", default="coking_coal_price_state")
+    coal_cycle_state_parser.add_argument("--selection-count", type=int, default=8)
+    coal_cycle_state_parser.add_argument("--min-history", type=int, default=8)
 
     utilities_daily_parser = subparsers.add_parser("utilities-daily-backtest")
     utilities_daily_subparsers = utilities_daily_parser.add_subparsers(dest="utilities_daily_command", required=True)
@@ -549,6 +577,29 @@ def main(argv: list[str] | None = None) -> int:
                     args.min_history,
                 )
             )
+            return 0
+        if args.command == "coal-external-state":
+            if args.state_command == "template":
+                print(write_coal_external_state_template(args.out_dir))
+                return 0
+            if args.state_command == "collect":
+                print(collect_coal_external_state(args.out_dir, args.start_date, args.end_date))
+                return 0
+            if args.state_command == "validate":
+                print(json.dumps(validate_coal_external_state(args.csv_path), ensure_ascii=False, indent=2))
+                return 0
+        if args.command == "collect-coal-pit-panel":
+            result = collect_coal_pit_panel(
+                out_dir=args.out_dir,
+                state_panel=args.state_panel,
+                start_date=args.start_date,
+                end_date=args.end_date,
+                listing_age_days=args.listing_age_days,
+            )
+            print(result.panel_path)
+            return 0
+        if args.command == "validate-coal-cycle-state":
+            print(run_coal_cycle_state_validation(args.panel, args.out, args.metric, args.selection_count, args.min_history))
             return 0
         if args.command == "utilities-daily-backtest":
             if args.utilities_daily_command == "ready":

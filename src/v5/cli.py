@@ -18,8 +18,11 @@ from v5.coal_data_audit_runner import (
     audit_coal_business_tags,
     audit_coal_capex_fcf,
     build_coal_capex_policy_panel,
+    build_coal_reviewed_business_tag_panel,
     collect_eastmoney_coal_segment_evidence,
     collect_coal_report_disclosure_dates,
+    collect_tushare_coal_segment_evidence,
+    merge_coal_segment_evidence_sources,
     merge_coal_manual_state,
     merge_coal_state_sources,
     write_coal_business_tag_visible_date_template,
@@ -343,6 +346,20 @@ def main(argv: list[str] | None = None) -> int:
     coal_data_eastmoney.add_argument("--request-timeout-seconds", type=float, default=15.0)
     coal_data_eastmoney.add_argument("--sleep-seconds", type=float, default=0.25)
     coal_data_eastmoney.add_argument("--limit", type=int)
+    coal_data_tushare = coal_data_audit_subparsers.add_parser("collect-tushare-segments")
+    coal_data_tushare.add_argument("panel", type=Path, default=Path("数据库") / "processed" / "coal_pit_panel" / "panel.csv", nargs="?")
+    coal_data_tushare.add_argument("disclosure_csv", type=Path, default=Path("数据库") / "processed" / "coal_business_tags" / "coal_report_disclosure_dates.csv", nargs="?")
+    coal_data_tushare.add_argument("--out-dir", type=Path, default=Path("数据库") / "processed" / "coal_business_tags")
+    coal_data_tushare.add_argument("--codes", nargs="*", default=None)
+    coal_data_tushare.add_argument("--sleep-seconds", type=float, default=0.25)
+    coal_data_merge_segments = coal_data_audit_subparsers.add_parser("merge-segment-evidence")
+    coal_data_merge_segments.add_argument("eastmoney_csv", type=Path, default=Path("数据库") / "processed" / "coal_business_tags" / "coal_segment_business_evidence_eastmoney.csv", nargs="?")
+    coal_data_merge_segments.add_argument("fallback_csv", type=Path, default=Path("数据库") / "processed" / "coal_business_tags" / "coal_segment_business_evidence_tushare.csv", nargs="?")
+    coal_data_merge_segments.add_argument("--out-dir", type=Path, default=Path("数据库") / "processed" / "coal_business_tags")
+    coal_data_reviewed_panel = coal_data_audit_subparsers.add_parser("build-reviewed-business-tag-panel")
+    coal_data_reviewed_panel.add_argument("panel", type=Path, default=Path("数据库") / "processed" / "coal_pit_panel" / "panel.csv", nargs="?")
+    coal_data_reviewed_panel.add_argument("evidence_csv", type=Path, default=Path("数据库") / "processed" / "coal_business_tags" / "coal_segment_business_evidence_reviewed.csv", nargs="?")
+    coal_data_reviewed_panel.add_argument("--out-dir", type=Path, default=Path("数据库") / "processed" / "coal_business_tags")
     coal_data_capex = coal_data_audit_subparsers.add_parser("audit-capex-fcf")
     coal_data_capex.add_argument("panel", type=Path, nargs="?", default=Path("数据库") / "processed" / "coal_pit_panel" / "panel.csv")
     coal_data_capex.add_argument("--out-dir", type=Path, default=Path("数据库") / "manifests" / "coal_capex_fcf_audit")
@@ -707,6 +724,23 @@ def main(argv: list[str] | None = None) -> int:
                         args.limit,
                     )
                 )
+                return 0
+            if args.coal_data_audit_command == "collect-tushare-segments":
+                print(
+                    collect_tushare_coal_segment_evidence(
+                        args.panel,
+                        args.disclosure_csv,
+                        args.out_dir,
+                        args.codes,
+                        args.sleep_seconds,
+                    )
+                )
+                return 0
+            if args.coal_data_audit_command == "merge-segment-evidence":
+                print(merge_coal_segment_evidence_sources(args.eastmoney_csv, args.fallback_csv, args.out_dir))
+                return 0
+            if args.coal_data_audit_command == "build-reviewed-business-tag-panel":
+                print(build_coal_reviewed_business_tag_panel(args.panel, args.evidence_csv, args.out_dir))
                 return 0
             if args.coal_data_audit_command == "audit-capex-fcf":
                 print(audit_coal_capex_fcf(args.panel, args.out_dir))

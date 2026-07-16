@@ -584,6 +584,210 @@ def collect_eastmoney_coal_segment_evidence(
     return evidence_path
 
 
+def collect_tushare_coal_segment_evidence(
+    panel_csv: Path,
+    disclosure_csv: Path,
+    out_dir: Path = DEFAULT_PROCESSED_DIR / "coal_business_tags",
+    codes: list[str] | None = None,
+    sleep_seconds: float = 0.25,
+) -> Path:
+    panel_rows = _read_csv(panel_csv)
+    panel_codes = sorted({row.get("code", "") for row in panel_rows if row.get("code")})
+    target_codes = sorted(codes or panel_codes)
+    disclosure_rows = _read_csv(disclosure_csv)
+    target_periods = [
+        row
+        for row in disclosure_rows
+        if row.get("code") in target_codes and row.get("report_period")
+    ]
+    disclosures = _disclosures_by_code_period(disclosure_csv)
+    raw_rows: list[dict[str, Any]] = []
+    warnings: list[str] = []
+    try:
+        import tushare as ts
+    except Exception as exc:
+        raise RuntimeError("tushare is required for coal segment fallback collection") from exc
+    token = load_tushare_token()
+    if not token:
+        raise RuntimeError("Tushare token is not available for coal segment fallback collection")
+    pro = ts.pro_api(token)
+    for item in target_periods:
+        code = item["code"]
+        report_period = item["report_period"]
+        try:
+            records = _fetch_tushare_segment_records(pro, code, report_period)
+        except Exception as exc:
+            warnings.append(f"{code}:{report_period}: Tushare fina_mainbz failed: {type(exc).__name__}: {exc}")
+            continue
+        if not records:
+            warnings.append(f"{code}:{report_period}: Tushare fina_mainbz returned no rows")
+        raw_rows.extend(_normalize_tushare_segment_records(code, report_period, records))
+        if sleep_seconds > 0:
+            time.sleep(sleep_seconds)
+    evidence_rows = _build_segment_evidence_from_raw(raw_rows, disclosures)
+    for row in evidence_rows:
+        row["source_name"] = "Tushare fina_mainbz + Tushare disclosure_date"
+        row["review_status"] = _tushare_segment_review_status(row)
+        row["notes"] = _tushare_segment_notes(row)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    raw_path = out_dir / "tushare_coal_segment_raw.csv"
+    evidence_path = out_dir / "coal_segment_business_evidence_tushare.csv"
+    _write_csv(raw_path, EASTMONEY_SEGMENT_RAW_FIELDS, raw_rows)
+    _write_csv(evidence_path, SEGMENT_EVIDENCE_FIELDS, evidence_rows)
+    complete_rows = [
+        row
+        for row in evidence_rows
+        if str(row.get("pit_usable", "")).lower() == "true"
+        and row.get("approved_coal_business_tag")
+        and (row.get("coal_revenue_ratio") or row.get("coal_profit_ratio"))
+    ]
+    _write_json(
+        out_dir / "tushare_coal_segment_evidence_manifest.json",
+        {
+            "dataset": "tushare_coal_segment_evidence",
+            "panel": str(panel_csv),
+            "disclosure_csv": str(disclosure_csv),
+            "raw_output": str(raw_path),
+            "evidence_output": str(evidence_path),
+            "requested_company_count": len(target_codes),
+            "requested_period_count": len(target_periods),
+            "raw_row_count": len(raw_rows),
+            "evidence_row_count": len(evidence_rows),
+            "complete_rows": len(complete_rows),
+            "covered_company_count": len({row["code"] for row in complete_rows}),
+            "warning_count": len(warnings),
+            "warnings": warnings,
+            "source_policy": "Tushare fina_mainbz is used as a licensed structured fallback for Eastmoney segment gaps. Credentials are never written.",
+            "pit_policy": "visible_date is joined from Tushare disclosure_date for the same report period when available.",
+            "research_rule": "Coal trade exposure without coal mining/selection business is not upgraded to core coal. It remains mixed_or_special_review or non_core_or_review for Research Agent judgment.",
+            "created_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
+        },
+    )
+    return evidence_path
+
+
+def merge_coal_segment_evidence_sources(
+    eastmoney_csv: Path,
+    fallback_csv: Path,
+    out_dir: Path = DEFAULT_PROCESSED_DIR / "coal_business_tags",
+) -> Path:
+    eastmoney_rows = _read_csv(eastmoney_csv)
+    fallback_rows = _read_csv(fallback_csv)
+    merged: dict[tuple[str, str], dict[str, Any]] = {}
+    for row in fallback_rows:
+        if _segment_row_complete(row):
+            merged[(row["code"], row["report_period"])] = row
+    for row in eastmoney_rows:
+        if _segment_row_complete(row):
+            key = (row["code"], row["report_period"])
+            merged[key] = row
+    rows = [merged[key] for key in sorted(merged)]
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / "coal_segment_business_evidence_reviewed.csv"
+    _write_csv(out_path, SEGMENT_EVIDENCE_FIELDS, rows)
+    source_counts = {}
+    for row in rows:
+        source = row.get("source_name", "")
+        source_counts[source] = source_counts.get(source, 0) + 1
+    _write_json(
+        out_dir / "coal_segment_business_evidence_reviewed_manifest.json",
+        {
+            "dataset": "coal_segment_business_evidence_reviewed",
+            "eastmoney_csv": str(eastmoney_csv),
+            "fallback_csv": str(fallback_csv),
+            "output": str(out_path),
+            "row_count": len(rows),
+            "covered_company_count": len({row["code"] for row in rows if row.get("code")}),
+            "source_counts": source_counts,
+            "governance": "Eastmoney is preferred where complete; Tushare fills Eastmoney gaps. Research Agent must review trade-only, shell, ST, delisted, or non-disclosure cases before formal acceptance.",
+            "created_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
+        },
+    )
+    return out_path
+
+
+def build_coal_reviewed_business_tag_panel(
+    panel_csv: Path,
+    evidence_csv: Path,
+    out_dir: Path = DEFAULT_PROCESSED_DIR / "coal_business_tags",
+) -> Path:
+    panel_rows = _read_csv(panel_csv)
+    evidence_by_code = _complete_segment_evidence_by_code(evidence_csv)
+    rows: list[dict[str, Any]] = []
+    missing_rows = 0
+    excluded_rows = 0
+    for row in panel_rows:
+        trade_date = row.get("trade_date", "")
+        code = row.get("code", "")
+        evidence = _latest_visible_evidence(evidence_by_code.get(code, []), trade_date)
+        out = dict(row)
+        if evidence is None:
+            missing_rows += 1
+            out.update(
+                {
+                    "formal_coal_universe_include": "false",
+                    "reviewed_coal_business_tag": "",
+                    "business_tag_review_status": "missing_visible_segment_evidence",
+                    "business_tag_evidence_report_period": "",
+                    "business_tag_notes": "No visible segment evidence available at this trade date.",
+                }
+            )
+        else:
+            tag = evidence.get("approved_coal_business_tag", "")
+            include = _formal_coal_universe_include(tag, evidence)
+            if not include:
+                excluded_rows += 1
+            out["coal_business_tag"] = tag
+            out["is_core_coal_numeric"] = "1" if tag == "core_coal" else "0"
+            out["business_tag_visible_date"] = evidence.get("visible_date", "")
+            out["business_tag_source"] = evidence.get("source_name", "")
+            out.update(
+                {
+                    "formal_coal_universe_include": "true" if include else "false",
+                    "reviewed_coal_business_tag": tag,
+                    "business_tag_review_status": evidence.get("review_status", ""),
+                    "business_tag_evidence_report_period": evidence.get("report_period", ""),
+                    "business_tag_notes": evidence.get("notes", ""),
+                }
+            )
+        rows.append(out)
+    fields = list(panel_rows[0].keys()) if panel_rows else []
+    for field in [
+        "formal_coal_universe_include",
+        "reviewed_coal_business_tag",
+        "business_tag_review_status",
+        "business_tag_evidence_report_period",
+        "business_tag_notes",
+    ]:
+        if field not in fields:
+            fields.append(field)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / "coal_business_tag_pit_reviewed_panel.csv"
+    formal_rows = [row for row in rows if row.get("formal_coal_universe_include") == "true"]
+    formal_path = out_dir / "coal_business_tag_pit_formal_universe_panel.csv"
+    _write_csv(out_path, fields, rows)
+    _write_csv(formal_path, fields, formal_rows)
+    _write_json(
+        out_dir / "coal_business_tag_pit_reviewed_panel_manifest.json",
+        {
+            "dataset": "coal_business_tag_pit_reviewed_panel",
+            "panel_csv": str(panel_csv),
+            "evidence_csv": str(evidence_csv),
+            "output": str(out_path),
+            "formal_universe_output": str(formal_path),
+            "row_count": len(rows),
+            "formal_universe_row_count": len(formal_rows),
+            "missing_visible_segment_rows": missing_rows,
+            "formal_universe_excluded_rows": excluded_rows,
+            "formal_universe_included_rows": len(rows) - missing_rows - excluded_rows,
+            "covered_company_count": len({row["code"] for row in rows if row.get("business_tag_review_status") != "missing_visible_segment_evidence"}),
+            "governance": "This reviewed panel separates PIT business exposure from formal universe inclusion. Non-core, shell, trade-only and disclosure-risk rows are excluded from formal coal universe by default.",
+            "created_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
+        },
+    )
+    return out_path
+
+
 def collect_coal_report_disclosure_dates(
     panel_csv: Path,
     out_dir: Path = DEFAULT_PROCESSED_DIR / "coal_business_tags",
@@ -870,6 +1074,14 @@ def _fetch_eastmoney_segment_records(code: str, timeout_seconds: float) -> list[
     return records if isinstance(records, list) else []
 
 
+def _fetch_tushare_segment_records(pro: Any, code: str, report_period: str) -> list[dict[str, Any]]:
+    period = report_period.replace("-", "")
+    df = pro.fina_mainbz(ts_code=_to_ts_code(code), period=period)
+    if df is None or getattr(df, "empty", True):
+        return []
+    return df.to_dict("records")
+
+
 def _normalize_eastmoney_segment_records(code: str, records: list[dict[str, Any]]) -> list[dict[str, Any]]:
     rows = []
     for record in records:
@@ -897,6 +1109,31 @@ def _normalize_eastmoney_segment_records(code: str, records: list[dict[str, Any]
     return rows
 
 
+def _normalize_tushare_segment_records(code: str, report_period: str, records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    rows = []
+    for record in records:
+        row_period = _format_date(_date_text(record.get("end_date"))) or report_period
+        rows.append(
+            {
+                "code": code,
+                "eastmoney_code": _to_eastmoney_code(code),
+                "report_period": row_period,
+                "mainop_type": _tushare_bz_type_name(record.get("bz_code")),
+                "item_name": str(record.get("bz_item") or "").strip(),
+                "main_business_income": _fmt_float(record.get("bz_sales")),
+                "income_ratio": "",
+                "main_business_cost": _fmt_float(record.get("bz_cost")),
+                "cost_ratio": "",
+                "main_business_profit": _fmt_float(record.get("bz_profit")),
+                "profit_ratio": "",
+                "gross_profit_ratio": "",
+                "source_name": "Tushare fina_mainbz",
+                "source_url": "https://tushare.pro/document/2?doc_id=81",
+            }
+        )
+    return rows
+
+
 def _build_segment_evidence_from_raw(
     raw_rows: list[dict[str, Any]],
     disclosures: dict[tuple[str, str], dict[str, str]],
@@ -915,11 +1152,13 @@ def _build_segment_evidence_from_raw(
         ratios = _segment_ratios(selected)
         disclosure = disclosures.get((code, report_period), {})
         visible_date = disclosure.get("notice_date", "")
+        context = _segment_context(rows)
         tag = _approved_coal_business_tag(
             ratios["coal_revenue_ratio"],
             ratios["coal_profit_ratio"],
             ratios["power_revenue_ratio"],
             ratios["coal_chemical_revenue_ratio"],
+            context,
         )
         evidence_rows.append(
             {
@@ -938,7 +1177,7 @@ def _build_segment_evidence_from_raw(
                 "source_url": f"https://emweb.securities.eastmoney.com/PC_HSF10/BusinessAnalysis/Index?type=web&code={_to_eastmoney_code(code)}",
                 "pit_usable": "true" if visible_date and tag else "false",
                 "review_status": "eastmoney_segment_needs_spot_check" if visible_date and tag else "missing_disclosure_or_segment_tag",
-                "notes": "Ratios use product classification where available, otherwise industry classification. Coal chemical is classified before coal to avoid double-counting.",
+                "notes": _segment_evidence_notes(context),
             }
         )
     return evidence_rows
@@ -951,10 +1190,21 @@ def _segment_ratios(rows: list[dict[str, Any]]) -> dict[str, float]:
         "power_revenue_ratio": 0.0,
         "coal_chemical_revenue_ratio": 0.0,
     }
+    total_income = sum(_to_float(row.get("main_business_income")) or 0.0 for row in rows)
+    profit_values = [_to_float(row.get("main_business_profit")) for row in rows]
+    total_profit = sum(value for value in profit_values if value is not None)
     for row in rows:
         bucket = _segment_bucket(str(row.get("item_name") or ""))
-        income_ratio = _to_float(row.get("income_ratio")) or 0.0
-        profit_ratio = _to_float(row.get("profit_ratio")) or 0.0
+        income_ratio = _to_float(row.get("income_ratio"))
+        if income_ratio is None:
+            income_value = _to_float(row.get("main_business_income"))
+            income_ratio = _ratio(income_value, total_income) if income_value is not None else 0.0
+            income_ratio = income_ratio or 0.0
+        profit_ratio = _to_float(row.get("profit_ratio"))
+        if profit_ratio is None:
+            profit_value = _to_float(row.get("main_business_profit"))
+            profit_ratio = _ratio(profit_value, total_profit) if profit_value is not None else 0.0
+            profit_ratio = profit_ratio or 0.0
         if bucket == "coal":
             result["coal_revenue_ratio"] += income_ratio
             result["coal_profit_ratio"] += profit_ratio
@@ -983,8 +1233,25 @@ def _segment_bucket(item_name: str) -> str:
     return "other"
 
 
-def _approved_coal_business_tag(coal_revenue: float, coal_profit: float, power_revenue: float, coal_chemical_revenue: float) -> str:
+def _segment_context(rows: list[dict[str, Any]]) -> dict[str, bool]:
+    names = " ".join(str(row.get("item_name") or "") for row in rows)
+    return {
+        "coal_mining_or_washing": any(keyword in names for keyword in ["煤炭采选", "煤炭开采", "煤炭洗选", "采煤", "洗煤", "选煤"]),
+        "coal_trade": any(keyword in names for keyword in ["贸易", "大宗贸易", "贸易业务", "贸易煤"]),
+        "medical_or_game": any(keyword in names for keyword in ["医疗", "网络游戏", "手游", "端游", "广告", "媒体平台"]),
+        "manufacturing_or_potash": any(keyword in names for keyword in ["键合材料", "钾肥", "纺织", "花岗岩", "供电"]),
+    }
+
+
+def _approved_coal_business_tag(coal_revenue: float, coal_profit: float, power_revenue: float, coal_chemical_revenue: float, context: dict[str, bool] | None = None) -> str:
+    context = context or {}
+    if context.get("medical_or_game") and coal_revenue < 0.4 and coal_profit < 0.4:
+        return "non_core_or_review"
+    if context.get("manufacturing_or_potash") and coal_revenue < 0.4 and coal_profit < 0.4:
+        return "non_core_or_review"
     coal_core = max(coal_revenue, coal_profit) >= 0.7
+    if coal_core and context.get("coal_trade") and not context.get("coal_mining_or_washing"):
+        return "mixed_or_special_review"
     if coal_core and power_revenue >= 0.15:
         return "mixed_power_coal"
     if coal_core and coal_chemical_revenue >= 0.15:
@@ -996,8 +1263,72 @@ def _approved_coal_business_tag(coal_revenue: float, coal_profit: float, power_r
     return "non_core_or_review"
 
 
+def _segment_evidence_notes(context: dict[str, bool]) -> str:
+    notes = ["Ratios use product classification where available, otherwise industry classification. Coal chemical is classified before coal to avoid double-counting."]
+    if context.get("coal_trade") and not context.get("coal_mining_or_washing"):
+        notes.append("Coal exposure appears to be trade-oriented rather than mining/operation; Research Agent must not upgrade it to core coal without report support.")
+    if context.get("medical_or_game") or context.get("manufacturing_or_potash"):
+        notes.append("Non-coal operating segments are material; treat as non-core or special-review exposure.")
+    return " ".join(notes)
+
+
+def _tushare_segment_review_status(row: dict[str, Any]) -> str:
+    tag = row.get("approved_coal_business_tag", "")
+    notes = row.get("notes", "")
+    if tag in {"non_core_or_review", "mixed_or_special_review"} and ("trade-oriented" in notes or "Non-coal" in notes):
+        return "research_disclosure_risk_review"
+    return "reviewed_segment_evidence_tushare_mainbz"
+
+
+def _tushare_segment_notes(row: dict[str, Any]) -> str:
+    base = row.get("notes", "")
+    tag = row.get("approved_coal_business_tag", "")
+    if tag in {"non_core_or_review", "mixed_or_special_review"}:
+        return base + " Tushare fallback resolves Eastmoney gap but keeps the company out of formal core-coal acceptance unless Research Agent approves inclusion."
+    return base + " Tushare fallback resolves Eastmoney gap with structured main-business composition."
+
+
+def _segment_row_complete(row: dict[str, Any]) -> bool:
+    return (
+        str(row.get("pit_usable", "")).lower() == "true"
+        and bool(row.get("visible_date"))
+        and bool(row.get("approved_coal_business_tag"))
+        and bool(row.get("coal_revenue_ratio") or row.get("coal_profit_ratio"))
+    )
+
+
+def _complete_segment_evidence_by_code(evidence_csv: Path) -> dict[str, list[dict[str, str]]]:
+    result: dict[str, list[dict[str, str]]] = {}
+    for row in _read_csv(evidence_csv):
+        if _segment_row_complete(row):
+            result.setdefault(row["code"], []).append(row)
+    for rows in result.values():
+        rows.sort(key=lambda item: (item.get("visible_date", ""), item.get("report_period", "")))
+    return result
+
+
+def _latest_visible_evidence(rows: list[dict[str, str]], trade_date: str) -> dict[str, str] | None:
+    candidates = [row for row in rows if row.get("visible_date", "") <= trade_date]
+    if not candidates:
+        return None
+    return candidates[-1]
+
+
+def _formal_coal_universe_include(tag: str, evidence: dict[str, Any]) -> bool:
+    if tag in {"core_coal", "mixed_power_coal", "mixed_coal_chemical", "integrated_coal_power_transport"}:
+        return True
+    notes = evidence.get("notes", "")
+    if "trade-oriented" in notes or "Non-coal" in notes:
+        return False
+    return tag == "mixed_or_special_review"
+
+
 def _mainop_type_name(value: Any) -> str:
     return {"1": "industry", "2": "product", "3": "region"}.get(str(value), str(value or ""))
+
+
+def _tushare_bz_type_name(value: Any) -> str:
+    return {"I": "industry", "P": "product", "D": "region"}.get(str(value or ""), str(value or ""))
 
 
 def _to_eastmoney_code(code: str) -> str:
@@ -1211,6 +1542,20 @@ def main(argv: list[str] | None = None) -> int:
     eastmoney_parser.add_argument("--request-timeout-seconds", type=float, default=15.0)
     eastmoney_parser.add_argument("--sleep-seconds", type=float, default=0.25)
     eastmoney_parser.add_argument("--limit", type=int)
+    tushare_parser = subparsers.add_parser("collect-tushare-segments")
+    tushare_parser.add_argument("panel", type=Path)
+    tushare_parser.add_argument("disclosure_csv", type=Path)
+    tushare_parser.add_argument("--out-dir", type=Path, default=DEFAULT_PROCESSED_DIR / "coal_business_tags")
+    tushare_parser.add_argument("--codes", nargs="*", default=None)
+    tushare_parser.add_argument("--sleep-seconds", type=float, default=0.25)
+    merge_segment_parser = subparsers.add_parser("merge-segment-evidence")
+    merge_segment_parser.add_argument("eastmoney_csv", type=Path)
+    merge_segment_parser.add_argument("fallback_csv", type=Path)
+    merge_segment_parser.add_argument("--out-dir", type=Path, default=DEFAULT_PROCESSED_DIR / "coal_business_tags")
+    reviewed_panel_parser = subparsers.add_parser("build-reviewed-business-tag-panel")
+    reviewed_panel_parser.add_argument("panel", type=Path)
+    reviewed_panel_parser.add_argument("evidence_csv", type=Path)
+    reviewed_panel_parser.add_argument("--out-dir", type=Path, default=DEFAULT_PROCESSED_DIR / "coal_business_tags")
     capex_parser = subparsers.add_parser("audit-capex-fcf")
     capex_parser.add_argument("panel", type=Path)
     capex_parser.add_argument("--out-dir", type=Path, default=DEFAULT_MANIFEST_DIR / "coal_capex_fcf_audit")
@@ -1259,6 +1604,23 @@ def main(argv: list[str] | None = None) -> int:
                 args.limit,
             )
         )
+        return 0
+    if args.command == "collect-tushare-segments":
+        print(
+            collect_tushare_coal_segment_evidence(
+                args.panel,
+                args.disclosure_csv,
+                args.out_dir,
+                args.codes,
+                args.sleep_seconds,
+            )
+        )
+        return 0
+    if args.command == "merge-segment-evidence":
+        print(merge_coal_segment_evidence_sources(args.eastmoney_csv, args.fallback_csv, args.out_dir))
+        return 0
+    if args.command == "build-reviewed-business-tag-panel":
+        print(build_coal_reviewed_business_tag_panel(args.panel, args.evidence_csv, args.out_dir))
         return 0
     if args.command == "audit-capex-fcf":
         print(audit_coal_capex_fcf(args.panel, args.out_dir))

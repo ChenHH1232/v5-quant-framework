@@ -377,7 +377,7 @@ class DataValidationRunnerTests(unittest.TestCase):
                 "code": "601225.XSHG",
                 "report_period": "2025-12-31",
                 "mainop_type": "product",
-                "item_name": "贸易煤",
+                "item_name": "洗选煤",
                 "income_ratio": "0.32",
                 "profit_ratio": "0.02",
             },
@@ -403,6 +403,54 @@ class DataValidationRunnerTests(unittest.TestCase):
         self.assertEqual(rows[0]["approved_coal_business_tag"], "core_coal")
         self.assertAlmostEqual(float(rows[0]["coal_revenue_ratio"]), 0.87)
         self.assertAlmostEqual(float(rows[0]["power_revenue_ratio"]), 0.10)
+
+    def test_tushare_segment_evidence_does_not_upgrade_coal_trade_to_core(self) -> None:
+        raw_rows = [
+            {
+                "code": "600532.XSHG",
+                "report_period": "2021-12-31",
+                "mainop_type": "industry",
+                "item_name": "贸易",
+                "main_business_income": "635335108.94",
+                "main_business_profit": "24247391.52",
+            },
+            {
+                "code": "600532.XSHG",
+                "report_period": "2021-12-31",
+                "mainop_type": "industry",
+                "item_name": "医疗服务",
+                "main_business_income": "3551976.59",
+                "main_business_profit": "-10208295.86",
+            },
+            {
+                "code": "600532.XSHG",
+                "report_period": "2021-12-31",
+                "mainop_type": "product",
+                "item_name": "煤炭",
+                "main_business_income": "635335108.94",
+                "main_business_profit": "24247391.52",
+            },
+            {
+                "code": "600532.XSHG",
+                "report_period": "2021-12-31",
+                "mainop_type": "product",
+                "item_name": "医疗服务(产品)",
+                "main_business_income": "3551976.59",
+                "main_business_profit": "-10208295.86",
+            },
+        ]
+        disclosures = {
+            ("600532.XSHG", "2021-12-31"): {
+                "notice_date": "2022-06-30",
+            }
+        }
+
+        rows = _build_segment_evidence_from_raw(raw_rows, disclosures)
+
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["pit_usable"], "true")
+        self.assertEqual(rows[0]["approved_coal_business_tag"], "mixed_or_special_review")
+        self.assertIn("trade-oriented", rows[0]["notes"])
 
     def test_coal_capex_fcf_audit_flags_unstable_fcf_rows(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

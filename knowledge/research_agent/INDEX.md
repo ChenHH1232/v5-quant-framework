@@ -39,6 +39,7 @@
 - [Utilities V5.1d conditional result](strategy_cases/utilities_v51d_conditional_result.md) - conditional rules improved over composite but failed to beat raw baselines.
 - [Utilities V5.1 series retrospective](strategy_cases/utilities_v51_series_retrospective.md) - research reset required before further utilities strategy-candidate attempts.
 - [Utilities external state panel V1](strategy_cases/utilities_external_state_panel_v1.md) - initial PIT demand-state panel populated and validated.
+- [Utilities V5.1e demand-state preliminary model](strategy_cases/utilities_v51e_demand_state_preliminary_model.md) - external demand state supports an initial cash-flow / low-PB switching model, not yet a formal strategy.
 
 ## Open Research Questions
 

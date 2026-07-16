@@ -17,6 +17,7 @@ from v5.dividend_runner import _normalize_akshare_dividend_row
 from v5.joinquant_pit_panel_runner import _latest_visible_bank_quality, _load_bank_quality_snapshots
 from v5.local_backtest import BacktestOptions, run_local_backtest
 from v5.sector_rank_panel_runner import build_sector_rank_panel
+from v5.utilities_demand_state_validation_runner import run_utilities_demand_state_validation
 import v5.utilities_external_state_runner as utilities_external_state_runner
 from v5.utilities_external_state_runner import (
     collect_utilities_external_state,
@@ -150,6 +151,51 @@ class DataValidationRunnerTests(unittest.TestCase):
         self.assertEqual(manifest["dataset"], "utilities_external_state")
         self.assertEqual(manifest["validation"]["status"], "pass")
         self.assertEqual([row["metric"] for row in rows], ["generation_utilization_hours_total", "electricity_consumption_yoy"])
+
+    def test_utilities_demand_state_validation_writes_model_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            panel = tmp_path / "panel.csv"
+            state = tmp_path / "state.csv"
+            self._write_csv(
+                panel,
+                [
+                    "trade_date",
+                    "code",
+                    "future_return",
+                    "low_price_to_book",
+                    "operating_cash_flow_yield",
+                    "dividend_yield",
+                    "low_pb_subindustry_score",
+                    "cashflow_yield_subindustry_score",
+                ],
+                [
+                    {"trade_date": "2020-01-02", "code": "A", "future_return": "0.02", "low_price_to_book": "0.8", "operating_cash_flow_yield": "0.04", "dividend_yield": "0.02", "low_pb_subindustry_score": "0.8", "cashflow_yield_subindustry_score": "0.3"},
+                    {"trade_date": "2020-01-02", "code": "B", "future_return": "0.04", "low_price_to_book": "1.2", "operating_cash_flow_yield": "0.08", "dividend_yield": "0.03", "low_pb_subindustry_score": "0.4", "cashflow_yield_subindustry_score": "0.9"},
+                    {"trade_date": "2020-04-01", "code": "A", "future_return": "0.03", "low_price_to_book": "0.7", "operating_cash_flow_yield": "0.03", "dividend_yield": "0.02", "low_pb_subindustry_score": "0.9", "cashflow_yield_subindustry_score": "0.2"},
+                    {"trade_date": "2020-04-01", "code": "B", "future_return": "0.01", "low_price_to_book": "1.4", "operating_cash_flow_yield": "0.09", "dividend_yield": "0.04", "low_pb_subindustry_score": "0.3", "cashflow_yield_subindustry_score": "0.8"},
+                    {"trade_date": "2020-07-01", "code": "A", "future_return": "0.05", "low_price_to_book": "0.6", "operating_cash_flow_yield": "0.02", "dividend_yield": "0.01", "low_pb_subindustry_score": "0.9", "cashflow_yield_subindustry_score": "0.2"},
+                    {"trade_date": "2020-07-01", "code": "B", "future_return": "0.00", "low_price_to_book": "1.5", "operating_cash_flow_yield": "0.10", "dividend_yield": "0.05", "low_pb_subindustry_score": "0.2", "cashflow_yield_subindustry_score": "0.9"},
+                ],
+            )
+            self._write_csv(
+                state,
+                ["visible_date", "state_date", "metric", "value"],
+                [
+                    {"visible_date": "2020-01-01", "state_date": "2019-12-31", "metric": "electricity_consumption_yoy", "value": "3.0"},
+                    {"visible_date": "2020-03-25", "state_date": "2020-02-29", "metric": "electricity_consumption_yoy", "value": "4.0"},
+                    {"visible_date": "2020-06-25", "state_date": "2020-05-31", "metric": "electricity_consumption_yoy", "value": "8.0"},
+                ],
+            )
+
+            report = run_utilities_demand_state_validation(panel, state, tmp_path / "validation", selection_count=1, min_history=2)
+            summary = json.loads((report.parent / "demand_state_validation_summary.json").read_text(encoding="utf-8"))
+            report_exists = report.exists()
+
+        self.assertTrue(report_exists)
+        self.assertEqual(summary["strategy_id"], "utilities_demand_state_v51e")
+        self.assertEqual(summary["coverage"]["state_covered_dates"], 3)
+        self.assertIn(summary["status"], {"preliminary_model_candidate", "needs_more_evidence"})
 
     def test_validate_panel_writes_summary(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

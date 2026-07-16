@@ -32,6 +32,7 @@ from v5.sector_rank_panel_runner import build_sector_rank_panel
 from v5.tushare_disclosure_runner import collect_tushare_disclosure_dates
 from v5.universe_runner import build_point_in_time_universe
 from v5.utilities_model_panel_runner import build_utilities_cashflow_value_panel
+from v5.utilities_demand_state_validation_runner import run_utilities_demand_state_validation
 from v5.utilities_external_state_runner import collect_utilities_external_state, validate_utilities_external_state, write_utilities_external_state_template
 from v5.utilities_pit_panel_runner import collect_utilities_pit_panel
 from v5.validation_runner import validate_panel
@@ -244,6 +245,14 @@ def main(argv: list[str] | None = None) -> int:
     utilities_state_collect.add_argument("--out-dir", type=Path, default=Path("数据库") / "processed" / "utilities_external_state")
     utilities_state_validate = utilities_state_subparsers.add_parser("validate")
     utilities_state_validate.add_argument("csv_path", type=Path)
+
+    utilities_demand_state_parser = subparsers.add_parser("validate-utilities-demand-state")
+    utilities_demand_state_parser.add_argument("--panel", type=Path, default=Path("数据库") / "processed" / "utilities_cashflow_value_v51b_panel" / "panel.csv")
+    utilities_demand_state_parser.add_argument("--state-panel", type=Path, default=Path("数据库") / "processed" / "utilities_external_state" / "utilities_external_state.csv")
+    utilities_demand_state_parser.add_argument("--out", type=Path, default=Path("validation_formal_v51e"))
+    utilities_demand_state_parser.add_argument("--metric", default="electricity_consumption_yoy")
+    utilities_demand_state_parser.add_argument("--selection-count", type=int, default=10)
+    utilities_demand_state_parser.add_argument("--min-history", type=int, default=8)
 
     universe_parser = subparsers.add_parser("build-universe")
     universe_parser.add_argument("panel", type=Path)
@@ -490,6 +499,18 @@ def main(argv: list[str] | None = None) -> int:
             if args.state_command == "validate":
                 print(json.dumps(validate_utilities_external_state(args.csv_path), ensure_ascii=False, indent=2))
                 return 0
+        if args.command == "validate-utilities-demand-state":
+            print(
+                run_utilities_demand_state_validation(
+                    args.panel,
+                    args.state_panel,
+                    args.out,
+                    args.metric,
+                    args.selection_count,
+                    args.min_history,
+                )
+            )
+            return 0
         if args.command == "build-universe":
             print(build_point_in_time_universe(args.panel, args.execution_price_csv, args.out, args.strategy_id))
             return 0

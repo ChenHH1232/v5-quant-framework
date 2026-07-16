@@ -175,6 +175,10 @@ Outputs:
 - integration and unit tests;
 - execution consistency report.
 
+JoinQuant exporter rule:
+
+Backtest start date and data warm-up start date must be treated as separate concepts. If a strategy needs pre-start history for moving averages, trailing dividends, rolling state buckets, volatility, prior financial statements, or external state variables, `joinquant-strategy-exporter` must preload that history during `initialize` or before the first rebalance. The first trading date must not run with blank warm-up state. This is allowed only when every preloaded observation was visible before the decision date; otherwise it is future leakage.
+
 ## Phase 6: Final Freeze and Lifecycle Update
 
 Owner: Project Manager Agent

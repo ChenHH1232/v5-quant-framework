@@ -36,6 +36,32 @@ Optional:
 
 - JoinQuant log TXT with guard and selected-code lines.
 
+## JoinQuant Warm-Up Data Contract
+
+JoinQuant backtest start date is the evaluation window start, not the earliest data date a strategy may read.
+
+If the strategy needs data before the backtest start date, the JoinQuant script must preload the required history at initialization or before the first rebalance. Do not let the first rebalance run with blank warm-up state.
+
+Examples that require pre-start reads:
+
+- moving averages or volatility windows;
+- trailing dividend yield and dividend cash history;
+- external macro/state variables with publication lag;
+- rolling ranks, expanding tertiles, or historical state buckets;
+- prior financial statement snapshots needed for point-in-time factor selection.
+
+Engineering rule:
+
+- define `backtest_start_date` and `data_warmup_start_date` separately;
+- compute `data_warmup_start_date = backtest_start_date - required_lookback_buffer`;
+- in JoinQuant code, call platform data APIs with the warm-up start or sufficient `count` before the first signal;
+- log warm-up coverage at initialization and block trading if required history is missing;
+- keep the formal performance window unchanged when reporting results.
+
+PM interpretation:
+
+Warm-up reads are allowed when they only use information that would have been visible before each decision date. They are not sample contamination. They become leakage only if the script reads data whose visibility date is after the decision date.
+
 ## One-Click Runner
 
 Use:

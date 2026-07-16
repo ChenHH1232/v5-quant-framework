@@ -5,6 +5,7 @@ import calendar
 import csv
 import json
 import math
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from statistics import median
@@ -129,6 +130,23 @@ SEGMENT_EVIDENCE_FIELDS = [
     "pit_usable",
     "review_status",
     "notes",
+]
+
+EASTMONEY_SEGMENT_RAW_FIELDS = [
+    "code",
+    "eastmoney_code",
+    "report_period",
+    "mainop_type",
+    "item_name",
+    "main_business_income",
+    "income_ratio",
+    "main_business_cost",
+    "cost_ratio",
+    "main_business_profit",
+    "profit_ratio",
+    "gross_profit_ratio",
+    "source_name",
+    "source_url",
 ]
 
 OFFICIAL_STATE_SEED_ROWS = [
@@ -503,6 +521,69 @@ def audit_coal_segment_evidence(
     return out_dir / "coal_segment_evidence_audit_report.md"
 
 
+def collect_eastmoney_coal_segment_evidence(
+    panel_csv: Path,
+    disclosure_csv: Path,
+    out_dir: Path = DEFAULT_PROCESSED_DIR / "coal_business_tags",
+    request_timeout_seconds: float = 15.0,
+    sleep_seconds: float = 0.25,
+    limit: int | None = None,
+) -> Path:
+    panel_rows = _read_csv(panel_csv)
+    codes = sorted({row.get("code", "") for row in panel_rows if row.get("code")})
+    if limit is not None:
+        codes = codes[:limit]
+    disclosures = _disclosures_by_code_period(disclosure_csv)
+    raw_rows: list[dict[str, Any]] = []
+    warnings: list[str] = []
+    for code in codes:
+        try:
+            records = _fetch_eastmoney_segment_records(code, request_timeout_seconds)
+        except Exception as exc:
+            warnings.append(f"{code}: Eastmoney segment fetch failed: {type(exc).__name__}: {exc}")
+            continue
+        if not records:
+            warnings.append(f"{code}: Eastmoney segment fetch returned no zygcfx rows")
+        raw_rows.extend(_normalize_eastmoney_segment_records(code, records))
+        if sleep_seconds > 0:
+            time.sleep(sleep_seconds)
+
+    evidence_rows = _build_segment_evidence_from_raw(raw_rows, disclosures)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    raw_path = out_dir / "eastmoney_coal_segment_raw.csv"
+    evidence_path = out_dir / "coal_segment_business_evidence_eastmoney.csv"
+    _write_csv(raw_path, EASTMONEY_SEGMENT_RAW_FIELDS, raw_rows)
+    _write_csv(evidence_path, SEGMENT_EVIDENCE_FIELDS, evidence_rows)
+    complete_rows = [
+        row
+        for row in evidence_rows
+        if str(row.get("pit_usable", "")).lower() == "true"
+        and row.get("approved_coal_business_tag")
+        and (row.get("coal_revenue_ratio") or row.get("coal_profit_ratio"))
+    ]
+    _write_json(
+        out_dir / "eastmoney_coal_segment_evidence_manifest.json",
+        {
+            "dataset": "eastmoney_coal_segment_evidence",
+            "panel": str(panel_csv),
+            "disclosure_csv": str(disclosure_csv),
+            "raw_output": str(raw_path),
+            "evidence_output": str(evidence_path),
+            "requested_company_count": len(codes),
+            "raw_row_count": len(raw_rows),
+            "evidence_row_count": len(evidence_rows),
+            "complete_rows": len(complete_rows),
+            "covered_company_count": len({row["code"] for row in complete_rows}),
+            "warning_count": len(warnings),
+            "warnings": warnings,
+            "source_policy": "Eastmoney public F10 BusinessAnalysis/PageAjax via normal HTTP request with timeout and no anti-crawler bypass.",
+            "pit_policy": "visible_date is joined from Tushare disclosure_date for the same report period when available.",
+            "created_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
+        },
+    )
+    return evidence_path
+
+
 def collect_coal_report_disclosure_dates(
     panel_csv: Path,
     out_dir: Path = DEFAULT_PROCESSED_DIR / "coal_business_tags",
@@ -773,6 +854,176 @@ def _state_coverage_summary(rows: list[dict[str, str]]) -> dict[str, Any]:
     }
 
 
+def _fetch_eastmoney_segment_records(code: str, timeout_seconds: float) -> list[dict[str, Any]]:
+    import requests
+
+    eastmoney_code = _to_eastmoney_code(code)
+    url = "https://emweb.securities.eastmoney.com/PC_HSF10/BusinessAnalysis/PageAjax"
+    headers = {
+        "User-Agent": "Mozilla/5.0",
+        "Referer": f"https://emweb.securities.eastmoney.com/PC_HSF10/BusinessAnalysis/Index?type=web&code={eastmoney_code}",
+    }
+    response = requests.get(url, params={"code": eastmoney_code}, headers=headers, timeout=(5, timeout_seconds))
+    response.raise_for_status()
+    payload = response.json()
+    records = payload.get("zygcfx") or []
+    return records if isinstance(records, list) else []
+
+
+def _normalize_eastmoney_segment_records(code: str, records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    rows = []
+    for record in records:
+        report_period = _format_date(_date_text(record.get("REPORT_DATE")))
+        if not report_period:
+            continue
+        rows.append(
+            {
+                "code": code,
+                "eastmoney_code": _to_eastmoney_code(code),
+                "report_period": report_period,
+                "mainop_type": _mainop_type_name(record.get("MAINOP_TYPE")),
+                "item_name": str(record.get("ITEM_NAME") or "").strip(),
+                "main_business_income": _fmt_float(record.get("MAIN_BUSINESS_INCOME")),
+                "income_ratio": _fmt_float(record.get("MBI_RATIO")),
+                "main_business_cost": _fmt_float(record.get("MAIN_BUSINESS_COST")),
+                "cost_ratio": _fmt_float(record.get("MBC_RATIO")),
+                "main_business_profit": _fmt_float(record.get("MAIN_BUSINESS_RPOFIT")),
+                "profit_ratio": _fmt_float(record.get("MBR_RATIO")),
+                "gross_profit_ratio": _fmt_float(record.get("GROSS_RPOFIT_RATIO")),
+                "source_name": "Eastmoney F10 BusinessAnalysis",
+                "source_url": f"https://emweb.securities.eastmoney.com/PC_HSF10/BusinessAnalysis/Index?type=web&code={_to_eastmoney_code(code)}",
+            }
+        )
+    return rows
+
+
+def _build_segment_evidence_from_raw(
+    raw_rows: list[dict[str, Any]],
+    disclosures: dict[tuple[str, str], dict[str, str]],
+) -> list[dict[str, Any]]:
+    by_key: dict[tuple[str, str], list[dict[str, Any]]] = {}
+    for row in raw_rows:
+        by_key.setdefault((row["code"], row["report_period"]), []).append(row)
+    evidence_rows = []
+    for (code, report_period), rows in sorted(by_key.items()):
+        selected = [row for row in rows if row.get("mainop_type") == "product"]
+        if not selected:
+            selected = [row for row in rows if row.get("mainop_type") == "industry"]
+        if not selected:
+            selected = rows
+        selected = [row for row in selected if not _is_segment_subitem(str(row.get("item_name") or ""))]
+        ratios = _segment_ratios(selected)
+        disclosure = disclosures.get((code, report_period), {})
+        visible_date = disclosure.get("notice_date", "")
+        tag = _approved_coal_business_tag(
+            ratios["coal_revenue_ratio"],
+            ratios["coal_profit_ratio"],
+            ratios["power_revenue_ratio"],
+            ratios["coal_chemical_revenue_ratio"],
+        )
+        evidence_rows.append(
+            {
+                "code": code,
+                "ts_code": _to_ts_code(code),
+                "report_period": report_period,
+                "report_type": "semiannual" if report_period.endswith("-06-30") else "annual" if report_period.endswith("-12-31") else "other",
+                "notice_date": visible_date,
+                "visible_date": visible_date,
+                "coal_revenue_ratio": _fmt_float(ratios["coal_revenue_ratio"]),
+                "coal_profit_ratio": _fmt_float(ratios["coal_profit_ratio"]),
+                "power_revenue_ratio": _fmt_float(ratios["power_revenue_ratio"]),
+                "coal_chemical_revenue_ratio": _fmt_float(ratios["coal_chemical_revenue_ratio"]),
+                "approved_coal_business_tag": tag,
+                "source_name": "Eastmoney F10 BusinessAnalysis + Tushare disclosure_date",
+                "source_url": f"https://emweb.securities.eastmoney.com/PC_HSF10/BusinessAnalysis/Index?type=web&code={_to_eastmoney_code(code)}",
+                "pit_usable": "true" if visible_date and tag else "false",
+                "review_status": "eastmoney_segment_needs_spot_check" if visible_date and tag else "missing_disclosure_or_segment_tag",
+                "notes": "Ratios use product classification where available, otherwise industry classification. Coal chemical is classified before coal to avoid double-counting.",
+            }
+        )
+    return evidence_rows
+
+
+def _segment_ratios(rows: list[dict[str, Any]]) -> dict[str, float]:
+    result = {
+        "coal_revenue_ratio": 0.0,
+        "coal_profit_ratio": 0.0,
+        "power_revenue_ratio": 0.0,
+        "coal_chemical_revenue_ratio": 0.0,
+    }
+    for row in rows:
+        bucket = _segment_bucket(str(row.get("item_name") or ""))
+        income_ratio = _to_float(row.get("income_ratio")) or 0.0
+        profit_ratio = _to_float(row.get("profit_ratio")) or 0.0
+        if bucket == "coal":
+            result["coal_revenue_ratio"] += income_ratio
+            result["coal_profit_ratio"] += profit_ratio
+        elif bucket == "power":
+            result["power_revenue_ratio"] += income_ratio
+        elif bucket == "coal_chemical":
+            result["coal_chemical_revenue_ratio"] += income_ratio
+    return {key: min(1.0, max(0.0, value)) for key, value in result.items()}
+
+
+def _is_segment_subitem(item_name: str) -> bool:
+    text = item_name.strip()
+    return text.startswith("其中") or text.startswith("其中:") or text.startswith("其中：")
+
+
+def _segment_bucket(item_name: str) -> str:
+    text = item_name.lower()
+    if any(keyword in item_name for keyword in ["煤化工", "化工", "甲醇", "尿素", "烯烃", "焦化", "焦炭"]):
+        return "coal_chemical"
+    if any(keyword in item_name for keyword in ["电力", "发电", "供电", "热力", "供热"]):
+        return "power"
+    if any(keyword in item_name for keyword in ["煤", "煤炭", "原煤", "洗煤", "选煤", "焦煤", "动力煤"]):
+        return "coal"
+    if "coal" in text:
+        return "coal"
+    return "other"
+
+
+def _approved_coal_business_tag(coal_revenue: float, coal_profit: float, power_revenue: float, coal_chemical_revenue: float) -> str:
+    coal_core = max(coal_revenue, coal_profit) >= 0.7
+    if coal_core and power_revenue >= 0.15:
+        return "mixed_power_coal"
+    if coal_core and coal_chemical_revenue >= 0.15:
+        return "mixed_coal_chemical"
+    if coal_core:
+        return "core_coal"
+    if coal_revenue >= 0.4 or coal_profit >= 0.4:
+        return "mixed_or_special_review"
+    return "non_core_or_review"
+
+
+def _mainop_type_name(value: Any) -> str:
+    return {"1": "industry", "2": "product", "3": "region"}.get(str(value), str(value or ""))
+
+
+def _to_eastmoney_code(code: str) -> str:
+    if code.endswith(".XSHG"):
+        return "SH" + code[:6]
+    if code.endswith(".XSHE"):
+        return "SZ" + code[:6]
+    if code.endswith(".SH"):
+        return "SH" + code[:6]
+    if code.endswith(".SZ"):
+        return "SZ" + code[:6]
+    return code
+
+
+def _disclosures_by_code_period(disclosure_csv: Path) -> dict[tuple[str, str], dict[str, str]]:
+    result = {}
+    if not disclosure_csv.exists():
+        return result
+    for row in _read_csv(disclosure_csv):
+        code = row.get("code", "")
+        report_period = row.get("report_period", "")
+        if code and report_period:
+            result[(code, report_period)] = row
+    return result
+
+
 def _target_report_years(rows: list[dict[str, str]]) -> set[str]:
     years = set()
     for row in rows:
@@ -893,6 +1144,13 @@ def _to_float(value: Any) -> float | None:
     return numeric
 
 
+def _fmt_float(value: Any) -> str:
+    numeric = _to_float(value)
+    if numeric is None:
+        return ""
+    return f"{numeric:.10g}"
+
+
 def _ratio(numerator: float | int, denominator: float | int) -> float | None:
     if denominator == 0:
         return None
@@ -946,6 +1204,13 @@ def main(argv: list[str] | None = None) -> int:
     segment_audit_parser = subparsers.add_parser("audit-segment-evidence")
     segment_audit_parser.add_argument("evidence_csv", type=Path)
     segment_audit_parser.add_argument("--out-dir", type=Path, default=DEFAULT_MANIFEST_DIR / "coal_segment_evidence_audit")
+    eastmoney_parser = subparsers.add_parser("collect-eastmoney-segments")
+    eastmoney_parser.add_argument("panel", type=Path)
+    eastmoney_parser.add_argument("disclosure_csv", type=Path)
+    eastmoney_parser.add_argument("--out-dir", type=Path, default=DEFAULT_PROCESSED_DIR / "coal_business_tags")
+    eastmoney_parser.add_argument("--request-timeout-seconds", type=float, default=15.0)
+    eastmoney_parser.add_argument("--sleep-seconds", type=float, default=0.25)
+    eastmoney_parser.add_argument("--limit", type=int)
     capex_parser = subparsers.add_parser("audit-capex-fcf")
     capex_parser.add_argument("panel", type=Path)
     capex_parser.add_argument("--out-dir", type=Path, default=DEFAULT_MANIFEST_DIR / "coal_capex_fcf_audit")
@@ -982,6 +1247,18 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if args.command == "audit-segment-evidence":
         print(audit_coal_segment_evidence(args.evidence_csv, args.out_dir))
+        return 0
+    if args.command == "collect-eastmoney-segments":
+        print(
+            collect_eastmoney_coal_segment_evidence(
+                args.panel,
+                args.disclosure_csv,
+                args.out_dir,
+                args.request_timeout_seconds,
+                args.sleep_seconds,
+                args.limit,
+            )
+        )
         return 0
     if args.command == "audit-capex-fcf":
         print(audit_coal_capex_fcf(args.panel, args.out_dir))

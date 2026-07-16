@@ -18,6 +18,7 @@ from v5.coal_data_audit_runner import (
     audit_coal_business_tags,
     audit_coal_capex_fcf,
     build_coal_capex_policy_panel,
+    collect_eastmoney_coal_segment_evidence,
     collect_coal_report_disclosure_dates,
     merge_coal_manual_state,
     merge_coal_state_sources,
@@ -335,6 +336,13 @@ def main(argv: list[str] | None = None) -> int:
     coal_data_segment_audit = coal_data_audit_subparsers.add_parser("audit-segment-evidence")
     coal_data_segment_audit.add_argument("evidence_csv", type=Path, default=Path("数据库") / "processed" / "coal_business_tags" / "coal_segment_business_evidence_template.csv", nargs="?")
     coal_data_segment_audit.add_argument("--out-dir", type=Path, default=Path("数据库") / "manifests" / "coal_segment_evidence_audit")
+    coal_data_eastmoney = coal_data_audit_subparsers.add_parser("collect-eastmoney-segments")
+    coal_data_eastmoney.add_argument("panel", type=Path, default=Path("数据库") / "processed" / "coal_pit_panel" / "panel.csv", nargs="?")
+    coal_data_eastmoney.add_argument("disclosure_csv", type=Path, default=Path("数据库") / "processed" / "coal_business_tags" / "coal_report_disclosure_dates.csv", nargs="?")
+    coal_data_eastmoney.add_argument("--out-dir", type=Path, default=Path("数据库") / "processed" / "coal_business_tags")
+    coal_data_eastmoney.add_argument("--request-timeout-seconds", type=float, default=15.0)
+    coal_data_eastmoney.add_argument("--sleep-seconds", type=float, default=0.25)
+    coal_data_eastmoney.add_argument("--limit", type=int)
     coal_data_capex = coal_data_audit_subparsers.add_parser("audit-capex-fcf")
     coal_data_capex.add_argument("panel", type=Path, nargs="?", default=Path("数据库") / "processed" / "coal_pit_panel" / "panel.csv")
     coal_data_capex.add_argument("--out-dir", type=Path, default=Path("数据库") / "manifests" / "coal_capex_fcf_audit")
@@ -687,6 +695,18 @@ def main(argv: list[str] | None = None) -> int:
                 return 0
             if args.coal_data_audit_command == "audit-segment-evidence":
                 print(audit_coal_segment_evidence(args.evidence_csv, args.out_dir))
+                return 0
+            if args.coal_data_audit_command == "collect-eastmoney-segments":
+                print(
+                    collect_eastmoney_coal_segment_evidence(
+                        args.panel,
+                        args.disclosure_csv,
+                        args.out_dir,
+                        args.request_timeout_seconds,
+                        args.sleep_seconds,
+                        args.limit,
+                    )
+                )
                 return 0
             if args.coal_data_audit_command == "audit-capex-fcf":
                 print(audit_coal_capex_fcf(args.panel, args.out_dir))

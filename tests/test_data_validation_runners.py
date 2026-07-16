@@ -12,6 +12,7 @@ from v5.daily_backtest import _defensive_state
 from v5.bank_quality_date_alignment_runner import align_bank_quality_dates
 from v5.coal_cycle_state_validation_runner import run_coal_cycle_state_validation
 from v5.coal_data_audit_runner import (
+    _build_segment_evidence_from_raw,
     _target_report_years,
     audit_coal_segment_evidence,
     audit_coal_business_tags,
@@ -353,6 +354,55 @@ class DataValidationRunnerTests(unittest.TestCase):
         self.assertEqual(rows[0]["pit_usable"], "false")
         self.assertEqual(summary["status"], "blocked")
         self.assertEqual(summary["complete_rows"], 0)
+
+    def test_eastmoney_segment_evidence_prefers_product_rows_and_splits_power(self) -> None:
+        raw_rows = [
+            {
+                "code": "601225.XSHG",
+                "report_period": "2025-12-31",
+                "mainop_type": "industry",
+                "item_name": "煤炭采掘业",
+                "income_ratio": "0.90",
+                "profit_ratio": "0.95",
+            },
+            {
+                "code": "601225.XSHG",
+                "report_period": "2025-12-31",
+                "mainop_type": "product",
+                "item_name": "自产煤",
+                "income_ratio": "0.55",
+                "profit_ratio": "0.89",
+            },
+            {
+                "code": "601225.XSHG",
+                "report_period": "2025-12-31",
+                "mainop_type": "product",
+                "item_name": "贸易煤",
+                "income_ratio": "0.32",
+                "profit_ratio": "0.02",
+            },
+            {
+                "code": "601225.XSHG",
+                "report_period": "2025-12-31",
+                "mainop_type": "product",
+                "item_name": "电力",
+                "income_ratio": "0.10",
+                "profit_ratio": "0.05",
+            },
+        ]
+        disclosures = {
+            ("601225.XSHG", "2025-12-31"): {
+                "notice_date": "2026-04-20",
+            }
+        }
+
+        rows = _build_segment_evidence_from_raw(raw_rows, disclosures)
+
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["pit_usable"], "true")
+        self.assertEqual(rows[0]["approved_coal_business_tag"], "core_coal")
+        self.assertAlmostEqual(float(rows[0]["coal_revenue_ratio"]), 0.87)
+        self.assertAlmostEqual(float(rows[0]["power_revenue_ratio"]), 0.10)
 
     def test_coal_capex_fcf_audit_flags_unstable_fcf_rows(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

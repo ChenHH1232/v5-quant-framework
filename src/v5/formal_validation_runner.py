@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import csv
 import json
-import math
 from collections import defaultdict
 from datetime import date
 from pathlib import Path
@@ -12,7 +12,9 @@ from typing import Any
 
 from v5.engine import load_spec
 from v5.experiment_governance import build_run_manifest, write_run_manifest
-from v5.validation_runner import _apply_value_trap_guard, _score_date_rows, _to_float
+from v5.io_utils import write_csv_rows, write_json_file
+from v5.math_utils import compound, pearson, ranks
+from v5.scoring import apply_value_trap_guard, score_rows, to_float
 
 
 def run_formal_validation(
@@ -216,7 +218,7 @@ def _common_sample_interaction_tests(rows: list[dict[str, Any]], raw: dict[str, 
             "core_tier_1_capital_adequacy_ratio",
         ],
     )
-    common_rows = [row for row in rows if all(_to_float(row.get(name)) is not None for name in common_required)]
+    common_rows = [row for row in rows if all(to_float(row.get(name)) is not None for name in common_required)]
     common_date_count = len({row["trade_date"] for row in common_rows})
     common_security_count = len({row["code"] for row in common_rows})
     configured_cases = validation.get("common_sample_interactions")
@@ -257,8 +259,8 @@ def _factor_ic_rankic(rows: list[dict[str, Any]], raw: dict[str, Any]) -> list[d
         by_date: dict[str, list[tuple[float, float]]] = defaultdict(list)
         observations = 0
         for row in rows:
-            value = _to_float(row.get(name))
-            ret = _to_float(row.get("future_return"))
+            value = to_float(row.get(name))
+            ret = to_float(row.get("future_return"))
             if value is None or ret is None:
                 continue
             adjusted = -value if direction == "lower_is_better" else value
@@ -313,11 +315,12 @@ def _failure_mode_analysis(rows: list[dict[str, Any]], raw: dict[str, Any], weak
         all_factor_values: dict[str, list[float]] = defaultdict(list)
         selected_codes_by_date = []
         for trade_date, date_rows in sorted(by_date.items()):
-            scored = _score_date_rows(date_rows, factors, weights)
-            selected = sorted(_apply_value_trap_guard(scored), key=lambda item: item["score"], reverse=True)[:selection_count]
+            case_raw = _scoring_case_raw(raw, factors=factors, weights=weights)
+            scored, _used_factors = score_rows(case_raw, date_rows)
+            selected = sorted(apply_value_trap_guard(case_raw, scored), key=lambda item: item["score"], reverse=True)[:selection_count]
             low_pb = sorted(
-                [row for row in date_rows if _to_float(row.get("low_price_to_book")) is not None],
-                key=lambda row: _to_float(row.get("low_price_to_book")) or 0.0,
+                [row for row in date_rows if to_float(row.get("low_price_to_book")) is not None],
+                key=lambda row: to_float(row.get("low_price_to_book")) or 0.0,
             )[:selection_count]
             if selected:
                 selected_returns.append(mean(float(row["future_return"]) for row in selected))
@@ -328,12 +331,12 @@ def _failure_mode_analysis(rows: list[dict[str, Any]], raw: dict[str, Any], weak
                 low_pb_returns.append(mean(float(row["future_return"]) for row in low_pb))
             for row in date_rows:
                 for factor in factors:
-                    value = _to_float(row.get(factor["name"]))
+                    value = to_float(row.get(factor["name"]))
                     if value is not None:
                         all_factor_values[factor["name"]].append(value)
             for row in selected:
                 for factor in factors:
-                    value = _to_float(row.get(factor["name"]))
+                    value = to_float(row.get(factor["name"]))
                     if value is not None:
                         selected_factor_values[factor["name"]].append(value)
         factor_notes = []
@@ -399,13 +402,14 @@ def _strategy_case(
         elif mode == "single_factor" and factor:
             current_factor_direction = factor_direction or _factor_direction(raw, factor)
             selected = sorted(
-                [row for row in case_rows if _to_float(row.get(factor)) is not None],
-                key=lambda row: _to_float(row.get(factor)) or 0.0,
+                [row for row in case_rows if to_float(row.get(factor)) is not None],
+                key=lambda row: to_float(row.get(factor)) or 0.0,
                 reverse=current_factor_direction == "higher_is_better",
             )[:current_selection_count]
         else:
-            scored = _score_date_rows(case_rows, factors, weights)
-            selected = sorted(_apply_value_trap_guard(scored), key=lambda item: item["score"], reverse=True)[:current_selection_count]
+            case_raw = _scoring_case_raw(raw, factors=factors, weights=weights, weight_scale=weight_scale)
+            scored, _used_factors = score_rows(case_raw, case_rows)
+            selected = sorted(apply_value_trap_guard(case_raw, scored), key=lambda item: item["score"], reverse=True)[:current_selection_count]
         if selected:
             returns.append(mean(float(row["future_return"]) for row in selected))
             selected_counts.append(len(selected))
@@ -422,6 +426,38 @@ def _strategy_case(
     }
 
 
+def _scoring_case_raw(
+    raw: dict[str, Any],
+    factors: list[dict[str, Any]],
+    weights: dict[str, float],
+    weight_scale: dict[str, float] | None = None,
+) -> dict[str, Any]:
+    case_raw = copy.deepcopy(raw)
+    allowed_names = {factor["name"] for factor in factors}
+    case_raw["signals"]["factors"] = factors
+    scoring = case_raw["signals"]["scoring"]
+    if "weights" in scoring:
+        scoring["weights"] = {
+            name: float(weight)
+            for name, weight in weights.items()
+            if name in allowed_names
+        }
+    for group_name in ("value_score", "quality_score"):
+        if group_name in scoring:
+            scoring[group_name] = {
+                name: _scaled_weight(name, float(weight), weight_scale)
+                for name, weight in scoring[group_name].items()
+                if name in allowed_names
+            }
+    return case_raw
+
+
+def _scaled_weight(name: str, weight: float, weight_scale: dict[str, float] | None) -> float:
+    if weight_scale and name in weight_scale:
+        return weight * float(weight_scale[name])
+    return weight
+
+
 def _apply_condition(rows: list[dict[str, Any]], condition: dict[str, Any] | None) -> list[dict[str, Any]]:
     if not condition:
         return rows
@@ -431,12 +467,12 @@ def _apply_condition(rows: list[dict[str, Any]], condition: dict[str, Any] | Non
     direction = str(condition.get("direction", _factor_direction({"signals": {"factors": []}}, field)))
     quantile = float(condition.get("quantile", 0.5))
     keep = str(condition.get("keep", "top"))
-    ranked = [row for row in rows if _to_float(row.get(field)) is not None]
+    ranked = [row for row in rows if to_float(row.get(field)) is not None]
     if not ranked:
         return []
     ranked = sorted(
         ranked,
-        key=lambda row: _to_float(row.get(field)) or 0.0,
+        key=lambda row: to_float(row.get(field)) or 0.0,
         reverse=direction == "higher_is_better",
     )
     count = max(1, int(len(ranked) * quantile))
@@ -450,9 +486,9 @@ def _load_panel(path: Path) -> list[dict[str, Any]]:
         rows = list(csv.DictReader(handle))
     result = []
     for row in rows:
-        ret = _to_float(row.get("total_return"))
+        ret = to_float(row.get("total_return"))
         if ret is None:
-            ret = _to_float(row.get("future_return"))
+            ret = to_float(row.get("future_return"))
         if row.get("trade_date") and row.get("code") and ret is not None:
             item = dict(row)
             item["future_return"] = ret
@@ -460,13 +496,7 @@ def _load_panel(path: Path) -> list[dict[str, Any]]:
     return result
 
 
-def _compound(returns: list[float]) -> float | None:
-    if not returns:
-        return None
-    value = 1.0
-    for ret in returns:
-        value *= 1.0 + ret
-    return value - 1.0
+_compound = compound
 
 
 def _positive_ratio(values: list[float]) -> float | None:
@@ -475,32 +505,10 @@ def _positive_ratio(values: list[float]) -> float | None:
     return sum(1 for value in values if value > 0) / len(values)
 
 
-def _pearson(x: list[float], y: list[float]) -> float | None:
-    if len(x) != len(y) or len(x) < 2:
-        return None
-    mx = mean(x)
-    my = mean(y)
-    numerator = sum((a - mx) * (b - my) for a, b in zip(x, y))
-    denom_x = math.sqrt(sum((a - mx) ** 2 for a in x))
-    denom_y = math.sqrt(sum((b - my) ** 2 for b in y))
-    if denom_x == 0 or denom_y == 0:
-        return None
-    return numerator / (denom_x * denom_y)
+_pearson = pearson
 
 
-def _ranks(values: list[float]) -> list[float]:
-    ordered = sorted((value, index) for index, value in enumerate(values))
-    ranks = [0.0] * len(values)
-    index = 0
-    while index < len(ordered):
-        end = index
-        while end + 1 < len(ordered) and ordered[end + 1][0] == ordered[index][0]:
-            end += 1
-        avg_rank = (index + end + 2) / 2.0
-        for pos in range(index, end + 1):
-            ranks[ordered[pos][1]] = avg_rank
-        index = end + 1
-    return ranks
+_ranks = ranks
 
 
 def _top_bottom_spread(pairs: list[tuple[float, float]]) -> float | None:
@@ -565,16 +573,11 @@ def _write_report(path: Path, summary: dict[str, Any]) -> None:
 
 
 def _write_csv(path: Path, fieldnames: list[str], rows: list[dict[str, Any]]) -> None:
-    with path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(rows)
+    write_csv_rows(path, fieldnames, rows)
 
 
 def _write_json(path: Path, payload: dict[str, Any]) -> None:
-    with path.open("w", encoding="utf-8") as handle:
-        json.dump(payload, handle, ensure_ascii=False, indent=2)
-        handle.write("\n")
+    write_json_file(path, payload)
 
 
 def main(argv: list[str] | None = None) -> int:

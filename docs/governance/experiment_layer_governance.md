@@ -6,6 +6,7 @@ Date: 2026-07-15
 
 Every result must be tagged with exactly one layer:
 
+- `data_availability_gate`
 - `research_pit_validation`
 - `platform_replication`
 - `engineering_smoke_test`
@@ -14,6 +15,22 @@ Every result must be tagged with exactly one layer:
 Project Manager Agent must block any report that does not carry one of these labels.
 
 ## Layer Definitions
+
+### data_availability_gate
+
+Purpose:
+
+Decide whether a sector has enough reliable PIT data to enter formal validation.
+
+Required rules:
+
+- Confirm a PIT universe can be built without current-business-structure pollution.
+- Confirm required factor fields and external state variables exist with visible dates.
+- Confirm benchmark data exists and is sector-appropriate.
+- Confirm dividends, corporate actions, and execution prices can be handled if engineering may follow.
+- Block formal validation for sectors whose core economic variables are unavailable, manual-only, or not legally / ethically collectable at the required quality.
+
+Project Manager Agent must treat this as a hard gate for new sectors.
 
 ### research_pit_validation
 
@@ -71,6 +88,7 @@ Required rules:
 
 - Reject unlabeled results.
 - Reject mixed interpretation across layers.
+- Block any new sector that has not passed `data_availability_gate`.
 - Maintain decision log.
 - Decide when a strategy can move from one layer to another.
 
@@ -83,6 +101,8 @@ Required rules:
   - baseline tests
   - ablation tests
   - robustness tests
+- Must return failed or weak hypotheses to Research Agent with a failure return packet.
+- Must not rewrite financial theory or tune weights after seeing validation results.
 
 ### Engineering Agent
 
@@ -92,4 +112,3 @@ Required rules:
   - daily attribution
   - rebalance-stock comparison material
   - order, dividend, cash diagnostics
-

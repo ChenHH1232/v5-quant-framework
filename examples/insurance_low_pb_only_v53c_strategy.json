@@ -1,0 +1,180 @@
+{
+  "meta": {
+    "strategy_id": "insurance_low_pb_only_v53c",
+    "name": "Insurance Low-PB-only V5.3c",
+    "objective": "Run a formal review of the simplest insurance value hypothesis: low PB only. Dividend, ROE, profit growth, EV/NBV and solvency fields are not positive score inputs in this review.",
+    "status": "research_formal_review_candidate_v53c"
+  },
+  "universe": {
+    "name": "A-share core listed insurance operating companies and groups",
+    "construction": "pm_reviewed_core_insurance_universe_v53_test1",
+    "point_in_time": true,
+    "minimum_rebalance_coverage_ratio": 0.8,
+    "exclude": [
+      "banks",
+      "brokers",
+      "asset_managers",
+      "financial_holding_contamination",
+      "st_or_delisted_special_cases_for_test1"
+    ]
+  },
+  "data": {
+    "vendor": "JoinQuant/DataJQ PIT valuation fields plus ChinaBond 10Y government yield state for review",
+    "price_frequency": "quarterly_signal_panel",
+    "financial_as_of_policy": "announcement_date",
+    "price_adjustment": {
+      "research_panel": "pre_adjusted_total_return",
+      "status": "research_pit_validation_only"
+    },
+    "insurance_indicator_policy": {
+      "status": "diagnostic_not_required_for_v53c_scoring",
+      "reason": "Insurance-specific indicator coverage and EV/NBV data are not repaired yet, so they are not score inputs."
+    },
+    "ev_nbv_policy": {
+      "status": "deferred_enhancement",
+      "reason": "EV/NBV require PIT annual-report or reviewed vendor extraction before formal scoring use."
+    },
+    "external_state_policy": {
+      "rate_state": "ChinaBond 10Y government bond yield via cached akshare.bond_china_yield output",
+      "rate_visibility": "latest visible_date <= rebalance date",
+      "equity_state": "CSI300 trailing return before rebalance",
+      "score_usage": "review_only_not_scoring"
+    },
+    "window": {
+      "research_start": "2015-07-01",
+      "research_end": "2026-05-31"
+    }
+  },
+  "signals": {
+    "factors": [
+      {
+        "name": "low_price_to_book",
+        "source": "jqdatasdk.valuation",
+        "role": "balance_sheet_value",
+        "direction": "lower_is_better",
+        "definition": "PB ratio. Lower PB is preferred when the company remains a PIT-confirmed core insurance operator.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security",
+        "winsorize": "rebalance_cross_section",
+        "normalize": "rank_within_rebalance_date",
+        "evidence_status": "v53b_dominant_factor"
+      }
+    ],
+    "scoring": {
+      "method": "insurance_low_pb_only_v53c",
+      "normalization_scope": "rebalance_cross_section",
+      "weights": {
+        "low_price_to_book": 1.0
+      },
+      "min_factor_count": 1,
+      "value_trap_guard": "No hard insurance guard is approved. ROE, profit growth, dividend, EV/NBV and solvency fields are diagnostics only."
+    }
+  },
+  "schedule": {
+    "signal_frequency": "quarterly",
+    "rebalance_frequency": "quarterly",
+    "rebalance_rule": "first_tradable_day_of_quarter_for_research_validation"
+  },
+  "portfolio": {
+    "selection_count": 3,
+    "weighting": "equal_weight_research_candidate",
+    "max_position_weight": 0.34,
+    "cash_policy": "hold_residual_cash_when_fewer_than_three_names_pass_filters"
+  },
+  "risk": {
+    "defensive_asset": "cash",
+    "defensive_rule": {
+      "enabled": false,
+      "reason": "V5.3c reviews valuation factor evidence, not market timing."
+    },
+    "individual_stop_loss_take_profit": {
+      "enabled": false,
+      "reason": "Fixed exits are not part of the research hypothesis."
+    }
+  },
+  "validation": {
+    "method": "rolling",
+    "train_years": 5,
+    "test_years": 2,
+    "review_years": 1,
+    "required_tests": [
+      "pit_leakage_audit",
+      "baseline_comparison",
+      "single_factor_ic_rankic",
+      "rolling_validation",
+      "selection_count_2_3_4_5_robustness",
+      "real_rate_state_review",
+      "failure_year_analysis_2021_2022_2026"
+    ],
+    "baselines": [
+      {
+        "name": "equal_weight_core_insurance",
+        "mode": "equal_all"
+      },
+      {
+        "name": "low_pb_core_insurance_top3",
+        "mode": "single_factor",
+        "factor": "low_price_to_book",
+        "direction": "lower_is_better",
+        "selection_count": 3
+      },
+      {
+        "name": "high_dividend_core_insurance_top3_reference_only",
+        "mode": "single_factor",
+        "factor": "dividend_yield",
+        "direction": "higher_is_better",
+        "selection_count": 3
+      }
+    ],
+    "common_sample_fields": [
+      "low_price_to_book"
+    ],
+    "common_sample_interactions": [
+      {
+        "name": "common_insurance_low_pb_only",
+        "factors": [
+          "low_price_to_book"
+        ]
+      }
+    ],
+    "robustness": {
+      "selection_counts": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "weight_scale_factors": [
+        "low_price_to_book"
+      ],
+      "weight_scales": [
+        1.0
+      ]
+    },
+    "weak_years": [
+      "2021",
+      "2022",
+      "2026"
+    ],
+    "acceptance_rule": "PM may approve formal strategy candidacy only if the rule remains evidence-driven, financially explainable, statistically validated, reproducible and maintainable. Historical performance alone is insufficient."
+  },
+  "execution": {
+    "status": "blocked_until_research_and_quant_validation_pass",
+    "next_gate": "research_pit_validation",
+    "commission_bps": 3,
+    "slippage_bps": 5,
+    "suspension_policy": "skip_untradeable",
+    "limit_policy": "skip_limit_blocked"
+  },
+  "outputs": {
+    "save_holdings": true,
+    "save_rebalance_signals": true,
+    "report": "markdown",
+    "required_reports": [
+      "formal_validation_packet",
+      "real_rate_state_review",
+      "pm_formal_candidate_decision"
+    ]
+  }
+}

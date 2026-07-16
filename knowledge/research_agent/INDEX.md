@@ -1,5 +1,11 @@
 # Research Agent Knowledge Index
 
+## Governance
+
+- [Research-Quant iteration protocol](../../docs/governance/research_quant_iteration_protocol_v1.md) - failed or weak validation returns to Research Agent for hypothesis revision, replacement, or archival.
+- [Sector research knowledge gate](../../docs/governance/sector_research_knowledge_gate_v1.md) - new sectors must have a Research Agent knowledge packet before formal validation.
+- [Sector data availability gate template](../../docs/governance/sector_data_availability_gate_template.md) - PM gate combining research knowledge, PIT universe, data availability, engineering data, and source access review.
+
 ## Market Structure
 
 - [JoinQuant execution matching requires real-price data](market_structure/joinquant_execution_price_alignment.md)
@@ -66,6 +72,8 @@
 - [Insurance V5.3 research preparation execution](strategy_cases/insurance_v53_research_preparation_execution.md) - first universe and data-field probe completed; Quant validation blocked until universe review, 2024-2025 indicator coverage repair, EV/NBV source decision, and state panel build.
 - [Insurance V5.3 Test-1 quant validation result](strategy_cases/insurance_v53_test1_quant_validation_result.md) - Test-1 ran PIT validation; low PB and dividend were useful, generic ROE/profit-growth composite was rejected, V5.3b recommended.
 - [Insurance V5.3b low-PB dividend result](strategy_cases/insurance_v53b_low_pb_dividend_result.md) - real 10Y rate state added; low PB remains dominant, low-PB + dividend composite rejected, V5.3c low-PB-only review recommended.
+- [Insurance V5.3c low-PB-only result](strategy_cases/insurance_v53c_low_pb_only_result.md) - low PB-only passed research PIT validation and is approved for Engineering preparation, with 2021/2026 and concentration risk still unresolved.
+- [Insurance V5.3c local daily simulation result](strategy_cases/insurance_v53c_local_daily_simulation_result.md) - Engineering smoke test completed with real JoinQuant daily prices, 20% tax-adjusted cash dividends, and 399809.XSHE insurance-theme benchmark; 2026 failure needs PM review.
 
 ## Open Research Questions
 

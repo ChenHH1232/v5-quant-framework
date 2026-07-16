@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>V5.1 公用事业板块阶段性报告</title>
+<style>
+@page { size: A4; margin: 18mm 16mm; }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  color: #1f2933;
+  font-family: "Microsoft YaHei", SimHei, SimSun, Arial, sans-serif;
+  font-size: 11pt;
+  line-height: 1.62;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.cover { min-height: 255mm; display: flex; flex-direction: column; justify-content: space-between; padding: 8mm 0; }
+.kicker { color: #53606b; font-size: 10pt; }
+h1 { font-size: 28pt; line-height: 1.22; margin: 10mm 0 5mm; color: #111827; }
+.subtitle { font-size: 14pt; color: #374151; max-width: 165mm; }
+.meta { margin-top: 12mm; display: grid; grid-template-columns: 34mm 1fr; gap: 2.4mm 6mm; }
+.meta b { color: #111827; }
+.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5mm; border-top: 1px solid #cfd8e3; padding-top: 7mm; }
+.card { border-left: 4px solid #2f6f8f; padding-left: 4mm; }
+.card .num { font-size: 18pt; color: #17324d; font-weight: bold; }
+.card .label { font-size: 9.5pt; color: #4b5563; }
+h2 { font-size: 17pt; margin: 8mm 0 3mm; color: #122033; border-bottom: 1px solid #cfd8e3; padding-bottom: 1.6mm; }
+h3 { font-size: 12.5pt; margin: 5mm 0 2mm; color: #17324d; }
+p { margin: 0 0 3mm; }
+ul { margin: 1mm 0 4mm 6mm; padding-left: 5mm; }
+li { margin: 1.2mm 0; }
+table { width: 100%; border-collapse: collapse; margin: 3mm 0 5mm; font-size: 9.6pt; }
+th, td { border: 1px solid #cfd8e3; padding: 2.2mm 2.6mm; vertical-align: top; }
+th { background: #eef3f6; color: #111827; text-align: left; }
+.right { text-align: right; }
+.callout { border: 1px solid #cbdce8; background: #f6fafc; padding: 4mm 5mm; margin: 4mm 0; border-radius: 2mm; }
+.status { display: inline-block; padding: 1mm 2.8mm; border-radius: 99px; background: #eaf3f8; color: #17405a; font-weight: bold; }
+.page-break { break-before: page; }
+.flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3mm; margin: 4mm 0 6mm; }
+.step { border: 1px solid #bac8d5; background: #f7fafc; padding: 4mm; min-height: 24mm; border-radius: 2mm; }
+.step b { display: block; color: #17324d; font-size: 12pt; margin-bottom: 1.5mm; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; }
+.box { border: 1px solid #cfd8e3; padding: 4mm; border-radius: 2mm; min-height: 31mm; }
+.note { color: #5b6570; font-size: 9pt; border-top: 1px solid #cfd8e3; padding-top: 3mm; margin-top: 8mm; }
+code { font-family: Consolas, "Microsoft YaHei", monospace; background: #eef2f5; padding: .2mm 1mm; border-radius: 1mm; }
+</style>
+</head>
+<body>
+<section class="cover">
+  <div>
+    <div class="kicker">Bank Quant V5 / Stage Report</div>
+    <h1>V5.1 公用事业板块<br>阶段性报告</h1>
+    <div class="subtitle">从银行主线迁移到公用事业板块的第一次流程复制验证：研究、量化验证、本地模拟聚宽、冻结信号平台复刻与工程过拟合审计。</div>
+    <div class="meta">
+      <b>报告日期</b><span>2026-07-16</span>
+      <b>项目定位</b><span>AI 驱动的量化研究框架，不是单一策略工程</span>
+      <b>阶段对象</b><span>V5.1f Utilities Demand State</span>
+      <b>当前状态</b><span><span class="status">formal_strategy_candidate + platform_frozen_signal_test_passed</span></span>
+      <b>明确边界</b><span>不是 accepted strategy；需要 forward / paper trading 继续记录</span>
+    </div>
+  </div>
+  <div class="cards">
+    <div class="card"><div class="num">200.58%</div><div class="label">聚宽冻结信号测试策略收益</div></div>
+    <div class="card"><div class="num">0.34pct</div><div class="label">本地与聚宽最终收益差异</div></div>
+    <div class="card"><div class="num">0 blocker</div><div class="label">工程过拟合审计阻断项</div></div>
+  </div>
+</section>
+
+<section class="page-break">
+<h2>一、阶段结论</h2>
+<div class="callout"><b>项目经理结论：</b>V5.1 到目前为止可以视为“流程复制验证阶段完成”。它证明 V5 的研究流程可以从银行板块迁移到公用事业板块，并且本地模拟聚宽与聚宽冻结信号测试可以高度对齐。但 V5.1f 仍不是正式接受策略。</div>
+<p>V5.1 的核心价值不在于一次回测收益很高，而在于验证了 V5 的组织方式：Research Agent 先提出行业逻辑，Quant Validation Agent 做统计验证，Engineering Agent 做平台复刻与风险审计，Project Manager Agent 负责分层拦截。</p>
+<table>
+<tr><th>项目</th><th>结论</th></tr>
+<tr><td>策略阶段</td><td><code>formal_strategy_candidate</code></td></tr>
+<tr><td>平台复刻</td><td><code>frozen_signal_platform_test_passed</code></td></tr>
+<tr><td>工程审计</td><td><code>needs_review</code>，无 blocker</td></tr>
+<tr><td>不能接受为正式策略的原因</td><td>2021-05 到 2026-05 是平台复刻/确认窗口，不是干净样本外；聚宽测试为冻结信号执行，不是完整实时因子重算；需要 forward / paper trading。</td></tr>
+</table>
+
+<h2>二、V5.1 做了什么</h2>
+<div class="flow">
+  <div class="step"><b>Research</b>公用事业经济逻辑：电力需求、现金流、股息、估值与资本开支。</div>
+  <div class="step"><b>Quant</b>滚动验证、基准对比、消融实验、状态分层 RankIC。</div>
+  <div class="step"><b>Engineering</b>本地 JoinQuant-like 日频模拟与聚宽冻结信号复刻。</div>
+  <div class="step"><b>PM Gate</b>实验分层、风险拦截、禁止把平台窗口当正式样本外。</div>
+</div>
+<ul>
+<li>股票池从银行迁移到 A 股公用事业运营公司，重点偏电力/运营类。</li>
+<li>最终候选模型 V5.1f 使用电力需求状态切换因子：弱需求偏高股息，中性需求偏经营现金流收益率，强需求偏低 PB。</li>
+<li>本地 runner 使用真实日频 open/close 执行近似，并输出每日净值、持仓、交易、调仓信号。</li>
+<li>聚宽阶段使用冻结信号脚本，验证平台执行与本地 runner 是否一致。</li>
+</ul>
+</section>
+
+<section class="page-break">
+<h2>三、关键结果</h2>
+<table>
+<tr><th>指标</th><th class="right">本地 JoinQuant-like</th><th class="right">聚宽冻结信号</th><th class="right">差异</th></tr>
+<tr><td>策略收益</td><td class="right">200.92%</td><td class="right">200.58%</td><td class="right">-0.34 pct</td></tr>
+<tr><td>年化收益</td><td class="right">25.37%</td><td class="right">25.11%</td><td class="right">-0.26 pct</td></tr>
+<tr><td>基准收益</td><td class="right">15.86%</td><td class="right">15.89%</td><td class="right">+0.03 pct</td></tr>
+<tr><td>Alpha</td><td class="right">0.220</td><td class="right">0.221</td><td class="right">+0.001</td></tr>
+<tr><td>Beta</td><td class="right">1.084</td><td class="right">1.079</td><td class="right">-0.005</td></tr>
+<tr><td>策略波动率</td><td class="right">0.243</td><td class="right">0.239</td><td class="right">-0.004</td></tr>
+<tr><td>最大回撤</td><td class="right">27.53%</td><td class="right">24.04%</td><td class="right">-3.49 pct</td></tr>
+<tr><td>最大回撤区间</td><td class="right">2024-05-29 至 2024-09-11</td><td class="right">2024-05-29 至 2024-09-11</td><td class="right">一致</td></tr>
+<tr><td>信息比率</td><td class="right">1.294</td><td class="right">1.388</td><td class="right">+0.094</td></tr>
+</table>
+<p>解释：最终收益、基准收益、Beta、波动率和最大回撤区间高度接近，说明 V5 的本地模拟聚宽框架已经具备较强的平台复刻能力。</p>
+
+<h2>四、工程过拟合审计</h2>
+<table>
+<tr><th>审计维度</th><th>结果</th><th>说明</th></tr>
+<tr><td>幸存者偏差</td><td>通过</td><td>股票池声明为 point-in-time，panel 中 universe visible date 未发现未来日期。</td></tr>
+<tr><td>未来函数</td><td>通过</td><td>因子可见日期、状态可见日期未晚于交易日；未使用 full-sample normalization。</td></tr>
+<tr><td>样本污染</td><td>需复核</td><td>2021-05 到 2026-05 是平台复刻窗口，不能被当作干净样本外验收。</td></tr>
+<tr><td>随机窗口稳定性</td><td>通过</td><td>100 次随机区间中，正收益窗口比例 0.98，P10 策略收益约 7.84%。</td></tr>
+<tr><td>买卖时间扰动</td><td>通过</td><td>日收益前后平移代理测试最大差异约 11.52%，未触发 timing blocker。</td></tr>
+<tr><td>参数扰动</td><td>通过</td><td>策略合同包含 selection_count 8/10/12 robustness；调仓信号 selected_count 稳定。</td></tr>
+</table>
+<div class="callout"><b>审计结论：</b>无阻断项，但仍需 PM/Quant 复核样本污染边界。V5.1f 不能因为平台复刻收益高就直接接受。</div>
+</section>
+
+<section class="page-break">
+<h2>五、相比 V4 的提升</h2>
+<div class="grid2">
+<div class="box"><h3>流程提升</h3><p>V4 更像单策略迭代；V5 形成了 Research、Quant、Engineering、PM 的分工与互相制衡。</p></div>
+<div class="box"><h3>数据口径</h3><p>V5 强制区分 PIT 研究、平台复刻、工程 smoke test、paper trading，避免不同目的测试混用。</p></div>
+<div class="box"><h3>平台复刻</h3><p>本地 runner 已能复刻聚宽冻结信号结果，显著减少反复去聚宽消耗积分和时间。</p></div>
+<div class="box"><h3>风险门禁</h3><p>新增过拟合审计：幸存者偏差、未来函数、样本污染、随机区间和执行时点扰动不再靠人工记忆检查。</p></div>
+</div>
+
+<h2>六、仍需警惕的问题</h2>
+<ul>
+<li>V5.1f 的历史收益过高，必须首先当作“需要解释的现象”，不能当作策略已成立。</li>
+<li>聚宽当前通过冻结信号执行测试，不代表 live-factor recomputation 已经完全打通。</li>
+<li>公用事业模型依赖外部电力需求状态，后续需要持续维护数据源和可见日期规则。</li>
+<li>2021-2026 只应作为平台复刻/模拟聚宽窗口，不应继续被用于调参或接受策略。</li>
+<li>正式接受前必须进入 paper trading，记录未来每次调仓信号、状态判断、持仓和实际表现。</li>
+</ul>
+
+<h2>七、下一步建议</h2>
+<table>
+<tr><th>优先级</th><th>事项</th><th>负责人</th></tr>
+<tr><td>高</td><td>开启 V5.1f forward / paper trading 记录，不再用 2021-2026 调参。</td><td>PM + Engineering</td></tr>
+<tr><td>高</td><td>补 live JoinQuant 因子重算路径，解决 dividend_yield 字段替代来源。</td><td>Engineering</td></tr>
+<tr><td>中</td><td>继续沉淀公用事业知识库，特别是电价、煤价、水电来水、资本开支和分红约束。</td><td>Research</td></tr>
+<tr><td>中</td><td>把过拟合审计变成所有 formal candidate 的必跑门禁。</td><td>Engineering + PM</td></tr>
+<tr><td>中</td><td>准备 V5.2 近似板块测试，例如煤炭、高股息央企或交运。</td><td>PM</td></tr>
+</table>
+
+<div class="note">本报告基于项目内治理记录与本地/聚宽测试结果生成。状态定义遵循 V5 实验分层：research_pit_validation、platform_replication、engineering_smoke_test、paper_trading。</div>
+</section>
+</body>
+</html>

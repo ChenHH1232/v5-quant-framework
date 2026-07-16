@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
+from v5.scoring import validate_scoring_method
+
 
 class SpecError(ValueError):
     """Raised when a strategy specification is malformed."""
@@ -104,6 +106,11 @@ def parse_strategy_spec(raw: dict[str, Any]) -> StrategySpec:
     if int(raw["portfolio"]["selection_count"]) <= 0:
         raise SpecError("portfolio.selection_count must be positive")
 
+    try:
+        validate_scoring_method(raw)
+    except ValueError as exc:
+        raise SpecError(str(exc)) from exc
+
     max_weight = float(raw["portfolio"]["max_position_weight"])
     if max_weight <= 0 or max_weight > 1:
         raise SpecError("portfolio.max_position_weight must be within (0, 1]")
@@ -117,4 +124,3 @@ def _require(obj: Any, fields: list[str], path: str) -> None:
     missing = [field for field in fields if field not in obj]
     if missing:
         raise SpecError(f"missing fields in {path}: {', '.join(missing)}")
-

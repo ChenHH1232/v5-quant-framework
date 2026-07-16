@@ -5,5 +5,25 @@ description = "Natural-language-driven, auditable quantitative strategy research
 requires-python = ">=3.10"
 dependencies = []
 
+[project.optional-dependencies]
+data = [
+    "akshare",
+    "pandas",
+    "requests",
+]
+jq = [
+    "jqdatasdk",
+]
+tushare = [
+    "tushare",
+]
+dev = [
+    "akshare",
+    "jqdatasdk",
+    "pandas",
+    "requests",
+    "tushare",
+]
+
 [tool.setuptools.packages.find]
 where = ["src"]

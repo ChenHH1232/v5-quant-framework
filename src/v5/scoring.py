@@ -7,6 +7,8 @@ from pathlib import Path
 from statistics import mean, median
 from typing import Any
 
+from v5.math_utils import to_float
+
 
 FACTOR_ALIASES = {
     "roe_quality": ["return_on_equity_ttm", "roe"],
@@ -14,11 +16,33 @@ FACTOR_ALIASES = {
     "provision_buffer": ["provision_coverage_ratio"],
 }
 EASTMONEY_QUALITY_FIELDS = {"asset_quality_trend", "provision_buffer", "capital_resilience"}
+TWO_LAYER_METHOD = "two_layer_score"
+WEIGHTED_COMPOSITE_METHODS = {
+    "weighted_composite",
+    "weighted_composite_score",
+    "equal_weighted_factor_score",
+    "research_candidate_only_no_approved_weights",
+    "cashflow_value_composite_research_candidate",
+    "external_state_switch",
+    "insurance_value_quality_test1_composite",
+    "insurance_low_pb_dividend_composite_v53b",
+    "insurance_low_pb_only_v53c",
+}
+SUPPORTED_SCORING_METHODS = frozenset({TWO_LAYER_METHOD, *WEIGHTED_COMPOSITE_METHODS})
+
+
+def validate_scoring_method(raw_spec: dict[str, Any]) -> str:
+    scoring = raw_spec.get("signals", {}).get("scoring", {})
+    method = str(scoring.get("method") or "weighted_composite_score")
+    if method not in SUPPORTED_SCORING_METHODS:
+        supported = ", ".join(sorted(SUPPORTED_SCORING_METHODS))
+        raise ValueError(f"unsupported scoring.method '{method}'. Supported methods: {supported}")
+    return method
 
 
 def score_rows(raw_spec: dict[str, Any], date_rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[str]]:
-    scoring = raw_spec.get("signals", {}).get("scoring", {})
-    if scoring.get("method") == "two_layer_score":
+    method = validate_scoring_method(raw_spec)
+    if method == TWO_LAYER_METHOD:
         return score_two_layer(raw_spec, date_rows)
     return score_weighted_composite(raw_spec, date_rows)
 
@@ -109,8 +133,8 @@ def score_two_layer(raw_spec: dict[str, Any], date_rows: list[dict[str, Any]]) -
 
 
 def apply_value_trap_guard(raw_spec: dict[str, Any], scored: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    scoring = raw_spec.get("signals", {}).get("scoring", {})
-    if scoring.get("method") == "two_layer_score":
+    method = validate_scoring_method(raw_spec)
+    if method == TWO_LAYER_METHOD:
         return _apply_v2_value_trap_guard(scored)
     return _apply_legacy_value_trap_guard(scored)
 
@@ -315,13 +339,7 @@ def _quantile(sorted_values: list[float], q: float) -> float:
     return sorted_values[lower] * (1.0 - fraction) + sorted_values[upper] * fraction
 
 
-def _to_float(value: Any) -> float | None:
-    if value is None or value == "":
-        return None
-    try:
-        return float(value)
-    except (TypeError, ValueError):
-        return None
+_to_float = to_float
 
 
 def _factor_value(row: dict[str, Any], name: str) -> float | None:

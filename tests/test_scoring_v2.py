@@ -6,6 +6,7 @@ import unittest
 from pathlib import Path
 
 from v5.scoring import apply_value_trap_guard, merge_eastmoney_quality, score_rows
+from v5.spec import SpecError, parse_strategy_spec
 
 
 class ScoringV2Tests(unittest.TestCase):
@@ -76,6 +77,69 @@ class ScoringV2Tests(unittest.TestCase):
             rows = [{"trade_date": "2025-07-01", "code": "A"}]
             merged = merge_eastmoney_quality(rows, path, visibility_mode="joinquant_source_year")
             self.assertEqual(merged[0]["asset_quality_trend"], "0.1")
+
+    def test_unknown_scoring_method_is_blocked(self):
+        spec = self._minimal_spec()
+        spec["signals"]["scoring"]["method"] = "insurance_low_pb_onyl_typo"
+
+        with self.assertRaises(SpecError):
+            parse_strategy_spec(spec)
+
+    def test_registered_insurance_low_pb_method_scores_as_weighted_composite(self):
+        spec = {
+            "signals": {
+                "factors": [
+                    {"name": "low_price_to_book", "direction": "lower_is_better"},
+                ],
+                "scoring": {
+                    "method": "insurance_low_pb_only_v53c",
+                    "weights": {"low_price_to_book": 1.0},
+                    "min_factor_count": 1,
+                },
+            }
+        }
+        rows = [
+            {"trade_date": "2025-05-06", "code": "A", "low_price_to_book": "0.5"},
+            {"trade_date": "2025-05-06", "code": "B", "low_price_to_book": "0.8"},
+            {"trade_date": "2025-05-06", "code": "C", "low_price_to_book": "1.2"},
+        ]
+
+        scored, used = score_rows(spec, rows)
+
+        self.assertEqual(used, ["low_price_to_book"])
+        ordered_codes = [row["code"] for row in sorted(scored, key=lambda item: item["score"], reverse=True)]
+        self.assertEqual(ordered_codes, ["A", "B", "C"])
+
+    def _minimal_spec(self):
+        return {
+            "meta": {"strategy_id": "test", "name": "test", "objective": "test"},
+            "universe": {"name": "test", "construction": "test", "point_in_time": True},
+            "data": {"vendor": "test", "price_frequency": "quarterly", "financial_as_of_policy": "announcement_date"},
+            "signals": {
+                "factors": [
+                    {
+                        "name": "low_price_to_book",
+                        "source": "test",
+                        "direction": "lower_is_better",
+                        "definition": "test",
+                        "as_of": "trade_date",
+                        "disclosure_lag_days": 1,
+                        "missing_policy": "drop_security",
+                    }
+                ],
+                "scoring": {
+                    "method": "weighted_composite_score",
+                    "weights": {"low_price_to_book": 1.0},
+                    "min_factor_count": 1,
+                },
+            },
+            "schedule": {"signal_frequency": "quarterly", "rebalance_frequency": "quarterly"},
+            "portfolio": {"selection_count": 1, "weighting": "equal", "max_position_weight": 1.0},
+            "risk": {"defensive_asset": "cash", "defensive_rule": {"enabled": False}},
+            "validation": {"method": "rolling", "train_years": 5, "test_years": 1},
+            "execution": {"commission_bps": 0, "slippage_bps": 0, "suspension_policy": "skip", "limit_policy": "skip"},
+            "outputs": {"save_holdings": True, "save_rebalance_signals": True, "report": "markdown"},
+        }
 
 
 if __name__ == "__main__":

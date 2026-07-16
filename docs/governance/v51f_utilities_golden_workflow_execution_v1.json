@@ -1,0 +1,363 @@
+{
+  "strategy_id": "utilities_demand_state_v51f",
+  "sector": "utilities_electricity",
+  "audit_id": "v51f_utilities_golden_workflow_execution_v1",
+  "created_at_utc": "2026-07-16T18:51:39+00:00",
+  "status": "golden_template_productized_with_pending_forward_and_platform_review",
+  "not_status": [
+    "accepted_strategy",
+    "live_trading_approved"
+  ],
+  "summary": {
+    "status": "golden_template_productized_with_pending_forward_and_platform_review",
+    "passed_steps": 12,
+    "blocked_steps": 0,
+    "pending_steps": 2,
+    "total_steps": 14,
+    "required_artifacts_present": 42,
+    "required_artifacts_total": 42,
+    "blocked_gates": [],
+    "pending_gates": [
+      "platform_replication_packet",
+      "forward_review"
+    ]
+  },
+  "steps": [
+    {
+      "step": 1,
+      "layer": "data_availability_gate",
+      "owner": "Project Manager",
+      "gate": "utilities_data_gate",
+      "required": [
+        "数据库/processed/utilities_pit_panel/panel.csv",
+        "数据库/processed/utilities_cashflow_value_v51b_panel/panel.csv",
+        "数据库/processed/utilities_external_state/utilities_external_state.csv",
+        "数据库/processed/utilities_joinquant_real_daily_prices.csv",
+        "数据库/processed/utilities_joinquant_real_benchmark_prices.csv"
+      ],
+      "optional": [
+        "数据库/processed/utilities_joinquant_cash_dividends.csv"
+      ],
+      "status": "passed",
+      "present_required": [
+        "数据库/processed/utilities_pit_panel/panel.csv",
+        "数据库/processed/utilities_cashflow_value_v51b_panel/panel.csv",
+        "数据库/processed/utilities_external_state/utilities_external_state.csv",
+        "数据库/processed/utilities_joinquant_real_daily_prices.csv",
+        "数据库/processed/utilities_joinquant_real_benchmark_prices.csv"
+      ],
+      "missing_required": [],
+      "present_optional": [
+        "数据库/processed/utilities_joinquant_cash_dividends.csv"
+      ],
+      "missing_optional": []
+    },
+    {
+      "step": 2,
+      "layer": "research_knowledge_gate",
+      "owner": "Research Agent",
+      "gate": "sector_knowledge_packet",
+      "required": [
+        "knowledge/research_agent/references/utilities_universe_definition.md",
+        "knowledge/research_agent/references/utilities_data_field_map.md",
+        "knowledge/research_agent/factor_theory/utilities_value_investing_framework.md",
+        "knowledge/research_agent/factor_theory/utilities_core_factor_hypotheses.md",
+        "knowledge/research_agent/references/utilities_validation_handoff.md"
+      ],
+      "optional": [
+        "knowledge/research_agent/references/utilities_source_collection_plan.md",
+        "knowledge/research_agent/references/utilities_special_information_sources.md"
+      ],
+      "status": "passed",
+      "present_required": [
+        "knowledge/research_agent/references/utilities_universe_definition.md",
+        "knowledge/research_agent/references/utilities_data_field_map.md",
+        "knowledge/research_agent/factor_theory/utilities_value_investing_framework.md",
+        "knowledge/research_agent/factor_theory/utilities_core_factor_hypotheses.md",
+        "knowledge/research_agent/references/utilities_validation_handoff.md"
+      ],
+      "missing_required": [],
+      "present_optional": [
+        "knowledge/research_agent/references/utilities_source_collection_plan.md",
+        "knowledge/research_agent/references/utilities_special_information_sources.md"
+      ],
+      "missing_optional": []
+    },
+    {
+      "step": 3,
+      "layer": "research_hypothesis_design",
+      "owner": "Research Agent",
+      "gate": "testable_hypotheses",
+      "required": [
+        "examples/utilities_demand_state_v51f_strategy.json",
+        "knowledge/research_agent/strategy_cases/utilities_v51f_quant_ready_candidate.md"
+      ],
+      "optional": [
+        "docs/governance/v51f_utilities_pm_formal_candidate_decision_v1.md"
+      ],
+      "status": "passed",
+      "present_required": [
+        "examples/utilities_demand_state_v51f_strategy.json",
+        "knowledge/research_agent/strategy_cases/utilities_v51f_quant_ready_candidate.md"
+      ],
+      "missing_required": [],
+      "present_optional": [
+        "docs/governance/v51f_utilities_pm_formal_candidate_decision_v1.md"
+      ],
+      "missing_optional": []
+    },
+    {
+      "step": 4,
+      "layer": "pit_universe_build",
+      "owner": "Quant Validation Agent",
+      "gate": "pit_universe",
+      "required": [
+        "数据库/processed/utilities_pit_panel/panel.csv",
+        "数据库/processed/utilities_pit_panel/collection_manifest.json"
+      ],
+      "optional": [],
+      "status": "passed",
+      "present_required": [
+        "数据库/processed/utilities_pit_panel/panel.csv",
+        "数据库/processed/utilities_pit_panel/collection_manifest.json"
+      ],
+      "missing_required": [],
+      "present_optional": [],
+      "missing_optional": []
+    },
+    {
+      "step": 5,
+      "layer": "pit_panel_build",
+      "owner": "Quant Validation Agent",
+      "gate": "pit_factor_and_state_panel",
+      "required": [
+        "数据库/processed/utilities_cashflow_value_v51b_panel/panel.csv",
+        "数据库/processed/utilities_cashflow_value_v51b_panel/collection_manifest.json",
+        "数据库/processed/utilities_external_state/utilities_external_state.csv",
+        "数据库/processed/utilities_external_state/collection_manifest.json"
+      ],
+      "optional": [],
+      "status": "passed",
+      "present_required": [
+        "数据库/processed/utilities_cashflow_value_v51b_panel/panel.csv",
+        "数据库/processed/utilities_cashflow_value_v51b_panel/collection_manifest.json",
+        "数据库/processed/utilities_external_state/utilities_external_state.csv",
+        "数据库/processed/utilities_external_state/collection_manifest.json"
+      ],
+      "missing_required": [],
+      "present_optional": [],
+      "missing_optional": []
+    },
+    {
+      "step": 6,
+      "layer": "formal_validation",
+      "owner": "Quant Validation Agent",
+      "gate": "formal_validation_packet",
+      "required": [
+        "validation_formal_v51e/utilities_demand_state_v51e/demand_state_validation_summary.json",
+        "validation_formal_v51e/utilities_demand_state_v51e/demand_state_validation_report.md",
+        "validation_formal_v51e/utilities_demand_state_v51e/rolling_state_model_tests.csv",
+        "validation_formal_v51e/utilities_demand_state_v51e/state_conditioned_factor_ic.csv",
+        "validation_formal_v51e/utilities_demand_state_v51e/selection_count_robustness.csv",
+        "validation_formal_v51e/utilities_demand_state_v51e/failure_year_analysis.csv"
+      ],
+      "optional": [
+        "validation_formal_v51e/utilities_demand_state_v51e/yearly_comparison.csv"
+      ],
+      "status": "passed",
+      "present_required": [
+        "validation_formal_v51e/utilities_demand_state_v51e/demand_state_validation_summary.json",
+        "validation_formal_v51e/utilities_demand_state_v51e/demand_state_validation_report.md",
+        "validation_formal_v51e/utilities_demand_state_v51e/rolling_state_model_tests.csv",
+        "validation_formal_v51e/utilities_demand_state_v51e/state_conditioned_factor_ic.csv",
+        "validation_formal_v51e/utilities_demand_state_v51e/selection_count_robustness.csv",
+        "validation_formal_v51e/utilities_demand_state_v51e/failure_year_analysis.csv"
+      ],
+      "missing_required": [],
+      "present_optional": [
+        "validation_formal_v51e/utilities_demand_state_v51e/yearly_comparison.csv"
+      ],
+      "missing_optional": []
+    },
+    {
+      "step": 7,
+      "layer": "pm_formal_candidate_decision",
+      "owner": "Project Manager",
+      "gate": "formal_candidate_decision",
+      "required": [
+        "docs/governance/v51f_utilities_pm_formal_candidate_decision_v1.md"
+      ],
+      "optional": [],
+      "status": "passed",
+      "present_required": [
+        "docs/governance/v51f_utilities_pm_formal_candidate_decision_v1.md"
+      ],
+      "missing_required": [],
+      "present_optional": [],
+      "missing_optional": []
+    },
+    {
+      "step": 8,
+      "layer": "engineering_smoke_test",
+      "owner": "Engineering Agent",
+      "gate": "engineering_smoke_test",
+      "required": [
+        "docs/governance/v51f_utilities_local_simulation_ready_v1.md",
+        "local_daily_backtests_utilities_v51f/utilities_demand_state_v51f/summary.json"
+      ],
+      "optional": [],
+      "status": "passed",
+      "present_required": [
+        "docs/governance/v51f_utilities_local_simulation_ready_v1.md",
+        "local_daily_backtests_utilities_v51f/utilities_demand_state_v51f/summary.json"
+      ],
+      "missing_required": [],
+      "present_optional": [],
+      "missing_optional": []
+    },
+    {
+      "step": 9,
+      "layer": "local_daily_simulation",
+      "owner": "Engineering Agent",
+      "gate": "local_daily_simulation_packet",
+      "required": [
+        "local_daily_backtests_utilities_v51f/utilities_demand_state_v51f/daily_returns.csv",
+        "local_daily_backtests_utilities_v51f/utilities_demand_state_v51f/holdings.csv",
+        "local_daily_backtests_utilities_v51f/utilities_demand_state_v51f/trades.csv",
+        "local_daily_backtests_utilities_v51f/utilities_demand_state_v51f/rebalance_signals.csv",
+        "local_daily_backtests_utilities_v51f/utilities_demand_state_v51f/dividends.csv"
+      ],
+      "optional": [],
+      "status": "passed",
+      "present_required": [
+        "local_daily_backtests_utilities_v51f/utilities_demand_state_v51f/daily_returns.csv",
+        "local_daily_backtests_utilities_v51f/utilities_demand_state_v51f/holdings.csv",
+        "local_daily_backtests_utilities_v51f/utilities_demand_state_v51f/trades.csv",
+        "local_daily_backtests_utilities_v51f/utilities_demand_state_v51f/rebalance_signals.csv",
+        "local_daily_backtests_utilities_v51f/utilities_demand_state_v51f/dividends.csv"
+      ],
+      "missing_required": [],
+      "present_optional": [],
+      "missing_optional": []
+    },
+    {
+      "step": 10,
+      "layer": "overfit_audit",
+      "owner": "Engineering Agent + Quant Validation Agent",
+      "gate": "overfit_audit_packet",
+      "required": [
+        "validation_overfit/utilities_demand_state_v51f/overfit_audit_summary.json",
+        "validation_overfit/utilities_demand_state_v51f/overfit_audit_report.md",
+        "validation_overfit/utilities_demand_state_v51f/overfit_audit_checks.csv",
+        "docs/governance/v51f_utilities_overfit_audit_v1.md"
+      ],
+      "optional": [],
+      "status": "passed",
+      "present_required": [
+        "validation_overfit/utilities_demand_state_v51f/overfit_audit_summary.json",
+        "validation_overfit/utilities_demand_state_v51f/overfit_audit_report.md",
+        "validation_overfit/utilities_demand_state_v51f/overfit_audit_checks.csv",
+        "docs/governance/v51f_utilities_overfit_audit_v1.md"
+      ],
+      "missing_required": [],
+      "present_optional": [],
+      "missing_optional": []
+    },
+    {
+      "step": 11,
+      "layer": "platform_replication_gate",
+      "owner": "Project Manager",
+      "gate": "platform_gate",
+      "required": [
+        "docs/governance/v51f_utilities_frozen_signal_platform_test_v1.md",
+        "exports/joinquant/utilities_demand_state_v51f_joinquant_live_recompute.py"
+      ],
+      "optional": [
+        "docs/governance/v51f_utilities_live_joinquant_recompute_v1.md"
+      ],
+      "status": "passed",
+      "present_required": [
+        "docs/governance/v51f_utilities_frozen_signal_platform_test_v1.md",
+        "exports/joinquant/utilities_demand_state_v51f_joinquant_live_recompute.py"
+      ],
+      "missing_required": [],
+      "present_optional": [
+        "docs/governance/v51f_utilities_live_joinquant_recompute_v1.md"
+      ],
+      "missing_optional": []
+    },
+    {
+      "step": 12,
+      "layer": "platform_replication",
+      "owner": "Engineering Agent",
+      "gate": "platform_replication_packet",
+      "required": [],
+      "optional": [],
+      "status_override": "pending_user_platform_export",
+      "notes": "Platform smoke test is prepared, but external JoinQuant result export is not yet recorded as a passed replication packet.",
+      "status": "pending_user_platform_export",
+      "present_required": [],
+      "missing_required": [],
+      "present_optional": [],
+      "missing_optional": []
+    },
+    {
+      "step": 13,
+      "layer": "paper_trading_setup",
+      "owner": "Project Manager + Engineering Agent",
+      "gate": "paper_trading_signal",
+      "required": [
+        "docs/governance/v51f_utilities_forward_paper_trading_log.md",
+        "docs/governance/v51f_utilities_paper_signal_20260716.md",
+        "paper_trading_signals/utilities_demand_state_v51f/2026-07-16/signal_summary.json",
+        "paper_trading_signals/utilities_demand_state_v51f/2026-07-16/selected_signal.csv"
+      ],
+      "optional": [
+        "paper_trading_signals/utilities_demand_state_v51f/2026-07-16/candidate_scores.csv",
+        "paper_trading_signals/utilities_demand_state_v51f/2026-07-16/q1_quality_check.csv"
+      ],
+      "status": "passed",
+      "present_required": [
+        "docs/governance/v51f_utilities_forward_paper_trading_log.md",
+        "docs/governance/v51f_utilities_paper_signal_20260716.md",
+        "paper_trading_signals/utilities_demand_state_v51f/2026-07-16/signal_summary.json",
+        "paper_trading_signals/utilities_demand_state_v51f/2026-07-16/selected_signal.csv"
+      ],
+      "missing_required": [],
+      "present_optional": [
+        "paper_trading_signals/utilities_demand_state_v51f/2026-07-16/candidate_scores.csv",
+        "paper_trading_signals/utilities_demand_state_v51f/2026-07-16/q1_quality_check.csv"
+      ],
+      "missing_optional": []
+    },
+    {
+      "step": 14,
+      "layer": "paper_trading_review",
+      "owner": "Project Manager + Quant Validation Agent",
+      "gate": "forward_review",
+      "required": [],
+      "optional": [],
+      "status_override": "pending_forward_evidence",
+      "notes": "Paper trading started on 2026-07-16. Forward review requires future realized data and must not be backfilled.",
+      "status": "pending_forward_evidence",
+      "present_required": [],
+      "missing_required": [],
+      "present_optional": [],
+      "missing_optional": []
+    }
+  ],
+  "pm_decision": {
+    "decision": "V5.1f is productized as the utilities golden workflow template. It remains not accepted and not live-trading approved.",
+    "current_status": [
+      "formal_strategy_candidate",
+      "engineering_smoke_test_passed",
+      "paper_trading_started",
+      "utilities_golden_workflow_template"
+    ],
+    "not_status": [
+      "accepted_strategy",
+      "live_trading_approved"
+    ],
+    "next_gate": "paper_trading_forward_review_and_optional_platform_export_attribution"
+  }
+}

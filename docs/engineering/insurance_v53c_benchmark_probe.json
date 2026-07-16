@@ -1,0 +1,50 @@
+{
+  "auth": true,
+  "date": "2026-05-31",
+  "keyword_hits": {
+    "index": [],
+    "etf": [],
+    "fja": [],
+    "fjb": [],
+    "open_fund": [],
+    "fund": []
+  },
+  "candidate_price_checks": {
+    "801194.XSHE": {
+      "status": "fail",
+      "error": "Exception(\"无效的证券代码 '801194.XSHE'\")"
+    },
+    "851941.XSHE": {
+      "status": "fail",
+      "error": "Exception(\"无效的证券代码 '851941.XSHE'\")"
+    },
+    "399809.XSHE": {
+      "status": "pass",
+      "rows": 3
+    },
+    "000849.XSHG": {
+      "status": "pass",
+      "rows": 3
+    },
+    "930618.XSHG": {
+      "status": "fail",
+      "error": "Exception(\"无效的证券代码 '930618.XSHG'\")"
+    },
+    "512070.XSHG": {
+      "status": "pass",
+      "rows": 3
+    },
+    "515630.XSHG": {
+      "status": "pass",
+      "rows": 3
+    },
+    "167301.XSHE": {
+      "status": "pass",
+      "rows": 3
+    },
+    "000300.XSHG": {
+      "status": "pass",
+      "rows": 3
+    }
+  }
+}

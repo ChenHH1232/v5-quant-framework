@@ -24,14 +24,17 @@ V5 is a natural-language-driven quantitative strategy research framework. Its co
 
 > AI translates research intent into a structured strategy specification; deterministic Python modules run validation, research, backtests, and experiment recording.
 
-This repository starts with a minimal auditable skeleton:
+The repository now contains the working V5 research platform:
 
 - Structured strategy specification in JSON.
 - Strict validation and research-risk audit.
-- Deterministic engine entrypoint.
-- Experiment artifact recording.
-- Skill design documents for the V5 workflow.
-- A V4 bank strategy reproduction example as the first standard case.
+- Shared scoring logic with explicit `scoring.method` validation.
+- Formal validation runners for PIT leakage, baseline comparison, ablation, IC / RankIC, rolling validation, robustness, and weak-year review.
+- Local daily JoinQuant-like backtests with real open / close execution prices, benchmark series, cash, trades, holdings, dividends, and daily returns.
+- Platform-replication attribution for local versus JoinQuant daily returns, holdings, transactions, and rebalance signals.
+- Overfit and execution audits, including sample-window, parameter, timing, leakage, and reproducibility checks.
+- Sector workflow branches for banks, utilities, coal, and insurance.
+- Skill and governance documents for the V5 four-agent workflow.
 
 ## Agent Architecture
 
@@ -54,39 +57,10 @@ Project Manager Agent
 Final Result
 ```
 
-### Project Manager Agent
-
-The Project Manager Agent is the orchestrator of the V5 project. It reads the manifesto, maintains the roadmap, breaks work into stages, assigns tasks, collects agent reports, manages experiment flow, updates TODOs, and records final decisions.
-
-Its core question is: what should happen next?
-
-It does not directly design factors, write strategy code, or perform statistical validation.
-
-### Research Agent
-
-The Research Agent acts as the financial researcher. It converts investment ideas into testable hypotheses, proposes factor designs, explains financial logic, reviews literature, judges economic meaning, and creates experiment plans.
-
-Its core question is: why is this worth researching?
-
-It does not write code, tune parameters, or accept strategies based only on returns.
-
-### Quant Validation Agent
-
-The Quant Validation Agent acts as the statistical analyst. It validates research hypotheses through IC analysis, RankIC, Fama-MacBeth regression, correlation analysis, feature selection, rolling validation, walk-forward testing, robustness tests, and overfitting checks.
-
-Its core question is: is there evidence to support this?
-
-It does not create financial theory, modify strategy ideas, or write trading logic.
-
-### Engineering Agent
-
-The Engineering Agent acts as the quantitative engineer. It turns approved research into runnable systems, including Python modules, JoinQuant implementations, strategy engines, portfolio construction, risk control, tests, audit checks, and documentation.
-
-Its core question is: how can this be implemented reliably?
-
-It does not invent investment views, change research conclusions, or adjust theory to fit historical performance.
-
-## Shared Agent Rule
+- Project Manager Agent asks: what should happen next?
+- Research Agent asks: why is this worth researching?
+- Quant Validation Agent asks: is there evidence to support this?
+- Engineering Agent asks: how can this be implemented reliably?
 
 Every V5 agent must follow the same rule:
 
@@ -120,13 +94,11 @@ python -m v5.cli validate-research examples/bank_value_15y_strategy.json data/pr
 python -m v5.cli local-backtest examples/bank_value_15y_strategy.json data/processed/bank_value_15y/panel.csv --out local_backtests
 ```
 
-The local database lives in `数据库/`. `collect-dividends` writes real cash dividend data to `数据库/processed/bank_cash_dividends.csv`. `collect-data` automatically uses that file when it exists unless `--dividend-csv` is provided explicitly.
+The local database lives in `数据库`. `collect-dividends` writes real cash dividend data to `数据库/processed/bank_cash_dividends.csv`. `collect-data` automatically uses that file when it exists unless `--dividend-csv` is provided explicitly.
 
-`collect-benchmarks` writes real bank benchmark data to `数据库/processed/bank_benchmarks.csv`. `collect-data` automatically uses `bank_etf_512800_qfq` as the default tradable benchmark when that file exists; use `--benchmark-id csi_bank_399986` to compare against the bank index instead.
+`collect-benchmarks` writes real benchmark data to `数据库/processed/bank_benchmarks.csv`. `collect-data` automatically uses `bank_etf_512800_qfq` as the default tradable bank benchmark when that file exists; use `--benchmark-id csi_bank_399986` to compare against the bank index instead.
 
 The data panel records `price_adjustment`, `price_return`, `dividend_return`, `total_return`, `return_source`, `benchmark_return`, and `benchmark_source`. Validation and local backtests prefer `total_return` and fall back to legacy `future_return` only for old panels.
-
-`collect-data` defaults to `--total-return-mode adjusted_total_return`. This is the correct comparison mode when migrated prices are already adjusted, because adding cash dividends again can double-count distributions. When a raw unadjusted price source is confirmed, use `--total-return-mode price_plus_net_cash_dividend`; V5 applies the JoinQuant-style default dividend tax assumption with `--dividend-tax-rate 0.2`.
 
 For JoinQuant execution-matching local backtests, collect real unadjusted daily prices and cash-dividend events first:
 
@@ -138,7 +110,7 @@ python -m v5.cli collect-joinquant-real-data data/processed_adjusted/bank_value_
 python -m v5.cli daily-backtest examples/bank_value_15y_strategy.json data/processed_adjusted/bank_value_15y/panel.csv --execution-price-csv 数据库/processed/joinquant_real_daily_prices.csv --benchmark-csv 数据库/processed/joinquant_real_benchmark_prices.csv --benchmark-id 512800.XSHG --dividend-cash-csv 数据库/processed/joinquant_cash_dividends.csv --out local_daily_backtests
 ```
 
-The JoinQuant real-data collector writes `fq=None` daily stock open/close, `512800.XSHG` open/close, ex-dividend/payment cash events, and net cash dividends after the configured dividend tax rate. Credentials are read only from environment variables or an existing authenticated `jqdatasdk` session and are never persisted.
+The JoinQuant real-data collector writes `fq=None` daily stock open / close, benchmark open / close, ex-dividend cash events, and net cash dividends after the configured dividend tax rate. Credentials are read only from environment variables or an existing authenticated `jqdatasdk` session and are never persisted.
 
 `local-backtest` defaults to the V4 comparison window: `2021-05-01` to `2026-05-31`. Use `--start-date` and `--end-date` only when a different research window is required.
 
@@ -153,73 +125,69 @@ $env:PYTHONPATH="src"
 python -m unittest discover -s tests
 ```
 
-## Design Principles
+Optional dependencies are split by use case:
 
-- Research is more valuable than a single strategy.
-- Explainability comes before performance.
-- Evidence comes before optimization.
-- Reproducibility is mandatory.
-- AI augments researchers rather than replacing them.
-- No free-form AI strategy code generation for core research logic.
-- Every strategy must be expressed as a structured, inspectable specification.
-- Serious data leakage or execution issues block formal runs.
-- Local research, platform backtests, and future execution should share the same strategy spec.
-- Every experiment records the spec, audit result, code context, parameters, warnings, and outputs.
+```powershell
+pip install -e .[data]
+pip install -e .[jq]
+pip install -e .[tushare]
+pip install -e .[dev]
+```
 
 ## Current Scope
 
-This first scaffold does not yet implement real factor computation or backtesting. It establishes the contract that future modules must follow:
+V5 is no longer only a scaffold. The current platform supports formal PIT research validation, local JoinQuant-like daily simulation, platform-replication attribution, overfit audits, and sector-specific workflow branches.
+
+Strategy acceptance is governed separately. A profitable backtest is never enough.
 
 ```text
 natural language
     -> strategy spec
-    -> validation and leakage audit
-    -> deterministic research engine
-    -> experiment record
-    -> report and platform export
+    -> research hypothesis
+    -> PIT data and visibility audit
+    -> formal validation packet
+    -> engineering smoke test
+    -> local daily simulation
+    -> platform replication, if approved
+    -> paper trading, if approved
+    -> PM decision record
 ```
 
 ## Project Layout
 
 ```text
 src/v5/
-  spec.py          Strategy specification model and parser
-  audit.py         Completeness, leakage, and execution-risk audit
-  engine.py        Deterministic run orchestration and artifact writing
-  cli.py           Command-line entrypoint
+  spec.py                         Strategy specification model and parser
+  scoring.py                      Shared scoring logic and method registry
+  formal_validation_runner.py     PIT validation, baselines, IC / RankIC, ablation, robustness
+  daily_backtest.py               JoinQuant-like daily execution simulator
+  platform_attribution_runner.py  Local versus JoinQuant attribution
+  overfit_audit_runner.py         Leakage, robustness, and overfit checks
+  io_utils.py                     Shared CSV / JSON helpers
+  math_utils.py                   Shared numeric, rank, correlation, and compounding helpers
+  date_utils.py                   Shared date parsing helpers
+  paths.py                        Shared repository data paths
+  cli.py                          Thin command-line entrypoint
+  cli_bank.py                     Bank data and quality-date commands
+  cli_utilities.py                Utilities / electricity commands
+  cli_coal.py                     Coal commands
+  cli_insurance.py                Insurance commands
+  cli_platform.py                 Platform replication and audit commands
+  coal_data_audit_runner.py       Compatibility facade for coal data audit APIs
+  coal_state_data_runner.py       Coal external-state import and merge APIs
+  coal_segment_evidence_runner.py Coal segment evidence APIs
+  coal_business_audit_runner.py   Coal business-tag and capex audit APIs
 examples/
-  v4_bank_candidate1.json
+  bank_value_15y_strategy.json
+  bank_high_dividend_sustainability_v3_strategy.json
+  utilities_demand_state_v51f_strategy.json
+  coal_cashflow_cycle_value_v52b_capex_policy_strategy.json
+  insurance_low_pb_only_v53c_strategy.json
 docs/
   RESEARCH_MANIFESTO.md
   V5_SKILL_MAP.md
-skills/
-  v5-controller/
-  research-agent/
-  quant-validation-agent/
-  engineering-agent/
-  data-source-router/
-  joinquant-a-share-collector/
-  tushare-data-collector/
-  financial-statement-standardizer/
-  bank-indicator-replacement-collector/
-  annual-report-bank-indicator-collector/
-  candidate-governance/
-  allocation-selection-separator/
-  momentum-research/
-  mean-reversion-research/
-  defensive-overlay-research/
-  state-routing-research/
-  strategy-attribution/
-  execution-stress-test/
-  research-archive-freeze/
-  statistical-validation-protocol/
-  joinquant-strategy-exporter/
-  skill-lifecycle-manager/
-  strategy-spec/
-  data-leakage-audit/
-  factor-research/
-  rolling-validation/
-  execution-consistency/
-  research-report/
+  governance/status_registry.json
+数据库/
+  processed/
 tests/
 ```

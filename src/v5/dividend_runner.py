@@ -138,6 +138,135 @@ def collect_bank_dividends(
     )
 
 
+def collect_joinquant_cash_dividends(
+    panel_path: Path,
+    database_dir: Path = DEFAULT_DATABASE_DIR,
+    start_date: str | None = None,
+    end_date: str | None = None,
+    output_prefix: str = "",
+    dividend_tax_rate: float = 0.2,
+    username_env: str = "JQDATA_USERNAME",
+    password_env: str = "JQDATA_PASSWORD",
+) -> DividendCollectionResult:
+    try:
+        import jqdatasdk as jq
+        from jqdatasdk import finance, query
+    except Exception as exc:  # pragma: no cover - optional dependency.
+        raise RuntimeError("collect-joinquant-dividends requires jqdatasdk in the local Python environment") from exc
+
+    from v5.credential_loader import load_joinquant_credentials
+
+    username, password = load_joinquant_credentials(username_env, password_env)
+    if username and password:
+        jq.auth(username, password)
+    if not jq.is_auth():
+        raise RuntimeError("JoinQuant credentials are not available for dividend collection")
+
+    codes = _load_codes_from_panel(panel_path)
+    start = start_date or "1900-01-01"
+    end = end_date or "2200-01-01"
+    raw_dir = database_dir / "raw" / "dividends"
+    processed_dir = database_dir / "processed"
+    manifest_dir = database_dir / "manifests"
+    raw_dir.mkdir(parents=True, exist_ok=True)
+    processed_dir.mkdir(parents=True, exist_ok=True)
+    manifest_dir.mkdir(parents=True, exist_ok=True)
+
+    table = finance.STK_XR_XD
+    fields = [
+        table.code,
+        table.report_date,
+        table.shareholders_plan_pub_date,
+        table.implementation_pub_date,
+        table.a_registration_date,
+        table.a_xr_date,
+        table.bonus_ratio_rmb,
+    ]
+    df = finance.run_query(
+        query(*fields).filter(
+            table.code.in_(codes),
+            table.a_xr_date >= start,
+            table.a_xr_date <= end,
+        )
+    )
+    raw_records = [] if df is None or getattr(df, "empty", True) else df.to_dict(orient="records")
+    processed_rows = []
+    for row in raw_records:
+        event = _normalize_joinquant_dividend_row(row, dividend_tax_rate)
+        if event is not None:
+            processed_rows.append(event)
+    processed_rows.sort(key=lambda item: (item["pay_date"], item["code"]))
+
+    safe_prefix = _safe_output_prefix(output_prefix)
+    raw_path = raw_dir / (f"{safe_prefix}joinquant_dividends_raw.csv" if safe_prefix else "joinquant_dividends_raw.csv")
+    processed_path = processed_dir / (f"{safe_prefix}joinquant_cash_dividends.csv" if safe_prefix else "joinquant_cash_dividends.csv")
+    _write_csv(
+        raw_path,
+        [
+            "code",
+            "report_date",
+            "shareholders_plan_pub_date",
+            "implementation_pub_date",
+            "a_registration_date",
+            "a_xr_date",
+            "bonus_ratio_rmb",
+        ],
+        raw_records,
+    )
+    _write_csv(
+        processed_path,
+        [
+            "code",
+            "report_period",
+            "announce_date",
+            "record_date",
+            "ex_date",
+            "pay_date",
+            "cash_per_10_shares",
+            "cash_per_share",
+            "dividend_tax_rate",
+            "net_cash_per_share",
+            "source",
+        ],
+        processed_rows,
+    )
+    manifest = {
+        "dataset": "joinquant_cash_dividends",
+        "source": "jqdatasdk.finance.STK_XR_XD",
+        "panel": str(panel_path),
+        "database_dir": str(database_dir),
+        "output_prefix": safe_prefix,
+        "raw_path": str(raw_path),
+        "processed_path": str(processed_path),
+        "code_count": len(codes),
+        "event_count": len(processed_rows),
+        "start_date": start_date,
+        "end_date": end_date,
+        "dividend_tax_rate": dividend_tax_rate,
+        "schema": {
+            "bonus_ratio_rmb": "Cash dividend per 10 shares before tax.",
+            "cash_per_share": "bonus_ratio_rmb / 10.",
+            "net_cash_per_share": "cash_per_share * (1 - dividend_tax_rate).",
+            "pay_date": "Uses a_xr_date because STK_XR_XD does not expose a separate cash arrival date in the validated field set.",
+            "announce_date": "implementation_pub_date, falling back to shareholders_plan_pub_date.",
+        },
+        "warnings": [],
+        "credential_policy": f"Credentials loaded from {username_env}/{password_env}; credentials are never written.",
+        "agent_access": ["Quant Validation Agent", "Engineering Agent"],
+        "created_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
+    }
+    manifest_path = manifest_dir / (f"{safe_prefix}joinquant_cash_dividends_manifest.json" if safe_prefix else "joinquant_cash_dividends_manifest.json")
+    _write_json(manifest_path, manifest)
+    return DividendCollectionResult(
+        processed_path=processed_path,
+        raw_path=raw_path,
+        manifest_path=manifest_path,
+        code_count=len(codes),
+        event_count=len(processed_rows),
+        warning_count=0,
+    )
+
+
 def _load_codes_from_panel(panel_path: Path) -> list[str]:
     with panel_path.open("r", encoding="utf-8-sig", newline="") as handle:
         rows = csv.DictReader(handle)
@@ -162,6 +291,28 @@ def _normalize_akshare_dividend_row(code: str, row: dict[str, Any]) -> dict[str,
         "dividend_yield_reported": _fmt_float(_to_float(row.get("现金分红-股息率"))),
         "plan_status": str(row.get("方案进度") or ""),
         "source": "akshare.stock_fhps_detail_em",
+    }
+
+
+def _normalize_joinquant_dividend_row(row: dict[str, Any], dividend_tax_rate: float) -> dict[str, str] | None:
+    code = str(row.get("code") or "").strip()
+    cash_per_10 = _to_float(row.get("bonus_ratio_rmb"))
+    ex_date = _date_text(row.get("a_xr_date"))
+    if not code or cash_per_10 is None or cash_per_10 <= 0 or not ex_date:
+        return None
+    cash_per_share = cash_per_10 / 10.0
+    return {
+        "code": code,
+        "report_period": _date_text(row.get("report_date")),
+        "announce_date": _date_text(row.get("implementation_pub_date")) or _date_text(row.get("shareholders_plan_pub_date")),
+        "record_date": _date_text(row.get("a_registration_date")),
+        "ex_date": ex_date,
+        "pay_date": ex_date,
+        "cash_per_10_shares": _fmt_float(cash_per_10),
+        "cash_per_share": _fmt_float(cash_per_share),
+        "dividend_tax_rate": _fmt_float(dividend_tax_rate),
+        "net_cash_per_share": _fmt_float(cash_per_share * max(0.0, 1.0 - dividend_tax_rate)),
+        "source": "jqdatasdk.finance.STK_XR_XD",
     }
 
 
@@ -231,14 +382,26 @@ def _write_json(path: Path, payload: dict[str, Any]) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="v5-dividends")
+    parser.add_argument("--source", choices=["akshare", "joinquant"], default="akshare")
     parser.add_argument("panel", type=Path)
     parser.add_argument("--database-dir", type=Path, default=DEFAULT_DATABASE_DIR)
     parser.add_argument("--start-date")
     parser.add_argument("--end-date")
     parser.add_argument("--output-prefix", default="")
+    parser.add_argument("--dividend-tax-rate", type=float, default=0.2)
     args = parser.parse_args(argv)
 
-    result = collect_bank_dividends(args.panel, args.database_dir, args.start_date, args.end_date, args.output_prefix)
+    if args.source == "joinquant":
+        result = collect_joinquant_cash_dividends(
+            args.panel,
+            args.database_dir,
+            args.start_date,
+            args.end_date,
+            args.output_prefix,
+            args.dividend_tax_rate,
+        )
+    else:
+        result = collect_bank_dividends(args.panel, args.database_dir, args.start_date, args.end_date, args.output_prefix)
     print(result.processed_path)
     return 0
 

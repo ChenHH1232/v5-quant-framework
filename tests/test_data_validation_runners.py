@@ -31,7 +31,8 @@ from v5.coal_pit_panel_runner import MANUAL_BUSINESS_TAGS
 from v5.credential_loader import load_tushare_token
 from v5.joinquant_availability_runner import build_joinquant_availability_proxy
 from v5.benchmark_runner import _normalize_benchmark_row
-from v5.dividend_runner import _normalize_akshare_dividend_row
+from v5.dividend_runner import _normalize_akshare_dividend_row, _normalize_joinquant_dividend_row
+from v5.insurance_daily_backtest_runner import check_insurance_daily_backtest_ready, run_insurance_daily_joinquant_like_backtest
 from v5.joinquant_pit_panel_runner import _latest_visible_bank_quality, _load_bank_quality_snapshots
 import v5.joinquant_real_data_runner as joinquant_real_data_runner
 from v5.local_backtest import BacktestOptions, run_local_backtest
@@ -642,7 +643,7 @@ class DataValidationRunnerTests(unittest.TestCase):
                 json.dumps(
                     {
                         "meta": {"strategy_id": "utilities_demand_state_v51f_test"},
-                        "portfolio": {"selection_count": 1},
+                        "portfolio": {"selection_count": 1, "weighting": "equal_weight", "max_position_weight": 1.0},
                     }
                 ),
                 encoding="utf-8",
@@ -702,6 +703,101 @@ class DataValidationRunnerTests(unittest.TestCase):
         self.assertEqual(signals[0]["selected_codes"], "B")
         self.assertEqual(daily[0]["benchmark_source"], "utilities_benchmark")
         self.assertTrue(dividends_file_exists)
+
+    def test_insurance_daily_backtest_builds_internal_equal_weight_benchmark(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            spec = tmp_path / "spec.json"
+            spec.write_text(
+                json.dumps(
+                    {
+                        "meta": {
+                            "strategy_id": "insurance_low_pb_only_test",
+                            "name": "Insurance Low PB Test",
+                            "objective": "Test insurance daily runner.",
+                        },
+                        "universe": {
+                            "name": "test",
+                            "construction": "test",
+                            "point_in_time": True,
+                            "minimum_rebalance_coverage_ratio": 0.8,
+                            "exclude": [],
+                        },
+                        "data": {"vendor": "test", "price_frequency": "daily", "financial_as_of_policy": "visible_date"},
+                        "signals": {
+                            "factors": [
+                                {
+                                    "name": "low_price_to_book",
+                                    "source": "test",
+                                    "role": "value",
+                                    "direction": "lower_is_better",
+                                    "definition": "test",
+                                    "as_of": "trade_date_lagged",
+                                    "disclosure_lag_days": 1,
+                                    "missing_policy": "drop_security",
+                                }
+                            ],
+                            "scoring": {"method": "weighted_composite_score", "weights": {"low_price_to_book": 1.0}, "min_factor_count": 1},
+                        },
+                        "schedule": {"signal_frequency": "quarterly", "rebalance_frequency": "quarterly", "rebalance_months": [7]},
+                        "portfolio": {"selection_count": 1, "weighting": "equal_weight", "max_position_weight": 1.0},
+                        "risk": {"defensive_asset": "cash", "defensive_rule": {"enabled": False}},
+                        "validation": {"method": "rolling", "train_years": 5, "test_years": 2},
+                        "execution": {
+                            "status": "engineering_smoke_test",
+                            "commission_bps": 3,
+                            "slippage_bps": 5,
+                            "suspension_policy": "skip_untradeable",
+                            "limit_policy": "skip_limit_blocked",
+                        },
+                        "outputs": {"save_holdings": True, "save_rebalance_signals": True, "report": "markdown"},
+                    }
+                ),
+                encoding="utf-8",
+            )
+            panel = tmp_path / "panel.csv"
+            prices = tmp_path / "prices.csv"
+            self._write_csv(
+                panel,
+                ["trade_date", "code", "low_price_to_book", "future_return", "factor_visible_date"],
+                [
+                    {"trade_date": "2021-07-01", "code": "A", "low_price_to_book": "0.8", "future_return": "0.01", "factor_visible_date": "2021-06-30"},
+                    {"trade_date": "2021-07-01", "code": "B", "low_price_to_book": "1.2", "future_return": "0.02", "factor_visible_date": "2021-06-30"},
+                    {"trade_date": "2021-07-01", "code": "C", "low_price_to_book": "1.5", "future_return": "0.03", "factor_visible_date": "2021-06-30"},
+                ],
+            )
+            self._write_csv(
+                prices,
+                ["date", "code", "open", "close", "high_limit", "low_limit", "paused"],
+                [
+                    {"date": "2021-07-01", "code": "A", "open": "10", "close": "10", "high_limit": "11", "low_limit": "9", "paused": "0"},
+                    {"date": "2021-07-01", "code": "B", "open": "20", "close": "20", "high_limit": "22", "low_limit": "18", "paused": "0"},
+                    {"date": "2021-07-01", "code": "C", "open": "30", "close": "30", "high_limit": "33", "low_limit": "27", "paused": "0"},
+                    {"date": "2021-07-02", "code": "A", "open": "10", "close": "11", "high_limit": "11", "low_limit": "9", "paused": "0"},
+                    {"date": "2021-07-02", "code": "B", "open": "20", "close": "19", "high_limit": "22", "low_limit": "18", "paused": "0"},
+                    {"date": "2021-07-02", "code": "C", "open": "30", "close": "30", "high_limit": "33", "low_limit": "27", "paused": "0"},
+                ],
+            )
+
+            readiness = check_insurance_daily_backtest_ready(panel, prices, start_date="2021-07-01", end_date="2021-07-02")
+            report = run_insurance_daily_joinquant_like_backtest(
+                spec,
+                panel,
+                prices,
+                tmp_path / "out",
+                options=BacktestOptions(start_date="2021-07-01", end_date="2021-07-02", execution_mode="joinquant_like", initial_cash=100000),
+            )
+            summary = json.loads((report.parent / "summary.json").read_text(encoding="utf-8"))
+            signals = self._read_csv(report.parent / "rebalance_signals.csv")
+            daily = self._read_csv(report.parent / "daily_returns.csv")
+            benchmark = self._read_csv(tmp_path / "out" / "insurance_core_equal_weight.csv")
+
+        self.assertEqual(readiness["status"], "ready")
+        self.assertEqual(summary["mode"], "insurance_daily_joinquant_like_smoke_test")
+        self.assertEqual(summary["benchmark_policy"]["type"], "internal_equal_weight_core_insurance")
+        self.assertEqual(signals[0]["selected_codes"], "A")
+        self.assertEqual(daily[0]["benchmark_source"], "insurance_core_equal_weight")
+        self.assertEqual(benchmark[0]["code"], "insurance_core_equal_weight")
 
     def test_joinquant_real_data_output_prefix_keeps_sector_files_separate(self) -> None:
         original_auth = joinquant_real_data_runner._load_authenticated_jqdata
@@ -918,6 +1014,25 @@ class DataValidationRunnerTests(unittest.TestCase):
         self.assertEqual(normalized["ex_date"], "2025-06-20")
         self.assertEqual(normalized["announce_date"], "2025-06-12")
         self.assertAlmostEqual(float(normalized["cash_per_share"]), 0.35)
+
+    def test_joinquant_dividend_row_normalizes_to_net_cash_per_share(self) -> None:
+        row = {
+            "code": "601318.XSHG",
+            "report_date": "2024-12-31",
+            "shareholders_plan_pub_date": "2025-05-14",
+            "implementation_pub_date": "2025-06-20",
+            "a_registration_date": "2025-06-27",
+            "a_xr_date": "2025-06-30",
+            "bonus_ratio_rmb": 16.2,
+        }
+
+        normalized = _normalize_joinquant_dividend_row(row, 0.2)
+
+        self.assertIsNotNone(normalized)
+        assert normalized is not None
+        self.assertEqual(normalized["cash_per_share"], "1.62")
+        self.assertEqual(normalized["net_cash_per_share"], "1.296")
+        self.assertEqual(normalized["pay_date"], "2025-06-30")
 
     def test_bank_quality_snapshots_use_notice_date_visibility(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

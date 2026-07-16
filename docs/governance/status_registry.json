@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-07-17",
+  "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
+  "strategies": [
+    {
+      "strategy_id": "bank_high_dividend_sustainability_v3",
+      "sector": "bank",
+      "current_status": [
+        "formal_strategy_candidate",
+        "platform_replication_passed"
+      ],
+      "not_status": [
+        "accepted_strategy"
+      ],
+      "experiment_layer": "platform_replication",
+      "evidence_paths": [
+        "docs/governance/bank_high_dividend_v3_platform_replication_passed_v1.md",
+        "docs/governance/bank_high_dividend_v3_forward_paper_trading_log.md"
+      ],
+      "blockers": [
+        "Requires forward / paper-trading evidence before acceptance."
+      ],
+      "next_gate": "paper_trading"
+    },
+    {
+      "strategy_id": "utilities_demand_state_v51f",
+      "sector": "utilities",
+      "current_status": [
+        "formal_strategy_candidate",
+        "engineering_smoke_test_passed",
+        "paper_trading_started",
+        "utilities_golden_workflow_template"
+      ],
+      "not_status": [
+        "accepted_strategy",
+        "live_trading_approved"
+      ],
+      "experiment_layer": "paper_trading",
+      "evidence_paths": [
+        "docs/governance/v51f_utilities_pm_formal_candidate_decision_v1.md",
+        "docs/governance/v51f_utilities_forward_paper_trading_log.md",
+        "docs/governance/v51f_utilities_golden_template_v1.md",
+        "docs/governance/v51f_utilities_golden_workflow_table_v1.md",
+        "docs/governance/v51f_utilities_golden_workflow_execution_v1.md",
+        "docs/governance/v51f_utilities_platform_replication_export_request_v1.md"
+      ],
+      "blockers": [
+        "Forward evidence is not yet mature.",
+        "Quality review remains needed for weak-fundamental paper signals."
+      ],
+      "next_gate": "golden_template_productization_in_progress"
+    },
+    {
+      "strategy_id": "coal_cashflow_cycle_value_v52b",
+      "sector": "coal",
+      "current_status": [
+        "workflow_replication_passed",
+        "strategy_candidate_failed",
+        "archived_not_formal_candidate",
+        "blocked_by_manual_research_data"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "platform_replication",
+        "accepted_strategy"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "docs/governance/v52b_coal_final_pm_decision_v1.md",
+        "docs/governance/v52b_coal_suspended_data_gate_v1.md"
+      ],
+      "blockers": [
+        "Official coal output / inventory PIT history remains incomplete.",
+        "Company segment evidence remains incomplete.",
+        "2018 failure was not sufficiently explained ex ante."
+      ],
+      "next_gate": "cyclical_sector_data_gate_repair_only"
+    },
+    {
+      "strategy_id": "insurance_low_pb_only_v53c",
+      "sector": "insurance",
+      "current_status": [
+        "research_pit_validation_passed",
+        "engineering_local_daily_simulation_completed_needs_review",
+        "failure_attribution_only_no_return_tuning"
+      ],
+      "not_status": [
+        "accepted_strategy",
+        "paper_trading_ready",
+        "joinquant_code_ready"
+      ],
+      "experiment_layer": "engineering_smoke_test",
+      "evidence_paths": [
+        "docs/V53C_INSURANCE_LOW_PB_ONLY_RESULT.md",
+        "docs/governance/v53c_insurance_pm_decision_v1.md",
+        "docs/engineering/v53c_insurance_local_daily_simulation_result.md",
+        "docs/governance/v53c_insurance_failure_diagnostic_plan_v1.md"
+      ],
+      "blockers": [
+        "2026 failure year remains unresolved.",
+        "Insurance EV / NBV and solvency fields remain deferred.",
+        "Platform replication has not been approved.",
+        "Return tuning is blocked until failure-year diagnosis is complete."
+      ],
+      "next_gate": "insurance_data_model_decision"
+    }
+  ],
+  "sector_test_policy": {
+    "current_priority": "workflow_optimization_first",
+    "golden_template_sector": "utilities",
+    "suspended_sector": "coal",
+    "diagnostic_sector": "insurance",
+    "research_knowledge_gate": "required_before_research_pit_validation",
+    "research_knowledge_gate_doc": "docs/governance/sector_research_knowledge_gate_v1.md",
+    "research_quant_iteration_protocol": "docs/governance/research_quant_iteration_protocol_v1.md",
+    "failed_validation_policy": "return_to_research_agent_no_return_tuning",
+    "data_availability_gate_template": "docs/governance/sector_data_availability_gate_template.md",
+    "next_new_sector_candidates": [
+      "telecom_operators",
+      "transportation_infrastructure",
+      "gas_water_environmental_utilities"
+    ],
+    "broad_sector_testing": "blocked_until_golden_template_productization"
+  },
+  "maintenance_backlog": [
+    {
+      "item": "split_cli_by_domain",
+      "status": "completed",
+      "reason": "src/v5/cli.py now only registers domain modules and dispatches handlers. Domain command modules are split into cli_core.py, cli_bank.py, cli_utilities.py, cli_coal.py, cli_insurance.py, and cli_platform.py."
+    },
+    {
+      "item": "split_coal_data_audit_runner",
+      "status": "completed_public_split",
+      "reason": "src/v5/coal_data_audit_runner.py is now a compatibility facade. Public coal data APIs are grouped into coal_state_data_runner.py, coal_segment_evidence_runner.py, and coal_business_audit_runner.py. The legacy implementation remains isolated for safe incremental internal migration."
+    },
+    {
+      "item": "extract_common_utils",
+      "status": "completed_initial_layer",
+      "reason": "Shared io_utils.py, math_utils.py, date_utils.py, and paths.py were added. High-risk modules now use the common helpers while compatibility wrappers preserve existing APIs."
+    }
+  ]
+}

@@ -112,6 +112,28 @@ The evidence is enough to create a preliminary utilities model:
 utilities_demand_state_v51e
 ```
 
+Follow-up Quant loop:
+
+```text
+utilities_demand_state_v51f
+```
+
+The Quant Agent found a stronger, more defensible rule:
+
+```text
+weak demand -> high dividend
+mid demand -> cash-flow yield
+strong demand -> low PB
+```
+
+This rule reached:
+
+```text
+formal_candidate_quant_ready
+```
+
+It is still not a formal strategy candidate until PM approval.
+
 The next gate is not JoinQuant code. The next gate is stricter Quant validation:
 
 - rolling IC / RankIC by state bucket;

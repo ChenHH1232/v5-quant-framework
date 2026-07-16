@@ -78,3 +78,25 @@ Only after passing that gate may PM consider:
 ```text
 formal_strategy_candidate
 ```
+
+## Quant Loop Update
+
+The Quant Agent continued the loop and found a stronger rule:
+
+```text
+demand_state_dividend_cashflow_low_pb
+```
+
+The rule passes:
+
+- selection_count robustness;
+- state-conditioned RankIC support;
+- baseline comparison versus low PB and cash-flow yield.
+
+Updated status:
+
+```text
+formal_candidate_quant_ready
+```
+
+PM review is required before any Engineering Agent implementation.

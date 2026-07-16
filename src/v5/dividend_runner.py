@@ -28,6 +28,7 @@ def collect_bank_dividends(
     database_dir: Path = DEFAULT_DATABASE_DIR,
     start_date: str | None = None,
     end_date: str | None = None,
+    output_prefix: str = "",
 ) -> DividendCollectionResult:
     try:
         import akshare as ak
@@ -76,14 +77,15 @@ def collect_bank_dividends(
                 continue
             processed_rows.append(event)
 
-    raw_path = raw_dir / "akshare_bank_dividends_raw.csv"
+    safe_prefix = _safe_output_prefix(output_prefix)
+    raw_path = raw_dir / (f"{safe_prefix}akshare_dividends_raw.csv" if safe_prefix else "akshare_bank_dividends_raw.csv")
     if raw_frames:
         pd.concat(raw_frames, ignore_index=True).to_csv(raw_path, index=False, encoding="utf-8-sig")
     else:
         raw_path.write_text("", encoding="utf-8")
 
     processed_rows.sort(key=lambda item: (item["ex_date"], item["code"]))
-    processed_path = processed_dir / "bank_cash_dividends.csv"
+    processed_path = processed_dir / (f"{safe_prefix}cash_dividends.csv" if safe_prefix else "bank_cash_dividends.csv")
     _write_csv(
         processed_path,
         [
@@ -106,6 +108,7 @@ def collect_bank_dividends(
         "source": "akshare.stock_fhps_detail_em",
         "panel": str(panel_path),
         "database_dir": str(database_dir),
+        "output_prefix": safe_prefix,
         "raw_path": str(raw_path),
         "processed_path": str(processed_path),
         "code_count": len(codes),
@@ -122,7 +125,7 @@ def collect_bank_dividends(
         "agent_access": ["Quant Validation Agent", "Engineering Agent"],
         "created_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
     }
-    manifest_path = manifest_dir / "bank_cash_dividends_manifest.json"
+    manifest_path = manifest_dir / (f"{safe_prefix}cash_dividends_manifest.json" if safe_prefix else "bank_cash_dividends_manifest.json")
     _write_json(manifest_path, manifest)
 
     return DividendCollectionResult(
@@ -164,6 +167,15 @@ def _normalize_akshare_dividend_row(code: str, row: dict[str, Any]) -> dict[str,
 
 def _to_plain_symbol(code: str) -> str:
     return code.split(".", 1)[0]
+
+
+def _safe_output_prefix(value: str) -> str:
+    if not value:
+        return ""
+    cleaned = "".join(char if char.isalnum() or char in {"_", "-"} else "_" for char in value.strip())
+    if cleaned and not cleaned.endswith(("_", "-")):
+        cleaned += "_"
+    return cleaned
 
 
 def _optional_date(value: str | None):
@@ -223,9 +235,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--database-dir", type=Path, default=DEFAULT_DATABASE_DIR)
     parser.add_argument("--start-date")
     parser.add_argument("--end-date")
+    parser.add_argument("--output-prefix", default="")
     args = parser.parse_args(argv)
 
-    result = collect_bank_dividends(args.panel, args.database_dir, args.start_date, args.end_date)
+    result = collect_bank_dividends(args.panel, args.database_dir, args.start_date, args.end_date, args.output_prefix)
     print(result.processed_path)
     return 0
 

@@ -39,6 +39,7 @@ def collect_joinquant_real_data(
     benchmark_fq: str = "pre",
     dividend_csv: Path | None = None,
     dividend_tax_rate: float = 0.2,
+    output_prefix: str = "",
     username_env: str = "JQDATA_USERNAME",
     password_env: str = "JQDATA_PASSWORD",
 ) -> JoinQuantRealDataResult:
@@ -72,9 +73,10 @@ def collect_joinquant_real_data(
     if dividend_csv is None:
         warnings.append("dividend_csv missing; joinquant_cash_dividends.csv will contain headers only")
 
-    price_path = processed_dir / "joinquant_real_daily_prices.csv"
-    benchmark_path = processed_dir / "joinquant_real_benchmark_prices.csv"
-    dividend_path = processed_dir / "joinquant_cash_dividends.csv"
+    safe_prefix = _safe_output_prefix(output_prefix)
+    price_path = processed_dir / f"{safe_prefix}joinquant_real_daily_prices.csv"
+    benchmark_path = processed_dir / f"{safe_prefix}joinquant_real_benchmark_prices.csv"
+    dividend_path = processed_dir / f"{safe_prefix}joinquant_cash_dividends.csv"
     _write_csv(
         price_path,
         [
@@ -136,6 +138,7 @@ def collect_joinquant_real_data(
         "dividend_path": str(dividend_path),
         "benchmark": benchmark,
         "benchmark_fq": benchmark_fq,
+        "output_prefix": safe_prefix,
         "start_date": start_date,
         "end_date": end_date,
         "price_policy": "Stock execution prices use JoinQuant get_price fq=None. Benchmark prices default to get_price fq=pre to match JoinQuant benchmark performance display.",
@@ -151,7 +154,7 @@ def collect_joinquant_real_data(
         "created_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
         "agent_access": ["Quant Validation Agent", "Engineering Agent"],
     }
-    manifest_path = manifest_dir / "joinquant_real_execution_data_manifest.json"
+    manifest_path = manifest_dir / f"{safe_prefix}joinquant_real_execution_data_manifest.json"
     _write_json(manifest_path, manifest)
     return JoinQuantRealDataResult(
         price_path=price_path,
@@ -269,6 +272,15 @@ def _load_codes_from_panel(panel_path: Path) -> list[str]:
         return sorted({row["code"] for row in csv.DictReader(handle) if row.get("code")})
 
 
+def _safe_output_prefix(value: str) -> str:
+    if not value:
+        return ""
+    cleaned = "".join(char if char.isalnum() or char in {"_", "-"} else "_" for char in value.strip())
+    if cleaned and not cleaned.endswith(("_", "-")):
+        cleaned += "_"
+    return cleaned
+
+
 def _read_csv(path: Path) -> list[dict[str, str]]:
     if not path.exists():
         return []
@@ -320,6 +332,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--benchmark-fq", default="pre", choices=["pre", "post", "none"])
     parser.add_argument("--dividend-csv", type=Path)
     parser.add_argument("--dividend-tax-rate", type=float, default=0.2)
+    parser.add_argument("--output-prefix", default="")
     args = parser.parse_args(argv)
     result = collect_joinquant_real_data(
         args.panel,
@@ -330,6 +343,7 @@ def main(argv: list[str] | None = None) -> int:
         benchmark_fq=None if args.benchmark_fq == "none" else args.benchmark_fq,
         dividend_csv=args.dividend_csv,
         dividend_tax_rate=args.dividend_tax_rate,
+        output_prefix=args.output_prefix,
     )
     print(result.price_path)
     return 0

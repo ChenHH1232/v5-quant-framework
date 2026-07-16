@@ -15,8 +15,10 @@ from v5.joinquant_availability_runner import build_joinquant_availability_proxy
 from v5.benchmark_runner import _normalize_benchmark_row
 from v5.dividend_runner import _normalize_akshare_dividend_row
 from v5.joinquant_pit_panel_runner import _latest_visible_bank_quality, _load_bank_quality_snapshots
+import v5.joinquant_real_data_runner as joinquant_real_data_runner
 from v5.local_backtest import BacktestOptions, run_local_backtest
 from v5.sector_rank_panel_runner import build_sector_rank_panel
+from v5.utilities_daily_backtest_runner import check_utilities_daily_backtest_ready, run_utilities_daily_joinquant_like_backtest
 from v5.utilities_demand_state_validation_runner import run_utilities_demand_state_validation
 import v5.utilities_external_state_runner as utilities_external_state_runner
 from v5.utilities_external_state_runner import (
@@ -196,6 +198,127 @@ class DataValidationRunnerTests(unittest.TestCase):
         self.assertEqual(summary["strategy_id"], "utilities_demand_state_v51e")
         self.assertEqual(summary["coverage"]["state_covered_dates"], 3)
         self.assertIn(summary["status"], {"preliminary_model_candidate", "needs_more_evidence"})
+
+    def test_utilities_daily_backtest_runs_from_state_switch_signals(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            spec = tmp_path / "spec.json"
+            spec.write_text(
+                json.dumps(
+                    {
+                        "meta": {"strategy_id": "utilities_demand_state_v51f_test"},
+                        "portfolio": {"selection_count": 1},
+                    }
+                ),
+                encoding="utf-8",
+            )
+            panel = tmp_path / "panel.csv"
+            state = tmp_path / "state.csv"
+            prices = tmp_path / "prices.csv"
+            benchmark = tmp_path / "benchmark.csv"
+            self._write_csv(
+                panel,
+                ["trade_date", "code", "dividend_yield", "operating_cash_flow_yield", "low_price_to_book", "future_return"],
+                [
+                    {"trade_date": "2021-07-01", "code": "A", "dividend_yield": "0.06", "operating_cash_flow_yield": "0.02", "low_price_to_book": "1.1", "future_return": "0.01"},
+                    {"trade_date": "2021-07-01", "code": "B", "dividend_yield": "0.03", "operating_cash_flow_yield": "0.08", "low_price_to_book": "0.8", "future_return": "0.02"},
+                ],
+            )
+            self._write_csv(
+                state,
+                ["visible_date", "state_date", "metric", "value"],
+                [{"visible_date": "2021-06-25", "state_date": "2021-05-31", "metric": "electricity_consumption_yoy", "value": "3.0"}],
+            )
+            self._write_csv(
+                prices,
+                ["date", "code", "open", "close", "high_limit", "low_limit", "paused"],
+                [
+                    {"date": "2021-07-01", "code": "B", "open": "10", "close": "10", "high_limit": "11", "low_limit": "9", "paused": "0"},
+                    {"date": "2021-07-02", "code": "B", "open": "10", "close": "10.5", "high_limit": "11", "low_limit": "9", "paused": "0"},
+                ],
+            )
+            self._write_csv(
+                benchmark,
+                ["date", "code", "close"],
+                [
+                    {"date": "2021-07-01", "code": "utilities_benchmark", "close": "1000"},
+                    {"date": "2021-07-02", "code": "utilities_benchmark", "close": "1005"},
+                ],
+            )
+
+            readiness = check_utilities_daily_backtest_ready(panel, state, prices, benchmark, start_date="2021-07-01", end_date="2021-07-02")
+            report = run_utilities_daily_joinquant_like_backtest(
+                spec,
+                panel,
+                state,
+                prices,
+                benchmark,
+                tmp_path / "out",
+                benchmark_id="utilities_benchmark",
+                options=BacktestOptions(start_date="2021-07-01", end_date="2021-07-02", execution_mode="joinquant_like", initial_cash=100000),
+            )
+            summary = json.loads((report.parent / "summary.json").read_text(encoding="utf-8"))
+            signals = self._read_csv(report.parent / "rebalance_signals.csv")
+            daily = self._read_csv(report.parent / "daily_returns.csv")
+            dividends_file_exists = (report.parent / "dividends.csv").exists()
+
+        self.assertEqual(readiness["status"], "ready")
+        self.assertEqual(summary["strategy_id"], "utilities_demand_state_v51f_test")
+        self.assertEqual(signals[0]["selected_codes"], "B")
+        self.assertEqual(daily[0]["benchmark_source"], "utilities_benchmark")
+        self.assertTrue(dividends_file_exists)
+
+    def test_joinquant_real_data_output_prefix_keeps_sector_files_separate(self) -> None:
+        original_auth = joinquant_real_data_runner._load_authenticated_jqdata
+        original_fetch = joinquant_real_data_runner._fetch_jq_price_rows
+
+        def fake_auth(username_env: str, password_env: str) -> object:
+            return object()
+
+        def fake_fetch(jq: object, code: str, start_date: str, end_date: str, asset_type: str, fq: str | None = None) -> list[dict[str, str]]:
+            return [
+                {
+                    "date": start_date,
+                    "code": code,
+                    "open": "1",
+                    "close": "1",
+                    "high": "1",
+                    "low": "1",
+                    "volume": "1",
+                    "money": "1",
+                    "high_limit": "",
+                    "low_limit": "",
+                    "paused": "",
+                    "price_adjustment": "raw_unadjusted_real_price" if fq is None else f"{fq}_adjusted_price",
+                    "source": "test",
+                }
+            ]
+
+        joinquant_real_data_runner._load_authenticated_jqdata = fake_auth
+        joinquant_real_data_runner._fetch_jq_price_rows = fake_fetch
+        try:
+            with tempfile.TemporaryDirectory() as tmp:
+                tmp_path = Path(tmp)
+                panel = tmp_path / "panel.csv"
+                self._write_csv(panel, ["trade_date", "code"], [{"trade_date": "2021-07-01", "code": "600000.XSHG"}])
+                result = joinquant_real_data_runner.collect_joinquant_real_data(
+                    panel,
+                    database_dir=tmp_path / "db",
+                    start_date="2021-07-01",
+                    end_date="2021-07-02",
+                    benchmark="000007.XSHG",
+                    output_prefix="utilities",
+                )
+                manifest = json.loads(result.manifest_path.read_text(encoding="utf-8"))
+        finally:
+            joinquant_real_data_runner._load_authenticated_jqdata = original_auth
+            joinquant_real_data_runner._fetch_jq_price_rows = original_fetch
+
+        self.assertEqual(result.price_path.name, "utilities_joinquant_real_daily_prices.csv")
+        self.assertEqual(result.benchmark_path.name, "utilities_joinquant_real_benchmark_prices.csv")
+        self.assertEqual(result.dividend_path.name, "utilities_joinquant_cash_dividends.csv")
+        self.assertEqual(manifest["output_prefix"], "utilities_")
+        self.assertEqual(manifest["benchmark"], "000007.XSHG")
 
     def test_validate_panel_writes_summary(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

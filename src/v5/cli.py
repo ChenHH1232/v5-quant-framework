@@ -32,6 +32,7 @@ from v5.sector_rank_panel_runner import build_sector_rank_panel
 from v5.tushare_disclosure_runner import collect_tushare_disclosure_dates
 from v5.universe_runner import build_point_in_time_universe
 from v5.utilities_model_panel_runner import build_utilities_cashflow_value_panel
+from v5.utilities_daily_backtest_runner import check_utilities_daily_backtest_ready, run_utilities_daily_joinquant_like_backtest
 from v5.utilities_demand_state_validation_runner import run_utilities_demand_state_validation
 from v5.utilities_external_state_runner import collect_utilities_external_state, validate_utilities_external_state, write_utilities_external_state_template
 from v5.utilities_pit_panel_runner import collect_utilities_pit_panel
@@ -80,6 +81,7 @@ def main(argv: list[str] | None = None) -> int:
     dividend_parser.add_argument("--database-dir", type=Path, default=DEFAULT_DATABASE_DIR)
     dividend_parser.add_argument("--start-date")
     dividend_parser.add_argument("--end-date")
+    dividend_parser.add_argument("--output-prefix", default="")
 
     benchmark_parser = subparsers.add_parser("collect-benchmarks")
     benchmark_parser.add_argument("--database-dir", type=Path, default=DEFAULT_DATABASE_DIR)
@@ -184,6 +186,7 @@ def main(argv: list[str] | None = None) -> int:
     jq_real_parser.add_argument("--benchmark-fq", default="pre", choices=["pre", "post", "none"])
     jq_real_parser.add_argument("--dividend-csv", type=Path)
     jq_real_parser.add_argument("--dividend-tax-rate", type=float, default=0.2)
+    jq_real_parser.add_argument("--output-prefix", default="")
 
     jq_probe_parser = subparsers.add_parser("probe-joinquant-capabilities")
     jq_probe_parser.add_argument("--out-dir", type=Path, default=DEFAULT_DATABASE_DIR / "manifests")
@@ -253,6 +256,29 @@ def main(argv: list[str] | None = None) -> int:
     utilities_demand_state_parser.add_argument("--metric", default="electricity_consumption_yoy")
     utilities_demand_state_parser.add_argument("--selection-count", type=int, default=10)
     utilities_demand_state_parser.add_argument("--min-history", type=int, default=8)
+
+    utilities_daily_parser = subparsers.add_parser("utilities-daily-backtest")
+    utilities_daily_subparsers = utilities_daily_parser.add_subparsers(dest="utilities_daily_command", required=True)
+    utilities_daily_ready = utilities_daily_subparsers.add_parser("ready")
+    utilities_daily_ready.add_argument("--panel", type=Path, default=Path("数据库") / "processed" / "utilities_cashflow_value_v51b_panel" / "panel.csv")
+    utilities_daily_ready.add_argument("--state-panel", type=Path, default=Path("数据库") / "processed" / "utilities_external_state" / "utilities_external_state.csv")
+    utilities_daily_ready.add_argument("--execution-price-csv", type=Path, required=True)
+    utilities_daily_ready.add_argument("--benchmark-csv", type=Path, required=True)
+    utilities_daily_ready.add_argument("--dividend-cash-csv", type=Path)
+    utilities_daily_ready.add_argument("--start-date", default=DEFAULT_BACKTEST_START)
+    utilities_daily_ready.add_argument("--end-date", default=DEFAULT_BACKTEST_END)
+    utilities_daily_run = utilities_daily_subparsers.add_parser("run")
+    utilities_daily_run.add_argument("spec", type=Path)
+    utilities_daily_run.add_argument("--panel", type=Path, default=Path("数据库") / "processed" / "utilities_cashflow_value_v51b_panel" / "panel.csv")
+    utilities_daily_run.add_argument("--state-panel", type=Path, default=Path("数据库") / "processed" / "utilities_external_state" / "utilities_external_state.csv")
+    utilities_daily_run.add_argument("--execution-price-csv", type=Path, required=True)
+    utilities_daily_run.add_argument("--benchmark-csv", type=Path, required=True)
+    utilities_daily_run.add_argument("--benchmark-id", default="utilities_benchmark")
+    utilities_daily_run.add_argument("--dividend-cash-csv", type=Path)
+    utilities_daily_run.add_argument("--out", type=Path, default=Path("local_daily_backtests_utilities_v51f"))
+    utilities_daily_run.add_argument("--start-date", default=DEFAULT_BACKTEST_START)
+    utilities_daily_run.add_argument("--end-date", default=DEFAULT_BACKTEST_END)
+    utilities_daily_run.add_argument("--initial-cash", type=float, default=2_000_000.0)
 
     universe_parser = subparsers.add_parser("build-universe")
     universe_parser.add_argument("panel", type=Path)
@@ -341,7 +367,7 @@ def main(argv: list[str] | None = None) -> int:
                 )
             return 0
         if args.command == "collect-dividends":
-            result = collect_bank_dividends(args.panel, args.database_dir, args.start_date, args.end_date)
+            result = collect_bank_dividends(args.panel, args.database_dir, args.start_date, args.end_date, args.output_prefix)
             print(result.processed_path)
             return 0
         if args.command == "collect-benchmarks":
@@ -428,6 +454,7 @@ def main(argv: list[str] | None = None) -> int:
                 benchmark_fq=None if args.benchmark_fq == "none" else args.benchmark_fq,
                 dividend_csv=args.dividend_csv,
                 dividend_tax_rate=args.dividend_tax_rate,
+                output_prefix=args.output_prefix,
             )
             print(result.price_path)
             return 0
@@ -508,6 +535,43 @@ def main(argv: list[str] | None = None) -> int:
                     args.metric,
                     args.selection_count,
                     args.min_history,
+                )
+            )
+            return 0
+        if args.command == "utilities-daily-backtest":
+            if args.utilities_daily_command == "ready":
+                print(
+                    json.dumps(
+                        check_utilities_daily_backtest_ready(
+                            args.panel,
+                            args.state_panel,
+                            args.execution_price_csv,
+                            args.benchmark_csv,
+                            args.dividend_cash_csv,
+                            args.start_date,
+                            args.end_date,
+                        ),
+                        ensure_ascii=False,
+                        indent=2,
+                    )
+                )
+                return 0
+            print(
+                run_utilities_daily_joinquant_like_backtest(
+                    args.spec,
+                    args.panel,
+                    args.state_panel,
+                    args.execution_price_csv,
+                    args.benchmark_csv,
+                    args.out,
+                    args.dividend_cash_csv,
+                    args.benchmark_id,
+                    options=BacktestOptions(
+                        execution_mode="joinquant_like",
+                        start_date=args.start_date,
+                        end_date=args.end_date,
+                        initial_cash=args.initial_cash,
+                    ),
                 )
             )
             return 0

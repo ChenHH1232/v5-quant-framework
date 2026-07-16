@@ -108,54 +108,6 @@ ELECTRICITY_STATE_ROWS = [
 ]
 
 
-FROZEN_REBALANCE_SIGNALS = {
-    '2021-07': ['600011.XSHG', '600795.XSHG', '600396.XSHG', '600027.XSHG', '601991.XSHG', '000669.XSHE', '600021.XSHG', '000543.XSHE', '001896.XSHE', '600617.XSHG'],
-    '2021-10': ['600969.XSHG', '000421.XSHE', '000539.XSHE', '601991.XSHG', '600803.XSHG', '600617.XSHG', '601985.XSHG', '000543.XSHE', '600795.XSHG', '600011.XSHG'],
-    '2022-01': ['000421.XSHE', '600795.XSHG', '600310.XSHG', '002893.XSHE', '601991.XSHG', '600617.XSHG', '002267.XSHE', '002039.XSHE', '601985.XSHG', '003816.XSHE'],
-    '2022-04': ['000421.XSHE', '600795.XSHG', '002893.XSHE', '600803.XSHG', '600681.XSHG', '002267.XSHE', '600617.XSHG', '600310.XSHG', '000407.XSHE', '600886.XSHG'],
-    '2022-07': ['601991.XSHG', '600795.XSHG', '000543.XSHE', '600027.XSHG', '002608.XSHE', '000669.XSHE', '000883.XSHE', '601985.XSHG', '600011.XSHG', '600744.XSHG'],
-    '2022-10': ['600719.XSHG', '600617.XSHG', '000421.XSHE', '600021.XSHG', '600795.XSHG', '000600.XSHE', '600803.XSHG', '600310.XSHG', '002039.XSHE', '600969.XSHG'],
-    '2023-01': ['600795.XSHG', '000600.XSHE', '600310.XSHG', '600283.XSHG', '002039.XSHE', '002893.XSHE', '600098.XSHG', '600617.XSHG', '601991.XSHG', '601985.XSHG'],
-    '2023-04': ['600795.XSHG', '000600.XSHE', '002893.XSHE', '600021.XSHG', '600283.XSHG', '600617.XSHG', '600956.XSHG', '600098.XSHG', '600168.XSHG', '601985.XSHG'],
-    '2023-07': ['000421.XSHE', '600795.XSHG', '600617.XSHG', '000669.XSHE', '600642.XSHG', '000883.XSHE', '002039.XSHE', '601985.XSHG', '000027.XSHE', '601991.XSHG'],
-    '2023-10': ['000421.XSHE', '600969.XSHG', '600795.XSHG', '600617.XSHG', '601985.XSHG', '600396.XSHG', '601991.XSHG', '000539.XSHE', '600982.XSHG', '003816.XSHE'],
-    '2024-01': ['000692.XSHE', '000685.XSHE', '600969.XSHG', '600098.XSHG', '000690.XSHE', '002608.XSHE', '000883.XSHE', '600168.XSHG', '000600.XSHE', '600578.XSHG'],
-    '2024-04': ['000692.XSHE', '600969.XSHG', '000685.XSHE', '600168.XSHG', '601368.XSHG', '000601.XSHE', '000605.XSHE', '600098.XSHG', '600021.XSHG', '000690.XSHE'],
-    '2024-07': ['001896.XSHE', '000601.XSHE', '601991.XSHG', '000669.XSHE', '600744.XSHG', '000539.XSHE', '600011.XSHG', '000966.XSHE', '600982.XSHG', '600795.XSHG'],
-    '2024-10': ['600969.XSHG', '000421.XSHE', '600795.XSHG', '000539.XSHE', '600617.XSHG', '000027.XSHE', '600011.XSHG', '600021.XSHG', '601991.XSHG', '002479.XSHE'],
-    '2025-01': ['600969.XSHG', '601991.XSHG', '000539.XSHE', '600744.XSHG', '600795.XSHG', '600011.XSHG', '000543.XSHE', '600021.XSHG', '000600.XSHE', '000692.XSHE'],
-    '2025-04': ['605368.XSHG', '000690.XSHE', '605028.XSHG', '600681.XSHG', '002911.XSHE', '000685.XSHE', '600167.XSHG', '603706.XSHG', '002267.XSHE', '600803.XSHG'],
-    '2025-07': ['605368.XSHG', '600681.XSHG', '000685.XSHE', '002267.XSHE', '600008.XSHG', '600167.XSHG', '001299.XSHE', '600803.XSHG', '001286.XSHE', '605090.XSHG'],
-    '2025-10': ['000421.XSHE', '600969.XSHG', '600795.XSHG', '600011.XSHG', '600051.XSHG', '600578.XSHG', '600027.XSHG', '000539.XSHE', '601991.XSHG', '600803.XSHG'],
-    '2026-01': ['601991.XSHG', '001896.XSHE', '600011.XSHG', '600795.XSHG', '000027.XSHE', '000543.XSHE', '600027.XSHG', '000600.XSHE', '002039.XSHE', '600617.XSHG'],
-    '2026-04': ['600795.XSHG', '000543.XSHE', '000027.XSHE', '600011.XSHG', '002039.XSHE', '001210.XSHE', '600021.XSHG', '000600.XSHE', '600969.XSHG', '600803.XSHG'],
-}
-
-
-FROZEN_SIGNAL_META = {
-    '2021-07': ('warmup', 'raw_cashflow_yield_utilities_top10', 'operating_cash_flow_yield'),
-    '2021-10': ('warmup', 'raw_cashflow_yield_utilities_top10', 'operating_cash_flow_yield'),
-    '2022-01': ('warmup', 'raw_cashflow_yield_utilities_top10', 'operating_cash_flow_yield'),
-    '2022-04': ('warmup', 'raw_cashflow_yield_utilities_top10', 'operating_cash_flow_yield'),
-    '2022-07': ('warmup', 'raw_cashflow_yield_utilities_top10', 'operating_cash_flow_yield'),
-    '2022-10': ('warmup', 'raw_cashflow_yield_utilities_top10', 'operating_cash_flow_yield'),
-    '2023-01': ('warmup', 'raw_cashflow_yield_utilities_top10', 'operating_cash_flow_yield'),
-    '2023-04': ('warmup', 'raw_cashflow_yield_utilities_top10', 'operating_cash_flow_yield'),
-    '2023-07': ('mid', 'raw_cashflow_yield_utilities_top10', 'operating_cash_flow_yield'),
-    '2023-10': ('mid', 'raw_cashflow_yield_utilities_top10', 'operating_cash_flow_yield'),
-    '2024-01': ('strong', 'raw_low_pb_utilities_top10', 'low_price_to_book'),
-    '2024-04': ('strong', 'raw_low_pb_utilities_top10', 'low_price_to_book'),
-    '2024-07': ('mid', 'raw_cashflow_yield_utilities_top10', 'operating_cash_flow_yield'),
-    '2024-10': ('mid', 'raw_cashflow_yield_utilities_top10', 'operating_cash_flow_yield'),
-    '2025-01': ('mid', 'raw_cashflow_yield_utilities_top10', 'operating_cash_flow_yield'),
-    '2025-04': ('weak', 'raw_high_dividend_utilities_top10', 'dividend_yield'),
-    '2025-07': ('weak', 'raw_high_dividend_utilities_top10', 'dividend_yield'),
-    '2025-10': ('mid', 'raw_cashflow_yield_utilities_top10', 'operating_cash_flow_yield'),
-    '2026-01': ('mid', 'raw_cashflow_yield_utilities_top10', 'operating_cash_flow_yield'),
-    '2026-04': ('mid', 'raw_cashflow_yield_utilities_top10', 'operating_cash_flow_yield'),
-}
-
-
 def initialize(context):
     set_benchmark('000007.XSHG')
     set_option('use_real_price', True)
@@ -350,8 +302,10 @@ def fetch_visible_cash_dividends_from_joinquant(stocks, factor_date):
 
     start_date = factor_date - timedelta(days=int(g.dividend_lookback_days) + 45)
     field_sets = [
-        ('code', 'pub_date', 'a_xr_date', 'bonus_amount_rmb'),
-        ('code', 'report_date', 'a_xr_date', 'bonus_amount_rmb'),
+        ('code', 'implementation_pub_date', 'a_xr_date', 'bonus_ratio_rmb'),
+        ('code', 'implementation_pub_date', 'a_xr_date', 'at_bonus_ratio_rmb'),
+        ('code', 'shareholders_plan_pub_date', 'a_xr_date', 'bonus_ratio_rmb'),
+        ('code', 'shareholders_plan_pub_date', 'a_xr_date', 'at_bonus_ratio_rmb'),
         ('code', 'notice_date', 'ex_date', 'cash_dividend_ratio'),
         ('code', 'announce_date', 'ex_date', 'cash_per_share'),
         ('code', 'pub_date', 'ex_dividend_date', 'dividend_cash_before_tax'),
@@ -417,7 +371,7 @@ def normalize_cash_dividend(value, field_name):
     if cash is None:
         return None
     # Some JoinQuant dividend tables express cash dividend per 10 shares.
-    if field_name in {'bonus_amount_rmb', 'cash_dividend_ratio', 'dividend_cash_before_tax'} and cash > 1.0:
+    if field_name in {'bonus_ratio_rmb', 'at_bonus_ratio_rmb', 'cash_dividend_ratio', 'dividend_cash_before_tax'} and cash > 1.0:
         return cash / 10.0
     return cash
 

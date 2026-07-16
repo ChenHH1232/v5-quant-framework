@@ -63,6 +63,7 @@ Each paper-trading signal must record:
 | Entry Date | Signal Date | Layer | State | Factor | Selected Holdings | Data Coverage | Execution Status | Notes | PM Decision |
 |---|---|---|---|---|---|---:|---|---|---|
 | 2026-07-16 | pending next valid rebalance | paper_trading_setup | pending | pending | pending | n/a | not started | Paper-trading log opened. First actionable signal requires latest visible electricity-demand state, PIT utilities universe, factor panel, and live/frozen signal source label. No retrospective refill from 2021-2026 is allowed. | monitor only |
+| 2026-07-16 | no forward signal generated | workflow_pm30_review | n/a | n/a | n/a | n/a | no trade | PM 30-minute workflow run prepared live JoinQuant recompute smoke test. This is not a paper-trading signal and does not backfill historical holdings. | continue platform smoke test only |
 
 ## PM Review Rule
 

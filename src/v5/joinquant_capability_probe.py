@@ -22,6 +22,7 @@ def run_joinquant_capability_probe(
         _check("get_price_stock_daily_pre", lambda: _records(jq.get_price("000001.XSHE", start_date="2025-01-02", end_date="2025-01-10", frequency="daily", fields=["open", "close"], fq="pre", panel=False))),
         _check("get_price_etf_daily_pre", lambda: _records(jq.get_price("512800.XSHG", start_date="2025-01-02", end_date="2025-01-10", frequency="daily", fields=["open", "close", "volume", "money"], fq="pre", panel=False))),
         _check("get_fundamentals_valuation_indicator", lambda: _records(jq.get_fundamentals(jq.query(jq.valuation.code, jq.valuation.pb_ratio, jq.valuation.market_cap, jq.indicator.roe).filter(jq.valuation.code == "000001.XSHE"), date="2025-05-15"))),
+        _check("finance_stk_xr_xd_cash_dividend", lambda: _finance_dividend_records(["600011.XSHG", "600795.XSHG"], "2024-01-01", "2026-05-31")),
     ]
     payload = {
         "dataset": "joinquant_capability_probe",
@@ -32,6 +33,7 @@ def run_joinquant_capability_probe(
             "A passed check means the current account/session can access that interface in this environment.",
             "A failed check may indicate missing permission, quota exhaustion, package mismatch, network issue, or API change.",
             "Specialized bank_indicator is intentionally not probed because V5 treats it as unavailable for new workflows.",
+            "finance_stk_xr_xd_cash_dividend checks whether JoinQuant/DataJQ can support live dividend-yield reconstruction without valuation.dividend_ratio.",
         ],
     }
     path = out_dir / "joinquant_capability_probe.json"
@@ -57,6 +59,56 @@ def _records(value: Any) -> list[dict[str, Any]]:
         return []
     frame = value.reset_index()
     return frame.head(3).to_dict("records")
+
+
+def _finance_dividend_records(codes: list[str], start_date: str, end_date: str) -> dict[str, Any]:
+    try:
+        from jqdatasdk import finance, query
+    except Exception as exc:
+        return {"status": "fail", "error": f"finance import failed: {repr(exc)}"}
+    table = getattr(finance, "STK_XR_XD", None)
+    if table is None:
+        return {"status": "fail", "error": "finance.STK_XR_XD missing"}
+
+    field_sets = [
+        ("code", "implementation_pub_date", "a_xr_date", "bonus_ratio_rmb"),
+        ("code", "implementation_pub_date", "a_xr_date", "at_bonus_ratio_rmb"),
+        ("code", "shareholders_plan_pub_date", "a_xr_date", "bonus_ratio_rmb"),
+        ("code", "shareholders_plan_pub_date", "a_xr_date", "at_bonus_ratio_rmb"),
+        ("code", "notice_date", "ex_date", "cash_dividend_ratio"),
+        ("code", "announce_date", "ex_date", "cash_per_share"),
+        ("code", "pub_date", "ex_dividend_date", "dividend_cash_before_tax"),
+    ]
+    attempts = []
+    for code_field, visible_field, ex_field, cash_field in field_sets:
+        try:
+            fields = [
+                getattr(table, code_field),
+                getattr(table, visible_field),
+                getattr(table, ex_field),
+                getattr(table, cash_field),
+            ]
+            df = finance.run_query(
+                query(*fields).filter(
+                    getattr(table, code_field).in_(codes),
+                    getattr(table, ex_field) >= start_date,
+                    getattr(table, ex_field) <= end_date,
+                )
+            )
+            records = _records(df)
+            attempts.append(
+                {
+                    "fields": [code_field, visible_field, ex_field, cash_field],
+                    "status": "pass",
+                    "row_count": 0 if df is None else len(df),
+                    "sample": records,
+                }
+            )
+            if records:
+                return {"status": "pass", "working_fields": [code_field, visible_field, ex_field, cash_field], "attempts": attempts}
+        except Exception as exc:
+            attempts.append({"fields": [code_field, visible_field, ex_field, cash_field], "status": "fail", "error": repr(exc)})
+    return {"status": "needs_review", "attempts": attempts}
 
 
 def _load_authenticated_jqdata(username_env: str, password_env: str):

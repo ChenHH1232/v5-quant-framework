@@ -55,6 +55,50 @@ The live-recompute script now:
 - preloads state warm-up history before the backtest start date;
 - logs warm-up coverage, factor source status, state bucket, candidate count, selected codes, and score preview.
 
+## DataJQ Capability Update
+
+After applying the workflow optimization table, Engineering Agent extended the JoinQuant capability probe and confirmed local DataJQ access to the dividend source.
+
+Capability probe command:
+
+```text
+python -m v5.cli probe-joinquant-capabilities --out-dir joinquant_capability_manifests
+```
+
+Working dividend source:
+
+```text
+finance.STK_XR_XD
+```
+
+Working fields:
+
+```text
+code
+implementation_pub_date
+a_xr_date
+bonus_ratio_rmb
+```
+
+Dividend interpretation:
+
+```text
+bonus_ratio_rmb = cash dividend per 10 shares
+cash_per_share = bonus_ratio_rmb / 10
+```
+
+Rejected field:
+
+```text
+bonus_amount_rmb
+```
+
+Reason:
+
+```text
+It is total dividend amount, not per-share cash dividend.
+```
+
 ## Warm-Up Rule
 
 The script separates:

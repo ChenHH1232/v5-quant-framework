@@ -13,6 +13,12 @@ from v5.benchmark_runner import (
 from v5.bank_quality_date_alignment_runner import DEFAULT_DATABASE_DIR as DATE_ALIGNMENT_DATABASE_DIR
 from v5.bank_quality_date_alignment_runner import align_bank_quality_dates
 from v5.coal_cycle_state_validation_runner import run_coal_cycle_state_validation
+from v5.coal_data_audit_runner import (
+    audit_coal_business_tags,
+    audit_coal_capex_fcf,
+    merge_coal_manual_state,
+    write_coal_manual_state_template,
+)
 from v5.coal_external_state_runner import collect_coal_external_state, validate_coal_external_state, write_coal_external_state_template
 from v5.coal_pit_panel_runner import collect_coal_pit_panel
 from v5.data_runner import collect_panel_from_v4_raw, write_collection_manifest
@@ -286,6 +292,21 @@ def main(argv: list[str] | None = None) -> int:
     coal_cycle_state_parser.add_argument("--selection-count", type=int, default=8)
     coal_cycle_state_parser.add_argument("--min-history", type=int, default=8)
     coal_cycle_state_parser.add_argument("--strategy-id", default="coal_high_dividend_cycle_value_v52")
+
+    coal_data_audit_parser = subparsers.add_parser("coal-data-audit")
+    coal_data_audit_subparsers = coal_data_audit_parser.add_subparsers(dest="coal_data_audit_command", required=True)
+    coal_data_template = coal_data_audit_subparsers.add_parser("manual-state-template")
+    coal_data_template.add_argument("--out-dir", type=Path, default=Path("数据库") / "processed" / "coal_external_state")
+    coal_data_merge = coal_data_audit_subparsers.add_parser("merge-manual-state")
+    coal_data_merge.add_argument("base_state_csv", type=Path)
+    coal_data_merge.add_argument("manual_state_csv", type=Path)
+    coal_data_merge.add_argument("--out-dir", type=Path, default=Path("数据库") / "processed" / "coal_external_state")
+    coal_data_tags = coal_data_audit_subparsers.add_parser("audit-business-tags")
+    coal_data_tags.add_argument("panel", type=Path, nargs="?", default=Path("数据库") / "processed" / "coal_pit_panel" / "panel.csv")
+    coal_data_tags.add_argument("--out-dir", type=Path, default=Path("数据库") / "manifests" / "coal_business_tag_audit")
+    coal_data_capex = coal_data_audit_subparsers.add_parser("audit-capex-fcf")
+    coal_data_capex.add_argument("panel", type=Path, nargs="?", default=Path("数据库") / "processed" / "coal_pit_panel" / "panel.csv")
+    coal_data_capex.add_argument("--out-dir", type=Path, default=Path("数据库") / "manifests" / "coal_capex_fcf_audit")
 
     utilities_daily_parser = subparsers.add_parser("utilities-daily-backtest")
     utilities_daily_subparsers = utilities_daily_parser.add_subparsers(dest="utilities_daily_command", required=True)
@@ -602,6 +623,19 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "validate-coal-cycle-state":
             print(run_coal_cycle_state_validation(args.panel, args.out, args.metric, args.selection_count, args.min_history, args.strategy_id))
             return 0
+        if args.command == "coal-data-audit":
+            if args.coal_data_audit_command == "manual-state-template":
+                print(write_coal_manual_state_template(args.out_dir))
+                return 0
+            if args.coal_data_audit_command == "merge-manual-state":
+                print(merge_coal_manual_state(args.base_state_csv, args.manual_state_csv, args.out_dir))
+                return 0
+            if args.coal_data_audit_command == "audit-business-tags":
+                print(audit_coal_business_tags(args.panel, args.out_dir))
+                return 0
+            if args.coal_data_audit_command == "audit-capex-fcf":
+                print(audit_coal_capex_fcf(args.panel, args.out_dir))
+                return 0
         if args.command == "utilities-daily-backtest":
             if args.utilities_daily_command == "ready":
                 print(

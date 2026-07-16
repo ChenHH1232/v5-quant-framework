@@ -26,4 +26,5 @@ validation_formal_*/
 
 数据库/raw/
 数据库/processed/
+数据库/manifests/
 数据库/manifests/*.json

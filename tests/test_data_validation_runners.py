@@ -11,6 +11,12 @@ from v5.data_runner import collect_panel_from_v4_raw, write_collection_manifest
 from v5.daily_backtest import _defensive_state
 from v5.bank_quality_date_alignment_runner import align_bank_quality_dates
 from v5.coal_cycle_state_validation_runner import run_coal_cycle_state_validation
+from v5.coal_data_audit_runner import (
+    audit_coal_business_tags,
+    audit_coal_capex_fcf,
+    merge_coal_manual_state,
+    write_coal_manual_state_template,
+)
 from v5.coal_external_state_runner import latest_visible_state_values, validate_coal_external_state, write_coal_external_state_template
 from v5.coal_pit_panel_runner import MANUAL_BUSINESS_TAGS
 from v5.credential_loader import load_tushare_token
@@ -106,6 +112,60 @@ class DataValidationRunnerTests(unittest.TestCase):
         self.assertEqual(result["pit_usable_count"], 0)
         self.assertIn("thermal_coal_price_state", result["missing_usable_required_metrics"])
 
+    def test_coal_manual_state_template_requires_manual_review_before_pit_use(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            template = write_coal_manual_state_template(Path(tmp))
+            result = validate_coal_external_state(template)
+
+        self.assertEqual(result["status"], "needs_review")
+        self.assertEqual(result["pit_usable_count"], 0)
+        self.assertIn("coal_inventory_or_output_state", result["missing_usable_required_metrics"])
+        self.assertIn("thermal_coal_price_state", result["missing_usable_required_metrics"])
+
+    def test_coal_manual_state_merge_accepts_reviewed_official_rows(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            base = tmp_path / "base.csv"
+            manual = tmp_path / "manual.csv"
+            fields = [
+                "visible_date",
+                "state_date",
+                "state_scope",
+                "sub_industry",
+                "metric",
+                "value",
+                "unit",
+                "source_name",
+                "source_url",
+                "source_publication_date",
+                "pit_usable",
+                "review_status",
+                "notes",
+            ]
+            self._write_csv(
+                base,
+                fields,
+                [
+                    {"visible_date": "2021-01-02", "state_date": "2020-12-31", "state_scope": "market", "sub_industry": "coking_coal", "metric": "coking_coal_price_state", "value": "1000", "unit": "cny_per_ton", "source_name": "test", "source_url": "https://example.test", "source_publication_date": "2021-01-02", "pit_usable": "true", "review_status": "reviewed", "notes": ""},
+                    {"visible_date": "2021-01-02", "state_date": "2020-12-31", "state_scope": "macro", "sub_industry": "coal_power", "metric": "coal_power_spread_state", "value": "300", "unit": "proxy", "source_name": "test", "source_url": "https://example.test", "source_publication_date": "2021-01-02", "pit_usable": "true", "review_status": "reviewed", "notes": ""},
+                    {"visible_date": "2021-01-02", "state_date": "2020-12-31", "state_scope": "macro", "sub_industry": "coal_oil_power", "metric": "coal_oil_power_price_index_state", "value": "105", "unit": "index", "source_name": "test", "source_url": "https://example.test", "source_publication_date": "2021-01-02", "pit_usable": "true", "review_status": "reviewed", "notes": ""},
+                ],
+            )
+            self._write_csv(
+                manual,
+                fields,
+                [
+                    {"visible_date": "2021-01-18", "state_date": "2020-12-31", "state_scope": "national", "sub_industry": "all_coal", "metric": "coal_inventory_or_output_state", "value": "39000", "unit": "10k_ton", "source_name": "NBS", "source_url": "https://www.stats.gov.cn/sj/zxfb/", "source_publication_date": "2021-01-18", "pit_usable": "true", "review_status": "reviewed", "notes": ""},
+                    {"visible_date": "2021-01-15", "state_date": "2021-01-10", "state_scope": "circulation_market", "sub_industry": "thermal_coal", "metric": "thermal_coal_price_state", "value": "760", "unit": "cny_per_ton", "source_name": "NBS", "source_url": "https://www.stats.gov.cn/sj/zxfb/", "source_publication_date": "2021-01-15", "pit_usable": "true", "review_status": "reviewed", "notes": ""},
+                ],
+            )
+
+            merged = merge_coal_manual_state(base, manual, tmp_path / "out")
+            result = validate_coal_external_state(merged)
+
+        self.assertEqual(result["status"], "pass")
+        self.assertEqual(result["pit_usable_count"], 5)
+
     def test_coal_latest_visible_state_uses_prior_visible_rows(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             state = Path(tmp) / "coal_state.csv"
@@ -168,6 +228,49 @@ class DataValidationRunnerTests(unittest.TestCase):
     def test_coal_manual_tags_mark_mixed_companies_for_robustness(self) -> None:
         self.assertEqual(MANUAL_BUSINESS_TAGS["600997.XSHG"], "mixed_coal_chemical")
         self.assertEqual(MANUAL_BUSINESS_TAGS["601225.XSHG"], "core_coal")
+
+    def test_coal_business_tag_audit_blocks_manual_current_tags(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            panel = tmp_path / "panel.csv"
+            self._write_csv(
+                panel,
+                ["trade_date", "code", "company_name", "coal_business_tag"],
+                [
+                    {"trade_date": "2021-01-04", "code": "601225.XSHG", "company_name": "test coal", "coal_business_tag": "core_coal"},
+                    {"trade_date": "2021-04-01", "code": "601225.XSHG", "company_name": "test coal", "coal_business_tag": "core_coal"},
+                ],
+            )
+
+            report = audit_coal_business_tags(panel, tmp_path / "audit")
+            summary = json.loads((report.parent / "coal_business_tag_audit_summary.json").read_text(encoding="utf-8"))
+            rows = self._read_csv(report.parent / "coal_business_tag_audit.csv")
+
+        self.assertEqual(summary["status"], "blocked")
+        self.assertEqual(summary["formal_pit_usable_count"], 0)
+        self.assertEqual(rows[0]["audit_status"], "blocked_manual_current_classification")
+
+    def test_coal_capex_fcf_audit_flags_unstable_fcf_rows(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            panel = tmp_path / "panel.csv"
+            self._write_csv(
+                panel,
+                ["trade_date", "code", "company_name", "coal_business_tag", "operating_cash_flow_yield", "free_cash_flow_yield", "capex_burden"],
+                [
+                    {"trade_date": "2021-01-04", "code": "A", "company_name": "ok", "coal_business_tag": "core_coal", "operating_cash_flow_yield": "0.10", "free_cash_flow_yield": "0.06", "capex_burden": "0.4"},
+                    {"trade_date": "2021-01-04", "code": "B", "company_name": "bad", "coal_business_tag": "core_coal", "operating_cash_flow_yield": "0.05", "free_cash_flow_yield": "-0.03", "capex_burden": "1.6"},
+                ],
+            )
+
+            report = audit_coal_capex_fcf(panel, tmp_path / "audit")
+            summary = json.loads((report.parent / "coal_capex_fcf_audit_summary.json").read_text(encoding="utf-8"))
+            rows = self._read_csv(report.parent / "coal_capex_fcf_audit_flags.csv")
+
+        self.assertEqual(summary["status"], "needs_review")
+        self.assertEqual(summary["flagged_rows"], 1)
+        self.assertIn("negative_fcf_yield", rows[0]["flags"])
+        self.assertIn("capex_exceeds_ocf", rows[0]["flags"])
 
     def test_coal_cycle_state_validation_writes_bucket_evidence(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

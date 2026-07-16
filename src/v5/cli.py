@@ -26,6 +26,7 @@ from v5.joinquant_pit_panel_runner import collect_joinquant_basic_pit_panel
 from v5.joinquant_availability_runner import build_joinquant_availability_proxy, collect_joinquant_bank_indicator_pubdates
 from v5.local_backtest import DEFAULT_BACKTEST_END, DEFAULT_BACKTEST_START, BacktestOptions, run_local_backtest
 from v5.formal_validation_runner import run_formal_validation
+from v5.overfit_audit_runner import run_overfit_audit
 from v5.platform_attribution_runner import run_platform_attribution, run_position_attribution, run_transaction_attribution
 from v5.platform_replication_runner import run_platform_replication_packet
 from v5.sector_rank_panel_runner import build_sector_rank_panel
@@ -285,6 +286,17 @@ def main(argv: list[str] | None = None) -> int:
     universe_parser.add_argument("execution_price_csv", type=Path)
     universe_parser.add_argument("--out", type=Path, default=Path("universes"))
     universe_parser.add_argument("--strategy-id", default="bank_value_15y")
+
+    overfit_parser = subparsers.add_parser("overfit-audit")
+    overfit_parser.add_argument("spec", type=Path)
+    overfit_parser.add_argument("--panel", type=Path)
+    overfit_parser.add_argument("--daily-returns-csv", type=Path)
+    overfit_parser.add_argument("--rebalance-signals-csv", type=Path)
+    overfit_parser.add_argument("--out", type=Path, default=Path("validation_overfit"))
+    overfit_parser.add_argument("--strategy-id")
+    overfit_parser.add_argument("--random-seed", type=int, default=20260716)
+    overfit_parser.add_argument("--random-windows", type=int, default=100)
+    overfit_parser.add_argument("--min-window-days", type=int, default=252)
 
     attribution_parser = subparsers.add_parser("platform-attribution")
     attribution_parser.add_argument("local_daily_csv", type=Path)
@@ -578,6 +590,20 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "build-universe":
             print(build_point_in_time_universe(args.panel, args.execution_price_csv, args.out, args.strategy_id))
             return 0
+        if args.command == "overfit-audit":
+            result = run_overfit_audit(
+                args.spec,
+                args.out,
+                panel_path=args.panel,
+                daily_returns_csv=args.daily_returns_csv,
+                rebalance_signals_csv=args.rebalance_signals_csv,
+                strategy_id=args.strategy_id,
+                random_seed=args.random_seed,
+                random_windows=args.random_windows,
+                min_window_days=args.min_window_days,
+            )
+            print(result.report_path)
+            return 0 if result.blocker_count == 0 else 2
         if args.command == "platform-attribution":
             print(
                 run_platform_attribution(

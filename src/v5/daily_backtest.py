@@ -81,6 +81,11 @@ def run_daily_joinquant_like_backtest(
     out.mkdir(parents=True, exist_ok=True)
 
     daily_rows, holding_rows, trade_rows, dividend_rows = _simulate_daily(prices_by_date, benchmarks, cash_dividends, signals, spec.raw, options)
+    for row in daily_rows:
+        row["experiment_layer"] = experiment_layer
+        row["benchmark_source"] = benchmark_id
+    for row in signal_rows:
+        row["experiment_layer"] = experiment_layer
     metrics = _compute_metrics(daily_rows)
     summary = {
         "strategy_id": spec.strategy_id,
@@ -241,6 +246,12 @@ def _build_rebalance_signals(
         signal_rows.append(
             {
                 "trade_date": trade_date,
+                "factor_visible_date": _max_visible_field(date_rows, "factor_visible_date"),
+                "business_tag_visible_date": _max_visible_field(date_rows, "business_tag_visible_date"),
+                "external_state_visible_date": _max_visible_field(date_rows, "external_state_visible_date"),
+                "universe_visible_date": _max_visible_field(date_rows, "universe_visible_date"),
+                "case": "composite_current",
+                "factor": ";".join(used_factors),
                 "candidate_count": len(scored),
                 "guarded_count": len(eligible),
                 "selected_count": len(selected),
@@ -249,6 +260,11 @@ def _build_rebalance_signals(
             }
         )
     return signals, signal_rows
+
+
+def _max_visible_field(rows: list[dict[str, Any]], field: str) -> str:
+    values = [str(row.get(field) or "")[:10] for row in rows if row.get(field)]
+    return max(values) if values else ""
 
 
 def _override_trailing_cash_dividend_yield(

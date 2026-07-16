@@ -54,6 +54,7 @@
 - [Coal V5.2b final PM decision](strategy_cases/coal_v52b_final_pm_decision.md) - V5.2b archived as workflow replication passed but strategy candidate failed.
 - [Coal V5.2b Eastmoney segment evidence](strategy_cases/coal_v52b_eastmoney_segment_evidence.md) - Eastmoney F10 segment runner covers 33/37 coal companies; formal tag gate remains blocked.
 - [Coal V5.2b segment reviewed repair result](strategy_cases/coal_v52b_segment_reviewed_repair_result.md) - Tushare fallback repairs 37/37 segment coverage and rebuilds a formal PIT coal universe panel.
+- [Coal V5.2b final inputs audit result](strategy_cases/coal_v52b_final_inputs_audit_result.md) - daily returns and rebalance signals repaired; external raw-coal output / inventory state remains blocked, so V5.2b is not promoted.
 
 ## Open Research Questions
 

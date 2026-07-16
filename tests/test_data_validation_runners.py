@@ -13,12 +13,16 @@ from v5.bank_quality_date_alignment_runner import align_bank_quality_dates
 from v5.coal_cycle_state_validation_runner import run_coal_cycle_state_validation
 from v5.coal_data_audit_runner import (
     _target_report_years,
+    audit_coal_segment_evidence,
     audit_coal_business_tags,
     audit_coal_capex_fcf,
     build_coal_capex_policy_panel,
+    merge_coal_state_sources,
     merge_coal_manual_state,
     write_coal_business_tag_visible_date_template,
+    write_coal_segment_evidence_template,
     write_coal_manual_state_template,
+    write_nbs_historical_state_template,
     write_coal_official_state_seed,
 )
 from v5.coal_external_state_runner import latest_visible_state_values, validate_coal_external_state, write_coal_external_state_template
@@ -181,6 +185,28 @@ class DataValidationRunnerTests(unittest.TestCase):
         self.assertIn("coal_inventory_or_output_state", {row["metric"] for row in rows})
         self.assertIn("thermal_coal_price_state", {row["metric"] for row in rows})
 
+    def test_coal_nbs_historical_template_is_continuous_but_not_pit_usable(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            template = write_nbs_historical_state_template(Path(tmp), start_year=2025, end_year=2025)
+            rows = self._read_csv(template)
+            manifest = json.loads((template.parent / "coal_nbs_historical_state_import_manifest.json").read_text(encoding="utf-8"))
+
+        self.assertEqual(len(rows), 84)
+        self.assertEqual(manifest["pit_usable_count"], 0)
+        self.assertEqual(rows[0]["pit_usable"], "false")
+        self.assertIn("coal_inventory_or_output_state", {row["metric"] for row in rows})
+        self.assertIn("thermal_coal_price_state", {row["metric"] for row in rows})
+
+    def test_coal_state_source_merge_marks_insufficient_history(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            seed = write_coal_official_state_seed(tmp_path)
+            merged = merge_coal_state_sources(tmp_path / "merged", seed)
+            manifest = json.loads((merged.parent / "coal_external_state_formal_candidate_manifest.json").read_text(encoding="utf-8"))
+
+        self.assertEqual(manifest["status"], "needs_review")
+        self.assertFalse(manifest["coverage"]["formal_history_ready"])
+
     def test_coal_latest_visible_state_uses_prior_visible_rows(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             state = Path(tmp) / "coal_state.csv"
@@ -299,6 +325,34 @@ class DataValidationRunnerTests(unittest.TestCase):
         self.assertIn("2021", years)
         self.assertIn("2025", years)
         self.assertIn("2026", years)
+
+    def test_coal_segment_evidence_template_and_audit_remain_blocked_until_filled(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            disclosures = tmp_path / "disclosures.csv"
+            self._write_csv(
+                disclosures,
+                ["code", "ts_code", "report_period", "report_type", "notice_date", "source_name"],
+                [
+                    {
+                        "code": "601225.XSHG",
+                        "ts_code": "601225.SH",
+                        "report_period": "2024-12-31",
+                        "report_type": "annual",
+                        "notice_date": "2025-04-20",
+                        "source_name": "test",
+                    }
+                ],
+            )
+
+            evidence = write_coal_segment_evidence_template(disclosures, tmp_path / "evidence")
+            report = audit_coal_segment_evidence(evidence, tmp_path / "audit")
+            rows = self._read_csv(evidence)
+            summary = json.loads((report.parent / "coal_segment_evidence_audit_summary.json").read_text(encoding="utf-8"))
+
+        self.assertEqual(rows[0]["pit_usable"], "false")
+        self.assertEqual(summary["status"], "blocked")
+        self.assertEqual(summary["complete_rows"], 0)
 
     def test_coal_capex_fcf_audit_flags_unstable_fcf_rows(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

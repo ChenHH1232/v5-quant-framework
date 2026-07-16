@@ -14,13 +14,17 @@ from v5.bank_quality_date_alignment_runner import DEFAULT_DATABASE_DIR as DATE_A
 from v5.bank_quality_date_alignment_runner import align_bank_quality_dates
 from v5.coal_cycle_state_validation_runner import run_coal_cycle_state_validation
 from v5.coal_data_audit_runner import (
+    audit_coal_segment_evidence,
     audit_coal_business_tags,
     audit_coal_capex_fcf,
     build_coal_capex_policy_panel,
     collect_coal_report_disclosure_dates,
     merge_coal_manual_state,
+    merge_coal_state_sources,
     write_coal_business_tag_visible_date_template,
+    write_coal_segment_evidence_template,
     write_coal_manual_state_template,
+    write_nbs_historical_state_template,
     write_coal_official_state_seed,
 )
 from v5.coal_external_state_runner import collect_coal_external_state, validate_coal_external_state, write_coal_external_state_template
@@ -301,8 +305,15 @@ def main(argv: list[str] | None = None) -> int:
     coal_data_audit_subparsers = coal_data_audit_parser.add_subparsers(dest="coal_data_audit_command", required=True)
     coal_data_template = coal_data_audit_subparsers.add_parser("manual-state-template")
     coal_data_template.add_argument("--out-dir", type=Path, default=Path("数据库") / "processed" / "coal_external_state")
+    coal_data_nbs_template = coal_data_audit_subparsers.add_parser("nbs-historical-template")
+    coal_data_nbs_template.add_argument("--out-dir", type=Path, default=Path("数据库") / "processed" / "coal_external_state")
+    coal_data_nbs_template.add_argument("--start-year", type=int, default=2015)
+    coal_data_nbs_template.add_argument("--end-year", type=int, default=2026)
     coal_data_seed = coal_data_audit_subparsers.add_parser("official-state-seed")
     coal_data_seed.add_argument("--out-dir", type=Path, default=Path("数据库") / "processed" / "coal_external_state")
+    coal_data_merge_sources = coal_data_audit_subparsers.add_parser("merge-state-sources")
+    coal_data_merge_sources.add_argument("state_csvs", type=Path, nargs="+")
+    coal_data_merge_sources.add_argument("--out-dir", type=Path, default=Path("数据库") / "processed" / "coal_external_state")
     coal_data_merge = coal_data_audit_subparsers.add_parser("merge-manual-state")
     coal_data_merge.add_argument("base_state_csv", type=Path)
     coal_data_merge.add_argument("manual_state_csv", type=Path)
@@ -318,6 +329,12 @@ def main(argv: list[str] | None = None) -> int:
     coal_data_disclosures.add_argument("--out-dir", type=Path, default=Path("数据库") / "processed" / "coal_business_tags")
     coal_data_disclosures.add_argument("--credential-file", type=Path, default=Path(r"D:\hh\保险箱\重要凭据.txt"))
     coal_data_disclosures.add_argument("--token-env", default="TUSHARE_TOKEN")
+    coal_data_segment_template = coal_data_audit_subparsers.add_parser("segment-evidence-template")
+    coal_data_segment_template.add_argument("disclosure_csv", type=Path, default=Path("数据库") / "processed" / "coal_business_tags" / "coal_report_disclosure_dates.csv", nargs="?")
+    coal_data_segment_template.add_argument("--out-dir", type=Path, default=Path("数据库") / "processed" / "coal_business_tags")
+    coal_data_segment_audit = coal_data_audit_subparsers.add_parser("audit-segment-evidence")
+    coal_data_segment_audit.add_argument("evidence_csv", type=Path, default=Path("数据库") / "processed" / "coal_business_tags" / "coal_segment_business_evidence_template.csv", nargs="?")
+    coal_data_segment_audit.add_argument("--out-dir", type=Path, default=Path("数据库") / "manifests" / "coal_segment_evidence_audit")
     coal_data_capex = coal_data_audit_subparsers.add_parser("audit-capex-fcf")
     coal_data_capex.add_argument("panel", type=Path, nargs="?", default=Path("数据库") / "processed" / "coal_pit_panel" / "panel.csv")
     coal_data_capex.add_argument("--out-dir", type=Path, default=Path("数据库") / "manifests" / "coal_capex_fcf_audit")
@@ -644,8 +661,14 @@ def main(argv: list[str] | None = None) -> int:
             if args.coal_data_audit_command == "manual-state-template":
                 print(write_coal_manual_state_template(args.out_dir))
                 return 0
+            if args.coal_data_audit_command == "nbs-historical-template":
+                print(write_nbs_historical_state_template(args.out_dir, args.start_year, args.end_year))
+                return 0
             if args.coal_data_audit_command == "official-state-seed":
                 print(write_coal_official_state_seed(args.out_dir))
+                return 0
+            if args.coal_data_audit_command == "merge-state-sources":
+                print(merge_coal_state_sources(args.out_dir, *args.state_csvs))
                 return 0
             if args.coal_data_audit_command == "merge-manual-state":
                 print(merge_coal_manual_state(args.base_state_csv, args.manual_state_csv, args.out_dir))
@@ -658,6 +681,12 @@ def main(argv: list[str] | None = None) -> int:
                 return 0
             if args.coal_data_audit_command == "collect-report-disclosures":
                 print(collect_coal_report_disclosure_dates(args.panel, args.out_dir, args.credential_file, args.token_env))
+                return 0
+            if args.coal_data_audit_command == "segment-evidence-template":
+                print(write_coal_segment_evidence_template(args.disclosure_csv, args.out_dir))
+                return 0
+            if args.coal_data_audit_command == "audit-segment-evidence":
+                print(audit_coal_segment_evidence(args.evidence_csv, args.out_dir))
                 return 0
             if args.coal_data_audit_command == "audit-capex-fcf":
                 print(audit_coal_capex_fcf(args.panel, args.out_dir))

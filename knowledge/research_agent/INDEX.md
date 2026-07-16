@@ -51,6 +51,7 @@
 - [Coal V5.2b cash-flow cycle value result](strategy_cases/coal_v52b_cashflow_cycle_value_result.md) - revised coal model improved evidence, but formal candidacy remains blocked by data audits and 2018 failure.
 - [Coal V5.2b data audit blocker repair](strategy_cases/coal_v52b_data_audit_blocker_repair.md) - source import template, business-tag PIT audit, FCF/capex audit, and PM decision to keep V5.2b in the data-audit loop.
 - [Coal V5.2b formal data repair result](strategy_cases/coal_v52b_formal_data_repair_result.md) - official state seed, report disclosure dates, capex-policy branch, and PM decision to keep candidacy blocked.
+- [Coal V5.2b final PM decision](strategy_cases/coal_v52b_final_pm_decision.md) - V5.2b archived as workflow replication passed but strategy candidate failed.
 
 ## Open Research Questions
 

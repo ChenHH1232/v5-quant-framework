@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import calendar
 import csv
 import json
 import math
@@ -111,6 +112,25 @@ REPORT_DISCLOSURE_FIELDS = [
     "notes",
 ]
 
+SEGMENT_EVIDENCE_FIELDS = [
+    "code",
+    "ts_code",
+    "report_period",
+    "report_type",
+    "notice_date",
+    "visible_date",
+    "coal_revenue_ratio",
+    "coal_profit_ratio",
+    "power_revenue_ratio",
+    "coal_chemical_revenue_ratio",
+    "approved_coal_business_tag",
+    "source_name",
+    "source_url",
+    "pit_usable",
+    "review_status",
+    "notes",
+]
+
 OFFICIAL_STATE_SEED_ROWS = [
     {
         "visible_date": "2026-06-16",
@@ -199,6 +219,77 @@ def write_coal_official_state_seed(out_dir: Path = DEFAULT_PROCESSED_DIR / "coal
     return seed_path
 
 
+def write_nbs_historical_state_template(
+    out_dir: Path = DEFAULT_PROCESSED_DIR / "coal_external_state",
+    start_year: int = 2015,
+    end_year: int = 2026,
+) -> Path:
+    out_dir.mkdir(parents=True, exist_ok=True)
+    rows: list[dict[str, Any]] = []
+    for year in range(start_year, end_year + 1):
+        for month in range(1, 13):
+            if year == 2026 and month > 6:
+                continue
+            state_date = _month_end_date(year, month)
+            rows.append(
+                _template_state_row(
+                    state_date,
+                    "national",
+                    "all_coal",
+                    "coal_inventory_or_output_state",
+                    "10k_ton_or_percent_yoy",
+                    "National Bureau of Statistics energy production release",
+                    "https://www.stats.gov.cn/sj/zxfb/",
+                    "Fill monthly raw coal output or YoY from NBS Energy Production Situation. Use publication date as conservative visible_date.",
+                )
+            )
+            for period_day, period_name in [(10, "early"), (20, "middle"), (_month_end_day(year, month), "late")]:
+                state_date = f"{year:04d}-{month:02d}-{period_day:02d}"
+                for metric, sub_industry, unit, notes in [
+                    (
+                        "thermal_coal_price_state",
+                        "thermal_coal",
+                        "cny_per_ton",
+                        "Fill Shanxi mixed coal / ordinary mixed coal / documented stitchable thermal coal item. Document item changes.",
+                    ),
+                    (
+                        "coking_coal_price_state",
+                        "coking_coal",
+                        "cny_per_ton",
+                        "Fill coking coal main coking coal item if available.",
+                    ),
+                ]:
+                    rows.append(
+                        _template_state_row(
+                            state_date,
+                            "circulation_market",
+                            sub_industry,
+                            metric,
+                            unit,
+                            "National Bureau of Statistics production-material circulation price release",
+                            "https://www.stats.gov.cn/sj/zxfb/",
+                            f"NBS {period_name}-period production-material circulation price. {notes}",
+                        )
+                    )
+    out_path = out_dir / "coal_nbs_historical_state_import_template.csv"
+    _write_csv(out_path, STATE_FIELDS, rows)
+    _write_json(
+        out_dir / "coal_nbs_historical_state_import_manifest.json",
+        {
+            "dataset": "coal_nbs_historical_state_import_template",
+            "output": str(out_path),
+            "start_year": start_year,
+            "end_year": end_year,
+            "row_count": len(rows),
+            "pit_usable_count": 0,
+            "required_rule": "Rows become PIT usable only after visible_date, source_publication_date, value and item notes are manually reviewed.",
+            "item_change_warning": "NBS coal price specifications changed in 2026; historical stitching must document item identity and any breaks.",
+            "created_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
+        },
+    )
+    return out_path
+
+
 def merge_coal_manual_state(
     base_state_csv: Path,
     manual_state_csv: Path,
@@ -223,6 +314,36 @@ def merge_coal_manual_state(
             "manual_row_count": len(manual_rows),
             "validation": validation,
             "governance": "Manual rows require source review before formal candidate promotion.",
+            "created_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
+        },
+    )
+    return out_path
+
+
+def merge_coal_state_sources(
+    out_dir: Path,
+    *state_csvs: Path,
+) -> Path:
+    rows: list[dict[str, str]] = []
+    for path in state_csvs:
+        if path.exists():
+            rows.extend(_read_csv(path))
+    rows = sorted(rows, key=lambda row: (row.get("visible_date", ""), row.get("state_date", ""), row.get("metric", ""), row.get("sub_industry", "")))
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / "coal_external_state_formal_candidate.csv"
+    _write_csv(out_path, STATE_FIELDS, rows)
+    validation = validate_coal_external_state(out_path)
+    coverage = _state_coverage_summary(rows)
+    _write_json(
+        out_dir / "coal_external_state_formal_candidate_manifest.json",
+        {
+            "dataset": "coal_external_state_formal_candidate",
+            "sources": [str(path) for path in state_csvs],
+            "output": str(out_path),
+            "row_count": len(rows),
+            "validation": validation,
+            "coverage": coverage,
+            "status": "needs_review" if coverage["formal_history_ready"] is False else "ready_for_quant_review",
             "created_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
         },
     )
@@ -304,6 +425,82 @@ def write_coal_business_tag_visible_date_template(
         },
     )
     return out_path
+
+
+def write_coal_segment_evidence_template(
+    disclosure_csv: Path,
+    out_dir: Path = DEFAULT_PROCESSED_DIR / "coal_business_tags",
+) -> Path:
+    disclosures = _read_csv(disclosure_csv)
+    rows = []
+    for row in disclosures:
+        rows.append(
+            {
+                "code": row.get("code", ""),
+                "ts_code": row.get("ts_code", ""),
+                "report_period": row.get("report_period", ""),
+                "report_type": row.get("report_type", ""),
+                "notice_date": row.get("notice_date", ""),
+                "visible_date": row.get("notice_date", ""),
+                "coal_revenue_ratio": "",
+                "coal_profit_ratio": "",
+                "power_revenue_ratio": "",
+                "coal_chemical_revenue_ratio": "",
+                "approved_coal_business_tag": "",
+                "source_name": row.get("source_name", "tushare.disclosure_date"),
+                "source_url": "",
+                "pit_usable": "false",
+                "review_status": "template_requires_segment_revenue_profit_evidence",
+                "notes": "Fill segment revenue/profit evidence from the visible report before setting pit_usable=true.",
+            }
+        )
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / "coal_segment_business_evidence_template.csv"
+    _write_csv(out_path, SEGMENT_EVIDENCE_FIELDS, rows)
+    _write_json(
+        out_dir / "coal_segment_business_evidence_manifest.json",
+        {
+            "dataset": "coal_segment_business_evidence_template",
+            "disclosure_csv": str(disclosure_csv),
+            "output": str(out_path),
+            "row_count": len(rows),
+            "pit_usable_count": 0,
+            "required_rule": "PIT business tags require report visible_date and segment revenue/profit evidence.",
+            "created_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
+        },
+    )
+    return out_path
+
+
+def audit_coal_segment_evidence(
+    evidence_csv: Path,
+    out_dir: Path = DEFAULT_MANIFEST_DIR / "coal_segment_evidence_audit",
+) -> Path:
+    rows = _read_csv(evidence_csv)
+    usable = [row for row in rows if str(row.get("pit_usable", "")).lower() == "true"]
+    complete = [
+        row
+        for row in usable
+        if row.get("visible_date")
+        and row.get("approved_coal_business_tag")
+        and (row.get("coal_revenue_ratio") or row.get("coal_profit_ratio"))
+    ]
+    by_code = {row.get("code", "") for row in complete if row.get("code")}
+    out_dir.mkdir(parents=True, exist_ok=True)
+    summary = {
+        "dataset": "coal_segment_evidence_audit",
+        "evidence_csv": str(evidence_csv),
+        "row_count": len(rows),
+        "pit_usable_rows": len(usable),
+        "complete_rows": len(complete),
+        "covered_company_count": len(by_code),
+        "status": "pass" if len(by_code) >= 37 and len(complete) >= 37 else "blocked",
+        "reason": "Business tags require segment revenue/profit evidence for all coal companies before formal candidate promotion.",
+        "created_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
+    }
+    _write_json(out_dir / "coal_segment_evidence_audit_summary.json", summary)
+    _write_report(out_dir / "coal_segment_evidence_audit_report.md", "Coal Segment Evidence Audit", summary)
+    return out_dir / "coal_segment_evidence_audit_report.md"
 
 
 def collect_coal_report_disclosure_dates(
@@ -524,6 +721,58 @@ def _write_report(path: Path, title: str, summary: dict[str, Any]) -> None:
     path.write_text("\n".join(lines), encoding="utf-8")
 
 
+def _template_state_row(
+    state_date: str,
+    state_scope: str,
+    sub_industry: str,
+    metric: str,
+    unit: str,
+    source_name: str,
+    source_url: str,
+    notes: str,
+) -> dict[str, str]:
+    return {
+        "visible_date": "",
+        "state_date": state_date,
+        "state_scope": state_scope,
+        "sub_industry": sub_industry,
+        "metric": metric,
+        "value": "",
+        "unit": unit,
+        "source_name": source_name,
+        "source_url": source_url,
+        "source_publication_date": "",
+        "pit_usable": "false",
+        "review_status": "manual_import_required",
+        "notes": notes,
+    }
+
+
+def _month_end_date(year: int, month: int) -> str:
+    return f"{year:04d}-{month:02d}-{_month_end_day(year, month):02d}"
+
+
+def _month_end_day(year: int, month: int) -> int:
+    return calendar.monthrange(year, month)[1]
+
+
+def _state_coverage_summary(rows: list[dict[str, str]]) -> dict[str, Any]:
+    usable = [row for row in rows if str(row.get("pit_usable", "")).lower() == "true"]
+    by_metric: dict[str, set[str]] = {}
+    for row in usable:
+        metric = row.get("metric", "")
+        state_date = row.get("state_date", "")
+        if metric and state_date:
+            by_metric.setdefault(metric, set()).add(state_date[:7])
+    required = ["coal_inventory_or_output_state", "thermal_coal_price_state", "coking_coal_price_state"]
+    metric_month_counts = {metric: len(by_metric.get(metric, set())) for metric in required}
+    return {
+        "metric_month_counts": metric_month_counts,
+        "formal_history_ready": all(count >= 80 for count in metric_month_counts.values()),
+        "minimum_required_months_per_metric": 80,
+    }
+
+
 def _target_report_years(rows: list[dict[str, str]]) -> set[str]:
     years = set()
     for row in rows:
@@ -667,8 +916,15 @@ def main(argv: list[str] | None = None) -> int:
     subparsers = parser.add_subparsers(dest="command", required=True)
     template_parser = subparsers.add_parser("manual-state-template")
     template_parser.add_argument("--out-dir", type=Path, default=DEFAULT_PROCESSED_DIR / "coal_external_state")
+    nbs_template_parser = subparsers.add_parser("nbs-historical-template")
+    nbs_template_parser.add_argument("--out-dir", type=Path, default=DEFAULT_PROCESSED_DIR / "coal_external_state")
+    nbs_template_parser.add_argument("--start-year", type=int, default=2015)
+    nbs_template_parser.add_argument("--end-year", type=int, default=2026)
     seed_parser = subparsers.add_parser("official-state-seed")
     seed_parser.add_argument("--out-dir", type=Path, default=DEFAULT_PROCESSED_DIR / "coal_external_state")
+    merge_sources_parser = subparsers.add_parser("merge-state-sources")
+    merge_sources_parser.add_argument("state_csvs", type=Path, nargs="+")
+    merge_sources_parser.add_argument("--out-dir", type=Path, default=DEFAULT_PROCESSED_DIR / "coal_external_state")
     merge_parser = subparsers.add_parser("merge-manual-state")
     merge_parser.add_argument("base_state_csv", type=Path)
     merge_parser.add_argument("manual_state_csv", type=Path)
@@ -684,6 +940,12 @@ def main(argv: list[str] | None = None) -> int:
     disclosure_parser.add_argument("--out-dir", type=Path, default=DEFAULT_PROCESSED_DIR / "coal_business_tags")
     disclosure_parser.add_argument("--credential-file", type=Path, default=DEFAULT_CREDENTIAL_FILE)
     disclosure_parser.add_argument("--token-env", default="TUSHARE_TOKEN")
+    segment_template_parser = subparsers.add_parser("segment-evidence-template")
+    segment_template_parser.add_argument("disclosure_csv", type=Path)
+    segment_template_parser.add_argument("--out-dir", type=Path, default=DEFAULT_PROCESSED_DIR / "coal_business_tags")
+    segment_audit_parser = subparsers.add_parser("audit-segment-evidence")
+    segment_audit_parser.add_argument("evidence_csv", type=Path)
+    segment_audit_parser.add_argument("--out-dir", type=Path, default=DEFAULT_MANIFEST_DIR / "coal_segment_evidence_audit")
     capex_parser = subparsers.add_parser("audit-capex-fcf")
     capex_parser.add_argument("panel", type=Path)
     capex_parser.add_argument("--out-dir", type=Path, default=DEFAULT_MANIFEST_DIR / "coal_capex_fcf_audit")
@@ -694,8 +956,14 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "manual-state-template":
         print(write_coal_manual_state_template(args.out_dir))
         return 0
+    if args.command == "nbs-historical-template":
+        print(write_nbs_historical_state_template(args.out_dir, args.start_year, args.end_year))
+        return 0
     if args.command == "official-state-seed":
         print(write_coal_official_state_seed(args.out_dir))
+        return 0
+    if args.command == "merge-state-sources":
+        print(merge_coal_state_sources(args.out_dir, *args.state_csvs))
         return 0
     if args.command == "merge-manual-state":
         print(merge_coal_manual_state(args.base_state_csv, args.manual_state_csv, args.out_dir))
@@ -708,6 +976,12 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if args.command == "collect-report-disclosures":
         print(collect_coal_report_disclosure_dates(args.panel, args.out_dir, args.credential_file, args.token_env))
+        return 0
+    if args.command == "segment-evidence-template":
+        print(write_coal_segment_evidence_template(args.disclosure_csv, args.out_dir))
+        return 0
+    if args.command == "audit-segment-evidence":
+        print(audit_coal_segment_evidence(args.evidence_csv, args.out_dir))
         return 0
     if args.command == "audit-capex-fcf":
         print(audit_coal_capex_fcf(args.panel, args.out_dir))

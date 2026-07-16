@@ -1,0 +1,175 @@
+{
+  "meta": {
+    "strategy_id": "utilities_demand_state_v51f",
+    "name": "Utilities Demand State V5.1f",
+    "objective": "Use PIT electricity-demand state to switch between high dividend, operating cash-flow yield, and low PB factors for A-share utilities operating companies.",
+    "status": "formal_strategy_candidate_pending_engineering_audit"
+  },
+  "universe": {
+    "name": "A-share utilities operating companies",
+    "construction": "point_in_time_core_utilities_operating_company_membership",
+    "point_in_time": true,
+    "minimum_rebalance_coverage_ratio": 0.8
+  },
+  "data": {
+    "vendor": "JoinQuant/DataJQ PIT utilities panel plus V5 utilities external state panel",
+    "price_frequency": "quarterly_signal_panel",
+    "financial_as_of_policy": "announcement_date",
+    "price_adjustment": {
+      "research_panel": "pre_adjusted_total_return",
+      "status": "research_pit_validation_only"
+    },
+    "external_state_policy": {
+      "metric": "electricity_consumption_yoy",
+      "visibility": "latest_visible_state_row_with_visible_date_lte_trade_date",
+      "bucket_method": "expanding_historical_tertiles",
+      "warmup_policy": "cashflow_yield"
+    },
+    "window": {
+      "research_start": "2017-01-01",
+      "research_end": "2026-05-31"
+    }
+  },
+  "signals": {
+    "factors": [
+      {
+        "name": "electricity_consumption_yoy",
+        "source": "utilities_external_state_panel",
+        "role": "external_demand_state",
+        "direction": "higher_is_better",
+        "definition": "Latest visible total social electricity consumption YoY. Used only for state bucketing, not as a ranked stock-level factor.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 25,
+        "missing_policy": "block_rebalance_date",
+        "winsorize": "not_applicable",
+        "normalize": "expanding_state_tertile",
+        "evidence_status": "formal_candidate_quant_ready"
+      },
+      {
+        "name": "dividend_yield",
+        "source": "jqdatasdk.valuation",
+        "role": "weak_demand_defensive_shareholder_return",
+        "direction": "higher_is_better",
+        "definition": "Dividend yield used when electricity demand state is weak.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security",
+        "winsorize": "rebalance_cross_section",
+        "normalize": "rank_within_rebalance_date",
+        "evidence_status": "state_conditioned_rankic_positive"
+      },
+      {
+        "name": "operating_cash_flow_yield",
+        "source": "derived_from_cash_flow_statement_and_market_cap",
+        "role": "mid_demand_cashflow_resilience",
+        "direction": "higher_is_better",
+        "definition": "Operating cash flow divided by market capitalization. Used in mid-demand states and warmup periods.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 90,
+        "missing_policy": "drop_security",
+        "winsorize": "rebalance_cross_section",
+        "normalize": "rank_within_rebalance_date",
+        "evidence_status": "state_conditioned_rankic_positive"
+      },
+      {
+        "name": "low_price_to_book",
+        "source": "jqdatasdk.valuation",
+        "role": "strong_demand_asset_revaluation",
+        "direction": "lower_is_better",
+        "definition": "PB ratio. Lower PB is preferred when electricity demand state is strong.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security",
+        "winsorize": "rebalance_cross_section",
+        "normalize": "rank_within_rebalance_date",
+        "evidence_status": "state_conditioned_rankic_positive"
+      }
+    ],
+    "scoring": {
+      "method": "external_state_switch",
+      "normalization_scope": "rebalance_cross_section",
+      "state_rules": [
+        {
+          "state": "weak",
+          "condition": "electricity_consumption_yoy <= expanding_tertile_33",
+          "factor": "dividend_yield",
+          "selection": "highest"
+        },
+        {
+          "state": "mid",
+          "condition": "expanding_tertile_33 < electricity_consumption_yoy < expanding_tertile_67",
+          "factor": "operating_cash_flow_yield",
+          "selection": "highest"
+        },
+        {
+          "state": "strong",
+          "condition": "electricity_consumption_yoy >= expanding_tertile_67",
+          "factor": "low_price_to_book",
+          "selection": "lowest"
+        },
+        {
+          "state": "warmup",
+          "condition": "fewer_than_8_historical_state_observations",
+          "factor": "operating_cash_flow_yield",
+          "selection": "highest"
+        }
+      ],
+      "min_factor_count": 1,
+      "value_trap_guard": "No additional guard is approved. Failure years 2017 and 2020 must remain visible in PM review."
+    }
+  },
+  "schedule": {
+    "signal_frequency": "quarterly_after_financial_disclosure_and_external_state_visibility",
+    "rebalance_frequency": "quarterly",
+    "rebalance_rule": "first_tradable_day_after_required_financial_data_and_state_visibility_check"
+  },
+  "portfolio": {
+    "selection_count": 10,
+    "weighting": "equal_weight_research_candidate",
+    "max_position_weight": 0.12,
+    "cash_policy": "hold_residual_cash_when_fewer_than_10_utilities_pass_filters"
+  },
+  "risk": {
+    "defensive_asset": "cash",
+    "defensive_rule": {
+      "enabled": false,
+      "reason": "V5.1f validates factor-state switching, not market-timing defense."
+    },
+    "individual_stop_loss_take_profit": {
+      "enabled": false,
+      "reason": "Fixed exits are not part of the research hypothesis."
+    }
+  },
+  "validation": {
+    "method": "rolling",
+    "train_years": 5,
+    "test_years": 2,
+    "review_years": 1,
+    "required_tests": [
+      "state_conditioned_rank_ic",
+      "selection_count_8_10_12_robustness",
+      "baseline_comparison_low_pb_cashflow",
+      "failure_year_analysis_2017_2020",
+      "secondary_state_metric_review"
+    ],
+    "acceptance_rule": "PM may approve formal strategy candidacy only if the rule remains evidence-driven, financially explainable, statistically validated, reproducible and maintainable. Historical performance alone is insufficient."
+  },
+  "execution": {
+    "status": "blocked_until_engineering_audit_passes",
+    "next_gate": "engineering_contract_audit",
+    "commission_bps": 3,
+    "slippage_bps": 5,
+    "suspension_policy": "skip_untradeable",
+    "limit_policy": "skip_limit_blocked"
+  },
+  "outputs": {
+    "save_holdings": true,
+    "save_rebalance_signals": true,
+    "report": "markdown",
+    "required_reports": [
+      "pm_formal_candidate_decision",
+      "engineering_contract_audit",
+      "future_platform_replication_packet_if_approved"
+    ]
+  }
+}

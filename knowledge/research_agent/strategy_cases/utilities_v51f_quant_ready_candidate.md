@@ -5,14 +5,14 @@ Date: 2026-07-16
 Status:
 
 ```text
-formal_candidate_quant_ready
+formal_strategy_candidate + engineering_contract_audit_passed
 ```
 
 Not status:
 
 ```text
-formal_strategy_candidate
 accepted_strategy
+platform_replication
 ```
 
 ## Rule
@@ -55,4 +55,18 @@ The candidate still has failure years:
 2017, 2020
 ```
 
-Research Agent should explain these before PM upgrades the model.
+Research Agent should continue tracking these failure modes before strategy acceptance.
+
+## Engineering Update
+
+The strategy contract passed engineering audit. This does not mean the strategy is accepted or ready for JoinQuant code.
+
+Engineering smoke test also passed. This means the local validation runner can reproduce the Quant result from local PIT and external-state panels.
+
+Next possible PM gate:
+
+```text
+platform_replication_preparation
+```
+
+Accepted strategy status remains blocked.

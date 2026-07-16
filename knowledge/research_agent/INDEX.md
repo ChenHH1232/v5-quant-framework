@@ -23,6 +23,11 @@
 - [Coal data field map](references/coal_data_field_map.md) - stock-level and external coal-cycle PIT field requirements.
 - [Coal source collection plan](references/coal_source_collection_plan.md) - candidate sources for coal price, output, inventory and spread state.
 - [Coal validation handoff](references/coal_validation_handoff.md) - Quant Validation Agent requirements for V5.2 Test-1.
+- [Cyclical sector data gate](references/cyclical_sector_data_gate.md) - required PIT commodity price, supply-demand, spread and business-exposure layers before cyclical-sector formal promotion.
+- [Insurance universe definition](references/insurance_universe_definition.md) - V5.3 insurance operating-company universe boundary.
+- [Insurance data field map](references/insurance_data_field_map.md) - PIT fields for valuation, EV/NBV, solvency, underwriting, investment and external rate/equity states.
+- [Insurance source collection plan](references/insurance_source_collection_plan.md) - source order and PIT guardrails for V5.3 insurance.
+- [Insurance validation handoff](references/insurance_validation_handoff.md) - Quant Validation Agent task requirements for V5.3 Test-1.
 
 ## Factor Theory
 
@@ -35,6 +40,8 @@
 - [Utilities core factor hypotheses](factor_theory/utilities_core_factor_hypotheses.md) - candidate hypotheses for PIT validation, not accepted factors.
 - [Coal value investing framework](factor_theory/coal_value_investing_framework.md) - V5.2 cycle-aware high-dividend / value framework.
 - [Coal core factor hypotheses](factor_theory/coal_core_factor_hypotheses.md) - candidate coal factors and external state hypotheses, not accepted factors.
+- [Insurance value / quality framework](factor_theory/insurance_value_quality_framework.md) - V5.3 insurance economic logic, not validated factors.
+- [Insurance core factor hypotheses](factor_theory/insurance_core_factor_hypotheses.md) - candidate insurance factors for PIT validation, not accepted factors.
 
 ## Strategy Cases
 
@@ -55,6 +62,7 @@
 - [Coal V5.2b Eastmoney segment evidence](strategy_cases/coal_v52b_eastmoney_segment_evidence.md) - Eastmoney F10 segment runner covers 33/37 coal companies; formal tag gate remains blocked.
 - [Coal V5.2b segment reviewed repair result](strategy_cases/coal_v52b_segment_reviewed_repair_result.md) - Tushare fallback repairs 37/37 segment coverage and rebuilds a formal PIT coal universe panel.
 - [Coal V5.2b final inputs audit result](strategy_cases/coal_v52b_final_inputs_audit_result.md) - daily returns and rebalance signals repaired; external raw-coal output / inventory state remains blocked, so V5.2b is not promoted.
+- [Coal V5.2b PM closeout and V5.3 selection](strategy_cases/coal_v52b_pm_closeout_and_v53_selection.md) - coal paused as data-completion watchlist; insurance selected as V5.3 research-preparation track.
 
 ## Open Research Questions
 
@@ -65,3 +73,4 @@
 - Which macro/defensive variables reduce drawdown out of sample without becoming hidden sector-timing overfit?
 - Can V5.1 utilities factors remain financially explainable and statistically stable without bank-specific indicators?
 - Can V5.2 coal value factors survive PIT validation after controlling for commodity-cycle state?
+- Can V5.3 insurance value / quality factors transfer V5 financial-sector logic beyond banks without becoming bank-factor reuse?

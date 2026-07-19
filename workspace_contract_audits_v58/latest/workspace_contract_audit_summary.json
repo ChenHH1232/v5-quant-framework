@@ -138,5 +138,5 @@
   },
   "blocked_actions": [],
   "pm_rule": "Workspace contract audit is a read-only governance check; it does not run backtests, refresh data, tune models, or call JoinQuant.",
-  "created_at_utc": "2026-07-19T16:59:43+00:00"
+  "created_at_utc": "2026-07-19T17:07:52+00:00"
 }

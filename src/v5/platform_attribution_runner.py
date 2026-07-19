@@ -259,15 +259,18 @@ def _load_joinquant_transactions(path: Path) -> tuple[list[dict[str, Any]], str]
                 code = _extract_joinquant_code(row[3])
                 if not code:
                     continue
+                amount = abs(int(round(_parse_number(row[6]) or 0.0)))
+                if amount <= 0 or row[13] in {"已撤单", "撤单", "废单"}:
+                    continue
                 transactions.append(
                     {
                         "trade_date": row[0][:10],
                         "time": row[1],
                         "code": code,
                         "side": _parse_joinquant_side(row[4]),
-                        "amount": int(round(_parse_number(row[6]) or 0.0)),
+                        "amount": amount,
                         "price": _parse_number(row[7]) or 0.0,
-                        "value": _parse_number(row[8]) or 0.0,
+                        "value": abs(_parse_number(row[8]) or 0.0),
                         "commission": _parse_number(row[12]) or 0.0,
                         "status": row[13],
                         "target_raw": row[3],
@@ -285,11 +288,14 @@ def _load_local_holdings(path: Path) -> list[dict[str, Any]]:
         for row in csv.DictReader(handle):
             if not row.get("trade_date") or not row.get("code"):
                 continue
+            amount = int(float(row.get("amount") or 0))
+            if amount <= 0:
+                continue
             result.append(
                 {
                     "trade_date": row["trade_date"][:10],
                     "code": row["code"],
-                    "amount": int(float(row.get("amount") or 0)),
+                    "amount": amount,
                     "close": _float(row.get("close")) or 0.0,
                     "actual_weight": _float(row.get("actual_weight")) or 0.0,
                 }
@@ -447,21 +453,22 @@ def _extract_joinquant_code(target: str) -> str | None:
 
 
 def _parse_joinquant_side(value: str) -> str:
-    if value in {"买", "\u0392\u03c2"} or value.startswith("\u0392"):
+    text = (value or "").strip()
+    if text in {"买", "买入", "开仓买入", "买开", "\u0392\u03c2"} or text.startswith("\u0392"):
         return "buy"
-    if value in {"卖", "\u0392\u03c4"}:
+    if text in {"卖", "卖出", "平仓卖出", "卖平", "\u0392\u03c4"}:
         return "sell"
-    return value
+    return text
 
 
 def _parse_number(value: Any) -> float | None:
     if value in {None, ""}:
         return None
     text = str(value).replace(",", "").replace("%", "").strip()
-    if text == "-":
+    if text in {"-", "--"}:
         return None
     text = re.sub(r"[^0-9.\-]", "", text)
-    if text in {"", "-"}:
+    if text in {"", "-", "--"}:
         return None
     return float(text)
 

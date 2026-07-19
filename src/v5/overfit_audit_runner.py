@@ -175,9 +175,15 @@ def _future_leakage_checks(
             {"normalization_scope": scope},
         )
     )
+    safe_factor_as_of = {
+        "announcement_date",
+        "report_publish_date",
+        "trade_date_lagged",
+        "trade_date_market_cap_and_latest_visible_ev",
+    }
     unsafe_factors = []
     for factor in spec.get("signals", {}).get("factors", []):
-        if factor.get("as_of") not in {"announcement_date", "report_publish_date", "trade_date_lagged"}:
+        if factor.get("as_of") not in safe_factor_as_of:
             unsafe_factors.append(str(factor.get("name")))
     result.append(
         _check(

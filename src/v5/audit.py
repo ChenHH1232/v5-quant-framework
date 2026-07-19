@@ -48,7 +48,14 @@ def audit_strategy(spec: StrategySpec) -> AuditResult:
             )
         )
 
-    if raw["data"].get("financial_as_of_policy") not in {"announcement_date", "report_publish_date"}:
+    safe_financial_as_of_policies = {
+        "announcement_date",
+        "report_publish_date",
+        "trade_date_pit_get_fundamentals",
+        "announcement_date_or_trade_date_lagged_by_factor",
+        "original_announcement_visible_date",
+    }
+    if raw["data"].get("financial_as_of_policy") not in safe_financial_as_of_policies:
         issues.append(
             AuditIssue(
                 "FINANCIAL_AS_OF_POLICY_UNSAFE",
@@ -58,7 +65,18 @@ def audit_strategy(spec: StrategySpec) -> AuditResult:
         )
 
     for factor in spec.factors:
-        if factor.as_of not in {"announcement_date", "report_publish_date", "trade_date_lagged"}:
+        safe_factor_as_of_policies = {
+            "announcement_date",
+            "report_publish_date",
+            "trade_date_lagged",
+            "operating_announcement_visible_date",
+            "visible_report_segment_evidence",
+            "reviewed_operating_visible_date",
+            "trade_date_market_cap_and_latest_visible_ev",
+            "latest_visible_report_announcement_date",
+            "latest_visible_report_date",
+        }
+        if factor.as_of not in safe_factor_as_of_policies:
             issues.append(
                 AuditIssue(
                     "FACTOR_AS_OF_UNSAFE",
@@ -142,4 +160,3 @@ def audit_strategy(spec: StrategySpec) -> AuditResult:
         )
 
     return AuditResult(issues)
-

@@ -21,6 +21,7 @@ dev = [
     "akshare",
     "jqdatasdk",
     "pandas",
+    "pytest",
     "requests",
     "tushare",
 ]

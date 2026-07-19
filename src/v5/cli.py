@@ -8,6 +8,9 @@ from v5.cli_coal import register_coal_commands
 from v5.cli_core import register_core_commands
 from v5.cli_insurance import register_insurance_commands
 from v5.cli_platform import register_platform_commands
+from v5.cli_port_rail import register_port_rail_commands
+from v5.cli_research import register_research_commands
+from v5.cli_sector import register_sector_commands
 from v5.cli_utilities import register_utilities_commands
 from v5.engine import RunBlockedError
 
@@ -17,6 +20,9 @@ def main(argv: list[str] | None = None) -> int:
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     register_core_commands(subparsers)
+    register_research_commands(subparsers)
+    register_sector_commands(subparsers)
+    register_port_rail_commands(subparsers)
     register_bank_commands(subparsers)
     register_utilities_commands(subparsers)
     register_coal_commands(subparsers)

@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import math
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -180,7 +181,15 @@ def collect_joinquant_cash_dividends(
         table.implementation_pub_date,
         table.a_registration_date,
         table.a_xr_date,
+        table.a_bonus_date,
+        table.a_transfer_arrival_date,
         table.bonus_ratio_rmb,
+        table.dividend_ratio,
+        table.transfer_ratio,
+        table.total_capital_before_transfer,
+        table.total_capital_after_transfer,
+        table.float_capital_before_transfer,
+        table.float_capital_after_transfer,
     ]
     df = finance.run_query(
         query(*fields).filter(
@@ -209,7 +218,15 @@ def collect_joinquant_cash_dividends(
             "implementation_pub_date",
             "a_registration_date",
             "a_xr_date",
+            "a_bonus_date",
+            "a_transfer_arrival_date",
             "bonus_ratio_rmb",
+            "dividend_ratio",
+            "transfer_ratio",
+            "total_capital_before_transfer",
+            "total_capital_after_transfer",
+            "float_capital_before_transfer",
+            "float_capital_after_transfer",
         ],
         raw_records,
     )
@@ -224,6 +241,10 @@ def collect_joinquant_cash_dividends(
             "pay_date",
             "cash_per_10_shares",
             "cash_per_share",
+            "bonus_share_per_10_shares",
+            "transfer_share_per_10_shares",
+            "stock_dividend_ratio",
+            "position_multiplier",
             "dividend_tax_rate",
             "net_cash_per_share",
             "source",
@@ -246,6 +267,10 @@ def collect_joinquant_cash_dividends(
         "schema": {
             "bonus_ratio_rmb": "Cash dividend per 10 shares before tax.",
             "cash_per_share": "bonus_ratio_rmb / 10.",
+            "dividend_ratio": "Bonus shares per 10 shares when JoinQuant reports stock dividend shares.",
+            "transfer_ratio": "Transferred shares per 10 shares.",
+            "stock_dividend_ratio": "(dividend_ratio + transfer_ratio) / 10. Used to adjust local unadjusted-price holdings.",
+            "position_multiplier": "1 + stock_dividend_ratio.",
             "net_cash_per_share": "cash_per_share * (1 - dividend_tax_rate).",
             "pay_date": "Uses a_xr_date because STK_XR_XD does not expose a separate cash arrival date in the validated field set.",
             "announce_date": "implementation_pub_date, falling back to shareholders_plan_pub_date.",
@@ -297,10 +322,15 @@ def _normalize_akshare_dividend_row(code: str, row: dict[str, Any]) -> dict[str,
 def _normalize_joinquant_dividend_row(row: dict[str, Any], dividend_tax_rate: float) -> dict[str, str] | None:
     code = str(row.get("code") or "").strip()
     cash_per_10 = _to_float(row.get("bonus_ratio_rmb"))
+    bonus_share_per_10 = _to_float(row.get("dividend_ratio")) or 0.0
+    transfer_share_per_10 = _to_float(row.get("transfer_ratio")) or 0.0
     ex_date = _date_text(row.get("a_xr_date"))
-    if not code or cash_per_10 is None or cash_per_10 <= 0 or not ex_date:
+    has_cash = cash_per_10 is not None and cash_per_10 > 0
+    has_share_action = bonus_share_per_10 > 0 or transfer_share_per_10 > 0
+    if not code or not ex_date or not (has_cash or has_share_action):
         return None
-    cash_per_share = cash_per_10 / 10.0
+    cash_per_share = (cash_per_10 or 0.0) / 10.0
+    stock_dividend_ratio = (bonus_share_per_10 + transfer_share_per_10) / 10.0
     return {
         "code": code,
         "report_period": _date_text(row.get("report_date")),
@@ -308,8 +338,12 @@ def _normalize_joinquant_dividend_row(row: dict[str, Any], dividend_tax_rate: fl
         "record_date": _date_text(row.get("a_registration_date")),
         "ex_date": ex_date,
         "pay_date": ex_date,
-        "cash_per_10_shares": _fmt_float(cash_per_10),
+        "cash_per_10_shares": _fmt_float(cash_per_10 or 0.0),
         "cash_per_share": _fmt_float(cash_per_share),
+        "bonus_share_per_10_shares": _fmt_float(bonus_share_per_10),
+        "transfer_share_per_10_shares": _fmt_float(transfer_share_per_10),
+        "stock_dividend_ratio": _fmt_float(stock_dividend_ratio),
+        "position_multiplier": _fmt_float(1.0 + stock_dividend_ratio),
         "dividend_tax_rate": _fmt_float(dividend_tax_rate),
         "net_cash_per_share": _fmt_float(cash_per_share * max(0.0, 1.0 - dividend_tax_rate)),
         "source": "jqdatasdk.finance.STK_XR_XD",
@@ -355,9 +389,12 @@ def _to_float(value: Any) -> float | None:
     if value in {None, "", "nan", "NaN", "None"}:
         return None
     try:
-        return float(value)
+        numeric = float(value)
     except (TypeError, ValueError):
         return None
+    if math.isnan(numeric) or math.isinf(numeric):
+        return None
+    return numeric
 
 
 def _fmt_float(value: float | None) -> str:

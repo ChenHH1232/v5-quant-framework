@@ -150,6 +150,24 @@ class OverfitAuditRunnerTests(unittest.TestCase):
             self.assertGreaterEqual(result.blocker_count, 1)
             self.assertIn("accepted_status_guard", checks)
 
+    def test_latest_visible_ev_market_cap_as_of_is_allowed(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            spec = _base_spec()
+            spec["signals"]["factors"] = [
+                {
+                    "name": "price_to_embedded_value",
+                    "as_of": "trade_date_market_cap_and_latest_visible_ev",
+                }
+            ]
+            spec_path = root / "spec.json"
+            _write_json(spec_path, spec)
+
+            result = run_overfit_audit(spec_path, root / "out")
+            checks = result.checks_path.read_text(encoding="utf-8")
+
+            self.assertNotIn('"unsafe_factors": "price_to_embedded_value"', checks)
+
 
 if __name__ == "__main__":
     unittest.main()

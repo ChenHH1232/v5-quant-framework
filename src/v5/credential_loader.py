@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 
 
-DEFAULT_CREDENTIAL_FILE = Path(r"D:\hh\保险箱\重要凭据.txt")
+DEFAULT_CREDENTIAL_FILE = Path("D:/hh/\u4fdd\u9669\u7bb1/\u91cd\u8981\u51ed\u636e.txt")
 
 
 def load_tushare_token(
@@ -35,9 +35,9 @@ def load_joinquant_credentials(
     for index, line in enumerate(lines):
         lower = line.lower()
         value = _inline_value(line)
-        if not found_user and _has_any(lower, ("joinquant", "jqdata", "聚宽")) and _has_any(lower, ("user", "account", "账号", "用户名")):
+        if not found_user and _has_any(lower, ("joinquant", "jqdata", "\u805a\u5bbd")) and _has_any(lower, ("user", "account", "\u8d26\u53f7", "\u7528\u6237\u540d")):
             found_user = value or _next_value(lines, index)
-        if not found_password and _has_any(lower, ("joinquant", "jqdata", "聚宽")) and _has_any(lower, ("password", "密码")):
+        if not found_password and _has_any(lower, ("joinquant", "jqdata", "\u805a\u5bbd")) and _has_any(lower, ("password", "\u5bc6\u7801")):
             found_password = value or _next_value(lines, index)
     return found_user, found_password
 
@@ -67,7 +67,7 @@ def _read_secret_text(path: Path) -> str:
 
 
 def _inline_value(line: str) -> str | None:
-    for separator in (":", "：", "="):
+    for separator in (":", "\uff1a", "="):
         if separator in line:
             value = line.split(separator, 1)[1].strip()
             return value or None
@@ -78,7 +78,7 @@ def _next_value(lines: list[str], index: int) -> str | None:
     if index + 1 >= len(lines):
         return None
     candidate = lines[index + 1].strip()
-    if not candidate or any(separator in candidate for separator in (":", "：", "=")):
+    if not candidate or any(separator in candidate for separator in (":", "\uff1a", "=")):
         return None
     return candidate
 

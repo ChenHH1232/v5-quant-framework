@@ -6,6 +6,8 @@ venv/
 dist/
 build/
 *.egg-info/
+tmp/
+research_reports/
 
 data/
 validation/

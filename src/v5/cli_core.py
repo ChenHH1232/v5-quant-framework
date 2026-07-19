@@ -5,22 +5,30 @@ import json
 from pathlib import Path
 
 from v5.benchmark_runner import DEFAULT_BENCHMARK_ID, DEFAULT_BENCHMARK_PROCESSED
+from v5.config_validation_runner import validate_config_file
 from v5.data_runner import collect_panel_from_v4_raw, write_collection_manifest
 from v5.daily_backtest import run_daily_joinquant_like_backtest
 from v5.dividend_runner import DEFAULT_DIVIDEND_PROCESSED
-from v5.engine import run_strategy, validate_spec_file
+from v5.engine import run_strategy
 from v5.formal_validation_runner import run_formal_validation
 from v5.joinquant_capability_probe import run_joinquant_capability_probe
 from v5.joinquant_real_data_runner import collect_joinquant_real_data
 from v5.local_backtest import DEFAULT_BACKTEST_END, DEFAULT_BACKTEST_START, BacktestOptions, run_local_backtest
 from v5.paths import DEFAULT_DATABASE_DIR
 from v5.validation_runner import validate_panel
+from v5.workspace_contract_audit_runner import DEFAULT_OUT_DIR as DEFAULT_WORKSPACE_CONTRACT_AUDIT_OUT, run_workspace_contract_audit
 
 
 def register_core_commands(subparsers: argparse._SubParsersAction[argparse.ArgumentParser]) -> None:
     validate_parser = subparsers.add_parser("validate")
     validate_parser.add_argument("spec", type=Path)
     validate_parser.set_defaults(handler=_handle_validate)
+
+    workspace_audit_parser = subparsers.add_parser("audit-workspace-contract")
+    workspace_audit_parser.add_argument("--root", type=Path, default=Path("."))
+    workspace_audit_parser.add_argument("--out", type=Path, default=DEFAULT_WORKSPACE_CONTRACT_AUDIT_OUT)
+    workspace_audit_parser.add_argument("--registry", type=Path, default=Path("docs/governance/status_registry.json"))
+    workspace_audit_parser.set_defaults(handler=_handle_audit_workspace_contract)
 
     run_parser = subparsers.add_parser("run")
     run_parser.add_argument("spec", type=Path)
@@ -96,6 +104,7 @@ def register_core_commands(subparsers: argparse._SubParsersAction[argparse.Argum
     daily_backtest_parser.add_argument("--out", type=Path, default=Path("local_daily_backtests"))
     daily_backtest_parser.add_argument("--start-date", default=DEFAULT_BACKTEST_START)
     daily_backtest_parser.add_argument("--end-date", default=DEFAULT_BACKTEST_END)
+    daily_backtest_parser.add_argument("--min-coverage-ratio", type=float, default=0.8)
     daily_backtest_parser.add_argument("--initial-cash", type=float, default=2_000_000.0)
     daily_backtest_parser.add_argument("--target-exposure", type=float, default=0.995)
     daily_backtest_parser.add_argument("--defensive-mode", choices=["none", "benchmark_ma"], default="none")
@@ -123,9 +132,15 @@ def register_core_commands(subparsers: argparse._SubParsersAction[argparse.Argum
 
 
 def _handle_validate(args: argparse.Namespace) -> int:
-    result = validate_spec_file(args.spec)
+    result = validate_config_file(args.spec)
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0 if result["audit"]["passed"] else 2
+
+
+def _handle_audit_workspace_contract(args: argparse.Namespace) -> int:
+    result = run_workspace_contract_audit(root=args.root, out_dir=args.out, registry_path=args.registry)
+    print(result.report_path)
+    return 0 if result.status == "passed" else 2
 
 
 def _handle_run(args: argparse.Namespace) -> int:
@@ -200,6 +215,7 @@ def _handle_daily_backtest(args: argparse.Namespace) -> int:
             execution_mode="joinquant_like",
             start_date=args.start_date,
             end_date=args.end_date,
+            min_coverage_ratio=args.min_coverage_ratio,
             initial_cash=args.initial_cash,
             target_exposure=args.target_exposure,
             defensive_mode=args.defensive_mode,

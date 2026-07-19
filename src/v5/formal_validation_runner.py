@@ -436,6 +436,7 @@ def _scoring_case_raw(
     allowed_names = {factor["name"] for factor in factors}
     case_raw["signals"]["factors"] = factors
     scoring = case_raw["signals"]["scoring"]
+    _adjust_min_factor_count(scoring, len(factors))
     if "weights" in scoring:
         scoring["weights"] = {
             name: float(weight)
@@ -450,6 +451,14 @@ def _scoring_case_raw(
                 if name in allowed_names
             }
     return case_raw
+
+
+def _adjust_min_factor_count(scoring: dict[str, Any], available_factor_count: int) -> None:
+    if available_factor_count <= 0:
+        scoring["min_factor_count"] = 0
+        return
+    original = int(scoring.get("min_factor_count", 1) or 1)
+    scoring["min_factor_count"] = max(1, min(original, available_factor_count))
 
 
 def _scaled_weight(name: str, weight: float, weight_scale: dict[str, float] | None) -> float:

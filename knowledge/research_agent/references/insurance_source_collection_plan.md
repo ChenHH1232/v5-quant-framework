@@ -23,6 +23,7 @@ research_preparation
 5. Bond-yield and equity-index market data for external state.
 6. Eastmoney F10 and similar vendor pages as first-pass structure only.
 7. Tushare announcement links for report-date cross-checking.
+8. Fxbaogao VIP report search for industry research, company research and report discovery. Use it for Research Agent knowledge formation only; do not treat research-report values as PIT financial data unless verified against the original announcement.
 
 ## Source Tags
 
@@ -60,4 +61,5 @@ pit_usable
 - Prefer official downloadable reports, exchange announcements and APIs already available in V5.
 - Vendor pages may provide structure, but formal validation requires publication-date review.
 - Manual import templates are acceptable when official data is hard to automate.
-
+- Fxbaogao API credentials are stored outside the repository in the local vault. Search outputs must keep report ID, title, organization, publication time and view URL, but must never persist the API key.
+- For EV / NBV / P/EV repair, fxbaogao may help locate annual reports, solvency reports and sector research. Formal PIT use still requires original announcement date and field-definition review.

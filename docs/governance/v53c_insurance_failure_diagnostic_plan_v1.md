@@ -46,3 +46,15 @@ Research Agent and Quant Validation Agent should answer:
 ```text
 insurance_data_model_decision
 ```
+
+Detailed workflow table:
+
+```text
+docs/governance/v53c_insurance_diagnostic_workflow_table_v1.md
+```
+
+Latest diagnostic execution:
+
+```text
+docs/governance/v53c_insurance_diagnostic_execution_v1.md
+```

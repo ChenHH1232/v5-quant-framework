@@ -1,0 +1,5 @@
+code,company_name,period_month,visible_date,source_name,source_url,passenger_throughput,passenger_throughput_yoy,cargo_throughput,cargo_throughput_yoy,aircraft_movements,aircraft_movements_yoy,international_passenger_throughput,international_passenger_recovery_vs_2019,review_status,notes
+600009.XSHG,Shanghai Airport,,,,,,,,,,,,,,manual_required,
+600004.XSHG,Baiyun Airport,,,,,,,,,,,,,,manual_required,
+000089.XSHE,Shenzhen Airport,,,,,,,,,,,,,,manual_required,
+600897.XSHG,Xiamen Airport,,,,,,,,,,,,,,manual_required,

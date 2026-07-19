@@ -142,12 +142,13 @@ failure_attribution_insurance_v53c / insurance_low_pb_only_v53c
 | Year | Strategy return | Benchmark return | Excess return | Max drawdown | Dividend cash | Read |
 | --- | ---: | ---: | ---: | ---: | ---: | --- |
 | 2021 | -12.00% | -16.72% | 4.73% | 14.52% | 36,618.72 | loses money but beats insurance-theme index |
+| 2022 | -1.26% | -8.27% | 7.01% | 28.26% | 47,763.20 | loses money but beats insurance-theme index; drawdown remains large |
 | 2026 | -22.56% | -19.59% | -2.98% | 30.99% | 0.00 | loses money and lags insurance-theme index |
 
 PM read:
 
 ```text
-2021 is an industry drawdown year where low PB still adds relative value. 2026 is the unresolved failure year because low PB underperforms the insurance-theme index and receives no dividend cushion in the partial-year sample.
+2021 and 2022 are industry drawdown years where low PB still adds relative value. 2026 is the unresolved failure year because low PB underperforms the insurance-theme index and receives no dividend cushion in the partial-year sample.
 ```
 
 ## Engineering Audit

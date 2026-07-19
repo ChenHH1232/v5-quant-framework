@@ -2,6 +2,14 @@
 
 Date: 2026-07-15
 
+Operating protocol:
+
+```text
+docs/governance/agent_operating_protocol_v1.md
+```
+
+Agent loops may continue autonomously inside a single experiment layer, but Project Manager Agent must stop and checkpoint when a loop crosses layers, reaches a stage gate, hits a blocker, or triggers a mandatory user decision.
+
 ## Required Experiment Layers
 
 Every result must be tagged with exactly one layer:

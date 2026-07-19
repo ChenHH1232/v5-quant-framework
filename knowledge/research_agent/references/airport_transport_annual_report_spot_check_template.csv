@@ -1,0 +1,5 @@
+code,company_name,report_period,visible_date,source_name,source_url,original_report_checked,airport_operator_revenue_share,commercial_rental_concession_revenue_share,non_airport_revenue_share,capex_to_ocf,policy_or_fee_change_flag,review_status,notes
+600009.XSHG,Shanghai Airport,,,,,false,,,,,,manual_required,
+600004.XSHG,Baiyun Airport,,,,,false,,,,,,manual_required,
+000089.XSHE,Shenzhen Airport,,,,,false,,,,,,manual_required,
+600897.XSHG,Xiamen Airport,,,,,false,,,,,,manual_required,

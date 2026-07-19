@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "protocol_id": "agent_operating_protocol_v1",
+  "updated_at": "2026-07-19",
+  "owner": "Project Manager Agent",
+  "purpose": "Govern exploratory V5 agent loops with timeboxes, checkpoints, stop rules, and user-decision gates.",
+  "default_timebox_minutes": 30,
+  "extended_timebox_minutes": 60,
+  "core_rule": "Agents continue inside the approved objective without asking after ordinary steps, but must stop at timebox, stage gate, blocker, direction change, or no-new-evidence rules.",
+  "action_classes": {
+    "continue_without_asking": [
+      "same_hypothesis_data_collection",
+      "runner_input_repair",
+      "rerun_after_implementation_fix",
+      "validation_audit_attribution_status_output",
+      "same_layer_candidate_testing",
+      "documentation_for_confirmed_outputs"
+    ],
+    "report_but_do_not_ask": [
+      "move_to_data_availability_audit_inside_same_objective",
+      "return_failed_hypothesis_to_research",
+      "move_platform_mismatch_to_attribution",
+      "mark_skill_limited_or_new_skill_candidate",
+      "mark_branch_observation_or_data_blocked"
+    ],
+    "must_ask_user": [
+      "change_research_direction",
+      "open_new_sector_or_strategy_line",
+      "promote_strategy_state",
+      "use_paid_external_resource_or_new_credential_use",
+      "delete_overwrite_or_large_restructure",
+      "change_frozen_strategy_contract",
+      "continue_after_two_no_new_evidence_loops",
+      "resolve_user_owned_external_blocker"
+    ]
+  },
+  "stop_rules": [
+    "timebox_ended",
+    "approved_hypothesis_rejected",
+    "required_pit_data_unavailable",
+    "same_blocker_repeats_two_loops",
+    "two_loops_no_new_evidence",
+    "mixed_experiment_layers_detected",
+    "mandatory_user_decision_required",
+    "engineering_requires_changing_frozen_research_logic"
+  ],
+  "output_types": [
+    "progress_note",
+    "checkpoint_packet",
+    "blocker_packet",
+    "failure_return_packet",
+    "stage_gate_decision",
+    "external_resource_request"
+  ],
+  "allowed_pm_decisions": [
+    "continue_same_loop",
+    "continue_next_timebox",
+    "narrow_scope",
+    "return_to_research",
+    "return_to_quant",
+    "return_to_engineering",
+    "freeze_candidate",
+    "start_platform_replication",
+    "start_paper_trading",
+    "archive_branch",
+    "disable_or_revise_skill",
+    "ask_user_for_stage_gate",
+    "ask_user_for_external_input"
+  ],
+  "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy."
+}

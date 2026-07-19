@@ -8,6 +8,14 @@ Owner:
 Project Manager Agent
 ```
 
+Operating protocol:
+
+```text
+docs/governance/agent_operating_protocol_v1.md
+```
+
+Research-Quant loops follow the 30-minute default timebox and the two-loop no-new-evidence stop rule. A failed validation returns to Research Agent through a failure packet; it does not require user confirmation unless it changes direction, opens a new sector, needs external/manual data, or asks for strategy-state promotion.
+
 Participating agents:
 
 ```text

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-17",
+  "updated_at": "2026-07-20",
   "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
   "strategies": [
     {
@@ -83,7 +83,10 @@
       "current_status": [
         "research_pit_validation_passed",
         "engineering_local_daily_simulation_completed_needs_review",
-        "failure_attribution_only_no_return_tuning"
+        "failure_attribution_only_no_return_tuning",
+        "insurance_diagnosis_executed",
+        "insurance_special_fields_source_repair_passed",
+        "v53d_research_hypothesis_design_completed"
       ],
       "not_status": [
         "accepted_strategy",
@@ -95,19 +98,1201 @@
         "docs/V53C_INSURANCE_LOW_PB_ONLY_RESULT.md",
         "docs/governance/v53c_insurance_pm_decision_v1.md",
         "docs/engineering/v53c_insurance_local_daily_simulation_result.md",
-        "docs/governance/v53c_insurance_failure_diagnostic_plan_v1.md"
+        "docs/governance/v53c_insurance_failure_diagnostic_plan_v1.md",
+        "docs/governance/v53c_insurance_diagnostic_workflow_table_v1.md",
+        "docs/governance/v53c_insurance_diagnostic_execution_v1.md",
+        "docs/governance/v53c_insurance_data_availability_matrix_v1.md",
+        "docs/governance/v53c_insurance_special_fields_source_audit_v1.md",
+        "docs/governance/v53c_insurance_special_fields_source_repair_execution_v1.md",
+        "docs/governance/v53d_insurance_investment_quality_field_decision_v1.md",
+        "docs/governance/v53d_insurance_formal_validation_decision_v1.md"
       ],
       "blockers": [
         "2026 failure year remains unresolved.",
-        "Insurance EV / NBV and solvency fields remain deferred.",
+        "Insurance EV / NBV / solvency / total investment yield have 2025 reviewed PIT source coverage across five core codes.",
+        "net_investment_yield is downgraded to optional enhancement because only three of five core codes disclose a reviewed annual field.",
+        "V5.3d formal validation rejected the composite hypothesis.",
         "Platform replication has not been approved.",
-        "Return tuning is blocked until failure-year diagnosis is complete."
+        "Return tuning remains blocked."
       ],
-      "next_gate": "insurance_data_model_decision"
+      "next_gate": "research_return_to_hypothesis_design"
+    },
+    {
+      "strategy_id": "insurance_value_investment_solvency_v53d",
+      "sector": "insurance",
+      "current_status": [
+        "research_pit_validation_completed",
+        "pit_leakage_audit_passed",
+        "composite_hypothesis_rejected",
+        "not_engineering_handoff",
+        "returned_to_research_agent"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "platform_replication",
+        "paper_trading_ready",
+        "accepted_strategy",
+        "joinquant_code_ready"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "examples/insurance_value_investment_solvency_v53d_strategy.json",
+        "data/processed/insurance_v53d_formal_panel/collection_manifest.json",
+        "validation_formal_v53d_insurance_value_investment_solvency/insurance_value_investment_solvency_v53d/formal_validation_summary.json",
+        "validation_formal_v53d_insurance_value_investment_solvency/insurance_value_investment_solvency_v53d/baseline_tests.csv",
+        "validation_formal_v53d_insurance_value_investment_solvency/insurance_value_investment_solvency_v53d/factor_ic_rankic.csv",
+        "validation_formal_v53d_insurance_value_investment_solvency/insurance_value_investment_solvency_v53d/failure_mode_analysis.csv",
+        "docs/governance/v53d_insurance_formal_validation_decision_v1.md"
+      ],
+      "research_reset_paths": [
+        "knowledge/research_agent/strategy_cases/insurance_v53d_composite_rejection_and_research_reset.md",
+        "knowledge/research_agent/factor_theory/insurance_v53e_research_hypothesis_redesign.md",
+        "knowledge/research_agent/references/insurance_ev_nbv_pit_repair_plan.md"
+      ],
+      "blockers": [
+        "Composite cumulative return underperformed low-PB-only baseline.",
+        "Total investment return had negative IC and RankIC in the formal sample.",
+        "Solvency evidence was weak and did not improve the low-PB baseline.",
+        "2022 and 2026 failure years remain unresolved.",
+        "Ablation runner needs min_factor_count policy repair before its drop-factor rows can be interpreted."
+      ],
+      "next_gate": "research_return_to_hypothesis_design"
+    },
+    {
+      "strategy_id": "insurance_low_pb_solvency_guard_v53e",
+      "sector": "insurance",
+      "current_status": [
+        "research_pit_validation_completed",
+        "pit_leakage_audit_passed",
+        "solvency_guard_hypothesis_rejected",
+        "state_diagnostic_inconclusive",
+        "not_engineering_handoff"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "platform_replication",
+        "paper_trading_ready",
+        "accepted_strategy",
+        "joinquant_code_ready",
+        "state_timing_rule_approved"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "examples/insurance_low_pb_solvency_guard_v53e_strategy.json",
+        "validation_formal_v53e_insurance_low_pb_solvency_guard/insurance_low_pb_solvency_guard_v53e/formal_validation_summary.json",
+        "validation_formal_v53e_insurance_low_pb_solvency_guard/insurance_low_pb_solvency_guard_v53e/baseline_tests.csv",
+        "validation_formal_v53e_insurance_low_pb_solvency_guard/insurance_low_pb_solvency_guard_v53e/state_diagnostic_summary.csv",
+        "validation_formal_v53e_insurance_low_pb_solvency_guard/insurance_low_pb_solvency_guard_v53e/weak_year_state_paths.csv",
+        "docs/governance/v53e_insurance_research_validation_decision_v1.md",
+        "knowledge/research_agent/strategy_cases/insurance_v53e_solvency_guard_state_diagnostic_result.md"
+      ],
+      "blockers": [
+        "Solvency top80 guard underperformed raw low-PB baseline.",
+        "State diagnostics explain stress but do not produce a stable ex-ante timing rule.",
+        "2021, 2022 and 2026 weak years do not share a single clean state path.",
+        "Insurance universe remains too small and concentration-sensitive.",
+        "EV / NBV / P/EV multi-year PIT coverage is still not repaired."
+      ],
+      "next_gate": "ev_nbv_pit_repair_or_subgroup_hypothesis_design"
+    },
+    {
+      "strategy_id": "insurance_v53_research_line",
+      "sector": "insurance",
+      "current_status": [
+        "v53g_effective_candidate_found",
+        "v53g_frozen_candidate_tracking_started",
+        "v53f_ev_nbv_partial_repair_completed",
+        "research_signal_exists_but_not_deployable",
+        "insurance_domain_workflow_fixed",
+        "research_quant_loop_closed",
+        "subgroup_validation_blocked_by_insufficient_cross_section"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "platform_replication",
+        "paper_trading_ready",
+        "accepted_strategy",
+        "joinquant_code_ready"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "docs/governance/v53_insurance_pm_research_quant_loop_closeout_v1.md",
+        "docs/governance/v53f_insurance_pev_nbv_data_repair_diagnostic_v1.md",
+        "knowledge/research_agent/strategy_cases/insurance_v53_research_quant_loop_closeout.md",
+        "knowledge/research_agent/strategy_cases/insurance_v53f_pev_nbv_data_repair_diagnostic.md",
+        "knowledge/research_agent/references/insurance_ev_nbv_pit_repair_plan.md",
+        "knowledge/research_agent/references/insurance_ev_nbv_reviewed_2024_2025_core5.csv",
+        "validation_formal_v53e_insurance_low_pb_solvency_guard/insurance_low_pb_solvency_guard_v53e/formal_validation_summary.json",
+        "validation_diagnostic_v53f_insurance_pev_nbv/insurance_pev_nbv_v53f_diagnostic/formal_validation_summary.json",
+        "validation_formal_v53e_insurance_low_pb_solvency_guard/insurance_low_pb_solvency_guard_v53e/state_diagnostic_summary.csv",
+        "knowledge/research_agent/references/insurance_ev_nbv_reviewed_2020_2025_core5.csv",
+        "docs/governance/v53g_insurance_pev_value_pm_decision_v1.md",
+        "docs/governance/v53g_insurance_pev_value_freeze_v1.md",
+        "docs/governance/v53g_insurance_forward_paper_trading_log.md",
+        "docs/governance/v53g_insurance_stage_closeout_v1.md"
+      ],
+      "blockers": [
+        "Life / P&C / insurance-group subgroup validation is blocked by insufficient cross-section.",
+        "Low PB signal exists but simple quality, solvency guard and state variants were rejected.",
+        "2021, 2022 and 2026 failure years remain unresolved without insurance-specific franchise value data."
+      ],
+      "next_gate": "track_v53g_platform_replication_and_paper_trading"
+    },
+    {
+      "strategy_id": "insurance_pev_nbv_v53f_diagnostic",
+      "sector": "insurance",
+      "current_status": [
+        "research_data_repair_partial",
+        "quant_diagnostic_completed",
+        "blocked_by_insufficient_pit_history",
+        "not_engineering_handoff"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "platform_replication",
+        "paper_trading_ready",
+        "accepted_strategy",
+        "joinquant_code_ready"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "examples/insurance_pev_nbv_v53f_diagnostic_strategy.json",
+        "knowledge/research_agent/factor_theory/insurance_pev_ev_nbv_research_framework.md",
+        "knowledge/research_agent/references/insurance_ev_nbv_reviewed_2024_2025_core5.csv",
+        "insurance_ev_nbv_panel_v53f/insurance_pev_nbv_v53f/ev_nbv_panel_summary.json",
+        "validation_diagnostic_v53f_insurance_pev_nbv/insurance_pev_nbv_v53f_diagnostic/formal_validation_summary.json",
+        "docs/governance/v53f_insurance_pev_nbv_data_repair_diagnostic_v1.md"
+      ],
+      "blockers": [
+        "Covered years are only 2025 and 2026.",
+        "Rolling validation was skipped due to insufficient history.",
+        "NBV growth has only one usable date.",
+        "EV scope must be harmonized before formal common-sample validation."
+      ],
+      "next_gate": "multi_year_ev_nbv_pit_repair"
+    },
+    {
+      "strategy_id": "insurance_pev_value_v53g",
+      "sector": "insurance",
+      "current_status": [
+        "overfit_audit_no_blockers",
+        "frozen_formal_strategy_candidate",
+        "paper_trading_started",
+        "insurance_domain_workflow_fixed",
+        "platform_replication_summary_matched_pending_daily_attribution",
+        "engineering_smoke_test_completed_needs_review",
+        "research_pit_validation_passed"
+      ],
+      "not_status": [
+        "accepted_strategy",
+        "full_platform_replication_passed",
+        "live_trading_approved",
+        "return_tuning_allowed"
+      ],
+      "experiment_layer": "platform_replication",
+      "evidence_paths": [
+        "examples/insurance_pev_value_v53g_strategy.json",
+        "knowledge/research_agent/references/insurance_ev_nbv_reviewed_2020_2025_core5.csv",
+        "insurance_ev_nbv_source_audit_v53g_2020_2025/insurance_pev_value_v53g_source/insurance_special_fields_audit_report.md",
+        "insurance_ev_nbv_panel_v53g_2020_2025/insurance_pev_value_v53g/ev_nbv_panel_report.md",
+        "validation_formal_v53g_insurance_pev_value/insurance_pev_value_v53g/formal_validation_summary.json",
+        "local_daily_backtests_insurance_v53g/insurance_pev_value_v53g/summary.json",
+        "failure_attribution_insurance_v53g/insurance_pev_value_v53g/failure_year_attribution_summary.json",
+        "validation_overfit_v53g_insurance/insurance_pev_value_v53g/overfit_audit_summary.json",
+        "docs/governance/v53g_insurance_pev_value_pm_decision_v1.md",
+        "docs/governance/v53g_insurance_pev_value_freeze_v1.md",
+        "docs/governance/v53g_insurance_platform_replication_export_request_v1.md",
+        "docs/governance/v53g_insurance_forward_paper_trading_log.md",
+        "docs/governance/v53g_insurance_platform_replication_summary_v1.md",
+        "docs/governance/v53g_insurance_stage_closeout_v1.md"
+      ],
+      "blockers": [
+        "Not an accepted strategy; forward/paper evidence is absent.",
+        "Core insurance universe has only five names, so concentration risk requires PM acceptance before acceptance.",
+        "2026 partial-year stress remains an unresolved absolute drawdown and slight benchmark underperformance.",
+        "Full platform replication still needs daily returns, transactions, positions, and logs for attribution.",
+        "No return tuning is allowed from the JoinQuant summary result."
+      ],
+      "next_gate": "export_joinquant_daily_transaction_position_log_for_attribution"
+    },
+    {
+      "strategy_id": "highway_cashflow_dividend_v54",
+      "sector": "transportation_infrastructure_highway",
+      "current_status": [
+        "workflow_replication_passed",
+        "research_pit_validation_completed",
+        "pit_leakage_audit_passed",
+        "composite_hypothesis_rejected",
+        "returned_to_research_agent",
+        "not_engineering_handoff"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "engineering_smoke_test",
+        "platform_replication",
+        "paper_trading_ready",
+        "accepted_strategy",
+        "joinquant_code_ready"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "docs/governance/v54_highway_cashflow_dividend_workflow_v1.md",
+        "examples/highway_cashflow_dividend_v54_strategy.json",
+        "数据库/processed/highway_pit_panel_v54/collection_manifest.json",
+        "数据库/processed/highway_pit_panel_v54/panel.csv",
+        "validation_formal_v54_highway_cashflow_dividend/highway_cashflow_dividend_v54/formal_validation_summary.json",
+        "validation_formal_v54_highway_cashflow_dividend/highway_cashflow_dividend_v54/factor_ic_rankic.csv",
+        "validation_formal_v54_highway_cashflow_dividend/highway_cashflow_dividend_v54/baseline_tests.csv",
+        "knowledge/research_agent/strategy_cases/highway_v54_cashflow_dividend_test1_result.md"
+      ],
+      "blockers": [
+        "Composite cash-flow dividend model underperformed high-dividend-only baseline.",
+        "Free-cash-flow yield and FCF dividend support showed weak or negative IC in Test-1.",
+        "JoinQuant HY03160 PIT industry classification starts in 2021-12-13, so pre-2022 history requires separate evidence repair.",
+        "Traffic volume, toll revenue, concession maturity and toll policy state data are not yet joined.",
+        "2026 weak period remains unresolved."
+      ],
+      "next_gate": "research_redesign_v54b_high_dividend_with_cashflow_risk_diagnostics"
+    },
+    {
+      "strategy_id": "highway_high_dividend_cashflow_diagnostics_v54b",
+      "sector": "transportation_infrastructure_highway",
+      "current_status": [
+        "workflow_replication_passed",
+        "research_pit_validation_completed",
+        "pit_leakage_audit_passed",
+        "high_dividend_signal_promising",
+        "cashflow_diagnostics_not_promoted",
+        "returned_to_research_agent",
+        "not_engineering_handoff"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "engineering_smoke_test",
+        "platform_replication",
+        "paper_trading_ready",
+        "accepted_strategy",
+        "joinquant_code_ready"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "docs/governance/v54b_highway_high_dividend_cashflow_diagnostics_decision_v1.md",
+        "examples/highway_high_dividend_cashflow_diagnostics_v54b_strategy.json",
+        "数据库/processed/highway_pit_panel_v54/collection_manifest.json",
+        "数据库/processed/highway_pit_panel_v54/panel.csv",
+        "validation_formal_v54b_highway_high_dividend_cashflow_diagnostics/highway_high_dividend_cashflow_diagnostics_v54b/formal_validation_summary.json",
+        "validation_formal_v54b_highway_high_dividend_cashflow_diagnostics/highway_high_dividend_cashflow_diagnostics_v54b/baseline_tests.csv",
+        "validation_formal_v54b_highway_high_dividend_cashflow_diagnostics/highway_high_dividend_cashflow_diagnostics_v54b/factor_ic_rankic.csv",
+        "knowledge/research_agent/strategy_cases/highway_v54b_high_dividend_cashflow_diagnostics_result.md"
+      ],
+      "blockers": [
+        "V5.4b high-dividend signal is promising but still relies on a short 2022-2026 PIT window.",
+        "FCF yield, FCF dividend support, capex burden and leverage did not prove stable incremental alpha.",
+        "2026 weak period remains unresolved.",
+        "Traffic volume, toll revenue trend, concession maturity and toll policy state data are not yet joined."
+      ],
+      "next_gate": "research_repair_highway_operating_state_fields_before_v54c"
+    },
+    {
+      "strategy_id": "highway_dividend_operating_state_v54c",
+      "sector": "transportation_infrastructure_highway",
+      "current_status": [
+        "workflow_replication_passed",
+        "research_pit_validation_completed",
+        "pit_leakage_audit_passed",
+        "operating_state_proxy_validation_completed",
+        "high_dividend_signal_promising",
+        "operating_state_proxy_rejected_as_alpha",
+        "returned_to_research_agent",
+        "not_engineering_handoff"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "engineering_smoke_test",
+        "platform_replication",
+        "paper_trading_ready",
+        "accepted_strategy",
+        "joinquant_code_ready"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "docs/governance/v54c_highway_operating_state_pm_decision_v1.md",
+        "examples/highway_dividend_operating_state_v54c_strategy.json",
+        "数据库/processed/highway_pit_panel_v54c/collection_manifest.json",
+        "数据库/processed/highway_pit_panel_v54c/panel.csv",
+        "validation_formal_v54c_highway_dividend_operating_state/highway_dividend_operating_state_v54c/formal_validation_summary.json",
+        "validation_formal_v54c_highway_dividend_operating_state/highway_dividend_operating_state_v54c/baseline_tests.csv",
+        "validation_formal_v54c_highway_dividend_operating_state/highway_dividend_operating_state_v54c/factor_ic_rankic.csv",
+        "knowledge/research_agent/strategy_cases/highway_v54c_operating_state_proxy_result.md"
+      ],
+      "blockers": [
+        "Operating-state composite underperformed high-dividend-only baseline.",
+        "Revenue growth, cash-collection quality and OCF-to-revenue had negative IC / RankIC.",
+        "2026 remains an absolute loss year.",
+        "Current fields are financial proxies, not direct traffic volume, toll revenue, concession maturity or toll policy data.",
+        "Common-sample interaction rows with fewer factors are affected by the known min_factor_count runner limitation."
+      ],
+      "next_gate": "highway_operating_data_repair_or_archive_as_workflow_replication_passed_strategy_candidate_failed"
+    },
+    {
+      "strategy_id": "highway_dividend_segment_purity_v54d",
+      "sector": "transportation_infrastructure_highway",
+      "current_status": [
+        "workflow_replication_passed",
+        "research_pit_validation_completed",
+        "pit_leakage_audit_passed",
+        "real_segment_evidence_joined",
+        "high_dividend_signal_promising",
+        "research_pit_validation_promising",
+        "not_engineering_handoff"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "engineering_smoke_test",
+        "platform_replication",
+        "paper_trading_ready",
+        "accepted_strategy",
+        "joinquant_code_ready"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "docs/governance/v54d_highway_segment_purity_pm_decision_v1.md",
+        "examples/highway_dividend_segment_purity_v54d_strategy.json",
+        "数据库/processed/highway_operating_data/highway_report_disclosure_dates.csv",
+        "数据库/processed/highway_operating_data/highway_segment_business_evidence_eastmoney.csv",
+        "数据库/processed/highway_operating_data/highway_segment_enriched_panel.csv",
+        "数据库/processed/highway_operating_data/highway_segment_formal_panel.csv",
+        "数据库/processed/highway_operating_data/highway_operating_data_manual_template.csv",
+        "数据库/manifests/highway_operating_data_audit/highway_operating_data_audit_summary.json",
+        "validation_formal_v54d_highway_dividend_segment_purity/highway_dividend_segment_purity_v54d/formal_validation_summary.json",
+        "validation_formal_v54d_highway_dividend_segment_purity/highway_dividend_segment_purity_v54d/baseline_tests.csv",
+        "validation_formal_v54d_highway_dividend_segment_purity/highway_dividend_segment_purity_v54d/factor_ic_rankic.csv",
+        "knowledge/research_agent/strategy_cases/highway_v54d_segment_purity_result.md"
+      ],
+      "blockers": [
+        "Eastmoney segment evidence needs original annual/interim report spot checks before promotion.",
+        "Traffic volume, toll revenue trend, remaining concession years and toll policy fields are still blocked in the operating data audit.",
+        "Validation window remains short because JQData HY03160 starts in 2021-12.",
+        "Ablation rows are affected by the known min_factor_count runner limitation."
+      ],
+      "next_gate": "annual_report_spot_check_and_operating_data_repair_before_engineering"
+    },
+    {
+      "strategy_id": "highway_dividend_segment_purity_v54e",
+      "sector": "transportation_infrastructure_highway",
+      "current_status": [
+        "workflow_replication_passed",
+        "research_pit_validation_completed",
+        "pit_leakage_audit_passed",
+        "annual_report_spot_check_completed",
+        "operating_field_candidates_extracted",
+        "research_pit_validation_promising",
+        "engineering_blocked_by_operating_data_review"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "engineering_smoke_test",
+        "platform_replication",
+        "paper_trading_ready",
+        "accepted_strategy",
+        "joinquant_code_ready"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "docs/governance/v54e_highway_annual_report_spot_check_pm_decision_v1.md",
+        "examples/highway_dividend_segment_purity_v54e_strategy.json",
+        "数据库/processed/highway_operating_data/annual_reports/highway_annual_report_download_manifest.json",
+        "数据库/processed/highway_operating_data/annual_reports/highway_eastmoney_segment_spot_check_summary.json",
+        "数据库/processed/highway_operating_data/annual_reports/highway_operating_field_extraction_summary.json",
+        "数据库/processed/highway_operating_data/annual_reports/highway_operating_field_candidate_shortlist.csv",
+        "validation_formal_v54e_highway_dividend_segment_purity/highway_dividend_segment_purity_v54e/formal_validation_summary.json",
+        "knowledge/research_agent/strategy_cases/highway_v54e_annual_report_spot_check_result.md"
+      ],
+      "blockers": [
+        "Direct traffic volume, toll revenue, concession years and toll policy values are candidates only and are not PIT usable.",
+        "CNINFO sample downloaded 7 of 8 requested reports; 001965.XSHE still needs alternate source lookup.",
+        "Eastmoney segment spot check is sample-level, not full-history review.",
+        "V5.4e remains primarily a high-dividend + segment-purity model."
+      ],
+      "next_gate": "review_candidate_operating_fields_then_run_v54f"
+    },
+    {
+      "strategy_id": "highway_dividend_reviewed_operating_v54f",
+      "sector": "transportation_infrastructure_highway",
+      "current_status": [
+        "workflow_replication_passed",
+        "research_pit_validation_completed",
+        "pit_leakage_audit_passed",
+        "reviewed_operating_data_joined",
+        "engineering_blocked_by_reviewed_operating_coverage",
+        "not_engineering_handoff"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "engineering_smoke_test",
+        "platform_replication",
+        "paper_trading_ready",
+        "accepted_strategy",
+        "joinquant_code_ready"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "docs/governance/v54f_highway_reviewed_operating_pm_decision_v1.md",
+        "examples/highway_dividend_reviewed_operating_v54f_strategy.json",
+        "数据库/processed/highway_operating_data/annual_reports/highway_reviewed_operating_disclosure_data.csv",
+        "数据库/processed/highway_operating_data/annual_reports/highway_reviewed_operating_disclosure_data_summary.json",
+        "数据库/processed/highway_operating_data/annual_reports/highway_reviewed_operating_formal_panel.csv",
+        "数据库/processed/highway_operating_data/annual_reports/highway_reviewed_operating_panel_summary.json",
+        "validation_formal_v54f_highway_dividend_reviewed_operating/highway_dividend_reviewed_operating_v54f/formal_validation_summary.json",
+        "knowledge/research_agent/strategy_cases/highway_v54f_reviewed_operating_result.md"
+      ],
+      "blockers": [
+        "Reviewed operating formal panel has only 18 rows, 5 rebalance dates and 4 covered companies after PIT join.",
+        "Rolling validation skipped because reviewed operating history is insufficient.",
+        "Reviewed operating disclosure score is a data-quality gate, not validated alpha.",
+        "Exact traffic volume, toll revenue, concession maturity and toll policy numeric values remain unpromoted.",
+        "001965.XSHE still needs alternate source lookup."
+      ],
+      "next_gate": "expand_reviewed_highway_operating_panel_2021_2025_before_engineering"
+    },
+    {
+      "strategy_id": "highway_dividend_reviewed_operating_v54g",
+      "sector": "transportation_infrastructure_highway",
+      "current_status": [
+        "formal_strategy_candidate",
+        "research_pit_validation_passed",
+        "pit_leakage_audit_passed",
+        "multi_year_reviewed_operating_data_joined",
+        "engineering_smoke_test_passed_with_pm_review",
+        "overfit_audit_no_blockers",
+        "platform_replication_ready"
+      ],
+      "not_status": [
+        "accepted_strategy",
+        "full_platform_replication_passed",
+        "paper_trading_ready",
+        "live_trading_approved",
+        "return_tuning_allowed"
+      ],
+      "experiment_layer": "engineering_smoke_test",
+      "evidence_paths": [
+        "docs/governance/v54g_highway_reviewed_operating_pm_decision_v1.md",
+        "examples/highway_dividend_reviewed_operating_v54g_strategy.json",
+        "数据库/processed/highway_operating_data/annual_reports_2021_2025/highway_reviewed_operating_formal_panel.csv",
+        "validation_formal_v54g_highway_dividend_reviewed_operating/highway_dividend_reviewed_operating_v54g/formal_validation_summary.json",
+        "数据库/processed/highway_v54g_joinquant_real_daily_prices.csv",
+        "数据库/processed/highway_v54g_joinquant_cash_dividends.csv",
+        "数据库/processed/highway_v54g_equal_weight_benchmark.csv",
+        "local_daily_backtests_highway_v54g_full_coverage/highway_dividend_reviewed_operating_v54g/summary.json",
+        "validation_overfit_v54g_highway/highway_dividend_reviewed_operating_v54g/overfit_audit_summary.json",
+        "exports/joinquant/highway_dividend_reviewed_operating_v54g_joinquant_frozen_signals.py",
+        "knowledge/research_agent/strategy_cases/highway_v54g_reviewed_operating_result.md"
+      ],
+      "blockers": [
+        "Not an accepted strategy; platform replication and forward/paper evidence are absent.",
+        "Exact traffic volume, toll revenue, concession maturity and toll policy numeric values remain unpromoted.",
+        "2026 rolling return remains negative.",
+        "Benchmark is an internal same-pool equal-weight benchmark for engineering smoke test, not yet a JoinQuant platform benchmark.",
+        "Early reviewed-operating coverage is smaller, so selected_count varies from 4 to 8."
+      ],
+      "next_gate": "run_joinquant_platform_replication_and_export_daily_transaction_position_logs"
+    },
+    {
+      "strategy_id": "highway_dividend_reviewed_operating_v54h_repaired_2021",
+      "sector": "transportation_infrastructure_highway",
+      "current_status": [
+        "formal_strategy_candidate",
+        "research_pit_validation_repaired",
+        "pit_leakage_audit_passed",
+        "2021_no_signal_gap_repaired",
+        "engineering_smoke_test_completed",
+        "joinquant_platform_smoke_passed",
+        "platform_replication_passed"
+      ],
+      "not_status": [
+        "accepted_strategy",
+        "paper_trading_ready",
+        "live_trading_approved",
+        "return_tuning_allowed"
+      ],
+      "experiment_layer": "platform_replication",
+      "evidence_paths": [
+        "docs/governance/v54h_highway_2021_pit_repair_pm_decision_v1.md",
+        "examples/highway_dividend_reviewed_operating_v54h_repaired_2021_strategy.json",
+        "数据库/processed/highway_operating_data/annual_reports_2020_2025/v54h_repaired_2021/highway_reviewed_operating_formal_panel_v54h_repaired_2021_segment_filled.csv",
+        "validation_formal_v54h_highway_repaired_2021_final/highway_dividend_reviewed_operating_v54h_repaired_2021/formal_validation_summary.json",
+        "数据库/processed/highway_v54h_joinquant_real_daily_prices.csv",
+        "数据库/processed/highway_v54h_joinquant_cash_dividends.csv",
+        "数据库/processed/highway_v54h_equal_weight_benchmark.csv",
+        "local_daily_backtests_highway_v54h_repaired_2021_final/highway_dividend_reviewed_operating_v54h_repaired_2021/summary.json",
+        "exports/joinquant/highway_dividend_reviewed_operating_v54h_repaired_2021_joinquant_frozen_signals.py",
+        "platform_replication_packets_highway_v54h/highway_dividend_reviewed_operating_v54h_repaired_2021/platform_replication_packet.json"
+      ],
+      "blockers": [
+        "Not an accepted strategy; forward/paper evidence is absent.",
+        "2021 repair uses 2020 annual-report reviewed operating evidence because JoinQuant HY03160 returns empty before 2021-12-13; this is valid as a repaired PIT universe but must be disclosed in platform replication.",
+        "Exact traffic volume, toll revenue, concession maturity and toll policy numeric values remain unpromoted.",
+        "2026 rolling return remains negative.",
+        "Return tuning is not allowed from platform replication results."
+      ],
+      "next_gate": "start_forward_paper_trading_record"
+    },
+    {
+      "strategy_id": "telecom_operators_cashflow_dividend_v55a",
+      "sector": "telecom_operators",
+      "current_status": [
+        "initial_model_built",
+        "research_pit_validation_completed",
+        "research_signal_only",
+        "sample_size_blocked",
+        "small_sample_observation_sleeve",
+        "basket_diagnostic_only",
+        "not_engineering_handoff"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "engineering_smoke_test",
+        "platform_replication",
+        "accepted_strategy"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "docs/governance/v55a_similar_sector_initial_model_pm_decision_v1.md",
+        "docs/governance/v58_telecom_small_sample_sleeve_policy_v1.md",
+        "docs/governance/v58_telecom_observation_sleeve_pm_decision_v1.md",
+        "docs/governance/v58_telecom_basket_contribution_data_gate_v1.md",
+        "examples/telecom_operators_cashflow_dividend_v55a_strategy.json",
+        "数据库/processed/similar_sector_pit_panel_v55/telecom_operators/panel.csv",
+        "数据库/processed/telecom_joinquant_joinquant_real_daily_prices.csv",
+        "数据库/processed/telecom_joinquant_joinquant_cash_dividends.csv",
+        "数据库/processed/low_volatility_factors_v58/telecom_operators/telecom_operators_cashflow_dividend_v55a/panel_with_low_vol.csv",
+        "validation_formal_v55a_similar_sectors/telecom_operators_cashflow_dividend_v55a/formal_validation_summary.json",
+        "knowledge/research_agent/strategy_cases/v55a_similar_sector_initial_model_result.md"
+      ],
+      "blockers": [
+        "Only three A-share core telecom operators; IC / RankIC evidence is sample-size constrained.",
+        "2026 rolling result is negative.",
+        "ARPU, subscriber count, capex cycle, EBITDA margin and enterprise-service mix are not joined.",
+        "Composite mean selected count is 1.5, so current evidence is concentration-sensitive.",
+        "Telecom requires PM-approved specialist sleeve handling before any Engineering handoff.",
+        "Specialist operating data such as ARPU, subscriber count, capex cycle and enterprise-service mix remains missing."
+      ],
+      "next_gate": "capped_basket_contribution_diagnostic_only"
+    },
+    {
+      "strategy_id": "gas_water_cashflow_dividend_v55a",
+      "sector": "gas_water_operators",
+      "current_status": [
+        "initial_model_built",
+        "research_pit_validation_completed",
+        "hypothesis_needs_research_revision"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "engineering_smoke_test",
+        "platform_replication",
+        "accepted_strategy"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "docs/governance/v55a_similar_sector_initial_model_pm_decision_v1.md",
+        "examples/gas_water_cashflow_dividend_v55a_strategy.json",
+        "数据库/processed/similar_sector_pit_panel_v55/gas_water_operators/panel.csv",
+        "validation_formal_v55a_similar_sectors/gas_water_cashflow_dividend_v55a/formal_validation_summary.json",
+        "knowledge/research_agent/strategy_cases/v55a_similar_sector_initial_model_result.md"
+      ],
+      "blockers": [
+        "Composite does not improve on high-dividend baseline.",
+        "2026 rolling result is negative.",
+        "Operating purity, tariff / spread, receivables pressure and recurring-operation revenue share are not joined."
+      ],
+      "next_gate": "return_to_research_agent_for_operating_purity_and_tariff_hypothesis"
+    },
+    {
+      "strategy_id": "port_rail_cashflow_dividend_v55a",
+      "sector": "port_rail_infrastructure",
+      "current_status": [
+        "initial_model_built",
+        "research_pit_validation_completed",
+        "research_signal_only",
+        "promoted_to_next_research_quant_loop"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "engineering_smoke_test",
+        "platform_replication",
+        "accepted_strategy"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "docs/governance/v55a_similar_sector_initial_model_pm_decision_v1.md",
+        "examples/port_rail_cashflow_dividend_v55a_strategy.json",
+        "数据库/processed/similar_sector_pit_panel_v55/port_rail_infrastructure/panel.csv",
+        "validation_formal_v55a_similar_sectors/port_rail_cashflow_dividend_v55a/formal_validation_summary.json",
+        "knowledge/research_agent/strategy_cases/v55a_similar_sector_initial_model_result.md"
+      ],
+      "blockers": [
+        "Cargo throughput, container throughput, rail freight volume, regional trade state and tariff / pricing policy are not joined.",
+        "Port and rail submodels may need to be split before formal candidacy.",
+        "Not approved for Engineering Agent."
+      ],
+      "next_gate": "v55b_port_rail_operating_state_repair"
+    },
+    {
+      "strategy_id": "port_rail_cashflow_operating_state_v55b",
+      "sector": "port_rail_infrastructure",
+      "current_status": [
+        "research_pit_validation_completed",
+        "hypothesis_rejected_as_scoring_factor",
+        "operating_state_score_downgraded_to_diagnostic"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "engineering_smoke_test",
+        "platform_replication",
+        "accepted_strategy"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "docs/governance/v55c_port_rail_formal_candidate_pm_decision_v1.md",
+        "examples/port_rail_cashflow_operating_state_v55b_strategy.json",
+        "数据库/processed/port_rail_operating_state_v55b/panel_operating_state.csv",
+        "validation_formal_v55b_port_rail_operating_state/port_rail_cashflow_operating_state_v55b/formal_validation_summary.json"
+      ],
+      "blockers": [
+        "Adding operating_state_score as a positive scoring factor reduced the full-sample composite result versus dropping it.",
+        "Rail-only operating_state_score RankIC was negative.",
+        "Research hypothesis revised into V5.5c diagnostic-only use."
+      ],
+      "next_gate": "superseded_by_port_rail_cashflow_value_operating_diagnostic_v55c"
+    },
+    {
+      "strategy_id": "port_rail_cashflow_value_operating_diagnostic_v55c",
+      "sector": "port_rail_infrastructure",
+      "current_status": [
+        "formal_strategy_candidate",
+        "research_pit_validation_passed",
+        "port_dominant_evidence_supported",
+        "engineering_data_partially_passed",
+        "local_daily_smoke_test_approved",
+        "engineering_smoke_test_completed",
+        "local_daily_attribution_completed",
+        "2021_signal_gap_explained_as_jq_industry_pit_coverage_gap",
+        "platform_replication_blocked_until_universe_policy_and_operating_evidence_review",
+        "superseded_for_2021_universe_gap_by_v55g"
+      ],
+      "not_status": [
+        "platform_replication",
+        "paper_trading",
+        "accepted_strategy",
+        "live_trading_approved",
+        "joinquant_code_ready"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "docs/governance/v55c_port_rail_formal_candidate_pm_decision_v1.md",
+        "examples/port_rail_cashflow_value_operating_diagnostic_v55c_strategy.json",
+        "数据库/processed/port_rail_operating_state_v55b/panel_operating_state.csv",
+        "数据库/processed/port_rail_operating_state_v55b/state_bucket_validation.csv",
+        "validation_formal_v55c_port_rail_operating_diagnostic/port_rail_cashflow_value_operating_diagnostic_v55c/formal_validation_summary.json",
+        "validation_formal_v55c_port_rail_operating_diagnostic_port_only/port_rail_cashflow_value_operating_diagnostic_v55c/formal_validation_summary.json",
+        "validation_formal_v55c_port_rail_operating_diagnostic_rail_only/port_rail_cashflow_value_operating_diagnostic_v55c/formal_validation_summary.json",
+        "docs/governance/v55d_port_rail_engineering_data_gate_v1.md",
+        "数据库/processed/port_rail_v55c_joinquant_real_daily_prices.csv",
+        "数据库/processed/port_rail_v55c_joinquant_cash_dividends.csv",
+        "数据库/processed/port_rail_v55c_joinquant_real_benchmark_prices.csv",
+        "数据库/processed/port_rail_operating_evidence_v55d/port_rail_operating_evidence_manual_template.csv",
+        "knowledge/research_agent/strategy_cases/port_rail_v55c_cashflow_value_operating_diagnostic_result.md",
+        "docs/governance/v55e_port_rail_local_smoke_test_approval_v1.md",
+        "docs/governance/v55e_port_rail_local_daily_smoke_test_result_v1.md",
+        "local_daily_backtests_port_rail_v55c/port_rail_cashflow_value_operating_diagnostic_v55c/summary.json",
+        "local_daily_backtests_port_rail_v55c/port_rail_cashflow_value_operating_diagnostic_v55c/RUN_MANIFEST.json",
+        "docs/governance/v55f_port_rail_signal_gap_and_local_attribution_review_v1.md",
+        "local_attribution_port_rail_v55f/port_rail_cashflow_value_operating_diagnostic_v55c/local_daily_attribution_summary.json",
+        "local_attribution_port_rail_v55f/port_rail_cashflow_value_operating_diagnostic_v55c/local_daily_attribution_report.md",
+        "local_attribution_port_rail_v55f/port_rail_cashflow_value_operating_diagnostic_v55c/annual_attribution.csv",
+        "local_attribution_port_rail_v55f/port_rail_cashflow_value_operating_diagnostic_v55c/rebalance_period_attribution.csv"
+      ],
+      "blockers": [
+        "Rail-only subgroup is not independently supported.",
+        "Operating_state_score is diagnostic only and must not be used as positive scoring factor.",
+        "Cargo throughput, container throughput, rail freight volume, tariff / pricing policy and port / rail revenue-share evidence need original-source review before platform replication and paper trading.",
+        "Pure port / rail tradable benchmark is not confirmed; 516970.XSHG is only a tradable infrastructure proxy.",
+        "Operating evidence template has 23 unreviewed rows and 0 reviewed rows.",
+        "2021 signal gap is explained as JoinQuant industry PIT coverage gap; PM must decide whether to repair 2021 universe or disclose 2022-start limitation before platform replication.",
+        "V5.5g repaired 2021 PIT universe and supersedes V5.5c for local engineering review."
+      ],
+      "next_gate": "archived_original_candidate_data_gap_reference"
+    },
+    {
+      "strategy_id": "port_rail_cashflow_value_operating_diagnostic_v55g_repaired_2021",
+      "sector": "port_rail_infrastructure",
+      "current_status": [
+        "formal_strategy_candidate",
+        "research_pit_validation_passed",
+        "2021_pit_universe_repaired",
+        "local_daily_smoke_test_completed",
+        "local_daily_attribution_completed",
+        "overfit_audit_no_blockers_needs_review",
+        "eastmoney_segment_classifier_repaired",
+        "first_layer_business_evidence_partially_passed",
+        "platform_replication_blocked_until_selected_operating_evidence_spot_check_or_business_purity_gate_rerun"
+      ],
+      "not_status": [
+        "platform_replication",
+        "paper_trading",
+        "accepted_strategy",
+        "live_trading_approved",
+        "joinquant_code_ready"
+      ],
+      "experiment_layer": "engineering_smoke_test",
+      "evidence_paths": [
+        "docs/governance/v55g_port_rail_2021_pit_universe_repair_pm_decision_v1.md",
+        "examples/port_rail_cashflow_value_operating_diagnostic_v55g_repaired_2021_strategy.json",
+        "数据库/processed/port_rail_pit_universe_repair_v55g/panel_repaired_2021.csv",
+        "数据库/processed/port_rail_pit_universe_repair_v55g/collection_manifest.json",
+        "数据库/processed/port_rail_operating_state_v55g_repaired_2021/panel_operating_state.csv",
+        "validation_formal_v55g_port_rail_repaired_2021/port_rail_cashflow_value_operating_diagnostic_v55g_repaired_2021/formal_validation_summary.json",
+        "local_daily_backtests_port_rail_v55g_repaired_2021/port_rail_cashflow_value_operating_diagnostic_v55g_repaired_2021/summary.json",
+        "local_attribution_port_rail_v55g_repaired_2021/port_rail_cashflow_value_operating_diagnostic_v55g_repaired_2021/local_daily_attribution_summary.json",
+        "validation_overfit_v55g_port_rail_repaired_2021/port_rail_cashflow_value_operating_diagnostic_v55g_repaired_2021/overfit_audit_summary.json",
+        "docs/governance/v55h_port_rail_operating_evidence_review_v1.md",
+        "数据库/processed/port_rail_operating_evidence_v55h/port_rail_segment_business_evidence_eastmoney.csv",
+        "数据库/processed/port_rail_operating_evidence_v55h/port_rail_segment_business_evidence_manifest.json",
+        "数据库/processed/port_rail_operating_evidence_v55h/port_rail_segment_evidence_coverage_summary.json"
+      ],
+      "blockers": [
+        "Original operating evidence review is still incomplete for throughput, freight volume, tariff policy and capex commitments.",
+        "V5.5h Eastmoney segment classifier is repaired, but selected-stock coverage still has PIT-visible business-purity gaps: 601326.XSHG and 600125.XSHG in 2021-05/2021-07; 000905.XSHE, 000507.XSHE and 600279.XSHG also need spot checks in later selected periods.",
+        "516970.XSHG is only an engineering proxy benchmark, not a pure port / rail benchmark.",
+        "Overfit audit has no blockers but still flags first-date constituent smell test, platform-window usage and parameter perturbation contract as needs_review.",
+        "2021-2026 remains a platform-confirmation window and cannot be used as accepted-strategy evidence.",
+        "Rail-only subgroup is not independently supported; V5.5g remains port-dominant."
+      ],
+      "next_gate": "v55i_selected_stock_operating_evidence_spot_check_or_business_purity_gate_rerun"
+    },
+    {
+      "strategy_id": "port_rail_cashflow_value_operating_diagnostic_v55i_business_purity_gate",
+      "sector": "port_rail_infrastructure",
+      "current_status": [
+        "formal_strategy_candidate",
+        "research_pit_validation_passed",
+        "business_purity_gate_added",
+        "local_daily_smoke_test_completed",
+        "overfit_audit_no_blockers_needs_review",
+        "superseded_by_v55j_reviewed_business_sources",
+        "platform_replication_not_yet_approved"
+      ],
+      "not_status": [
+        "platform_replication",
+        "paper_trading",
+        "accepted_strategy",
+        "live_trading_approved",
+        "joinquant_code_ready"
+      ],
+      "experiment_layer": "engineering_smoke_test",
+      "evidence_paths": [
+        "docs/governance/v55i_port_rail_business_purity_gate_pm_decision_v1.md",
+        "examples/port_rail_cashflow_value_operating_diagnostic_v55i_business_purity_gate_strategy.json",
+        "数据库/processed/port_rail_business_purity_gate_v55i/panel_core_port_rail_only.csv",
+        "数据库/processed/port_rail_business_purity_gate_v55i/business_purity_gate_manifest.json",
+        "数据库/processed/port_rail_operating_evidence_v55h/annual_reports_v55i_selected_gaps/highway_annual_report_download_manifest.json",
+        "数据库/processed/port_rail_operating_evidence_v55h/annual_reports_v55i_selected_gaps/highway_eastmoney_segment_spot_check_summary.json",
+        "validation_formal_v55i_port_rail_business_purity_gate/port_rail_cashflow_value_operating_diagnostic_v55i_business_purity_gate/formal_validation_summary.json",
+        "local_daily_backtests_port_rail_v55i_business_purity_gate/port_rail_cashflow_value_operating_diagnostic_v55i_business_purity_gate/summary.json",
+        "validation_overfit_v55i_port_rail_business_purity_gate/port_rail_cashflow_value_operating_diagnostic_v55i_business_purity_gate/overfit_audit_summary.json"
+      ],
+      "blockers": [
+        "601326.XSHG annual reports were not found from CNINFO in the automated selected-gap source repair and need SSE / company-site / Eastmoney-report-link / manual import repair.",
+        "Strict business-purity gate blocks 2021-05 and 2021-07 under the 80% coverage rule; PM must either accept a 2021-10-08 start date or repair earlier PIT business-purity evidence.",
+        "Original throughput, freight volume, tariff policy and capex commitment data remain unpromoted.",
+        "516970.XSHG is only an engineering proxy benchmark, not a pure port / rail benchmark.",
+        "2021-2026 remains a platform-confirmation window and cannot be used as accepted-strategy evidence."
+      ],
+      "next_gate": "superseded_by_port_rail_cashflow_value_operating_diagnostic_v55j_reviewed_business_sources"
+    },
+    {
+      "strategy_id": "port_rail_cashflow_value_operating_diagnostic_v55j_reviewed_business_sources",
+      "sector": "port_rail_infrastructure",
+      "current_status": [
+        "formal_strategy_candidate",
+        "research_pit_validation_passed",
+        "reviewed_business_source_repair_completed",
+        "local_daily_smoke_test_completed",
+        "overfit_audit_no_blockers_needs_review",
+        "preferred_port_rail_candidate",
+        "platform_replication_ready_for_pm_approval"
+      ],
+      "not_status": [
+        "paper_trading",
+        "accepted_strategy",
+        "live_trading_approved",
+        "return_tuning_allowed"
+      ],
+      "experiment_layer": "engineering_smoke_test",
+      "evidence_paths": [
+        "docs/governance/v55j_port_rail_reviewed_business_sources_pm_decision_v1.md",
+        "examples/port_rail_cashflow_value_operating_diagnostic_v55j_reviewed_business_sources_strategy.json",
+        "数据库/processed/port_rail_operating_evidence_v55h/reviewed_overrides_v55j/port_rail_reviewed_business_purity_overrides_v55j.csv",
+        "数据库/processed/port_rail_operating_evidence_v55h/reviewed_evidence_v55j/port_rail_segment_business_evidence_reviewed_v55j.csv",
+        "数据库/processed/port_rail_business_purity_gate_v55j_reviewed_sources/panel_core_port_rail_only_reviewed_sources.csv",
+        "数据库/processed/port_rail_business_purity_gate_v55j_reviewed_sources/business_purity_gate_manifest.json",
+        "validation_formal_v55j_port_rail_reviewed_business_sources/port_rail_cashflow_value_operating_diagnostic_v55j_reviewed_business_sources/formal_validation_summary.json",
+        "local_daily_backtests_port_rail_v55j_reviewed_business_sources/port_rail_cashflow_value_operating_diagnostic_v55j_reviewed_business_sources/summary.json",
+        "validation_overfit_v55j_port_rail_reviewed_business_sources/port_rail_cashflow_value_operating_diagnostic_v55j_reviewed_business_sources/overfit_audit_summary.json"
+      ],
+      "blockers": [
+        "Not an accepted strategy; platform replication and paper trading evidence are absent.",
+        "Original throughput, freight volume, tariff policy and capex commitment data remain unpromoted.",
+        "516970.XSHG is only an engineering proxy benchmark, not a pure port / rail benchmark.",
+        "2021-2026 remains a platform-confirmation window and cannot be used as accepted-strategy evidence.",
+        "Parameter perturbation contract still needs standardization before final acceptance review."
+      ],
+      "next_gate": "pm_approve_joinquant_platform_replication_as_attribution_only"
+    },
+    {
+      "strategy_id": "v56_dividend_low_vol_fcf_shadow_basket",
+      "sector": "cross_sector_dividend_cashflow_low_vol",
+      "current_status": [
+        "basket_formal_validation_completed_not_acceptance",
+        "local_daily_simulation_completed",
+        "bank_v3_real_daily_price_repaired",
+        "utilities_cash_dividend_events_repaired",
+        "cash_dividend_and_stock_action_ledger_completed",
+        "true_basket_ablation_completed_common_window_required",
+        "failure_attribution_2025_2026_completed",
+        "overfit_audit_no_blockers_needs_review",
+        "platform_replication_prepared_pending_joinquant_exports",
+        "paper_trading_log_initialized_pending_fresh_pit_signal"
+      ],
+      "not_status": [
+        "accepted_strategy",
+        "platform_replication",
+        "paper_trading_ready",
+        "live_trading_approved"
+      ],
+      "experiment_layer": "research_pit_validation_and_engineering_smoke_test",
+      "evidence_paths": [
+        "config/dividend_low_vol_fcf_basket_v56.json",
+        "examples/dividend_low_vol_fcf_basket_v56_strategy.json",
+        "数据库/processed/bank_v3_joinquant_real_daily_prices.csv",
+        "数据库/processed/bank_v3_joinquant_cash_dividends.csv",
+        "数据库/processed/utilities_joinquant_cash_dividends.csv",
+        "数据库/processed/highway_v54h_joinquant_cash_dividends.csv",
+        "数据库/processed/port_rail_v55c_joinquant_cash_dividends.csv",
+        "数据库/processed/low_volatility_factors_v56/bank_v3/panel_with_low_vol.csv",
+        "validation_formal_v56_basket_constructor/basket_construction_summary.json",
+        "local_daily_backtests_v56_basket/v56_dividend_low_vol_fcf_shadow_basket/summary.json",
+        "validation_formal_v56_basket/v56_dividend_low_vol_fcf_shadow_basket/basket_formal_validation_summary.json",
+        "validation_ablation_v56_basket/v56_dividend_low_vol_fcf_shadow_basket/basket_ablation_summary.json",
+        "validation_attribution_v56_basket/v56_dividend_low_vol_fcf_shadow_basket/failure_attribution_summary.json",
+        "validation_overfit_v56_basket/v56_dividend_low_vol_fcf_shadow_basket/overfit_audit_summary.json",
+        "platform_replication_packets_v56_basket/v56_dividend_low_vol_fcf_shadow_basket/platform_replication_packet.json",
+        "exports/joinquant/v56_dividend_low_vol_fcf_basket_frozen_signals_near5y.py",
+        "docs/governance/v56_basket_formal_validation_overfit_pm_decision_v1.md",
+        "docs/governance/v56_basket_local_framework_improvement_v1.md",
+        "docs/governance/v56_basket_platform_replication_export_request_v1.md",
+        "docs/governance/v56_basket_forward_paper_trading_log.md"
+      ],
+      "blockers": [
+        "2021-2026 remains platform-confirmation context and cannot be used as accepted-strategy evidence.",
+        "Platform replication requires JoinQuant daily result, transaction and position exports.",
+        "Fresh 2026-07 paper signal requires extending eligible sleeve PIT panels beyond 2026-04-01.",
+        "Same-pool benchmark is a local proxy; a tradable benchmark basket or ETF comparison still needs PM approval.",
+        "True basket ablation is complete, but factor decisions must use common-window results and must not tune on 2021-2026.",
+        "2025-2026 underperformance is attributed to style trade-off, not cash drag; low-PB / FCF narrative needs research reset before promotion."
+      ],
+      "next_gate": "v56_forward_paper_trading_design_or_low_pb_fcf_research_reset"
+    },
+    {
+      "strategy_id": "v56c_ocf_value_vol_guard_basket",
+      "sector": "cross_sector_stable_cashflow_ocf_low_vol_guard",
+      "current_status": [
+        "research_reset_successful",
+        "ocf_value_vol_guard_mainline_selected",
+        "formal_validation_completed_not_acceptance",
+        "local_daily_simulation_completed",
+        "overfit_audit_no_blockers_needs_review",
+        "failure_attribution_2025_2026_completed",
+        "constructor_sector_cap_fix_completed"
+      ],
+      "not_status": [
+        "accepted_strategy",
+        "platform_replication",
+        "paper_trading_ready",
+        "live_trading_approved",
+        "sector_cap_100_concentration_variant"
+      ],
+      "experiment_layer": "research_pit_validation_and_engineering_smoke_test",
+      "evidence_paths": [
+        "config/dividend_ocf_vol_guard_basket_v56c.json",
+        "examples/dividend_ocf_vol_guard_basket_v56c_strategy.json",
+        "validation_formal_v56c_basket_constructor/basket_construction_summary.json",
+        "local_daily_backtests_v56c_basket/v56c_ocf_value_vol_guard_basket/summary.json",
+        "validation_formal_v56c_basket/v56c_ocf_value_vol_guard_basket/basket_formal_validation_summary.json",
+        "validation_ablation_v56c_basket/v56c_ocf_value_vol_guard_basket/basket_ablation_summary.json",
+        "validation_attribution_v56c_basket/v56c_ocf_value_vol_guard_basket/failure_attribution_summary.json",
+        "validation_overfit_v56c_basket/v56c_ocf_value_vol_guard_basket/overfit_audit_summary.json",
+        "docs/governance/v56c_ocf_value_vol_guard_research_reset_pm_decision_v1.md"
+      ],
+      "blockers": [
+        "2021-2026 remains platform-confirmation context and cannot be used as accepted-strategy evidence.",
+        "Fresh paper-trading signal requires extending eligible sleeve PIT panels beyond 2026-04-01.",
+        "Selected count varies between 24 and 30 due to stricter OCF and low-vol coverage.",
+        "2025 and 2026 still underperform same-pool benchmark; attribution indicates style boundary rather than cash drag.",
+        "Platform replication is intentionally not run in this step."
+      ],
+      "next_gate": "extend_fresh_pit_panels_and_start_v56c_forward_paper_trading"
+    },
+    {
+      "strategy_id": "v57_dividend_low_vol_ocf_fcf_sector_coverage",
+      "sector": "cross_sector_coverage_map",
+      "current_status": [
+        "stage1_batch_screening_completed",
+        "sector_coverage_workflow_defined",
+        "ready_shadow_pool_confirmed",
+        "not_formal_modeling",
+        "external_source_policy_added",
+        "fxbaogao_first_pass_research_collected",
+        "fcf_capex_quality_gate_defined",
+        "external_source_collection_execution_recorded",
+        "gas_water_research_framework_added",
+        "telecom_observation_framework_added",
+        "transport_research_refresh_added"
+      ],
+      "not_status": [
+        "accepted_strategy",
+        "platform_replication",
+        "paper_trading_ready",
+        "live_trading_approved",
+        "formal_modeling_for_all_candidates"
+      ],
+      "experiment_layer": "data_availability_gate",
+      "evidence_paths": [
+        "docs/governance/v57_dividend_low_vol_ocf_fcf_coverage_workflow_v1.md",
+        "config/dividend_low_vol_ocf_fcf_sector_coverage_v57.json",
+        "validation_formal_v57_sector_coverage/sector_screening_summary.json",
+        "validation_formal_v57_sector_coverage/sector_screening_results.csv",
+        "validation_formal_v57_sector_coverage/sector_screening_pm_report.md",
+        "docs/governance/v57_sector_coverage_screening_execution_v1.md",
+        "docs/governance/v57_external_source_integration_policy_v1.md",
+        "knowledge/research_agent/references/v57_external_report_collection_plan.md",
+        "knowledge/research_agent/references/v57_fxbaogao_source_register.md",
+        "knowledge/research_agent/factor_theory/cross_industry_fcf_capex_quality_gate_v1.md",
+        "research_reports/fxbaogao_v57_gas_water_fcf_dividend/collection_manifest.json",
+        "research_reports/fxbaogao_v57_transport_infra_fcf_dividend/collection_manifest.json",
+        "research_reports/fxbaogao_v57_three_telecom_operators_dividend_fcf/collection_manifest.json",
+        "research_reports/fxbaogao_v57_cross_industry_fcf_low_vol_framework/collection_manifest.json",
+        "docs/governance/v57_external_source_collection_execution_v1.md",
+        "knowledge/research_agent/factor_theory/gas_water_operator_cashflow_dividend_framework_v57.md",
+        "knowledge/research_agent/factor_theory/telecom_operator_cashflow_dividend_observation_framework_v57.md",
+        "knowledge/research_agent/factor_theory/transport_infrastructure_cashflow_dividend_refresh_v57.md"
+      ],
+      "blockers": [
+        "Fresh PIT panels are still required before V5.6c paper trading.",
+        "Gas / water operators require operator-purity and FCF/capex-quality research before formal validation.",
+        "Telecom operators are small-sample observation only unless PM approves a small-sample sleeve policy.",
+        "Coal and environmental project operators remain blocked by data gates.",
+        "FCF is not approved as a basket-wide core factor.",
+        "Report knowledge cannot become formal factor evidence until PIT visible-date source rows are collected through JoinQuant/DataJQ, Tushare/TCER, Eastmoney/original reports or manual reviewed templates."
+      ],
+      "next_gate": "research_agent_build_sector_knowledge_packets_then_quant_validates_only_passed_pit_fields"
+    },
+    {
+      "strategy_id": "gas_water_value_serviceability_v57b",
+      "sector": "gas_water_operators",
+      "current_status": [
+        "initial_model_validation_passed",
+        "research_signal_candidate",
+        "research_signal_candidate_repaired",
+        "business_purity_repair_passed",
+        "direct_financial_evidence_repair_passed",
+        "local_joinquant_style_simulation_ready",
+        "engineering_pre_simulation_completed",
+        "coverage_policy_frozen_conservative_80",
+        "research_pit_validation_completed",
+        "pit_leakage_audit_passed",
+        "not_engineering_handoff"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "platform_replication",
+        "paper_trading_ready",
+        "accepted_strategy",
+        "live_trading_approved"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "examples/gas_water_value_serviceability_v57b_strategy.json",
+        "数据库/processed/similar_sector_pit_panel_v57/gas_water_operators/panel.csv",
+        "数据库/processed/gas_water_v57_enriched_panel/panel_enriched.csv",
+        "validation_formal_v57_gas_water_v57b/gas_water_value_serviceability_v57b/formal_validation_summary.json",
+        "validation_formal_v57_gas_water_v57b/gas_water_value_serviceability_v57b/baseline_tests.csv",
+        "validation_formal_v57_gas_water_v57b/gas_water_value_serviceability_v57b/factor_ic_rankic.csv",
+        "validation_formal_v57_gas_water_v57b/gas_water_value_serviceability_v57b/rolling_validation.csv",
+        "validation_formal_v57_gas_water_v57b/gas_water_value_serviceability_v57b/ablation_tests.csv",
+        "validation_formal_v57_gas_water_v57b/gas_water_value_serviceability_v57b/robustness_tests.csv",
+        "数据库/processed/gas_water_operating_evidence_v57/business_purity_panel/panel_business_purity_passed.csv",
+        "数据库/processed/gas_water_financial_evidence_v57/panel_with_direct_financial_evidence.csv",
+        "validation_formal_v57_gas_water_v57b_business_purity/gas_water_value_serviceability_v57b/formal_validation_summary.json",
+        "validation_formal_v57_gas_water_v57b_direct_financial/gas_water_value_serviceability_v57b/formal_validation_summary.json",
+        "validation_formal_v57_gas_water_v57b_direct_financial/gas_water_value_serviceability_v57b/gas_water_v57b_2026_direct_factor_attribution.md",
+        "数据库/processed/gas_water_v57b_joinquant_real_daily_prices.csv",
+        "数据库/processed/gas_water_v57b_joinquant_cash_dividends.csv",
+        "数据库/processed/gas_water_v57b_same_pool_equal_weight_benchmark.csv",
+        "local_daily_backtests_v57_gas_water/gas_water_value_serviceability_v57b/summary.json",
+        "local_daily_backtests_v57_gas_water/gas_water_value_serviceability_v57b/local_daily_pre_simulation_attribution_report.md",
+        "local_daily_backtests_v57_gas_water_coverage_diagnostic/gas_water_value_serviceability_v57b/summary.json",
+        "validation_overfit_v57_gas_water/gas_water_value_serviceability_v57b/overfit_audit_summary.json",
+        "platform_replication_packets_v57_gas_water/gas_water_value_serviceability_v57b/platform_replication_packet.json",
+        "docs/governance/v57b_gas_water_initial_model_pm_decision_v1.md",
+        "docs/governance/v57b_gas_water_business_purity_financial_repair_pm_decision_v1.md",
+        "docs/governance/v57b_gas_water_local_jq_simulation_readiness_v1.md",
+        "docs/governance/v57b_gas_water_coverage_policy_freeze_v1.md",
+        "docs/engineering/v57b_gas_water_local_simulation_handoff_v1.md",
+        "knowledge/research_agent/references/gas_water_v57_external_state_source_register.csv",
+        "knowledge/research_agent/strategy_cases/gas_water_v57b_initial_model_result.md",
+        "knowledge/research_agent/strategy_cases/gas_water_v57b_business_purity_financial_repair_result.md",
+        "knowledge/research_agent/factor_theory/gas_water_operator_cashflow_dividend_framework_v57.md"
+      ],
+      "blockers": [
+        "Eastmoney operator-purity evidence is first-layer only; annual/interim report spot checks are still required before Engineering handoff.",
+        "Direct receivables/debt fields are joined with full PIT coverage, but 2026-01 shows receivables pressure remains a real failure-risk hypothesis.",
+        "Strict 80% coverage policy skips 2021-07-01; 70% startup diagnostic changes results materially and must not be adopted without PM approval.",
+        "2026 failure remains unresolved at formal state-variable level; external-state reports are mostly post-rebalance research evidence.",
+        "Same-pool benchmark is available for local simulation, but a formal JoinQuant sector benchmark is not confirmed.",
+        "Real daily open/close, true cash dividends and same-pool benchmark are collected for local simulation; platform export is not yet requested.",
+        "2021-2026 remains platform-confirmation context and cannot be accepted-strategy evidence."
+      ],
+      "next_gate": "local_simulation_packet_review_then_decide_platform_script"
+    },
+    {
+      "strategy_id": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f",
+      "sector": "cross_sector_dividend_low_vol_cashflow_enhanced_etf",
+      "current_status": [
+        "formal_etf_candidate",
+        "research_pit_validation_completed",
+        "engineering_local_daily_simulation_completed",
+        "overfit_audit_no_blockers_needs_review",
+        "platform_replication_prepared_pending_joinquant_exports",
+        "paper_trading_process_started",
+        "late_recorded_2026_07_initialization_signal_generated",
+        "fresh_2026_07_pit_extension_completed_for_paper_monitoring",
+        "platform_export_intake_ready",
+        "clean_paper_preflight_ready",
+        "platform_test_deferred_by_user",
+        "local_paper_preflight_continues",
+        "paper_input_preflight_ready",
+        "next_clean_signal_pending_future_data_window",
+        "paper_refresh_queue_ready",
+        "queued_for_future_refresh_window",
+        "paper_refresh_status_checked",
+        "waiting_for_future_refresh_window"
+      ],
+      "not_status": [
+        "accepted_strategy",
+        "platform_replication_passed",
+        "live_trading_approved"
+      ],
+      "experiment_layer": "platform_replication_preparation_and_paper_trading",
+      "evidence_paths": [
+        "config/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f.json",
+        "examples/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f_strategy.json",
+        "docs/governance/v57f_dividend_low_vol_cashflow_enhanced_etf_pm_decision_v1.md",
+        "docs/governance/v57f_dividend_low_vol_cashflow_enhanced_etf_forward_paper_trading_log.md",
+        "validation_formal_v57f_etf_constructor/basket_construction_summary.json",
+        "local_daily_backtests_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/summary.json",
+        "validation_formal_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/basket_formal_validation_summary.json",
+        "validation_ablation_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/basket_ablation_summary.json",
+        "validation_attribution_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/failure_attribution_summary.json",
+        "validation_overfit_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/overfit_audit_summary.json",
+        "docs/governance/v57f_dividend_low_vol_cashflow_enhanced_etf_platform_replication_preparation_v1.md",
+        "platform_replication_packets_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/platform_replication_packet.json",
+        "exports/joinquant/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f_joinquant_frozen_signals_near5y.py",
+        "config/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f_paper_202607.json",
+        "docs/governance/v57f_dividend_low_vol_cashflow_enhanced_etf_paper_signal_20260719.md",
+        "paper_trading_signals/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/2026-07-19/basket_rebalance_signals.csv",
+        "paper_trading_signals/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/2026-07-19/local_monitoring/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f_paper_202607/summary.json",
+        "docs/governance/v57f_platform_export_intake_and_paper_preflight_v1.md",
+        "platform_exports_v57f/expected_exports_manifest.json",
+        "paper_trading_gates_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/forward_paper_gate_summary.json",
+        "docs/governance/v57f_no_live_joinquant_test_local_continuation_pm_decision_v1.md",
+        "platform_export_intake_checks_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/platform_export_intake_summary.json",
+        "src/v5/platform_export_intake_runner.py",
+        "docs/governance/v57f_2026_10_clean_paper_input_preflight_v1.md",
+        "paper_input_preflight_checks_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/paper_input_preflight_summary.json",
+        "src/v5/basket_paper_input_preflight_runner.py",
+        "docs/governance/v57f_2026_10_paper_refresh_task_queue_v1.md",
+        "paper_refresh_queues_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/paper_refresh_task_queue_summary.json",
+        "paper_refresh_queues_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/paper_refresh_task_queue.csv",
+        "src/v5/basket_paper_refresh_queue_runner.py",
+        "docs/governance/v57f_2026_10_paper_refresh_status_check_v1.md",
+        "paper_refresh_status_checks_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/paper_refresh_task_status_summary.json",
+        "paper_refresh_status_checks_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/paper_refresh_task_status.csv",
+        "src/v5/basket_paper_refresh_status_runner.py"
+      ],
+      "blockers": [
+        "2021-2026 is platform-confirmation context, not clean out-of-sample acceptance evidence.",
+        "No JoinQuant platform replication attribution has been run for V5.7f.",
+        "Same-pool equal-weight benchmark remains a local proxy.",
+        "2026 excess underperformance requires monitoring and attribution.",
+        "FCF remains disabled until capex-quality and PIT coverage gates pass.",
+        "Platform replication requires JoinQuant daily result, transaction and position exports for attribution.",
+        "The 2026-07 signal was generated late on 2026-07-19, so it is paper initialization / monitoring only, not a clean real-time forward record.",
+        "Bank quality fields in the 2026-07 paper panel still use explicitly marked stale fallback until refreshed PIT bank-quality data is collected.",
+        "Platform exports must be placed into platform_exports_v57f/pending before attribution; old exports from other strategies must not be reused.",
+        "User deferred actual JoinQuant testing; platform_replication_passed is blocked until exports are supplied and attribution passes.",
+        "2026-10-08 clean paper signal is pending future data refresh; current latest panels are 2026-04-01 and latest prices are 2026-05-29.",
+        "Bank sleeve latest panel has 42 stale fallback rows that must be refreshed or explicitly logged before the clean paper signal.",
+        "2026-10-08 refresh queue has 15 tasks; clean signal generation is blocked until the queue is completed and preflight passes."
+      ],
+      "next_gate": "wait_until_2026_10_refresh_window_then_execute_queue"
+    },
+    {
+      "strategy_id": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay",
+      "sector": "cross_sector_dividend_low_vol_cashflow_enhanced_etf_telecom_overlay",
+      "current_status": [
+        "diagnostic_overlay_completed",
+        "observation_sleeve_data_repaired",
+        "basket_contribution_diagnostic_completed",
+        "not_mainline_replacement",
+        "not_platform_replication"
+      ],
+      "not_status": [
+        "formal_etf_candidate",
+        "accepted_strategy",
+        "platform_replication_passed",
+        "live_trading_approved",
+        "v57f_replacement"
+      ],
+      "experiment_layer": "research_pit_validation_and_engineering_smoke_test",
+      "evidence_paths": [
+        "config/dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay.json",
+        "docs/governance/v58_telecom_small_sample_sleeve_policy_v1.md",
+        "docs/governance/v58_telecom_basket_contribution_data_gate_v1.md",
+        "docs/governance/v58_telecom_overlay_basket_contribution_pm_decision_v1.md",
+        "validation_formal_v58_telecom_overlay_basket_constructor/basket_construction_summary.json",
+        "local_daily_backtests_v58_telecom_overlay_matched/dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay/dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay/summary.json",
+        "validation_formal_v58_telecom_overlay_matched_basket/dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay/basket_formal_validation_summary.json"
+      ],
+      "blockers": [
+        "Telecom has only three A-share core operators and remains sample-size constrained.",
+        "Overlay did not improve total return, excess return or information ratio versus V5.7f.",
+        "Specialist telecom operating data remains incomplete.",
+        "No JoinQuant platform replication or paper-trading approval exists for the overlay."
+      ],
+      "next_gate": "observation_only_or_future_specialist_data_research"
     }
   ],
   "sector_test_policy": {
-    "current_priority": "workflow_optimization_first",
+    "current_priority": "v57f_clean_forward_monitoring_and_platform_attribution",
+    "agent_operating_protocol": "docs/governance/agent_operating_protocol_v1.md",
+    "agent_operating_protocol_config": "config/agent_operating_protocol_v1.json",
+    "agent_loop_packet_runner": "src/v5/agent_loop_packet_runner.py",
+    "latest_agent_loop_checkpoint": "agent_loop_packets_v58/v57f_2026_10_paper_refresh_status_20260720/checkpoint_packet.json",
+    "default_agent_loop_timebox_minutes": 30,
+    "extended_agent_loop_timebox_minutes": 60,
+    "agent_loop_policy": "default_continue_without_asking_inside_approved_objective_checkpoint_at_timebox_stop_after_two_no_new_evidence_loops",
     "golden_template_sector": "utilities",
     "suspended_sector": "coal",
     "diagnostic_sector": "insurance",
@@ -116,14 +1301,402 @@
     "research_quant_iteration_protocol": "docs/governance/research_quant_iteration_protocol_v1.md",
     "failed_validation_policy": "return_to_research_agent_no_return_tuning",
     "data_availability_gate_template": "docs/governance/sector_data_availability_gate_template.md",
+    "similar_sector_replication_framework": "docs/governance/V55_SECTOR_REPLICATION_FRAMEWORK.md",
+    "v55_candidate_screening_packet": "docs/governance/v55_candidate_screening_packet_v1.md",
+    "v56_batch_screening_flow": "docs/governance/v56_dividend_low_vol_fcf_batch_screening_flow_v1.md",
+    "v56_batch_screening_config": "config/dividend_low_vol_fcf_sector_candidates_v56.json",
+    "v56_batch_screening_result": "validation_formal_v56_batch_screening/sector_screening_summary.json",
+    "v56_batch_screening_report": "validation_formal_v56_batch_screening/sector_screening_pm_report.md",
+    "v56_batch_screening_status": "stage1_batch_screening_completed_not_formal_modeling",
+    "v56_low_vol_stage2_doc": "docs/governance/v56_low_vol_and_basket_constructor_stage2_v1.md",
+    "v56_basket_config": "config/dividend_low_vol_fcf_basket_v56.json",
+    "v56_basket_constructor_result": "validation_formal_v56_basket_constructor/basket_construction_summary.json",
+    "v56_stage2_status": "low_vol_factor_runner_completed_shadow_basket_constructor_completed_not_backtest",
+    "v56_basket_daily_backtest_doc": "docs/governance/v56_basket_daily_backtest_and_benchmark_v1.md",
+    "v56_basket_daily_backtest_result": "local_daily_backtests_v56_basket/v56_dividend_low_vol_fcf_shadow_basket/summary.json",
+    "v56_basket_daily_backtest_status": "engineering_smoke_test_completed_with_bank_and_utilities_repairs_not_platform_replication",
+    "v56_basket_formal_validation_doc": "docs/governance/v56_basket_formal_validation_overfit_pm_decision_v1.md",
+    "v56_basket_formal_validation_result": "validation_formal_v56_basket/v56_dividend_low_vol_fcf_shadow_basket/basket_formal_validation_summary.json",
+    "v56_basket_overfit_audit_result": "validation_overfit_v56_basket/v56_dividend_low_vol_fcf_shadow_basket/overfit_audit_summary.json",
+    "v56_basket_ablation_result": "validation_ablation_v56_basket/v56_dividend_low_vol_fcf_shadow_basket/basket_ablation_summary.json",
+    "v56_basket_failure_attribution_result": "validation_attribution_v56_basket/v56_dividend_low_vol_fcf_shadow_basket/failure_attribution_summary.json",
+    "v56_basket_local_framework_improvement_doc": "docs/governance/v56_basket_local_framework_improvement_v1.md",
+    "v56_basket_formal_status": "formal_validation_completed_not_acceptance_overfit_audit_no_blockers_needs_review",
+    "v56c_research_reset_doc": "docs/governance/v56c_ocf_value_vol_guard_research_reset_pm_decision_v1.md",
+    "v56c_basket_config": "config/dividend_ocf_vol_guard_basket_v56c.json",
+    "v56c_basket_strategy_spec": "examples/dividend_ocf_vol_guard_basket_v56c_strategy.json",
+    "v56c_basket_constructor_result": "validation_formal_v56c_basket_constructor/basket_construction_summary.json",
+    "v56c_basket_daily_backtest_result": "local_daily_backtests_v56c_basket/v56c_ocf_value_vol_guard_basket/summary.json",
+    "v56c_basket_formal_validation_result": "validation_formal_v56c_basket/v56c_ocf_value_vol_guard_basket/basket_formal_validation_summary.json",
+    "v56c_basket_ablation_result": "validation_ablation_v56c_basket/v56c_ocf_value_vol_guard_basket/basket_ablation_summary.json",
+    "v56c_basket_failure_attribution_result": "validation_attribution_v56c_basket/v56c_ocf_value_vol_guard_basket/failure_attribution_summary.json",
+    "v56c_basket_overfit_audit_result": "validation_overfit_v56c_basket/v56c_ocf_value_vol_guard_basket/overfit_audit_summary.json",
+    "v56c_mainline_status": "research_reset_successful_formal_validation_completed_not_acceptance",
+    "v56_basket_platform_export_request": "docs/governance/v56_basket_platform_replication_export_request_v1.md",
+    "v56_basket_joinquant_frozen_script": "exports/joinquant/v56_dividend_low_vol_fcf_basket_frozen_signals_near5y.py",
+    "v56_basket_platform_packet": "platform_replication_packets_v56_basket/v56_dividend_low_vol_fcf_shadow_basket/platform_replication_packet.json",
+    "v56_basket_paper_trading_log": "docs/governance/v56_basket_forward_paper_trading_log.md",
+    "v55_prelaunch_status": "port_rail_v55j_reviewed_business_sources_platform_replication_ready_for_pm_approval",
     "next_new_sector_candidates": [
       "telecom_operators",
-      "transportation_infrastructure",
-      "gas_water_environmental_utilities"
+      "gas_water_operators",
+      "port_rail_infrastructure"
     ],
-    "broad_sector_testing": "blocked_until_golden_template_productization"
+    "v55_preferred_candidate": "port_rail_infrastructure",
+    "v55_backup_candidate": "telecom_operators",
+    "v55_watchlist_candidate": "gas_water_operators",
+    "v55a_initial_model_pm_decision": "docs/governance/v55a_similar_sector_initial_model_pm_decision_v1.md",
+    "v55_next_gate": "pm_approve_joinquant_platform_replication_as_attribution_only",
+    "v55b_port_rail_workflow": "docs/governance/v55b_port_rail_operating_state_repair_workflow_v1.md",
+    "v55c_port_rail_pm_decision": "docs/governance/v55c_port_rail_formal_candidate_pm_decision_v1.md",
+    "v55d_port_rail_engineering_data_gate": "docs/governance/v55d_port_rail_engineering_data_gate_v1.md",
+    "broad_sector_testing": "allowed_at_screening_layer_only",
+    "insurance_workflow_template": "docs/governance/v53g_insurance_stage_closeout_v1.md",
+    "insurance_workflow_status": "fixed_domain_specific_template_not_global_golden_template",
+    "latest_sector_test": "port_rail_cashflow_value_operating_diagnostic_v55j_reviewed_business_sources",
+    "latest_sector_test_status": "reviewed_business_source_repair_completed_formal_validation_passed_local_daily_completed_platform_replication_ready_for_pm_approval",
+    "dividend_cashflow_basket_path": [
+      "bank_high_dividend_sustainability_v3",
+      "utilities_demand_state_v51f",
+      "insurance_pev_value_v53g",
+      "highway_dividend_reviewed_operating_v54g",
+      "highway_dividend_reviewed_operating_v54h_repaired_2021",
+      "port_rail_cashflow_value_operating_diagnostic_v55c",
+      "port_rail_cashflow_value_operating_diagnostic_v55g_repaired_2021",
+      "port_rail_cashflow_value_operating_diagnostic_v55i_business_purity_gate",
+      "port_rail_cashflow_value_operating_diagnostic_v55j_reviewed_business_sources"
+    ],
+    "v56_ready_for_basket_shadow_pool": [
+      "bank",
+      "utilities_electricity",
+      "highway_infrastructure",
+      "port_rail_infrastructure"
+    ],
+    "v56_observation_only": [
+      "telecom_operators",
+      "insurance"
+    ],
+    "v56_manual_research_before_formal": [
+      "gas_water_operators"
+    ],
+    "v56_blocked_by_cycle_data_gate": [
+      "coal"
+    ],
+    "v56_missing_global_modules": [
+      "formal_standardized_sector_weight_cap_policy",
+      "formal_standardized_single_stock_weight_cap_policy",
+      "formal_basket_benchmark_policy",
+      "basket_level_forward_paper_trading_log"
+    ],
+    "v56_stage2_ready_low_vol_panels": [
+      "bank",
+      "utilities_electricity",
+      "highway_infrastructure",
+      "port_rail_infrastructure"
+    ],
+    "v56_stage2_pending_low_vol_panels": [],
+    "v56_next_gate": "v56_extend_pit_panels_for_fresh_paper_signal_or_run_joinquant_platform_export",
+    "v56_current_research_mainline": "v56c_ocf_value_vol_guard_basket",
+    "v57_sector_coverage_workflow": "docs/governance/v57_dividend_low_vol_ocf_fcf_coverage_workflow_v1.md",
+    "v57_sector_coverage_config": "config/dividend_low_vol_ocf_fcf_sector_coverage_v57.json",
+    "v57_sector_coverage_result": "validation_formal_v57_sector_coverage/sector_screening_summary.json",
+    "v57_sector_coverage_report": "validation_formal_v57_sector_coverage/sector_screening_pm_report.md",
+    "v57_sector_coverage_execution_doc": "docs/governance/v57_sector_coverage_screening_execution_v1.md",
+    "v57_sector_coverage_status": "stage1_batch_screening_completed_not_formal_modeling",
+    "v57_ready_shadow_pool": [
+      "bank",
+      "utilities_electricity",
+      "highway_infrastructure",
+      "port_rail_infrastructure"
+    ],
+    "v57_observation_only": [
+      "telecom_operators",
+      "insurance"
+    ],
+    "v57_next_research_before_formal": [
+      "gas_water_operators",
+      "airport_transport_operators",
+      "oil_gas_pipeline_integrated",
+      "consumer_staples_cashflow",
+      "pharma_medical_services"
+    ],
+    "v57_blocked": [
+      "environmental_project_operators",
+      "coal"
+    ],
+    "v57_preferred_next_research_target": "gas_water_operators",
+    "v57_preferred_observation_target": "telecom_operators",
+    "v55f_port_rail_local_attribution_review": "docs/governance/v55f_port_rail_signal_gap_and_local_attribution_review_v1.md",
+    "v55g_port_rail_pm_decision": "docs/governance/v55g_port_rail_2021_pit_universe_repair_pm_decision_v1.md",
+    "v55h_port_rail_pm_decision": "docs/governance/v55h_port_rail_operating_evidence_review_v1.md",
+    "v55i_port_rail_pm_decision": "docs/governance/v55i_port_rail_business_purity_gate_pm_decision_v1.md",
+    "v55j_port_rail_pm_decision": "docs/governance/v55j_port_rail_reviewed_business_sources_pm_decision_v1.md",
+    "v57_external_source_policy": "docs/governance/v57_external_source_integration_policy_v1.md",
+    "v57_external_report_collection_plan": "knowledge/research_agent/references/v57_external_report_collection_plan.md",
+    "v57_fxbaogao_source_register": "knowledge/research_agent/references/v57_fxbaogao_source_register.md",
+    "v57_cross_industry_fcf_capex_quality_gate": "knowledge/research_agent/factor_theory/cross_industry_fcf_capex_quality_gate_v1.md",
+    "research_report_source_role": "knowledge_and_hypothesis_only_not_pit_factor_evidence",
+    "jqdata_datajq_source_role": "pit_financials_daily_prices_dividends_universe_benchmarks",
+    "tushare_tcer_source_role": "announcement_date_cross_check_and_supplemental_structured_data",
+    "eastmoney_source_role": "first_layer_structured_business_evidence_requires_original_report_review",
+    "v57_report_research_priority": [
+      "cross_industry_fcf_capex_quality_framework",
+      "gas_water_operators",
+      "telecom_operators_observation_sleeve",
+      "transport_infrastructure_knowledge_refresh"
+    ],
+    "v57_external_source_collection_execution": "docs/governance/v57_external_source_collection_execution_v1.md",
+    "v57_gas_water_framework": "knowledge/research_agent/factor_theory/gas_water_operator_cashflow_dividend_framework_v57.md",
+    "v57_telecom_observation_framework": "knowledge/research_agent/factor_theory/telecom_operator_cashflow_dividend_observation_framework_v57.md",
+    "v57_transport_infrastructure_refresh": "knowledge/research_agent/factor_theory/transport_infrastructure_cashflow_dividend_refresh_v57.md",
+    "v57_gas_water_initial_model": "gas_water_value_serviceability_v57b",
+    "v57_gas_water_initial_model_status": "coverage_policy_frozen_conservative_80_local_simulation_ready_not_platform_replication_ready",
+    "v57_gas_water_initial_model_decision": "docs/governance/v57b_gas_water_initial_model_pm_decision_v1.md",
+    "v57_gas_water_repair_decision": "docs/governance/v57b_gas_water_business_purity_financial_repair_pm_decision_v1.md",
+    "v57_gas_water_local_simulation_readiness": "docs/governance/v57b_gas_water_local_jq_simulation_readiness_v1.md",
+    "v57_gas_water_coverage_policy_freeze": "docs/governance/v57b_gas_water_coverage_policy_freeze_v1.md",
+    "v57_gas_water_engineering_handoff": "docs/engineering/v57b_gas_water_local_simulation_handoff_v1.md",
+    "v57_gas_water_next_gate": "local_simulation_packet_review_then_decide_platform_script",
+    "current_enhanced_etf_candidate": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f",
+    "v57f_etf_pm_decision": "docs/governance/v57f_dividend_low_vol_cashflow_enhanced_etf_pm_decision_v1.md",
+    "v57f_etf_forward_paper_trading_log": "docs/governance/v57f_dividend_low_vol_cashflow_enhanced_etf_forward_paper_trading_log.md",
+    "v57f_etf_config": "config/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f.json",
+    "v57f_etf_local_daily_backtest_result": "local_daily_backtests_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/summary.json",
+    "v57f_etf_formal_validation_result": "validation_formal_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/basket_formal_validation_summary.json",
+    "v57f_etf_overfit_audit_result": "validation_overfit_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/overfit_audit_summary.json",
+    "v57f_etf_status": "formal_etf_candidate_pending_platform_exports_paper_tracking_started_not_accepted",
+    "v57f_included_sleeves": [
+      "bank",
+      "utilities_electricity",
+      "highway_infrastructure",
+      "port_rail_infrastructure"
+    ],
+    "v57f_observation_sleeves": [
+      "gas_water_operators",
+      "telecom_operators",
+      "insurance"
+    ],
+    "v57f_blocked_sleeves": [
+      "coal",
+      "environmental_project_operators"
+    ],
+    "v57f_etf_platform_replication_preparation": "docs/governance/v57f_dividend_low_vol_cashflow_enhanced_etf_platform_replication_preparation_v1.md",
+    "v57f_etf_platform_packet": "platform_replication_packets_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/platform_replication_packet.json",
+    "v57f_etf_pm_gate_result": "pm_gate_packets_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/basket_pm_gate_summary.json",
+    "v57f_etf_pm_gate_status": "formal_candidate_pending_platform_exports",
+    "v57f_etf_pm_gate_needs_review_count": 3,
+    "v57f_etf_joinquant_frozen_script": "exports/joinquant/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f_joinquant_frozen_signals_near5y.py",
+    "v57f_etf_next_gate": "clean_next_future_rebalance_paper_signal_on_2026_10_08_and_joinquant_platform_exports",
+    "v57f_etf_forward_paper_gate": "paper_trading_gates_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/forward_paper_gate_summary.json",
+    "v57f_etf_next_clean_rebalance_date": "2026-10-08",
+    "v57f_etf_next_clean_rebalance_calendar": "数据库/processed/trading_calendars/sse_2026_q4_rebalance_calendar.csv",
+    "v57f_etf_paper_signal_20260719": "docs/governance/v57f_dividend_low_vol_cashflow_enhanced_etf_paper_signal_20260719.md",
+    "v57f_etf_paper_signal_csv_20260719": "paper_trading_signals/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/2026-07-19/basket_rebalance_signals.csv",
+    "v57f_etf_paper_monitoring_summary_20260719": "paper_trading_signals/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/2026-07-19/local_monitoring/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f_paper_202607/summary.json",
+    "v58_sector_replication_roadmap_doc": "docs/governance/v58_dividend_low_vol_cashflow_sector_replication_roadmap_v1.md",
+    "v58_sector_replication_roadmap_config": "config/dividend_low_vol_cashflow_sector_coverage_v58.json",
+    "v58_sector_replication_roadmap_result": "roadmaps_v58_sector_replication/sector_replication_roadmap_summary.json",
+    "v58_sector_replication_roadmap_report": "roadmaps_v58_sector_replication/sector_replication_roadmap_pm_report.md",
+    "v58_sector_replication_pm_queue": "roadmaps_v58_sector_replication/agent_queues/project_manager_queue.csv",
+    "v58_sector_replication_research_queue": "roadmaps_v58_sector_replication/agent_queues/research_agent_queue.csv",
+    "v58_sector_replication_quant_queue": "roadmaps_v58_sector_replication/agent_queues/quant_validation_agent_queue.csv",
+    "v58_sector_replication_engineering_queue": "roadmaps_v58_sector_replication/agent_queues/engineering_agent_queue.csv",
+    "v58_sector_replication_checkpoint": "agent_loop_packets_v58/v58_sector_replication_roadmap_20260719/checkpoint_packet.json",
+    "v58_sector_replication_status": "roadmap_active_not_new_sector_modeling",
+    "v58_research_queue_execution_checkpoint": "docs/governance/v58_research_queue_execution_checkpoint_v1.md",
+    "v58_gas_water_stage_gate_status": "coverage_policy_stage_gate_pending_not_platform_replication",
+    "v58_airport_transport_research_status": "workflow_replication_passed_strategy_candidate_failed_blocked_until_new_domain_data",
+    "v58_airport_transport_source_plan": "knowledge/research_agent/references/transport_operator_source_collection_plan.md",
+    "v58_airport_transport_cashflow_framework": "knowledge/research_agent/factor_theory/transport_operator_cashflow_framework.md",
+    "v58_airport_transport_initial_pit_panel": "数据库/processed/similar_sector_pit_panel_v58/airport_transport_operators/panel.csv",
+    "v58_airport_transport_initial_pit_manifest": "数据库/processed/similar_sector_pit_panel_v58/airport_transport_operators/collection_manifest.json",
+    "v58_airport_transport_remaining_data_gates": [
+      "annual_report_spot_check_rows_filled",
+      "annual_report_business_purity_spot_check",
+      "international_route_recovery_state",
+      "duty_free_rental_commercial_revenue_exposure",
+      "airport_capex_quality_policy_state_review"
+    ],
+    "v58_primary_cross_sector_factor_policy": [
+      "operating_cash_flow_yield",
+      "low_volatility"
+    ],
+    "v58_supporting_factor_policy": [
+      "dividend_yield",
+      "dividend_stability",
+      "cash_flow_coverage"
+    ],
+    "v58_sector_approved_enhancements": [
+      "free_cash_flow_yield",
+      "capex_quality",
+      "sector_operating_state"
+    ],
+    "v58_not_current_mainline": [
+      "low_pb_as_basket_wide_primary_factor",
+      "raw_free_cash_flow_without_capex_review",
+      "historical_return_selected_factors"
+    ],
+    "v58_next_manual_research_queue": [
+      "gas_water_operators",
+      "airport_transport_operators",
+      "oil_gas_pipeline_integrated",
+      "consumer_staples_cashflow",
+      "pharma_medical_services"
+    ],
+    "v58_observation_only_queue": [
+      "telecom_operators",
+      "insurance"
+    ],
+    "v58_telecom_small_sample_policy": "docs/governance/v58_telecom_small_sample_sleeve_policy_v1.md",
+    "v58_telecom_pm_decision": "docs/governance/v58_telecom_observation_sleeve_pm_decision_v1.md",
+    "v58_telecom_basket_data_gate": "docs/governance/v58_telecom_basket_contribution_data_gate_v1.md",
+    "v58_telecom_validation_result": "validation_formal_v55a_similar_sectors/telecom_operators_cashflow_dividend_v55a/formal_validation_summary.json",
+    "v58_telecom_real_daily_prices": "数据库/processed/telecom_joinquant_joinquant_real_daily_prices.csv",
+    "v58_telecom_cash_dividends": "数据库/processed/telecom_joinquant_joinquant_cash_dividends.csv",
+    "v58_telecom_low_vol_panel": "数据库/processed/low_volatility_factors_v58/telecom_operators/telecom_operators_cashflow_dividend_v55a/panel_with_low_vol.csv",
+    "v58_telecom_status": "small_sample_observation_sleeve_data_inputs_repaired_basket_contribution_diagnostic_ready",
+    "v58_telecom_next_gate": "capped_basket_contribution_diagnostic_only",
+    "v58_blocked_data_repair_queue": [
+      "environmental_project_operators",
+      "coal"
+    ],
+    "v58_airport_transport_report_disclosure_dates": "数据库/processed/airport_transport_operating_evidence_v58/airport_report_disclosure_dates.csv",
+    "v58_airport_transport_eastmoney_segment_evidence": "数据库/processed/airport_transport_operating_evidence_v58/airport_segment_business_evidence_eastmoney.csv",
+    "v58_airport_transport_business_purity_panel": "数据库/processed/airport_transport_operating_evidence_v58/business_purity_panel/panel_business_purity_passed.csv",
+    "v58_airport_transport_business_purity_coverage": "数据库/processed/airport_transport_operating_evidence_v58/business_purity_panel/business_purity_coverage_by_rebalance.csv",
+    "v58_airport_transport_business_purity_status": "first_layer_passed_80pct_rebalance_coverage_600515_removed_for_non_airport_contamination",
+    "v58_airport_transport_external_state_field_map": "knowledge/research_agent/references/airport_transport_external_state_field_map_v58.md",
+    "v58_airport_transport_operating_state_manual_template": "knowledge/research_agent/references/airport_transport_operating_state_manual_template.csv",
+    "v58_airport_transport_annual_report_spot_check_template": "knowledge/research_agent/references/airport_transport_annual_report_spot_check_template.csv",
+    "v58_airport_transport_operating_announcement_index": "数据库/processed/airport_transport_operating_evidence_v58/eastmoney_airport_operating_announcement_index.csv",
+    "v58_airport_transport_operating_announcement_manifest": "数据库/processed/airport_transport_operating_evidence_v58/eastmoney_airport_operating_announcement_index_manifest.json",
+    "v58_airport_transport_operating_announcement_status": "passed_4_companies_261_rows_65_months_each_2020_12_to_2026_04_values_not_extracted",
+    "v58_airport_transport_operating_value_sample4": "数据库/processed/airport_transport_operating_evidence_v58/operating_state_values_sample4/airport_operating_state_value_candidates.csv",
+    "v58_airport_transport_operating_value_sample4_manifest": "数据库/processed/airport_transport_operating_evidence_v58/operating_state_values_sample4/airport_operating_state_value_extraction_manifest.json",
+    "v58_airport_transport_operating_value_status": "full_cache261_candidate_extraction261_and_unit_normalization261_complete_original_pdf_spot_check_required_not_quant_ready",
+    "v58_airport_transport_operating_content_cache_probe8": "数据库/processed/airport_transport_operating_evidence_v58/operating_content_cache_probe8/airport_operating_content_cache_manifest.json",
+    "v58_airport_transport_operating_value_cache_probe8": "数据库/processed/airport_transport_operating_evidence_v58/operating_state_values_cache_probe8_retry/airport_operating_state_value_candidates.csv",
+    "v58_airport_transport_operating_value_cache_probe8_manifest": "数据库/processed/airport_transport_operating_evidence_v58/operating_state_values_cache_probe8_retry/airport_operating_state_value_extraction_manifest.json",
+    "v58_airport_transport_operating_content_cache20": "数据库/processed/airport_transport_operating_evidence_v58/operating_content_cache/airport_operating_content_cache_manifest.json",
+    "v58_airport_transport_operating_value_cache20": "数据库/processed/airport_transport_operating_evidence_v58/operating_state_values_cache20/airport_operating_state_value_candidates.csv",
+    "v58_airport_transport_operating_value_cache20_manifest": "数据库/processed/airport_transport_operating_evidence_v58/operating_state_values_cache20/airport_operating_state_value_extraction_manifest.json",
+    "v58_airport_transport_operating_content_cache_full_summary": "数据库/processed/airport_transport_operating_evidence_v58/operating_content_cache/airport_operating_content_cache_coverage_summary.json",
+    "v58_airport_transport_operating_value_cache_full": "数据库/processed/airport_transport_operating_evidence_v58/operating_state_values_cache_full/airport_operating_state_value_candidates.csv",
+    "v58_airport_transport_operating_value_cache_full_manifest": "数据库/processed/airport_transport_operating_evidence_v58/operating_state_values_cache_full/airport_operating_state_value_extraction_manifest.json",
+    "v58_airport_transport_operating_value_normalized": "数据库/processed/airport_transport_operating_evidence_v58/operating_state_values_cache_full/airport_operating_state_value_candidates_normalized.csv",
+    "v58_airport_transport_operating_value_normalization_manifest": "数据库/processed/airport_transport_operating_evidence_v58/operating_state_values_cache_full/airport_operating_state_value_normalization_manifest.json",
+    "v58_airport_transport_operating_value_spot_check_sample": "数据库/processed/airport_transport_operating_evidence_v58/operating_state_values_cache_full/airport_operating_state_spot_check_sample.csv",
+    "v58_airport_transport_cached_notice_spot_check_review": "数据库/processed/airport_transport_operating_evidence_v58/operating_state_values_cache_full/spot_check_review/airport_operating_state_cached_notice_spot_check_review.csv",
+    "v58_airport_transport_cached_notice_spot_check_summary": "数据库/processed/airport_transport_operating_evidence_v58/operating_state_values_cache_full/spot_check_review/airport_operating_state_cached_notice_spot_check_review_summary.json",
+    "v58_airport_transport_cninfo_pdf_spot_check_review": "数据库/processed/airport_transport_operating_evidence_v58/operating_state_values_cache_full/spot_check_review/airport_operating_state_cninfo_pdf_spot_check_review.csv",
+    "v58_airport_transport_cninfo_pdf_spot_check_summary": "数据库/processed/airport_transport_operating_evidence_v58/operating_state_values_cache_full/spot_check_review/airport_operating_state_cninfo_pdf_spot_check_review_summary.json",
+    "v58_airport_transport_operating_state_reviewed_panel": "数据库/processed/airport_transport_operating_evidence_v58/operating_state_values_cache_full/airport_operating_state_value_pit_reviewed_panel.csv",
+    "v58_airport_transport_operating_state_reviewed_manifest": "数据库/processed/airport_transport_operating_evidence_v58/operating_state_values_cache_full/airport_operating_state_value_pit_reviewed_panel_manifest.json",
+    "v58_airport_transport_spot_check_pm_decision": "docs/governance/v58_airport_transport_operating_state_spot_check_pm_decision_v1.md",
+    "v58_airport_transport_formal_panel": "数据库/processed/airport_transport_formal_panel_v58/panel.csv",
+    "v58_airport_transport_formal_panel_manifest": "数据库/processed/airport_transport_formal_panel_v58/collection_manifest.json",
+    "v58_airport_transport_strategy_spec": "examples/airport_transport_cashflow_operating_state_v58_strategy.json",
+    "v58_airport_transport_formal_validation": "validation_formal_v58_airport_transport/airport_transport_cashflow_operating_state_v58/formal_validation_summary.json",
+    "v58_airport_transport_formal_validation_report": "validation_formal_v58_airport_transport/airport_transport_cashflow_operating_state_v58/formal_validation_report.md",
+    "v58_airport_transport_formal_validation_pm_decision": "docs/governance/v58_airport_transport_formal_validation_pm_decision_v1.md",
+    "v58_airport_transport_quant_decision": "data_workflow_replication_passed_strategy_hypothesis_not_promoted_not_engineering_handoff",
+    "v58b_airport_transport_research_framework": "knowledge/research_agent/factor_theory/airport_transport_franchise_state_framework_v58b.md",
+    "v58b_airport_transport_strategy_spec": "examples/airport_transport_franchise_state_v58b_strategy.json",
+    "v58b_airport_transport_formal_panel": "数据库/processed/airport_transport_formal_panel_v58b/panel.csv",
+    "v58b_airport_transport_formal_panel_manifest": "数据库/processed/airport_transport_formal_panel_v58b/collection_manifest.json",
+    "v58b_airport_transport_formal_validation": "validation_formal_v58b_airport_transport/airport_transport_franchise_state_v58b/formal_validation_summary.json",
+    "v58b_airport_transport_formal_validation_report": "validation_formal_v58b_airport_transport/airport_transport_franchise_state_v58b/formal_validation_report.md",
+    "v58b_airport_transport_pm_decision": "docs/governance/v58b_airport_transport_franchise_state_pm_decision_v1.md",
+    "v58b_airport_transport_restart_required_data": [
+      "international_passenger_recovery_vs_2019",
+      "duty_free_commercial_lease_contract_terms",
+      "rent_concession_or_minimum_annual_guarantee_changes",
+      "airport_fee_policy_changes",
+      "capex_project_cycle_capacity_expansion_evidence",
+      "annual_report_business_purity_spot_check"
+    ],
+    "v58_telecom_overlay_config": "config/dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay.json",
+    "v58_telecom_overlay_pm_decision": "docs/governance/v58_telecom_overlay_basket_contribution_pm_decision_v1.md",
+    "v58_telecom_overlay_local_daily_backtest": "local_daily_backtests_v58_telecom_overlay_matched/dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay/dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay/summary.json",
+    "v58_telecom_overlay_formal_validation": "validation_formal_v58_telecom_overlay_matched_basket/dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay/basket_formal_validation_summary.json",
+    "v58_telecom_overlay_status": "diagnostic_completed_observation_only_not_v57f_replacement",
+    "v58_telecom_overlay_pm_comparison": "return_lower_excess_lower_information_ratio_lower_drawdown_lower_volatility_lower_than_v57f",
+    "v57f_platform_export_intake_doc": "docs/governance/v57f_platform_export_intake_and_paper_preflight_v1.md",
+    "v57f_platform_export_intake_manifest": "platform_exports_v57f/expected_exports_manifest.json",
+    "v57f_platform_export_intake_dir": "platform_exports_v57f/pending",
+    "v57f_next_gate": "wait_until_2026_10_refresh_window_then_execute_queue",
+    "v57f_clean_paper_preflight_status": "pending_clean_future_rebalance_2026_10_08",
+    "v57f_actual_joinquant_test_status": "deferred_by_user_2026_07_19",
+    "v57f_local_continuation_pm_decision": "docs/governance/v57f_no_live_joinquant_test_local_continuation_pm_decision_v1.md",
+    "v57f_platform_export_intake_checker": "src/v5/platform_export_intake_runner.py",
+    "v57f_platform_export_intake_check_result": "platform_export_intake_checks_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/platform_export_intake_summary.json",
+    "v57f_paper_input_preflight_runner": "src/v5/basket_paper_input_preflight_runner.py",
+    "v57f_2026_10_preflight_doc": "docs/governance/v57f_2026_10_clean_paper_input_preflight_v1.md",
+    "v57f_2026_10_preflight_result": "paper_input_preflight_checks_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/paper_input_preflight_summary.json",
+    "v57f_2026_10_preflight_status": "pending_future_data_window",
+    "v57f_2026_10_preflight_needs_review": "bank_latest_panel_42_stale_fallback_rows",
+    "v57f_paper_refresh_queue_runner": "src/v5/basket_paper_refresh_queue_runner.py",
+    "v57f_2026_10_refresh_queue_doc": "docs/governance/v57f_2026_10_paper_refresh_task_queue_v1.md",
+    "v57f_2026_10_refresh_queue_summary": "paper_refresh_queues_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/paper_refresh_task_queue_summary.json",
+    "v57f_2026_10_refresh_queue_csv": "paper_refresh_queues_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/paper_refresh_task_queue.csv",
+    "v57f_2026_10_refresh_queue_status": "queued_for_future_refresh_window",
+    "v57f_2026_10_refresh_queue_task_count": 15,
+    "v57f_paper_refresh_status_runner": "src/v5/basket_paper_refresh_status_runner.py",
+    "v57f_2026_10_refresh_status_doc": "docs/governance/v57f_2026_10_paper_refresh_status_check_v1.md",
+    "v57f_2026_10_refresh_status_summary": "paper_refresh_status_checks_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/paper_refresh_task_status_summary.json",
+    "v57f_2026_10_refresh_status_csv": "paper_refresh_status_checks_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/paper_refresh_task_status.csv",
+    "v57f_2026_10_refresh_status": "waiting_for_future_refresh_window",
+    "v57f_2026_10_refresh_status_task_counts": {
+      "not_due_yet": 14,
+      "pending_refresh": 1,
+      "completed": 0,
+      "blockers": 0
+    },
+    "v57f_governance_dashboard_runner": "src/v5/basket_governance_dashboard_runner.py",
+    "v57f_governance_dashboard_test": "tests/test_basket_governance_dashboard_runner.py",
+    "v57f_governance_dashboard_doc": "docs/governance/v57f_governance_dashboard_v1.md",
+    "v57f_governance_dashboard_summary": "basket_governance_dashboards_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/basket_governance_dashboard_summary.json",
+    "v57f_governance_dashboard_report": "basket_governance_dashboards_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/basket_governance_dashboard_report.md",
+    "v57f_governance_dashboard_status": "frozen_candidate_waiting_for_future_paper_window_platform_deferred",
+    "v57f_governance_dashboard_blockers": 0,
+    "v57f_governance_dashboard_checkpoint": "agent_loop_packets_v58/v57f_governance_dashboard_20260720/checkpoint_packet.json",
+    "v57f_pm_action_router_runner": "src/v5/basket_pm_action_router_runner.py",
+    "v57f_pm_action_router_test": "tests/test_basket_pm_action_router_runner.py",
+    "v57f_pm_action_router_doc": "docs/governance/v57f_pm_action_router_v1.md",
+    "v57f_pm_action_route_summary": "basket_pm_action_routes_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/basket_pm_action_route_summary.json",
+    "v57f_pm_action_route_report": "basket_pm_action_routes_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/basket_pm_action_route_report.md",
+    "v57f_pm_action_route_status": "no_action_until_external_event",
+    "v57f_pm_action_route_should_continue_agent_loop": false,
+    "v57f_pm_action_route_checkpoint": "agent_loop_packets_v58/v57f_pm_action_router_20260720/checkpoint_packet.json",
+    "workflow_contract_validation_router": "src/v5/config_validation_runner.py",
+    "workflow_contract_validation_router_tests": "tests/test_config_validation_runner.py",
+    "workflow_contract_config_validation_status": "16_configs_passed_0_failed",
+    "workflow_contract_examples_validation_status": "49_examples_passed_0_failed",
+    "workflow_registry_consistency_tests": "tests/test_status_registry_consistency.py",
+    "workflow_unicode_path_policy": "docs/governance/unicode_path_cli_argument_policy_v1.md",
+    "workflow_formal_ablation_min_factor_policy_test": "tests/test_formal_validation_ablation_policy.py",
+    "workflow_contract_hardening_checkpoint": "agent_loop_packets_v58/workflow_contract_hardening_20260720/checkpoint_packet.json",
+    "workflow_contract_audit_runner": "src/v5/workspace_contract_audit_runner.py",
+    "workflow_contract_audit_tests": "tests/test_workspace_contract_audit_runner.py",
+    "workflow_contract_audit_doc": "docs/governance/workspace_contract_audit_v1.md",
+    "workflow_contract_audit_summary": "workspace_contract_audits_v58/latest/workspace_contract_audit_summary.json",
+    "workflow_contract_audit_report": "workspace_contract_audits_v58/latest/workspace_contract_audit_report.md",
+    "workflow_contract_audit_status": "passed_0_blockers_1_warning_group",
+    "workflow_contract_audit_checkpoint": "agent_loop_packets_v58/workspace_contract_audit_default_entry_20260720/checkpoint_packet.json",
+    "workflow_strategy_state_gate_runner": "src/v5/strategy_state_gate_runner.py",
+    "workflow_strategy_state_gate_tests": "tests/test_strategy_state_gate_runner.py",
+    "workflow_strategy_state_gate_doc": "docs/governance/strategy_state_gate_v1.md",
+    "v57f_accepted_strategy_gate_summary": "strategy_state_gates_v58/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/accepted_strategy/strategy_state_gate_summary.json",
+    "v57f_accepted_strategy_gate_status": "blocked_missing_platform_replication_passed_and_open_blockers",
+    "workflow_strategy_state_gate_checkpoint": "agent_loop_packets_v58/strategy_state_gate_20260720/checkpoint_packet.json",
+    "v57f_governance_next_gate": "wait_until_refresh_window_or_user_supplies_platform_exports"
   },
   "maintenance_backlog": [
+    {
+      "item": "formal_validation_runner_ablation_min_factor_count_policy",
+      "status": "completed_initial_layer",
+      "reason": "src/v5/formal_validation_runner.py now lowers scoring.min_factor_count to the available factor count for ablation and common-sample cases, with tests in tests/test_formal_validation_ablation_policy.py."
+    },
     {
       "item": "split_cli_by_domain",
       "status": "completed",
@@ -138,6 +1711,81 @@
       "item": "extract_common_utils",
       "status": "completed_initial_layer",
       "reason": "Shared io_utils.py, math_utils.py, date_utils.py, and paths.py were added. High-risk modules now use the common helpers while compatibility wrappers preserve existing APIs."
+    },
+    {
+      "item": "v56_low_volatility_factor_runner",
+      "status": "completed_initial_layer",
+      "reason": "src/v5/low_volatility_factor_runner.py generates PIT-safe 60/120/252-day realized volatility, downside volatility, drawdown, beta and low_vol_score using closes strictly before each trade_date."
+    },
+    {
+      "item": "v56_cross_sector_basket_constructor",
+      "status": "completed_shadow_signal_layer",
+      "reason": "src/v5/basket_constructor_runner.py creates cross-sector shadow rebalance signals from low-vol-enriched sector panels with initial sector and single-stock caps. It is not yet a daily backtest."
+    },
+    {
+      "item": "v56_basket_daily_backtest_and_benchmark",
+      "status": "completed_initial_layer",
+      "reason": "src/v5/basket_daily_backtest_runner.py simulates basket daily open-price execution, close valuation, cash, holdings, trades, tax-adjusted dividends and a same-pool equal-weight benchmark."
+    },
+    {
+      "item": "v56_bank_v3_real_daily_price_repair",
+      "status": "completed",
+      "reason": "Bank V3 JoinQuant raw-unadjusted real daily open/close prices were recollected for 2021-05-01 to 2026-05-31 and bank_v3 low-vol factors were generated for the V5.6 basket."
+    },
+    {
+      "item": "v56_utilities_cash_dividend_event_repair",
+      "status": "completed",
+      "reason": "Utilities JoinQuant cash-dividend events were recollected and net_cash_per_share was generated after 20% tax."
+    },
+    {
+      "item": "v56_basket_formal_validation_runner",
+      "status": "completed_initial_layer",
+      "reason": "src/v5/basket_formal_validation_runner.py validates cross-sector basket signals with combined PIT panel, baseline, IC/RankIC, rolling, ablation proxy, robustness and weak-year outputs."
+    },
+    {
+      "item": "v56_basket_overfit_audit",
+      "status": "completed_no_blockers_needs_review",
+      "reason": "Engineering overfit audit found 0 blockers and 1 governance needs-review item: the 2021-2026 window remains platform-confirmation context, not accepted-strategy evidence."
+    },
+    {
+      "item": "jqdata_serial_collection_policy",
+      "status": "added_to_workflow_rules",
+      "reason": "The current JQData account allows only one active connection; data collection runners should not run JQData jobs in parallel."
+    },
+    {
+      "item": "unicode_path_cli_argument_policy",
+      "status": "completed_initial_governance_layer",
+      "reason": "Mojibake evidence paths in status_registry.json were repaired, tests/test_status_registry_consistency.py now guards strategy evidence paths, and docs/governance/unicode_path_cli_argument_policy_v1.md defines the CLI/path policy. Broad runner migration to paths.py remains incremental."
+    },
+    {
+      "item": "v57f_basket_pm_gate_runner",
+      "status": "completed_initial_layer",
+      "reason": "src/v5/basket_pm_gate_runner.py consolidates formal validation, local daily simulation, ablation, overfit audit, platform replication and paper signal status into a PM gate packet."
+    },
+    {
+      "item": "basket_ablation_windows_long_path_policy",
+      "status": "completed",
+      "reason": "Basket ablation cases now use short case ids such as drop_ocf_yield to avoid Windows path-length failures while preserving the dropped factor in governance metadata."
+    },
+    {
+      "item": "agent_operating_protocol_v1",
+      "status": "completed",
+      "reason": "PM now governs exploratory agent loops with a default 30-minute timebox, checkpoint/blocker packets, mandatory user-decision triggers, and a two-loop no-new-evidence stop rule."
+    },
+    {
+      "item": "agent_loop_packet_runner",
+      "status": "completed_initial_layer",
+      "reason": "src/v5/agent_loop_packet_runner.py creates protocol-compliant checkpoint, blocker, and failure-return packets with validation for agent, experiment layer, decision, and user-decision reason."
+    },
+    {
+      "item": "v58_sector_replication_roadmap_runner",
+      "status": "completed_initial_layer",
+      "reason": "src/v5/sector_replication_roadmap_runner.py turns broad dividend low-volatility cash-flow sector screening into PM-routed agent queues with lane, timebox, packet and graduation-gate rules."
+    },
+    {
+      "item": "v58_airport_transport_resumable_operating_content_cache_runner",
+      "status": "completed_initial_layer",
+      "reason": "cache-airport-operating-announcement-contents now writes one JSON per art_code, skips cached rows, supports code/month/limit/retry filters, and isolates errors. Cache-only extraction produced 261/261 complete candidate rows after full content caching. Original PDF spot-check and unit normalization remain required before Quant validation."
     }
   ]
 }

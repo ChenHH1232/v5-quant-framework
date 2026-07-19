@@ -34,6 +34,12 @@
 - [Insurance data field map](references/insurance_data_field_map.md) - PIT fields for valuation, EV/NBV, solvency, underwriting, investment and external rate/equity states.
 - [Insurance source collection plan](references/insurance_source_collection_plan.md) - source order and PIT guardrails for V5.3 insurance.
 - [Insurance validation handoff](references/insurance_validation_handoff.md) - Quant Validation Agent task requirements for V5.3 Test-1.
+- [Insurance EV / NBV PIT repair plan](references/insurance_ev_nbv_pit_repair_plan.md) - required source, date and coverage gates before P/EV can enter formal validation.
+- [Fxbaogao report source](references/fxbaogao_report_source.md) - VIP report-search source for Research Agent knowledge collection; not direct PIT factor evidence.
+- [V5.7 external report collection plan](references/v57_external_report_collection_plan.md) - MECE report-learning tasks for gas/water, telecom, transport infrastructure and cross-industry FCF knowledge.
+- [V5.7 Fxbaogao source register](references/v57_fxbaogao_source_register.md) - first-pass report source register and paragraph-screening outputs for V5.7 sector coverage.
+- [V5.7 external source collection execution](../../docs/governance/v57_external_source_collection_execution_v1.md) - PM execution record for FxBaogao report collection and source-role handoff.
+- [Gas / water V5.7 external state source register](references/gas_water_v57_external_state_source_register.csv) - gas procurement, pass-through, water-tariff, receivables and financing-risk report sources; research-only until PIT state fields are built.
 
 ## Factor Theory
 
@@ -48,6 +54,12 @@
 - [Coal core factor hypotheses](factor_theory/coal_core_factor_hypotheses.md) - candidate coal factors and external state hypotheses, not accepted factors.
 - [Insurance value / quality framework](factor_theory/insurance_value_quality_framework.md) - V5.3 insurance economic logic, not validated factors.
 - [Insurance core factor hypotheses](factor_theory/insurance_core_factor_hypotheses.md) - candidate insurance factors for PIT validation, not accepted factors.
+- [Insurance V5.3e research hypothesis redesign](factor_theory/insurance_v53e_research_hypothesis_redesign.md) - post-V5.3d reset: solvency as guard, investment return as state diagnostic, EV/NBV as data-repair-dependent hypothesis.
+- [Insurance P/EV, EV and NBV research framework](factor_theory/insurance_pev_ev_nbv_research_framework.md) - fxbaogao-backed insurance valuation framework; P/EV remains blocked until multi-year PIT EV/NBV coverage passes.
+- [Cross-industry FCF / capex quality gate](factor_theory/cross_industry_fcf_capex_quality_gate_v1.md) - OCF remains the basket mainline; FCF can enter only after sector-specific capex-quality and PIT gates pass.
+- [Gas / water operator cash-flow dividend framework](factor_theory/gas_water_operator_cashflow_dividend_framework_v57.md) - V5.7 preferred next sector; OCF first, FCF conditional, receivables/debt/operator-purity gates required.
+- [Telecom operator observation framework](factor_theory/telecom_operator_cashflow_dividend_observation_framework_v57.md) - small-sample observation sleeve; capex-cycle-aware FCF and basket-level validation required.
+- [Transport infrastructure cash-flow dividend refresh](factor_theory/transport_infrastructure_cashflow_dividend_refresh_v57.md) - report-backed refresh supporting V5.4/V5.5 transport infrastructure workflow.
 
 ## Strategy Cases
 
@@ -74,6 +86,15 @@
 - [Insurance V5.3b low-PB dividend result](strategy_cases/insurance_v53b_low_pb_dividend_result.md) - real 10Y rate state added; low PB remains dominant, low-PB + dividend composite rejected, V5.3c low-PB-only review recommended.
 - [Insurance V5.3c low-PB-only result](strategy_cases/insurance_v53c_low_pb_only_result.md) - low PB-only passed research PIT validation and is approved for Engineering preparation, with 2021/2026 and concentration risk still unresolved.
 - [Insurance V5.3c local daily simulation result](strategy_cases/insurance_v53c_local_daily_simulation_result.md) - Engineering smoke test completed with real JoinQuant daily prices, 20% tax-adjusted cash dividends, and 399809.XSHE insurance-theme benchmark; 2026 failure needs PM review.
+- [Insurance V5.3d composite rejection and research reset](strategy_cases/insurance_v53d_composite_rejection_and_research_reset.md) - PIT audit passed, but low-PB + investment-return + solvency composite failed; returns to Research Agent for hypothesis redesign.
+- [Insurance V5.3e solvency guard and state diagnostic result](strategy_cases/insurance_v53e_solvency_guard_state_diagnostic_result.md) - solvency guard failed to improve low PB; state diagnostics are explanatory but not enough for timing.
+- [Insurance V5.3 research-quant loop closeout](strategy_cases/insurance_v53_research_quant_loop_closeout.md) - insurance has a low-PB research signal but is blocked from deployment until multi-year PIT EV/NBV/P/EV data is repaired.
+- [Insurance V5.3f P/EV and NBV data repair diagnostic](strategy_cases/insurance_v53f_pev_nbv_data_repair_diagnostic.md) - fxbaogao knowledge and 2024-2025 EV/NBV partial repair completed; P/EV diagnostic is blocked by insufficient PIT history.
+- [V5.6c OCF value + volatility guard basket research reset](strategy_cases/v56c_ocf_value_vol_guard_basket_research_reset.md) - low PB / FCF basket narrative rejected; OCF primary signal with volatility guard becomes current basket research mainline.
+- [V5.7 sector coverage screening result](strategy_cases/v57_sector_coverage_screening_result.md) - first batch coverage map for dividend low-vol OCF basket with sector-approved FCF enhancement.
+- [Gas / water V5.7b initial model result](strategy_cases/gas_water_v57b_initial_model_result.md) - Research-Quant loop rejected OCF mainline and found a preliminary regulated-asset value + serviceability model.
+- [Gas / water V5.7b business-purity and financial-evidence repair](strategy_cases/gas_water_v57b_business_purity_financial_repair_result.md) - operator-purity and direct receivables/debt fields repaired; V5.7b remains a repaired research-signal candidate, not an Engineering handoff.
+- [Gas / water V5.7b coverage policy freeze](../../docs/governance/v57b_gas_water_coverage_policy_freeze_v1.md) - conservative 80% coverage rule frozen; 70% startup coverage remains diagnostic only because it was observed before rule freeze.
 
 ## Open Research Questions
 
@@ -85,3 +106,4 @@
 - Can V5.1 utilities factors remain financially explainable and statistically stable without bank-specific indicators?
 - Can V5.2 coal value factors survive PIT validation after controlling for commodity-cycle state?
 - Can V5.3 insurance value / quality factors transfer V5 financial-sector logic beyond banks without becoming bank-factor reuse?
+- Which sectors can upgrade FCF from diagnostic support to formal factor after capex-quality and PIT visibility gates?

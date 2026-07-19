@@ -16,7 +16,7 @@ Statistical methods identify relationships. Financial theory explains why those 
 
 V5 is built on the integration of these three disciplines rather than relying on any single one.
 
-The full research manifesto is stored in [docs/RESEARCH_MANIFESTO.md](docs/RESEARCH_MANIFESTO.md), the operating skill map is stored in [docs/V5_SKILL_MAP.md](docs/V5_SKILL_MAP.md), and the machine-readable project context is stored in [config/v5_context.json](config/v5_context.json).
+The full research manifesto is stored in [docs/RESEARCH_MANIFESTO.md](docs/RESEARCH_MANIFESTO.md), the operating skill map is stored in [docs/V5_SKILL_MAP.md](docs/V5_SKILL_MAP.md), the agent operating protocol is stored in [docs/governance/agent_operating_protocol_v1.md](docs/governance/agent_operating_protocol_v1.md), and the machine-readable project context is stored in [config/v5_context.json](config/v5_context.json).
 
 ## Framework Summary
 
@@ -65,6 +65,14 @@ Final Result
 Every V5 agent must follow the same rule:
 
 > Every decision must be evidence-driven, financially explainable, statistically validated, reproducible and maintainable. Historical performance alone is never sufficient evidence for accepting a strategy.
+
+Agent work is governed by the V5 Agent Operating Protocol:
+
+- Agents do not ask the user after ordinary steps inside an approved objective.
+- Exploratory loops use a default 30-minute timebox.
+- A loop ends with a checkpoint, blocker packet, failure return packet, or stage-gate decision.
+- The user is asked only for direction changes, new sectors, strategy-state promotion, external resources, frozen-logic changes, or irreversible repository work.
+- Two consecutive loops with no new evidence must stop and be archived, narrowed, or escalated.
 
 ## Dynamic Skill Lifecycle
 

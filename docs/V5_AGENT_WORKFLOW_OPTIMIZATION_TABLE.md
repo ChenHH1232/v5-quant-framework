@@ -6,12 +6,21 @@ Owner: Project Manager Agent
 
 Purpose: reduce Agent handoff interruptions, prevent silent stalls, and make long-running research loops auditable.
 
+Canonical protocol:
+
+```text
+docs/governance/agent_operating_protocol_v1.md
+config/agent_operating_protocol_v1.json
+```
+
+This table is the implementation checklist for the canonical protocol. If a rule conflicts, `agent_operating_protocol_v1` wins.
+
 ## Core Rule Update
 
 The previous working loop used short informal progress checks. Going forward, V5 uses a formal 30-minute PM review window:
 
 ```text
-If an Agent loop runs for 30 minutes without producing a usable artifact, PM must review the cause before work continues.
+If an Agent loop reaches its timebox, PM must produce a checkpoint or blocker packet before work continues.
 ```
 
 A usable artifact can be:
@@ -83,6 +92,8 @@ Allowed PM decisions:
 - `start_paper_trading`;
 - `disable_or_revise_skill`;
 - `ask_user_for_external_input`.
+
+User confirmation is required only for the mandatory decision triggers listed in `agent_operating_protocol_v1`: direction change, new sector or strategy line, strategy-state promotion, paid/manual external resource use, frozen-logic change, large irreversible repository work, two loops with no new evidence, or a user-owned external blocker.
 
 ## V5.1 Immediate Application
 

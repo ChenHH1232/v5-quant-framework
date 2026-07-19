@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "project": "v56_dividend_low_vol_fcf_shadow_basket",
+  "experiment_layer": "research_pit_validation",
+  "purpose": "Construct first shadow rebalance signals across ready stable-cash-flow sectors after PIT-safe low-volatility factors are joined.",
+  "sectors": [
+    {
+      "sector_id": "bank",
+      "strategy_id": "bank_high_dividend_sustainability_v3",
+      "panel_csv": "数据库/processed/low_volatility_factors_v56/bank_v3/panel_with_low_vol.csv",
+      "price_csv": "数据库/processed/bank_v3_joinquant_real_daily_prices.csv",
+      "dividend_csv": "数据库/processed/bank_v3_joinquant_cash_dividends.csv",
+      "role": "bank_core_dividend_sleeve"
+    },
+    {
+      "sector_id": "utilities_electricity",
+      "strategy_id": "utilities_demand_state_v51f",
+      "panel_csv": "数据库/processed/low_volatility_factors_v56/utilities_v51f/panel_with_low_vol.csv",
+      "price_csv": "数据库/processed/utilities_joinquant_real_daily_prices.csv",
+      "dividend_csv": "数据库/processed/utilities_joinquant_cash_dividends.csv",
+      "role": "golden_template_core"
+    },
+    {
+      "sector_id": "highway_infrastructure",
+      "strategy_id": "highway_dividend_reviewed_operating_v54h_repaired_2021",
+      "panel_csv": "数据库/processed/low_volatility_factors_v56/highway_v54h/panel_with_low_vol.csv",
+      "price_csv": "数据库/processed/highway_v54h_joinquant_real_daily_prices.csv",
+      "dividend_csv": "数据库/processed/highway_v54h_joinquant_cash_dividends.csv",
+      "role": "stable_cash_flow_core"
+    },
+    {
+      "sector_id": "port_rail_infrastructure",
+      "strategy_id": "port_rail_cashflow_value_operating_diagnostic_v55j_reviewed_business_sources",
+      "panel_csv": "数据库/processed/low_volatility_factors_v56/port_rail_v55j/panel_with_low_vol.csv",
+      "price_csv": "数据库/processed/port_rail_v55c_joinquant_real_daily_prices.csv",
+      "dividend_csv": "数据库/processed/port_rail_v55c_joinquant_cash_dividends.csv",
+      "role": "stable_cash_flow_candidate_pending_platform_replication"
+    }
+  ],
+  "signals": {
+    "factors": [
+      {
+        "name": "dividend_yield",
+        "direction": "higher_is_better"
+      },
+      {
+        "name": "operating_cash_flow_yield",
+        "direction": "higher_is_better"
+      },
+      {
+        "name": "free_cash_flow_yield",
+        "direction": "higher_is_better"
+      },
+      {
+        "name": "low_price_to_book",
+        "direction": "higher_is_better"
+      },
+      {
+        "name": "low_vol_score",
+        "direction": "higher_is_better"
+      },
+      {
+        "name": "volatility_120d",
+        "direction": "lower_is_better"
+      },
+      {
+        "name": "max_drawdown_120d",
+        "direction": "lower_is_better"
+      },
+      {
+        "name": "capex_burden",
+        "direction": "lower_is_better"
+      }
+    ],
+    "scoring": {
+      "method": "weighted_composite",
+      "min_factor_count": 4,
+      "weights": {
+        "dividend_yield": 0.22,
+        "operating_cash_flow_yield": 0.16,
+        "free_cash_flow_yield": 0.12,
+        "low_price_to_book": 0.14,
+        "low_vol_score": 0.16,
+        "volatility_120d": 0.08,
+        "max_drawdown_120d": 0.08,
+        "capex_burden": 0.04
+      }
+    }
+  },
+  "portfolio": {
+    "start_date": "2021-05-01",
+    "end_date": "2026-05-31",
+    "rebalance_calendar_policy": "union",
+    "required_fields": [
+      "low_vol_score",
+      "volatility_120d"
+    ],
+    "target_count": 30,
+    "sector_weight_cap": 0.35,
+    "single_stock_weight_cap": 0.05,
+    "rebalance_frequency": "quarterly",
+    "weight_policy": "equal_weight_after_sector_and_single_stock_caps"
+  },
+  "governance": {
+    "status": "shadow_basket_constructor_ready_for_formal_validation",
+    "not_status": [
+      "accepted_strategy",
+      "platform_replication",
+      "paper_trading_ready"
+    ],
+    "known_gaps": [
+      "Basket constructor creates signals only; formal validation and overfit audit are required before PM can approve paper trading.",
+      "Sector benchmark and basket benchmark are still same-pool/local proxies until a tradable benchmark package is finalized.",
+      "2021-2026 remains platform-confirmation context, not accepted-strategy evidence."
+    ]
+  }
+}

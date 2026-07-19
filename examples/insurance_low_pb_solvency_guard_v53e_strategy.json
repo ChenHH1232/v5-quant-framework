@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "strategy_id": "insurance_low_pb_solvency_guard_v53e",
+    "name": "Insurance Low-PB With Solvency Guard V5.3e",
+    "objective": "Research reset after V5.3d rejection. Test whether low PB remains the core insurance value signal while solvency works better as a guard than as a positive score. Total investment return is kept as a diagnostic/state variable, not an alpha score.",
+    "status": "research_hypothesis_candidate_v53e"
+  },
+  "universe": {
+    "name": "A-share core listed insurance operating companies and groups",
+    "construction": "pm_reviewed_core_insurance_universe_v53_test1",
+    "point_in_time": true,
+    "minimum_rebalance_coverage_ratio": 0.8,
+    "exclude": [
+      "banks",
+      "brokers",
+      "asset_managers",
+      "financial_holding_contamination",
+      "st_or_delisted_special_cases"
+    ]
+  },
+  "data": {
+    "vendor": "JoinQuant/DataJQ PIT valuation fields plus reviewed insurance-specific diagnostic fields",
+    "price_frequency": "quarterly_signal_panel",
+    "financial_as_of_policy": "announcement_date",
+    "price_adjustment": {
+      "research_panel": "pre_adjusted_total_return",
+      "status": "research_pit_validation_only"
+    },
+    "insurance_special_fields_policy": {
+      "source_repair_status": "insurance_special_fields_source_repair_passed_for_2025_core5_only",
+      "score_fields": [
+        "low_price_to_book"
+      ],
+      "guard_fields": [
+        "solvency_adequacy_ratio"
+      ],
+      "diagnostic_state_fields": [
+        "total_investment_rate_of_return",
+        "gov_bond_10y_yield",
+        "gov_bond_10y_yield_change_252d",
+        "equity_252d_return"
+      ],
+      "enhancement_only_fields": [
+        "embedded_value",
+        "new_business_value",
+        "net_investment_yield"
+      ],
+      "reason": "V5.3d showed total investment return had negative IC and solvency was weak as a linear alpha score. V5.3e tests role separation instead of weight tuning."
+    },
+    "window": {
+      "research_start": "2016-01-01",
+      "research_end": "2026-05-31"
+    }
+  },
+  "signals": {
+    "factors": [
+      {
+        "name": "low_price_to_book",
+        "source": "jqdatasdk.valuation",
+        "role": "core_value_score",
+        "direction": "lower_is_better",
+        "definition": "PB ratio. Lower PB is the only alpha score in V5.3e because it remains the strongest validated insurance signal.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security",
+        "normalize": "rank_within_rebalance_date"
+      }
+    ],
+    "scoring": {
+      "method": "weighted_composite",
+      "normalization_scope": "rebalance_cross_section",
+      "weights": {
+        "low_price_to_book": 1.0
+      },
+      "min_factor_count": 1,
+      "value_trap_guard": "Formal score remains low PB only. Solvency guard is tested as a research baseline condition, not embedded as a tuned scoring rule."
+    }
+  },
+  "schedule": {
+    "signal_frequency": "quarterly",
+    "rebalance_frequency": "quarterly",
+    "rebalance_rule": "first_tradable_day_of_quarter_for_research_validation"
+  },
+  "portfolio": {
+    "selection_count": 3,
+    "weighting": "equal_weight_research_candidate",
+    "max_position_weight": 0.34,
+    "cash_policy": "hold_residual_cash_when fewer than three names pass guard"
+  },
+  "risk": {
+    "defensive_asset": "cash",
+    "defensive_rule": {
+      "enabled": false,
+      "reason": "V5.3e validates value-trap guard and state diagnostics, not market timing."
+    },
+    "individual_stop_loss_take_profit": {
+      "enabled": false,
+      "reason": "Fixed exits are not part of the research hypothesis."
+    }
+  },
+  "validation": {
+    "method": "rolling",
+    "train_years": 5,
+    "test_years": 2,
+    "review_years": 1,
+    "required_tests": [
+      "pit_leakage_audit",
+      "baseline_comparison",
+      "low_pb_ic_rankic",
+      "solvency_guard_effect",
+      "investment_return_state_diagnostic",
+      "rate_state_diagnostic",
+      "equity_state_diagnostic",
+      "rolling_validation",
+      "selection_count_2_3_4_5_robustness",
+      "failure_year_analysis_2021_2022_2026",
+      "comparison_against_v53c_low_pb_only"
+    ],
+    "baselines": [
+      {
+        "name": "equal_weight_core_insurance",
+        "mode": "equal_all"
+      },
+      {
+        "name": "low_pb_core_insurance_top3",
+        "mode": "single_factor",
+        "factor": "low_price_to_book",
+        "direction": "lower_is_better",
+        "selection_count": 3
+      },
+      {
+        "name": "low_pb_after_solvency_top80_guard",
+        "mode": "single_factor",
+        "factor": "low_price_to_book",
+        "direction": "lower_is_better",
+        "selection_count": 3,
+        "condition": {
+          "field": "solvency_adequacy_ratio",
+          "direction": "higher_is_better",
+          "quantile": 0.8,
+          "keep": "top"
+        }
+      },
+      {
+        "name": "high_solvency_reference_top3",
+        "mode": "single_factor",
+        "factor": "solvency_adequacy_ratio",
+        "direction": "higher_is_better",
+        "selection_count": 3
+      },
+      {
+        "name": "v53e_low_pb_score",
+        "mode": "composite",
+        "selection_count": 3
+      }
+    ],
+    "common_sample_fields": [
+      "low_price_to_book",
+      "solvency_adequacy_ratio",
+      "total_investment_rate_of_return"
+    ],
+    "common_sample_interactions": [
+      {
+        "name": "common_low_pb_only",
+        "factors": [
+          "low_price_to_book"
+        ]
+      }
+    ],
+    "robustness": {
+      "selection_counts": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "weight_scale_factors": [
+        "low_price_to_book"
+      ],
+      "weight_scales": [
+        0.8,
+        1.0,
+        1.2
+      ]
+    },
+    "weak_years": [
+      "2021",
+      "2022",
+      "2026"
+    ],
+    "acceptance_rule": "V5.3e may proceed only if the solvency guard improves common-sample low-PB evidence without reducing sample coverage too much, and if investment/rate/equity state diagnostics explain weak years ex ante rather than becoming return tuning."
+  },
+  "execution": {
+    "status": "blocked_until_research_and_quant_validation_pass",
+    "next_gate": "research_pit_validation",
+    "commission_bps": 3,
+    "slippage_bps": 5,
+    "suspension_policy": "skip_untradeable",
+    "limit_policy": "skip_limit_blocked"
+  },
+  "outputs": {
+    "save_holdings": true,
+    "save_rebalance_signals": true,
+    "report": "markdown",
+    "required_reports": [
+      "formal_validation_packet",
+      "state_diagnostic_packet",
+      "pm_formal_candidate_decision"
+    ]
+  }
+}

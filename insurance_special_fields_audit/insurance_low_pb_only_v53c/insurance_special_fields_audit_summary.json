@@ -1,0 +1,22 @@
+{
+  "strategy_id": "insurance_low_pb_only_v53c",
+  "status": "insurance_special_fields_source_repair_blocked",
+  "source_csv": "knowledge\\research_agent\\references\\insurance_special_fields_manual_template.csv",
+  "row_count": 8,
+  "pit_usable_rows": 0,
+  "field_count": 8,
+  "usable_core_fields": [],
+  "missing_core_fields": [
+    "comprehensive_solvency_ratio",
+    "core_solvency_ratio",
+    "embedded_value",
+    "net_investment_yield",
+    "new_business_value",
+    "total_investment_yield"
+  ],
+  "missing_columns": [],
+  "pit_blocked_rows": 8,
+  "blocker_count": 6,
+  "created_at_utc": "2026-07-17T04:41:00+00:00",
+  "next_gate": "insurance_special_fields_source_repair"
+}

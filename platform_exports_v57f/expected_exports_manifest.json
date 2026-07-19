@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "strategy_id": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f",
+  "experiment_layer": "platform_replication",
+  "status": "waiting_for_joinquant_exports",
+  "intake_dir": "platform_exports_v57f/pending",
+  "expected_joinquant_setup": {
+    "start_date": "2021-05-01",
+    "end_date": "2026-05-31",
+    "initial_cash": 2000000,
+    "frequency": "daily",
+    "rebalance_time": "09:40",
+    "display_benchmark": "000300.XSHG",
+    "frozen_script": "exports/joinquant/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f_joinquant_frozen_signals_near5y.py"
+  },
+  "required_exports": [
+    {
+      "name": "daily_result",
+      "target_path": "platform_exports_v57f/pending/result.csv",
+      "source_hint": "JoinQuant daily result / result_*.csv export",
+      "required_for": "daily_nav_attribution"
+    },
+    {
+      "name": "transaction_detail",
+      "target_path": "platform_exports_v57f/pending/transaction.csv",
+      "source_hint": "JoinQuant transaction detail export",
+      "required_for": "transaction_attribution"
+    },
+    {
+      "name": "position_detail",
+      "target_path": "platform_exports_v57f/pending/position.csv",
+      "source_hint": "JoinQuant position export",
+      "required_for": "position_attribution"
+    },
+    {
+      "name": "full_log",
+      "target_path": "platform_exports_v57f/pending/log.txt",
+      "source_hint": "JoinQuant full run log",
+      "required_for": "manual_execution_diagnostics"
+    }
+  ],
+  "local_reference": {
+    "local_run_dir": "local_daily_backtests_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f",
+    "daily_returns_csv": "local_daily_backtests_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/daily_returns.csv",
+    "trades_csv": "local_daily_backtests_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/trades.csv",
+    "holdings_csv": "local_daily_backtests_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/holdings.csv",
+    "dividends_csv": "local_daily_backtests_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/dividends.csv",
+    "rebalance_signals_csv": "local_daily_backtests_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/rebalance_signals.csv",
+    "panel_csv": "validation_formal_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/combined_basket_panel_for_validation.csv"
+  },
+  "attribution_commands_after_exports_arrive": {
+    "platform_packet": "python -m v5.cli platform-replication-packet local_daily_backtests_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f --out platform_replication_packets_v57f_etf --strategy-id dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f --panel-csv validation_formal_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/combined_basket_panel_for_validation.csv --joinquant-daily-csv platform_exports_v57f/pending/result.csv --joinquant-transaction-csv platform_exports_v57f/pending/transaction.csv --joinquant-position-csv platform_exports_v57f/pending/position.csv"
+  },
+  "pm_rules": [
+    "Do not tune V5.7f from platform replication output.",
+    "Do not mix exports from other strategies.",
+    "Do not mark platform_replication_passed unless daily, transaction and position attribution all pass.",
+    "Do not use the JoinQuant display benchmark as the formal ETF benchmark without attribution notes."
+  ],
+  "created_at": "2026-07-19"
+}
+

@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "packet_type": "checkpoint_packet",
+  "protocol_id": "agent_operating_protocol_v1",
+  "objective": "V5.8 airport transport first-layer PIT business purity gate",
+  "agent": "Project Manager Agent",
+  "experiment_layer": "data_availability_gate",
+  "elapsed_timebox_minutes": 30,
+  "artifacts_created": [
+    "src/v5/airport_transport_operating_evidence_runner.py",
+    "tests/test_airport_transport_operating_evidence_runner.py",
+    "数据库/processed/airport_transport_operating_evidence_v58/business_purity_panel/panel_business_purity_passed.csv",
+    "docs/governance/v58_research_queue_execution_checkpoint_v1.md"
+  ],
+  "evidence_found": [
+    "Airport operator PIT business-purity coverage is 80% on every 2021-2026 rebalance after classifier repair.",
+    "600515.XSHG is removed for visible non-airport contamination, not for missing evidence."
+  ],
+  "blockers": [
+    "Airport / transport is not Quant-ready until passenger throughput, cargo throughput, international-route recovery, commercial exposure and capex/policy state are mapped with visible dates.",
+    "Eastmoney segment evidence is first-layer evidence and still needs annual/interim report spot checks before Engineering handoff."
+  ],
+  "decision": "continue_next_timebox",
+  "next_owner": "Research Agent",
+  "stop_rule_status": "not_triggered",
+  "user_decision_required": false,
+  "user_decision_reason": "",
+  "allowed_next_action": "Research Agent should build external operating-state field map and annual/interim report spot-check plan; Quant must wait.",
+  "restart_condition": "Start Quant validation only after external-state field map and spot-check coverage are recorded.",
+  "skill_status_change": "none",
+  "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
+  "created_at_utc": "2026-07-19T13:11:37+00:00"
+}

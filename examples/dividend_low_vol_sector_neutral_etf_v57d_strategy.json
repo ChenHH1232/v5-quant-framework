@@ -1,0 +1,118 @@
+{
+  "meta": {
+    "strategy_id": "dividend_low_vol_sector_neutral_etf_v57d",
+    "name": "Sector-Neutral Dividend Low-Vol ETF Candidate V5.7d",
+    "objective": "Test an ETF-like basket where dividend is a product-support variable and alpha scoring is driven by sector-adapted OCF, low volatility, drawdown control, PB and bank quality.",
+    "status": "sector_neutral_research_candidate_not_acceptance"
+  },
+  "universe": {
+    "name": "PIT candidate pool from bank, utilities/electricity, highway infrastructure and port/rail infrastructure sleeves",
+    "construction": "Each sector sleeve is scored inside its own cross-section, then combined under sector and single-stock caps.",
+    "point_in_time": true,
+    "minimum_rebalance_coverage_ratio": 0.8
+  },
+  "data": {
+    "vendor": "JoinQuant/DataJQ PIT panels, reviewed sector evidence where available, and JoinQuant real daily open/close execution prices",
+    "price_frequency": "daily_open_close_for_local_simulation",
+    "financial_as_of_policy": "announcement_date_or_trade_date_lagged_by_factor",
+    "cash_dividend_policy": "real cash dividends from JoinQuant STK_XR_XD, net_cash_per_share after 20% tax",
+    "derived_field_policy": "dividend_yield_decimal normalizes source units but is diagnostic only in V5.7d."
+  },
+  "signals": {
+    "core_hypothesis": "Dividend-rich stable-cash-flow sectors should be selected by sector-adapted cash-flow value and low-volatility evidence, while dividend yield remains a product-support and monitoring variable rather than a positive alpha score.",
+    "factors": [
+      {
+        "name": "operating_cash_flow_yield",
+        "role": "nonfinancial_cashflow_value",
+        "direction": "higher_is_better",
+        "as_of": "announcement_date"
+      },
+      {
+        "name": "volatility_120d",
+        "role": "volatility_guard",
+        "direction": "lower_is_better",
+        "as_of": "trade_date_lagged"
+      },
+      {
+        "name": "max_drawdown_120d",
+        "role": "drawdown_guard",
+        "direction": "lower_is_better",
+        "as_of": "trade_date_lagged"
+      },
+      {
+        "name": "capex_burden",
+        "role": "nonfinancial_capex_risk",
+        "direction": "lower_is_better",
+        "as_of": "announcement_date"
+      },
+      {
+        "name": "low_price_to_book",
+        "role": "bank_value_and_cross_sector_diagnostic",
+        "direction": "lower_is_better",
+        "as_of": "announcement_date"
+      },
+      {
+        "name": "non_performing_loan_ratio",
+        "role": "bank_asset_quality_risk",
+        "direction": "lower_is_better",
+        "as_of": "announcement_date"
+      },
+      {
+        "name": "provision_coverage_ratio",
+        "role": "bank_provision_buffer",
+        "direction": "higher_is_better",
+        "as_of": "announcement_date"
+      },
+      {
+        "name": "core_tier_1_capital_adequacy_ratio",
+        "role": "bank_capital_resilience",
+        "direction": "higher_is_better",
+        "as_of": "announcement_date"
+      },
+      {
+        "name": "dividend_yield_decimal",
+        "role": "diagnostic_product_support_not_alpha_score",
+        "direction": "higher_is_better",
+        "as_of": "trade_date_lagged"
+      }
+    ],
+    "scoring": {
+      "method": "weighted_composite",
+      "normalization_scope": "sector_adaptive",
+      "min_factor_count": 3
+    }
+  },
+  "portfolio": {
+    "selection_count": 30,
+    "target_count": 30,
+    "sector_weight_cap": 0.30,
+    "single_stock_weight_cap": 0.05,
+    "target_exposure": 0.995,
+    "weighting": "equal_weight_after_sector_and_single_stock_caps",
+    "rebalance_frequency": "quarterly"
+  },
+  "validation": {
+    "method": "rolling",
+    "required_tests": [
+      "baseline_comparison_same_pool_equal_weight",
+      "ic_rankic_full_candidate_panel",
+      "rolling_by_calendar_year",
+      "true_basket_ablation",
+      "failure_year_attribution",
+      "random_window_stability",
+      "execution_time_shift_proxy",
+      "future_leakage_audit",
+      "survivorship_bias_audit"
+    ],
+    "acceptance_rule": "PM cannot accept the ETF candidate from 2021-2026 platform-confirmation returns alone. Promotion requires stable evidence, clean data gates, platform attribution and paper trading."
+  },
+  "execution": {
+    "status": "pending_local_daily_simulation",
+    "commission_bps": 3,
+    "lot_size": 100,
+    "trade_price": "daily_open",
+    "valuation_price": "daily_close",
+    "suspension_policy": "skip_untradeable",
+    "limit_policy": "skip_limit_blocked"
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "project": "v56c_ocf_value_vol_guard_basket",
+  "experiment_layer": "research_pit_validation",
+  "purpose": "Second research reset for V5.6: use operating-cash-flow yield as the primary value factor and treat low-volatility data as a risk/coverage guard rather than a positive score factor.",
+  "sectors": [
+    {
+      "sector_id": "bank",
+      "strategy_id": "bank_high_dividend_sustainability_v3",
+      "panel_csv": "数据库/processed/low_volatility_factors_v56/bank_v3/panel_with_low_vol.csv",
+      "price_csv": "数据库/processed/bank_v3_joinquant_real_daily_prices.csv",
+      "dividend_csv": "数据库/processed/bank_v3_joinquant_cash_dividends.csv",
+      "role": "bank_core_dividend_sleeve"
+    },
+    {
+      "sector_id": "utilities_electricity",
+      "strategy_id": "utilities_demand_state_v51f",
+      "panel_csv": "数据库/processed/low_volatility_factors_v56/utilities_v51f/panel_with_low_vol.csv",
+      "price_csv": "数据库/processed/utilities_joinquant_real_daily_prices.csv",
+      "dividend_csv": "数据库/processed/utilities_joinquant_cash_dividends.csv",
+      "role": "golden_template_core"
+    },
+    {
+      "sector_id": "highway_infrastructure",
+      "strategy_id": "highway_dividend_reviewed_operating_v54h_repaired_2021",
+      "panel_csv": "数据库/processed/low_volatility_factors_v56/highway_v54h/panel_with_low_vol.csv",
+      "price_csv": "数据库/processed/highway_v54h_joinquant_real_daily_prices.csv",
+      "dividend_csv": "数据库/processed/highway_v54h_joinquant_cash_dividends.csv",
+      "role": "stable_cash_flow_core"
+    },
+    {
+      "sector_id": "port_rail_infrastructure",
+      "strategy_id": "port_rail_cashflow_value_operating_diagnostic_v55j_reviewed_business_sources",
+      "panel_csv": "数据库/processed/low_volatility_factors_v56/port_rail_v55j/panel_with_low_vol.csv",
+      "price_csv": "数据库/processed/port_rail_v55c_joinquant_real_daily_prices.csv",
+      "dividend_csv": "数据库/processed/port_rail_v55c_joinquant_cash_dividends.csv",
+      "role": "stable_cash_flow_candidate_pending_platform_replication"
+    }
+  ],
+  "signals": {
+    "factors": [
+      {
+        "name": "operating_cash_flow_yield",
+        "direction": "higher_is_better"
+      },
+      {
+        "name": "volatility_120d",
+        "direction": "lower_is_better"
+      },
+      {
+        "name": "max_drawdown_120d",
+        "direction": "lower_is_better"
+      },
+      {
+        "name": "dividend_yield",
+        "direction": "higher_is_better"
+      },
+      {
+        "name": "capex_burden",
+        "direction": "lower_is_better"
+      }
+    ],
+    "scoring": {
+      "method": "weighted_composite",
+      "normalization_scope": "rebalance_cross_section",
+      "min_factor_count": 3,
+      "weights": {
+        "operating_cash_flow_yield": 0.38,
+        "volatility_120d": 0.20,
+        "max_drawdown_120d": 0.18,
+        "dividend_yield": 0.16,
+        "capex_burden": 0.08
+      }
+    }
+  },
+  "portfolio": {
+    "start_date": "2021-05-01",
+    "end_date": "2026-05-31",
+    "rebalance_calendar_policy": "union",
+    "required_fields": [
+      "low_vol_score",
+      "volatility_120d",
+      "operating_cash_flow_yield"
+    ],
+    "target_count": 30,
+    "sector_weight_cap": 0.35,
+    "single_stock_weight_cap": 0.05,
+    "rebalance_frequency": "quarterly",
+    "weight_policy": "equal_weight_after_sector_and_single_stock_caps"
+  },
+  "governance": {
+    "status": "research_reset_candidate_not_accepted",
+    "not_status": [
+      "accepted_strategy",
+      "platform_replication",
+      "paper_trading_ready"
+    ],
+    "research_reset_reason": "V5.6b ablation suggested low_vol_score may be better as a risk/coverage gate than as a positive alpha score.",
+    "known_gaps": [
+      "2021-2026 remains platform-confirmation context, not accepted-strategy evidence.",
+      "Low PB and FCF are excluded from the core score and require separate research if reintroduced.",
+      "Same-pool benchmark is still a local proxy."
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "strategy_id": "insurance_pev_value_v53g",
+  "years": [
+    "2021",
+    "2022",
+    "2026"
+  ],
+  "daily_returns_csv": "local_daily_backtests_insurance_v53g\\insurance_pev_value_v53g\\daily_returns.csv",
+  "rebalance_signals_csv": "local_daily_backtests_insurance_v53g\\insurance_pev_value_v53g\\rebalance_signals.csv",
+  "trades_csv": "local_daily_backtests_insurance_v53g\\insurance_pev_value_v53g\\trades.csv",
+  "dividends_csv": "local_daily_backtests_insurance_v53g\\insurance_pev_value_v53g\\dividends.csv",
+  "summary": [
+    {
+      "year": "2021",
+      "daily_count": 164,
+      "strategy_return": -0.09921016159999918,
+      "benchmark_return": -0.16724074023848878,
+      "excess_return": 0.0680305786384896,
+      "max_drawdown": 0.1308185198485463,
+      "dividend_cash": 25834.4,
+      "dividend_event_count": 2,
+      "trade_count": 6,
+      "buy_turnover": 2033520.0,
+      "sell_turnover": 22224.0,
+      "signal_count": 2,
+      "selected_codes_by_rebalance": "2021-07-01:601336.XSHG;601601.XSHG;601628.XSHG | 2021-10-08:601336.XSHG;601628.XSHG;601601.XSHG",
+      "interpretation": "outperformed_benchmark,negative_absolute_return,dividends_cushioned_drawdown,few_rebalance_observations"
+    },
+    {
+      "year": "2022",
+      "daily_count": 242,
+      "strategy_return": -0.007079191813850749,
+      "benchmark_return": -0.08271272553574938,
+      "excess_return": 0.07563353372189863,
+      "max_drawdown": 0.2885414732681548,
+      "dividend_cash": 47048.8,
+      "dividend_event_count": 3,
+      "trade_count": 11,
+      "buy_turnover": 199985.0,
+      "sell_turnover": 151820.0,
+      "signal_count": 4,
+      "selected_codes_by_rebalance": "2022-01-04:601336.XSHG;601601.XSHG;601628.XSHG | 2022-04-01:601336.XSHG;601601.XSHG;601628.XSHG | 2022-07-01:601336.XSHG;601601.XSHG;601628.XSHG | 2022-10-10:601336.XSHG;601601.XSHG;601628.XSHG",
+      "interpretation": "outperformed_benchmark,negative_absolute_return,dividends_cushioned_drawdown"
+    },
+    {
+      "year": "2026",
+      "daily_count": 95,
+      "strategy_return": -0.2087558743236687,
+      "benchmark_return": -0.19586478922188644,
+      "excess_return": -0.012891085101782274,
+      "max_drawdown": 0.3159742633552133,
+      "dividend_cash": 0,
+      "dividend_event_count": 0,
+      "trade_count": 6,
+      "buy_turnover": 107115.0,
+      "sell_turnover": 99125.0,
+      "signal_count": 2,
+      "selected_codes_by_rebalance": "2026-01-05:601336.XSHG;601628.XSHG;601601.XSHG | 2026-04-01:601336.XSHG;601628.XSHG;601601.XSHG",
+      "interpretation": "underperformed_benchmark,negative_absolute_return,few_rebalance_observations,partial_year_tail_risk"
+    }
+  ],
+  "outputs": {
+    "summary": "failure_year_summary.csv",
+    "worst_days": "failure_year_worst_days.csv",
+    "rebalance_signals": "failure_year_rebalance_signals.csv",
+    "report": "failure_year_attribution_report.md"
+  },
+  "status": "completed_not_acceptance"
+}

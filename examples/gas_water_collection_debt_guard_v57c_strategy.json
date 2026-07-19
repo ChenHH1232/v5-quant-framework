@@ -1,0 +1,212 @@
+{
+  "meta": {
+    "strategy_id": "gas_water_collection_debt_guard_v57c",
+    "name": "Gas / Water Collection + Debt Guard V5.7c",
+    "objective": "Test whether gas / water value traps are best handled by cash collection, debt pressure and capex safeguards, with dividend only as a support variable."
+  },
+  "universe": {
+    "name": "A-share gas and water utility operators",
+    "construction": "JoinQuant PIT gas / water industry membership. Operator-purity remains first-layer only and must be reviewed before Engineering handoff.",
+    "point_in_time": true,
+    "minimum_rebalance_coverage_ratio": 0.8
+  },
+  "data": {
+    "vendor": "JoinQuant/DataJQ PIT financial fields and industry membership",
+    "price_frequency": "quarterly_signal_panel",
+    "financial_as_of_policy": "announcement_date",
+    "price_adjustment": {
+      "research_panel": "pre_adjusted_close_to_close_return",
+      "status": "research_pit_validation_input"
+    },
+    "window": {
+      "research_start": "2021-05-01",
+      "research_end": "2026-05-31"
+    },
+    "source_warning": "Research reports are hypothesis sources only. Formal factor rows use PIT JoinQuant fields and derived safe fields."
+  },
+  "signals": {
+    "factors": [
+      {
+        "name": "cash_collection_quality_safe",
+        "source": "derived from indicator.goods_sale_and_service_to_revenue",
+        "role": "receivables_and_collection_guard",
+        "direction": "higher_is_better",
+        "definition": "Cash collection quality after removing implausible outliers.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      },
+      {
+        "name": "interest_coverage_safe",
+        "source": "derived income / financial expense proxy",
+        "role": "debt_serviceability",
+        "direction": "higher_is_better",
+        "definition": "Interest coverage after removing negative artifacts.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      },
+      {
+        "name": "debt_pressure_safe",
+        "source": "derived from balance.total_liability / total_assets",
+        "role": "debt_pressure_guard",
+        "direction": "lower_is_better",
+        "definition": "Asset-liability ratio after removing implausible outliers.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      },
+      {
+        "name": "capex_burden_safe",
+        "source": "derived capex / OCF with negative OCF punished",
+        "role": "capex_quality_guard",
+        "direction": "lower_is_better",
+        "definition": "Capex burden; negative OCF rows are assigned a penalty instead of being rewarded.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      },
+      {
+        "name": "dividend_yield",
+        "source": "valuation.dividend_ratio",
+        "role": "shareholder_return_support",
+        "direction": "higher_is_better",
+        "definition": "Visible dividend yield.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      }
+    ],
+    "scoring": {
+      "method": "weighted_composite",
+      "normalization_scope": "rebalance_cross_section",
+      "weights": {
+        "cash_collection_quality_safe": 0.25,
+        "interest_coverage_safe": 0.25,
+        "debt_pressure_safe": 0.2,
+        "capex_burden_safe": 0.2,
+        "dividend_yield": 0.1
+      },
+      "min_factor_count": 4,
+      "value_trap_guard": "Sector value-trap controls are included as explicit scoring fields; no bank-specific guard is used."
+    }
+  },
+  "schedule": {
+    "signal_frequency": "quarterly",
+    "rebalance_frequency": "quarterly",
+    "rebalance_rule": "first tradable day of quarter after PIT visibility check"
+  },
+  "portfolio": {
+    "selection_count": 10,
+    "weighting": "equal_weight_research_candidate",
+    "max_position_weight": 0.12,
+    "cash_policy": "hold residual cash when fewer than ten names pass filters"
+  },
+  "risk": {
+    "defensive_asset": "cash",
+    "defensive_rule": {
+      "enabled": false,
+      "reason": "Research PIT validation only."
+    },
+    "individual_stop_loss_take_profit": {
+      "enabled": false,
+      "reason": "Fixed exits are not part of the research hypothesis."
+    }
+  },
+  "validation": {
+    "method": "rolling",
+    "train_years": 3,
+    "test_years": 1,
+    "review_years": 1,
+    "weak_years": [
+      "2022",
+      "2024",
+      "2026"
+    ],
+    "baselines": [
+      {
+        "name": "equal_weight_gas_water",
+        "mode": "equal_all"
+      },
+      {
+        "name": "high_dividend_top10",
+        "mode": "single_factor",
+        "factor": "dividend_yield",
+        "direction": "higher_is_better",
+        "selection_count": 10
+      },
+      {
+        "name": "collection_top10",
+        "mode": "single_factor",
+        "factor": "cash_collection_quality_safe",
+        "direction": "higher_is_better",
+        "selection_count": 10
+      },
+      {
+        "name": "serviceability_top10",
+        "mode": "single_factor",
+        "factor": "interest_coverage_safe",
+        "direction": "higher_is_better",
+        "selection_count": 10
+      },
+      {
+        "name": "v57c_collection_debt_guard_top10",
+        "mode": "composite",
+        "selection_count": 10
+      }
+    ],
+    "common_sample_fields": [
+      "cash_collection_quality_safe",
+      "interest_coverage_safe",
+      "debt_pressure_safe",
+      "capex_burden_safe",
+      "dividend_yield"
+    ],
+    "common_sample_interactions": [
+      {
+        "name": "common_v57c_collection_debt_guard",
+        "factors": [
+          "cash_collection_quality_safe",
+          "interest_coverage_safe",
+          "debt_pressure_safe",
+          "capex_burden_safe",
+          "dividend_yield"
+        ]
+      }
+    ],
+    "robustness": {
+      "selection_counts": [
+        8,
+        10,
+        12
+      ],
+      "weight_scale_factors": [
+        "cash_collection_quality_safe",
+        "interest_coverage_safe"
+      ],
+      "weight_scales": [
+        0.8,
+        1.0,
+        1.2
+      ]
+    },
+    "acceptance_rule": "Preliminary pass requires better evidence than equal-weight and high-dividend baselines, no PIT leakage, and stable rolling behavior. Historical return alone is insufficient."
+  },
+  "execution": {
+    "status": "not_started",
+    "next_gate": "quant_validation",
+    "commission_bps": 3,
+    "slippage_bps": 5,
+    "suspension_policy": "skip_untradeable",
+    "limit_policy": "skip_limit_blocked"
+  },
+  "outputs": {
+    "save_holdings": true,
+    "save_rebalance_signals": true,
+    "report": "markdown",
+    "required_reports": [
+      "formal_validation_packet",
+      "pm_initial_model_decision"
+    ]
+  }
+}

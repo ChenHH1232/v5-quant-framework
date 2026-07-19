@@ -1,0 +1,7 @@
+field,row_count,pit_usable_rows,code_count,pit_usable_code_count,pit_usable_ratio,is_core_v53d_field,is_enhancement_v53d_field,status
+comprehensive_solvency_ratio,5,5,5,5,1.0,true,false,usable
+core_solvency_ratio,5,5,5,5,1.0,true,false,usable
+embedded_value,5,5,5,5,1.0,true,false,usable
+net_investment_yield,5,3,5,3,0.6,false,true,usable
+new_business_value,5,5,5,5,1.0,true,false,usable
+total_investment_yield,5,5,5,5,1.0,true,false,usable

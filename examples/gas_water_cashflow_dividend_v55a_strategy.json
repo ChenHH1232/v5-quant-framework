@@ -1,0 +1,199 @@
+{
+  "meta": {
+    "strategy_id": "gas_water_cashflow_dividend_v55a",
+    "name": "Gas / Water Operators Cash-Flow Dividend V5.5a",
+    "objective": "Initial V5.5 similar-sector replication test for gas and water operators using dividend, cash-flow yield, valuation and serviceability discipline.",
+    "status": "initial_model_research_pit_validation_only"
+  },
+  "universe": {
+    "name": "A-share gas and water utility operators",
+    "construction": "JoinQuant PIT gas / water industry membership; engineering, equipment and project-contracting names require later operating-purity review.",
+    "point_in_time": true,
+    "minimum_rebalance_coverage_ratio": 0.8
+  },
+  "data": {
+    "vendor": "JoinQuant/DataJQ PIT financial fields and industry membership",
+    "price_frequency": "quarterly_signal_panel",
+    "financial_as_of_policy": "announcement_date",
+    "price_adjustment": {
+      "research_panel": "pre_adjusted_close_to_close_return",
+      "status": "research_pit_validation_input"
+    },
+    "window": {
+      "research_start": "2021-05-01",
+      "research_end": "2026-05-31"
+    },
+    "source_warning": "Operating-purity and tariff / spread fields are not yet joined; this is an initial model only."
+  },
+  "signals": {
+    "factors": [
+      {
+        "name": "dividend_yield",
+        "source": "valuation.dividend_ratio",
+        "role": "shareholder_return_signal",
+        "direction": "higher_is_better",
+        "definition": "Visible dividend yield.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      },
+      {
+        "name": "operating_cash_flow_yield",
+        "source": "cash_flow_statement / market_cap",
+        "role": "cash_generation_signal",
+        "direction": "higher_is_better",
+        "definition": "Operating cash flow divided by market capitalization.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      },
+      {
+        "name": "low_price_to_book",
+        "source": "valuation.pb_ratio",
+        "role": "valuation_discipline",
+        "direction": "lower_is_better",
+        "definition": "Lower PB is preferred.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      },
+      {
+        "name": "interest_coverage",
+        "source": "income_statement",
+        "role": "debt_serviceability",
+        "direction": "higher_is_better",
+        "definition": "Operating profit or operating cash flow divided by interest / financial expense proxy.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      },
+      {
+        "name": "capex_burden",
+        "source": "cash_flow_statement",
+        "role": "capital_intensity_risk",
+        "direction": "lower_is_better",
+        "definition": "Cash paid for fixed / intangible assets divided by operating cash flow.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      }
+    ],
+    "scoring": {
+      "method": "weighted_composite",
+      "normalization_scope": "rebalance_cross_section",
+      "weights": {
+        "dividend_yield": 0.35,
+        "operating_cash_flow_yield": 0.3,
+        "low_price_to_book": 0.15,
+        "interest_coverage": 0.1,
+        "capex_burden": 0.1
+      },
+      "min_factor_count": 4,
+      "value_trap_guard": "No operating-purity guard approved yet; project-contracting contamination must be reviewed before Engineering."
+    }
+  },
+  "schedule": {
+    "signal_frequency": "quarterly",
+    "rebalance_frequency": "quarterly",
+    "rebalance_rule": "first tradable day of quarter after PIT visibility check"
+  },
+  "portfolio": {
+    "selection_count": 10,
+    "weighting": "equal_weight_research_candidate",
+    "max_position_weight": 0.12,
+    "cash_policy": "hold residual cash when fewer than ten names pass filters"
+  },
+  "risk": {
+    "defensive_asset": "cash",
+    "defensive_rule": {
+      "enabled": false,
+      "reason": "Initial V5.5 model tests sector replication, not tactical defense."
+    },
+    "individual_stop_loss_take_profit": {
+      "enabled": false,
+      "reason": "Fixed exits are not part of the research hypothesis."
+    }
+  },
+  "validation": {
+    "method": "rolling",
+    "train_years": 3,
+    "test_years": 1,
+    "review_years": 1,
+    "weak_years": [
+      "2022",
+      "2024",
+      "2026"
+    ],
+    "baselines": [
+      {
+        "name": "equal_weight_gas_water",
+        "mode": "equal_all"
+      },
+      {
+        "name": "high_dividend_top10",
+        "mode": "single_factor",
+        "factor": "dividend_yield",
+        "direction": "higher_is_better",
+        "selection_count": 10
+      },
+      {
+        "name": "cashflow_dividend_composite_top10",
+        "mode": "composite",
+        "selection_count": 10
+      }
+    ],
+    "common_sample_fields": [
+      "dividend_yield",
+      "operating_cash_flow_yield",
+      "low_price_to_book",
+      "interest_coverage",
+      "capex_burden"
+    ],
+    "common_sample_interactions": [
+      {
+        "name": "common_gas_water_cashflow_dividend_serviceability",
+        "factors": [
+          "dividend_yield",
+          "operating_cash_flow_yield",
+          "low_price_to_book",
+          "interest_coverage",
+          "capex_burden"
+        ]
+      }
+    ],
+    "robustness": {
+      "selection_counts": [
+        8,
+        10,
+        12
+      ],
+      "weight_scale_factors": [
+        "dividend_yield",
+        "operating_cash_flow_yield"
+      ],
+      "weight_scales": [
+        0.8,
+        1.0,
+        1.2
+      ]
+    },
+    "acceptance_rule": "Initial evidence can only decide whether gas / water enters deeper research. Historical return alone is insufficient."
+  },
+  "execution": {
+    "status": "not_started",
+    "next_gate": "pm_initial_model_review",
+    "commission_bps": 3,
+    "slippage_bps": 5,
+    "suspension_policy": "skip_untradeable",
+    "limit_policy": "skip_limit_blocked"
+  },
+  "outputs": {
+    "save_holdings": true,
+    "save_rebalance_signals": true,
+    "report": "markdown",
+    "required_reports": [
+      "formal_validation_packet",
+      "pm_initial_model_decision"
+    ]
+  }
+}

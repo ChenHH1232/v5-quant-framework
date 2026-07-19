@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "project": "dividend_low_vol_ocf_enhanced_etf_v57",
+  "experiment_layer": "research_pit_validation",
+  "purpose": "V5.7 ETF-like product candidate: consolidate approved stable cash-flow sleeves into a dividend, low-volatility and operating-cash-flow enhanced basket. FCF remains a research-only enhancement until sector-specific capex-quality gates pass.",
+  "sectors": [
+    {
+      "sector_id": "bank",
+      "strategy_id": "bank_high_dividend_sustainability_v3",
+      "panel_csv": "\u6570\u636e\u5e93/processed/low_volatility_factors_v56/bank_v3/panel_with_low_vol.csv",
+      "price_csv": "\u6570\u636e\u5e93/processed/bank_v3_joinquant_real_daily_prices.csv",
+      "dividend_csv": "\u6570\u636e\u5e93/processed/bank_v3_joinquant_cash_dividends.csv",
+      "role": "bank_core_dividend_sleeve"
+    },
+    {
+      "sector_id": "utilities_electricity",
+      "strategy_id": "utilities_demand_state_v51f",
+      "panel_csv": "\u6570\u636e\u5e93/processed/low_volatility_factors_v56/utilities_v51f/panel_with_low_vol.csv",
+      "price_csv": "\u6570\u636e\u5e93/processed/utilities_joinquant_real_daily_prices.csv",
+      "dividend_csv": "\u6570\u636e\u5e93/processed/utilities_joinquant_cash_dividends.csv",
+      "role": "golden_template_core"
+    },
+    {
+      "sector_id": "highway_infrastructure",
+      "strategy_id": "highway_dividend_reviewed_operating_v54h_repaired_2021",
+      "panel_csv": "\u6570\u636e\u5e93/processed/low_volatility_factors_v56/highway_v54h/panel_with_low_vol.csv",
+      "price_csv": "\u6570\u636e\u5e93/processed/highway_v54h_joinquant_real_daily_prices.csv",
+      "dividend_csv": "\u6570\u636e\u5e93/processed/highway_v54h_joinquant_cash_dividends.csv",
+      "role": "stable_cash_flow_core"
+    },
+    {
+      "sector_id": "port_rail_infrastructure",
+      "strategy_id": "port_rail_cashflow_value_operating_diagnostic_v55j_reviewed_business_sources",
+      "panel_csv": "\u6570\u636e\u5e93/processed/low_volatility_factors_v56/port_rail_v55j/panel_with_low_vol.csv",
+      "price_csv": "\u6570\u636e\u5e93/processed/port_rail_v55c_joinquant_real_daily_prices.csv",
+      "dividend_csv": "\u6570\u636e\u5e93/processed/port_rail_v55c_joinquant_cash_dividends.csv",
+      "role": "stable_cash_flow_candidate_pending_platform_replication"
+    }
+  ],
+  "signals": {
+    "factors": [
+      {
+        "name": "operating_cash_flow_yield",
+        "direction": "higher_is_better"
+      },
+      {
+        "name": "volatility_120d",
+        "direction": "lower_is_better"
+      },
+      {
+        "name": "max_drawdown_120d",
+        "direction": "lower_is_better"
+      },
+      {
+        "name": "dividend_yield",
+        "direction": "higher_is_better"
+      },
+      {
+        "name": "capex_burden",
+        "direction": "lower_is_better"
+      }
+    ],
+    "scoring": {
+      "method": "weighted_composite",
+      "normalization_scope": "rebalance_cross_section",
+      "min_factor_count": 3,
+      "weights": {
+        "operating_cash_flow_yield": 0.38,
+        "volatility_120d": 0.20,
+        "max_drawdown_120d": 0.18,
+        "dividend_yield": 0.16,
+        "capex_burden": 0.08
+      }
+    }
+  },
+  "portfolio": {
+    "start_date": "2021-05-01",
+    "end_date": "2026-05-31",
+    "rebalance_calendar_policy": "union",
+    "required_fields": [
+      "low_vol_score",
+      "volatility_120d",
+      "operating_cash_flow_yield"
+    ],
+    "target_count": 30,
+    "sector_weight_cap": 0.30,
+    "single_stock_weight_cap": 0.05,
+    "rebalance_frequency": "quarterly",
+    "weight_policy": "equal_weight_after_sector_and_single_stock_caps"
+  },
+  "governance": {
+    "status": "enhanced_etf_candidate_not_accepted",
+    "not_status": [
+      "accepted_strategy",
+      "platform_replication_passed",
+      "live_trading_approved"
+    ],
+    "included_sector_policy": "Only sleeves with PIT panels, real daily prices and cash dividend files enter the official V5.7 basket.",
+    "excluded_or_observation_sleeves": {
+      "gas_water_operators": "Observation only. Strict 80% local simulation underperformed; 70% diagnostic is post-hoc and cannot be adopted.",
+      "telecom_operators": "Observation only because the cross-section is too small for reliable IC/RankIC.",
+      "insurance": "Specialist observation sleeve; requires EV/NBV or P/EV PIT data and concentration review.",
+      "coal": "Blocked by cyclical external-state and PIT business-exposure data gate."
+    },
+    "known_gaps": [
+      "2021-2026 remains platform-confirmation context, not clean out-of-sample acceptance evidence.",
+      "Same-pool equal-weight benchmark is still a local proxy and must be replaced or supplemented before live product decisions.",
+      "Port/rail needs final platform replication attribution before being treated as fully platform-replicated.",
+      "FCF is not a basket-wide core factor until capex-quality and PIT coverage gates are passed."
+    ]
+  }
+}

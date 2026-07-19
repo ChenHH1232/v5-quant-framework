@@ -1,0 +1,23 @@
+{
+  "strategy_id": "insurance_low_pb_only_v53c",
+  "status": "insurance_special_fields_source_repair_passed",
+  "source_csv": "knowledge\\research_agent\\references\\insurance_special_fields_reviewed_2025_core5.csv",
+  "row_count": 30,
+  "pit_usable_rows": 28,
+  "field_count": 6,
+  "usable_core_fields": [
+    "comprehensive_solvency_ratio",
+    "core_solvency_ratio",
+    "embedded_value",
+    "new_business_value",
+    "total_investment_yield"
+  ],
+  "missing_core_fields": [],
+  "coverage_blocked_core_fields": [],
+  "min_core_code_count": 5,
+  "missing_columns": [],
+  "pit_blocked_rows": 2,
+  "blocker_count": 0,
+  "created_at_utc": "2026-07-17T05:21:26+00:00",
+  "next_gate": "v53d_research_hypothesis_design"
+}

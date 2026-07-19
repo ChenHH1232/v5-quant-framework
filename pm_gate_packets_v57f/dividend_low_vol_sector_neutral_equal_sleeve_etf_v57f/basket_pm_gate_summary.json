@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "strategy_id": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f",
+  "status": "formal_candidate_pending_platform_exports",
+  "experiment_layer": "pm_decision_gate",
+  "blocker_count": 0,
+  "needs_review_count": 3,
+  "pass_count": 7,
+  "checks": [
+    {
+      "check": "formal_validation",
+      "severity": "pass",
+      "detail": "Formal validation completed with 19 signals."
+    },
+    {
+      "check": "weak_year_analysis",
+      "severity": "needs_review",
+      "detail": "Weak years still need monitoring/diagnosis: 2021, 2026."
+    },
+    {
+      "check": "local_daily_simulation",
+      "severity": "pass",
+      "detail": "Local daily simulation produced 709 trades."
+    },
+    {
+      "check": "dividend_accounting",
+      "severity": "pass",
+      "detail": "Cash dividend accounting applied 128 events."
+    },
+    {
+      "check": "drawdown_control",
+      "severity": "pass",
+      "detail": "Max drawdown is 11.75%."
+    },
+    {
+      "check": "overfit_audit",
+      "severity": "pass",
+      "detail": "Overfit audit has no blockers."
+    },
+    {
+      "check": "overfit_review_items",
+      "severity": "needs_review",
+      "detail": "Overfit audit has 1 review items."
+    },
+    {
+      "check": "ablation",
+      "severity": "pass",
+      "detail": "Ablation completed without blocked cases."
+    },
+    {
+      "check": "platform_replication",
+      "severity": "needs_review",
+      "detail": "Platform replication is waiting for JoinQuant exports."
+    },
+    {
+      "check": "paper_trading",
+      "severity": "pass",
+      "detail": "Paper trading signal exists with 28 selected stocks."
+    }
+  ],
+  "metrics_snapshot": {
+    "local_strategy_return": 0.8141640295000003,
+    "local_benchmark_return": 0.510118790617593,
+    "local_excess_return": 0.3040452388824073,
+    "local_max_drawdown": 0.11748909353603587,
+    "local_trade_count": 709,
+    "local_dividend_count": 128,
+    "formal_signal_count": 19,
+    "formal_panel_row_count": 3371,
+    "platform_status": "pending_attribution"
+  },
+  "input_paths": {
+    "formal_summary": "validation_formal_v57f_etf\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\basket_formal_validation_summary.json",
+    "daily_summary": "local_daily_backtests_v57f_etf\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\summary.json",
+    "overfit_summary": "validation_overfit_v57f_etf\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\overfit_audit_summary.json",
+    "ablation_summary": "validation_ablation_v57f_etf\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\basket_ablation_summary.json",
+    "platform_packet": "platform_replication_packets_v57f_etf\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\platform_replication_packet.json",
+    "paper_signal_summary": "paper_trading_signals\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\2026-07-19\\basket_construction_summary.json"
+  },
+  "pm_rules": [
+    "Historical performance alone is never sufficient evidence for accepting a strategy.",
+    "2021-2026 remains platform-confirmation context, not clean out-of-sample acceptance.",
+    "A frozen candidate may enter platform replication or paper trading, but not live trading approval.",
+    "Platform replication requires JoinQuant daily, transaction and position attribution."
+  ],
+  "created_at_utc": "2026-07-19T06:04:54+00:00"
+}

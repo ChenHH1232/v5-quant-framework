@@ -1,0 +1,264 @@
+{
+  "meta": {
+    "strategy_id": "highway_high_dividend_cashflow_diagnostics_v54b",
+    "name": "Highway High Dividend With Cash-Flow Diagnostics V5.4b",
+    "objective": "Test whether toll-road high-dividend selection remains robust when cash-flow support, capex burden and leverage are treated as diagnostics or filters instead of positive alpha factors.",
+    "status": "research_pit_validation_candidate"
+  },
+  "universe": {
+    "name": "A-share toll-road operators",
+    "construction": "JoinQuant HY03160 highway industry membership after 2021-12-13, excluding ports, airports, rail, shipping and logistics.",
+    "point_in_time": true,
+    "minimum_rebalance_coverage_ratio": 0.8
+  },
+  "data": {
+    "vendor": "JoinQuant/DataJQ PIT industry membership and fundamentals",
+    "price_frequency": "quarterly_signal_panel",
+    "financial_as_of_policy": "trade_date_pit_get_fundamentals",
+    "price_adjustment": {
+      "research_panel": "pre_adjusted_close_to_close_return",
+      "status": "research_pit_validation_input"
+    },
+    "window": {
+      "research_start": "2022-01-04",
+      "research_end": "2026-04-01"
+    },
+    "source_warning": "HY03160 starts in JoinQuant from 2021-12-13, so V5.4b does not claim pre-2022 PIT industry history."
+  },
+  "signals": {
+    "factors": [
+      {
+        "name": "dividend_yield",
+        "source": "valuation.dividend_ratio",
+        "role": "main_shareholder_return_signal",
+        "direction": "higher_is_better",
+        "definition": "Visible dividend yield. V5.4b treats this as the main candidate signal.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      },
+      {
+        "name": "free_cash_flow_yield",
+        "source": "cash_flow_statement_and_market_cap",
+        "role": "cash_flow_diagnostic",
+        "direction": "higher_is_better",
+        "definition": "(Operating cash flow - capex) divided by market cap. Used as a diagnostic/filter candidate, not a primary positive score.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "diagnostic_only"
+      },
+      {
+        "name": "fcf_dividend_support",
+        "source": "derived_fcf_dividend_cash_proxy",
+        "role": "dividend_sustainability_diagnostic",
+        "direction": "higher_is_better",
+        "definition": "Free cash flow divided by dividend cash proxy. Used to diagnose dividend sustainability.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "diagnostic_only"
+      },
+      {
+        "name": "capex_burden",
+        "source": "cash_flow_statement",
+        "role": "capital_intensity_risk_diagnostic",
+        "direction": "lower_is_better",
+        "definition": "Capex divided by operating cash flow. Lower burden may indicate less reinvestment pressure.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "diagnostic_only"
+      },
+      {
+        "name": "asset_liability_ratio",
+        "source": "balance_sheet",
+        "role": "leverage_pressure_diagnostic",
+        "direction": "lower_is_better",
+        "definition": "Liabilities divided by assets. Lower leverage may support dividend stability.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "diagnostic_only"
+      }
+    ],
+    "scoring": {
+      "method": "weighted_composite",
+      "normalization_scope": "rebalance_cross_section",
+      "weights": {
+        "dividend_yield": 1.0
+      },
+      "min_factor_count": 1,
+      "value_trap_guard": "Cash-flow and leverage variables are diagnostics in V5.4b. A filter can only be promoted if it improves robustness without obvious sample overfit."
+    }
+  },
+  "schedule": {
+    "signal_frequency": "quarterly",
+    "rebalance_frequency": "quarterly",
+    "rebalance_rule": "first_tradable_day_of_quarter"
+  },
+  "portfolio": {
+    "selection_count": 8,
+    "weighting": "equal_weight_research_candidate",
+    "max_position_weight": 0.15,
+    "cash_policy": "hold_residual_cash_when fewer than 8 names pass filters"
+  },
+  "risk": {
+    "defensive_asset": "cash",
+    "defensive_rule": {
+      "enabled": false,
+      "reason": "V5.4b isolates security selection and cash-flow diagnostics without market timing."
+    },
+    "individual_stop_loss_take_profit": {
+      "enabled": false,
+      "reason": "Fixed exits are not part of the research hypothesis."
+    }
+  },
+  "validation": {
+    "method": "rolling",
+    "train_years": 3,
+    "test_years": 1,
+    "review_years": 1,
+    "weak_years": [
+      "2022",
+      "2024",
+      "2026"
+    ],
+    "baselines": [
+      {
+        "name": "equal_weight_highway",
+        "mode": "equal_all"
+      },
+      {
+        "name": "high_dividend_highway_top8",
+        "mode": "single_factor",
+        "factor": "dividend_yield",
+        "direction": "higher_is_better",
+        "selection_count": 8
+      },
+      {
+        "name": "high_dividend_after_fcf_yield_top70pct",
+        "mode": "single_factor",
+        "factor": "dividend_yield",
+        "direction": "higher_is_better",
+        "selection_count": 8,
+        "condition": {
+          "field": "free_cash_flow_yield",
+          "direction": "higher_is_better",
+          "quantile": 0.7,
+          "keep": "top"
+        }
+      },
+      {
+        "name": "high_dividend_after_fcf_support_top70pct",
+        "mode": "single_factor",
+        "factor": "dividend_yield",
+        "direction": "higher_is_better",
+        "selection_count": 8,
+        "condition": {
+          "field": "fcf_dividend_support",
+          "direction": "higher_is_better",
+          "quantile": 0.7,
+          "keep": "top"
+        }
+      },
+      {
+        "name": "high_dividend_after_capex_burden_low70pct",
+        "mode": "single_factor",
+        "factor": "dividend_yield",
+        "direction": "higher_is_better",
+        "selection_count": 8,
+        "condition": {
+          "field": "capex_burden",
+          "direction": "lower_is_better",
+          "quantile": 0.7,
+          "keep": "top"
+        }
+      },
+      {
+        "name": "high_dividend_after_leverage_low70pct",
+        "mode": "single_factor",
+        "factor": "dividend_yield",
+        "direction": "higher_is_better",
+        "selection_count": 8,
+        "condition": {
+          "field": "asset_liability_ratio",
+          "direction": "lower_is_better",
+          "quantile": 0.7,
+          "keep": "top"
+        }
+      },
+      {
+        "name": "dividend_only_current",
+        "mode": "composite",
+        "selection_count": 8
+      }
+    ],
+    "common_sample_fields": [
+      "dividend_yield",
+      "free_cash_flow_yield",
+      "fcf_dividend_support",
+      "capex_burden",
+      "asset_liability_ratio"
+    ],
+    "common_sample_interactions": [
+      {
+        "name": "common_dividend_only",
+        "factors": [
+          "dividend_yield"
+        ]
+      },
+      {
+        "name": "common_dividend_plus_fcf_yield",
+        "factors": [
+          "dividend_yield",
+          "free_cash_flow_yield"
+        ]
+      },
+      {
+        "name": "common_dividend_plus_fcf_support",
+        "factors": [
+          "dividend_yield",
+          "fcf_dividend_support"
+        ]
+      },
+      {
+        "name": "common_dividend_plus_capex_leverage",
+        "factors": [
+          "dividend_yield",
+          "capex_burden",
+          "asset_liability_ratio"
+        ]
+      }
+    ],
+    "robustness": {
+      "selection_counts": [
+        6,
+        8,
+        10
+      ],
+      "weight_scale_factors": [
+        "dividend_yield"
+      ],
+      "weight_scales": [
+        0.8,
+        1.0,
+        1.2
+      ]
+    },
+    "acceptance_rule": "V5.4b can only enter engineering if high dividend plus diagnostics is stable, PIT-clean, and diagnostic filters improve weak-period behavior without reducing the result to return chasing."
+  },
+  "execution": {
+    "status": "not_started",
+    "next_gate": "formal_research_validation",
+    "commission_bps": 3,
+    "slippage_bps": 5,
+    "suspension_policy": "skip_untradeable",
+    "limit_policy": "skip_limit_blocked"
+  },
+  "outputs": {
+    "save_holdings": true,
+    "save_rebalance_signals": true,
+    "report": "markdown",
+    "required_reports": [
+      "formal_validation_packet",
+      "pm_decision"
+    ]
+  }
+}

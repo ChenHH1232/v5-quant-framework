@@ -1,0 +1,24 @@
+{
+  "strategy_id": "insurance_pev_value_v53g",
+  "status": "ev_nbv_pev_panel_ready_for_formal_validation",
+  "panel_csv": "data\\processed\\insurance_v53d_formal_panel\\panel.csv",
+  "ev_nbv_csv": "knowledge\\research_agent\\references\\insurance_ev_nbv_reviewed_2020_2025_core5.csv",
+  "row_count": 181,
+  "date_count": 41,
+  "covered_date_count": 21,
+  "covered_years": [
+    "2021",
+    "2022",
+    "2023",
+    "2024",
+    "2025",
+    "2026"
+  ],
+  "min_coverage_ratio": 0.8,
+  "min_validation_years": 4,
+  "first_covered_date": "2021-04-01",
+  "last_covered_date": "2026-04-01",
+  "formal_validation_allowed": true,
+  "pm_gate": "quant_validation_allowed",
+  "created_at_utc": "2026-07-17T07:51:19+00:00"
+}

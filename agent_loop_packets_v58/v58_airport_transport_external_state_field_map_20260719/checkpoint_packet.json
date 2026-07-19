@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "packet_type": "checkpoint_packet",
+  "protocol_id": "agent_operating_protocol_v1",
+  "objective": "V5.8 airport transport external operating state field map",
+  "agent": "Research Agent",
+  "experiment_layer": "data_availability_gate",
+  "elapsed_timebox_minutes": 30,
+  "artifacts_created": [
+    "knowledge/research_agent/references/airport_transport_external_state_field_map_v58.md",
+    "knowledge/research_agent/references/airport_transport_operating_state_manual_template.csv",
+    "knowledge/research_agent/references/airport_transport_annual_report_spot_check_template.csv",
+    "docs/governance/v58_research_queue_execution_checkpoint_v1.md"
+  ],
+  "evidence_found": [
+    "Airport operator state dimensions have been mapped: passenger, cargo, aircraft movements, international recovery, commercial exposure, capex pressure and policy state.",
+    "Official / original-source priority is defined: company monthly operating briefings, annual/interim reports and CAAC statistics."
+  ],
+  "blockers": [
+    "Manual or scripted source extraction still needs to populate visible_date rows before Quant validation."
+  ],
+  "decision": "continue_next_timebox",
+  "next_owner": "Research Agent",
+  "stop_rule_status": "not_triggered",
+  "user_decision_required": false,
+  "user_decision_reason": "",
+  "allowed_next_action": "Research Agent should populate the operating-state and annual-report spot-check templates for the 4 passed airport operator codes.",
+  "restart_condition": "Quant validation can start only after the templates have sufficient visible-date coverage and PM records a data gate pass.",
+  "skill_status_change": "none",
+  "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
+  "created_at_utc": "2026-07-19T13:15:34+00:00"
+}

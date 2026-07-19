@@ -1,0 +1,80 @@
+{
+  "strategy_id": "port_rail_cashflow_value_operating_diagnostic_v55c",
+  "experiment_layer": "engineering_smoke_test_local_attribution",
+  "window": {
+    "start": "2021-05-01",
+    "end": "2026-05-31"
+  },
+  "first_signal_date": "2022-01-04",
+  "signal_count": 18,
+  "daily_count": 1228,
+  "trade_count": 193,
+  "dividend_event_count": 35,
+  "pre_signal_period": {
+    "start": "2021-05-06",
+    "end": "2021-12-31",
+    "daily_count": 164,
+    "strategy_return": 0.0,
+    "benchmark_return": 0.2254802831142566,
+    "avg_cash_weight": 1.0,
+    "invested_days": 0
+  },
+  "active_period": {
+    "start": "2022-01-04",
+    "end": "2026-05-29",
+    "daily_count": 1064,
+    "invested_days": 1064,
+    "strategy_return": 0.638572741699998,
+    "benchmark_return": -0.03960396039604175,
+    "excess_return": 0.5174661424462204,
+    "avg_cash_weight": 0.00851964027171025,
+    "max_drawdown": 0.20197683956099188,
+    "max_drawdown_start": "2023-05-08",
+    "max_drawdown_end": "2024-01-22"
+  },
+  "full_period": {
+    "strategy_return": 0.638572741699998,
+    "benchmark_return": 0.17694641051566862,
+    "excess_return": 0.20071239843543842,
+    "avg_cash_weight": 0.1409323267500812,
+    "max_drawdown": 0.20197683956099188,
+    "max_drawdown_start": "2023-05-08",
+    "max_drawdown_end": "2024-01-22"
+  },
+  "signal_gap_diagnosis": {
+    "jq_industry_codes": {
+      "HY03155": "railway_transport",
+      "HY03159": "port"
+    },
+    "industry_member_counts_observed": [
+      {
+        "date": "2021-07-01",
+        "HY03155": 0,
+        "HY03159": 0
+      },
+      {
+        "date": "2021-10-08",
+        "HY03155": 0,
+        "HY03159": 0
+      },
+      {
+        "date": "2021-12-31",
+        "HY03155": 6,
+        "HY03159": 18
+      },
+      {
+        "date": "2022-01-04",
+        "HY03155": 6,
+        "HY03159": 18
+      }
+    ],
+    "daily_price_rows_exist_for_2021_07_01": 23,
+    "daily_price_rows_exist_for_2021_10_08": 23,
+    "conclusion": "2021 signal gap is caused by JoinQuant industry-membership PIT coverage returning zero port/rail members before 2021-12-31, not by missing daily prices, order sizing, or a strategy defensive rule."
+  },
+  "pm_interpretation": {
+    "local_smoke_test": "passed_for_mechanics",
+    "platform_replication": "blocked_until_2021_universe_policy_and_operating_evidence_review",
+    "benchmark_policy": "516970.XSHG is engineering proxy only, not pure port/rail benchmark"
+  }
+}

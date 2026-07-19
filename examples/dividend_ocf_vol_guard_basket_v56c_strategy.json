@@ -1,0 +1,144 @@
+{
+  "meta": {
+    "strategy_id": "v56c_ocf_value_vol_guard_basket",
+    "name": "OCF Value With Volatility Guard Basket V5.6c",
+    "objective": "Test a cleaner stable cash-flow basket where OCF yield is the primary score and low-volatility is enforced as a risk/coverage guard, not as a separate positive alpha score.",
+    "status": "research_reset_candidate_not_acceptance"
+  },
+  "universe": {
+    "name": "PIT candidate pool from bank, utilities/electricity, highway infrastructure and port/rail infrastructure sleeves",
+    "construction": "Each sleeve must pass its own PIT universe and data availability gate before entering the V5.6c basket constructor.",
+    "point_in_time": true,
+    "minimum_rebalance_coverage_ratio": 0.8
+  },
+  "data": {
+    "vendor": "JoinQuant/DataJQ PIT panels, reviewed sector evidence where available, and JoinQuant real daily open/close execution prices",
+    "price_frequency": "daily_open_close_for_local_simulation",
+    "financial_as_of_policy": "announcement_date_or_trade_date_lagged_by_factor",
+    "cash_dividend_policy": "real cash dividends from JoinQuant STK_XR_XD, net_cash_per_share after 20% tax, paid on ex-date proxy",
+    "stock_action_policy": "bonus/transfer shares adjust local unadjusted-price holdings on ex-date",
+    "window": {
+      "platform_confirmation_start": "2021-05-01",
+      "platform_confirmation_end": "2026-05-31"
+    }
+  },
+  "signals": {
+    "core_hypothesis": "Stable cash-flow sectors should be ranked primarily by operating cash-flow yield, while volatility and drawdown act as risk controls and dividend yield supports shareholder-return discipline.",
+    "factors": [
+      {
+        "name": "operating_cash_flow_yield",
+        "role": "primary_cash_flow_value",
+        "direction": "higher_is_better",
+        "as_of": "announcement_date",
+        "missing_policy": "required"
+      },
+      {
+        "name": "volatility_120d",
+        "role": "volatility_guard",
+        "direction": "lower_is_better",
+        "as_of": "trade_date_lagged",
+        "missing_policy": "required"
+      },
+      {
+        "name": "max_drawdown_120d",
+        "role": "drawdown_guard",
+        "direction": "lower_is_better",
+        "as_of": "trade_date_lagged",
+        "missing_policy": "score_if_available"
+      },
+      {
+        "name": "dividend_yield",
+        "role": "shareholder_return_support",
+        "direction": "higher_is_better",
+        "as_of": "trade_date_lagged",
+        "missing_policy": "score_if_available"
+      },
+      {
+        "name": "capex_burden",
+        "role": "capital_intensity_risk",
+        "direction": "lower_is_better",
+        "as_of": "announcement_date",
+        "missing_policy": "score_if_available"
+      }
+    ],
+    "risk_gate_fields": [
+      "low_vol_score",
+      "volatility_120d",
+      "operating_cash_flow_yield"
+    ],
+    "excluded_core_factors": [
+      {
+        "name": "low_price_to_book",
+        "reason": "Basket-level evidence remains weak or negative."
+      },
+      {
+        "name": "free_cash_flow_yield",
+        "reason": "Current PIT coverage and incremental contribution remain insufficient for a core factor."
+      },
+      {
+        "name": "low_vol_score",
+        "reason": "Used as a risk/coverage gate rather than a positive score after V5.6b ablation."
+      }
+    ],
+    "scoring": {
+      "method": "weighted_composite",
+      "normalization_scope": "rebalance_cross_section",
+      "min_factor_count": 3,
+      "weights": {
+        "operating_cash_flow_yield": 0.38,
+        "volatility_120d": 0.20,
+        "max_drawdown_120d": 0.18,
+        "dividend_yield": 0.16,
+        "capex_burden": 0.08
+      }
+    }
+  },
+  "schedule": {
+    "rebalance_frequency": "quarterly",
+    "rebalance_calendar_policy": "union_of_approved_sleeve_rebalance_dates"
+  },
+  "portfolio": {
+    "selection_count": 30,
+    "target_count": 30,
+    "sector_weight_cap": 0.35,
+    "single_stock_weight_cap": 0.05,
+    "target_exposure": 0.995,
+    "weighting": "equal_weight_after_sector_and_single_stock_caps"
+  },
+  "risk": {
+    "defensive_asset": "cash",
+    "defensive_rule": {
+      "enabled": false,
+      "reason": "V5.6c tests cross-sectional signal definition only; it does not add timing defense."
+    },
+    "individual_stop_loss_take_profit": {
+      "enabled": false,
+      "reason": "Fixed exits are not part of the research hypothesis."
+    }
+  },
+  "validation": {
+    "method": "rolling",
+    "required_tests": [
+      "baseline_comparison_same_pool_equal_weight",
+      "ic_rankic_full_candidate_panel",
+      "rolling_by_calendar_year",
+      "true_basket_ablation",
+      "failure_year_attribution",
+      "selection_count_parameter_robustness",
+      "random_window_stability",
+      "execution_time_shift_proxy",
+      "future_leakage_audit",
+      "survivorship_bias_audit"
+    ],
+    "acceptance_rule": "PM cannot accept the basket from 2021-2026 platform-confirmation returns alone. Promotion requires stable evidence, clean data gates, overfit audit, platform attribution and paper trading."
+  },
+  "execution": {
+    "status": "pending_local_daily_simulation",
+    "commission_bps": 3,
+    "lot_size": 100,
+    "trade_price": "daily_open",
+    "valuation_price": "daily_close",
+    "suspension_policy": "skip_untradeable",
+    "limit_policy": "skip_limit_blocked"
+  }
+}

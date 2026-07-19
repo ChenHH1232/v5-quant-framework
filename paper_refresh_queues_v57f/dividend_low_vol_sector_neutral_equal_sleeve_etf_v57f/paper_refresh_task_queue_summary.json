@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "strategy_id": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f",
+  "experiment_layer": "paper_trading_preparation",
+  "status": "queued_for_future_refresh_window",
+  "preflight_summary": "paper_input_preflight_checks_v57f\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\paper_input_preflight_summary.json",
+  "target_rebalance_date": "2026-10-08",
+  "as_of_date": "2026-07-20",
+  "target_date_is_future": true,
+  "task_count": 15,
+  "task_counts_by_type": {
+    "refresh_pit_panel": 4,
+    "refresh_real_daily_prices": 4,
+    "refresh_cash_dividends": 4,
+    "audit_or_repair_stale_fallback": 1,
+    "rerun_paper_input_preflight": 1,
+    "construct_clean_paper_signal_gate": 1
+  },
+  "task_counts_by_owner": {
+    "Engineering Agent": 13,
+    "Project Manager Agent": 2
+  },
+  "queue_csv": "paper_refresh_queues_v57f\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\paper_refresh_task_queue.csv",
+  "next_gate": "wait_until_refresh_window_then_execute_queue",
+  "pm_rules": [
+    "This queue prepares paper trading inputs only; it does not change the frozen V5.7f model.",
+    "Refresh tasks must be completed before constructing a clean paper signal.",
+    "If stale fallback remains, it must be disclosed in the paper signal log.",
+    "No return tuning is allowed."
+  ],
+  "created_at_utc": "2026-07-19T16:06:59+00:00"
+}

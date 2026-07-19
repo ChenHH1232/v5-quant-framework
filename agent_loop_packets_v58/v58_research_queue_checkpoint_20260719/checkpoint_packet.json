@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "packet_type": "checkpoint_packet",
+  "protocol_id": "agent_operating_protocol_v1",
+  "objective": "v58 research queue gas water stage gate and airport transport preparation",
+  "agent": "Project Manager Agent",
+  "experiment_layer": "pm_decision_gate",
+  "elapsed_timebox_minutes": 30,
+  "artifacts_created": [
+    "docs/governance/v58_research_queue_execution_checkpoint_v1.md",
+    "knowledge/research_agent/references/transport_operator_source_collection_plan.md",
+    "knowledge/research_agent/factor_theory/transport_operator_cashflow_framework.md",
+    "数据库/processed/similar_sector_pit_panel_v58/airport_transport_operators/panel.csv",
+    "数据库/processed/similar_sector_pit_panel_v58/airport_transport_operators/collection_manifest.json",
+    "src/v5/similar_sector_pit_panel_runner.py",
+    "src/v5/paths.py"
+  ],
+  "evidence_found": [
+    "Gas/water has repaired business-purity and direct financial evidence, but the 80% versus 70% startup coverage policy is a PM stage gate.",
+    "Airport/transport operator knowledge artifacts were missing and are now created.",
+    "Airport initial PIT panel collected from JQData: 100 rows, 20 rebalance dates, 5 airport operator codes, 0 warnings.",
+    "Default database path source was repaired to use Unicode escape for 数据库 to avoid mojibake path defaults."
+  ],
+  "blockers": [
+    "Gas/water cannot proceed to platform replication or formal strategy candidacy until coverage policy is frozen.",
+    "Airport/transport cannot enter Quant validation until business-purity report review and traffic/state visible-date panels are repaired."
+  ],
+  "decision": "continue_next_timebox",
+  "next_owner": "Research Agent",
+  "stop_rule_status": "not_triggered",
+  "user_decision_required": false,
+  "user_decision_reason": "",
+  "allowed_next_action": "Research Agent continues airport_transport_operators business-purity and external-state data gate repair.",
+  "restart_condition": "Gas/water restarts when PM freezes coverage policy; airport/transport advances when universe, business-purity and external-state field maps exist.",
+  "skill_status_change": "none",
+  "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
+  "created_at_utc": "2026-07-19T12:57:17+00:00"
+}

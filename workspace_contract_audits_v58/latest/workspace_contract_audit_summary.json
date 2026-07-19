@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "experiment_layer": "pm_decision_gate",
+  "status": "passed",
+  "root": "D:\\hh\\codex\\v5",
+  "blocker_count": 0,
+  "warning_count": 1,
+  "checks": [
+    {
+      "check": "config_validation",
+      "severity": "pass",
+      "detail": "passed=16, failed=0, warnings=0",
+      "file_count": 16,
+      "failed": [],
+      "warnings": []
+    },
+    {
+      "check": "example_validation",
+      "severity": "warning",
+      "detail": "passed=49, failed=0, warnings=4",
+      "file_count": 49,
+      "failed": [],
+      "warnings": [
+        {
+          "path": "examples\\bank_value_quality_v2_strategy.json",
+          "config_type": "legacy_strategy_spec",
+          "identifier": "bank_value_quality_v2",
+          "passed": true,
+          "issue_count": 1,
+          "issues": [
+            {
+              "code": "VALIDATION_NOT_ROLLING",
+              "severity": "warning",
+              "message": "Rolling validation is recommended before accepting candidate strategies."
+            }
+          ]
+        },
+        {
+          "path": "examples\\insurance_pev_nbv_v53f_diagnostic_strategy.json",
+          "config_type": "legacy_strategy_spec",
+          "identifier": "insurance_pev_nbv_v53f_diagnostic",
+          "passed": true,
+          "issue_count": 1,
+          "issues": [
+            {
+              "code": "VALIDATION_NOT_ROLLING",
+              "severity": "warning",
+              "message": "Rolling validation is recommended before accepting candidate strategies."
+            }
+          ]
+        },
+        {
+          "path": "examples\\insurance_pev_value_v53g_strategy.json",
+          "config_type": "legacy_strategy_spec",
+          "identifier": "insurance_pev_value_v53g",
+          "passed": true,
+          "issue_count": 1,
+          "issues": [
+            {
+              "code": "VALIDATION_NOT_ROLLING",
+              "severity": "warning",
+              "message": "Rolling validation is recommended before accepting candidate strategies."
+            }
+          ]
+        },
+        {
+          "path": "examples\\v4_bank_candidate1.json",
+          "config_type": "legacy_strategy_spec",
+          "identifier": "v4_bank_candidate1",
+          "passed": true,
+          "issue_count": 4,
+          "issues": [
+            {
+              "code": "NO_FINANCIAL_DISCLOSURE_LAG",
+              "severity": "warning",
+              "message": "Factor roe has zero disclosure lag; confirm the vendor uses true announcement dates."
+            },
+            {
+              "code": "NO_FINANCIAL_DISCLOSURE_LAG",
+              "severity": "warning",
+              "message": "Factor non_performing_loan_ratio has zero disclosure lag; confirm the vendor uses true announcement dates."
+            },
+            {
+              "code": "NO_FINANCIAL_DISCLOSURE_LAG",
+              "severity": "warning",
+              "message": "Factor capital_adequacy_ratio has zero disclosure lag; confirm the vendor uses true announcement dates."
+            },
+            {
+              "code": "NO_FINANCIAL_DISCLOSURE_LAG",
+              "severity": "warning",
+              "message": "Factor provision_coverage_ratio has zero disclosure lag; confirm the vendor uses true announcement dates."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "check": "status_registry",
+      "severity": "pass",
+      "detail": "missing_paths=0, missing_fields=0, accepted_violations=0",
+      "missing_paths": [],
+      "missing_fields": [],
+      "accepted_violations": [],
+      "strategy_count": 31
+    }
+  ],
+  "config_validation": {
+    "file_count": 16,
+    "passed_count": 16,
+    "failed_count": 0,
+    "counts_by_config_type": {
+      "agent_operating_protocol": 1,
+      "sector_replication_roadmap_config": 1,
+      "basket_runtime_config": 11,
+      "sector_screening_config": 2,
+      "project_context": 1
+    },
+    "failed": []
+  },
+  "example_validation": {
+    "file_count": 49,
+    "passed_count": 49,
+    "failed_count": 0,
+    "counts_by_config_type": {
+      "legacy_strategy_spec": 40,
+      "research_candidate_spec": 9
+    },
+    "failed": []
+  },
+  "registry_audit": {
+    "check": "status_registry",
+    "severity": "pass",
+    "detail": "missing_paths=0, missing_fields=0, accepted_violations=0",
+    "missing_paths": [],
+    "missing_fields": [],
+    "accepted_violations": [],
+    "strategy_count": 31
+  },
+  "blocked_actions": [],
+  "pm_rule": "Workspace contract audit is a read-only governance check; it does not run backtests, refresh data, tune models, or call JoinQuant.",
+  "created_at_utc": "2026-07-19T16:59:43+00:00"
+}

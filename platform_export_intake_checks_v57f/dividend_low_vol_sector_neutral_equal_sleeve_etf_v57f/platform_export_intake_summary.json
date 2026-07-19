@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "strategy_id": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f",
+  "experiment_layer": "platform_replication",
+  "status": "platform_test_deferred_by_user_waiting_for_exports",
+  "user_deferred": true,
+  "manifest_path": "platform_exports_v57f\\expected_exports_manifest.json",
+  "intake_dir": "platform_exports_v57f/pending",
+  "ready_count": 0,
+  "missing_count": 4,
+  "empty_count": 0,
+  "checks": [
+    {
+      "name": "daily_result",
+      "target_path": "platform_exports_v57f\\pending\\result.csv",
+      "required_for": "daily_nav_attribution",
+      "source_hint": "JoinQuant daily result / result_*.csv export",
+      "exists": false,
+      "size_bytes": 0,
+      "status": "missing"
+    },
+    {
+      "name": "transaction_detail",
+      "target_path": "platform_exports_v57f\\pending\\transaction.csv",
+      "required_for": "transaction_attribution",
+      "source_hint": "JoinQuant transaction detail export",
+      "exists": false,
+      "size_bytes": 0,
+      "status": "missing"
+    },
+    {
+      "name": "position_detail",
+      "target_path": "platform_exports_v57f\\pending\\position.csv",
+      "required_for": "position_attribution",
+      "source_hint": "JoinQuant position export",
+      "exists": false,
+      "size_bytes": 0,
+      "status": "missing"
+    },
+    {
+      "name": "full_log",
+      "target_path": "platform_exports_v57f\\pending\\log.txt",
+      "required_for": "manual_execution_diagnostics",
+      "source_hint": "JoinQuant full run log",
+      "exists": false,
+      "size_bytes": 0,
+      "status": "missing"
+    }
+  ],
+  "allowed_next_action": "continue_local_paper_preflight_and_do_not_run_platform_attribution",
+  "blocked_actions": [
+    "platform_replication_passed",
+    "accepted_strategy",
+    "live_trading_approved",
+    "return_tuning_from_platform_result"
+  ],
+  "pm_rule": "Platform replication may only proceed after all required exports are present and non-empty; summary return alone is not enough.",
+  "created_at_utc": "2026-07-19T15:54:26+00:00"
+}

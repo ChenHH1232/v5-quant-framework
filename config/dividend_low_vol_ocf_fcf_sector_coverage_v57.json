@@ -1,0 +1,303 @@
+{
+  "schema_version": 1,
+  "project": "v57_dividend_low_vol_ocf_fcf_sector_coverage",
+  "created_at": "2026-07-18",
+  "experiment_layer": "data_availability_gate",
+  "purpose": "Batch-screen sectors for a future dividend low-volatility OCF basket with FCF used only as a sector-approved enhancement.",
+  "global_missing_modules": [
+    "fresh_pit_panel_extension_after_2026_04",
+    "formal_tradable_basket_benchmark_policy",
+    "basket_level_forward_paper_trading_log",
+    "sector_specific_fcf_capex_quality_gate",
+    "small_sample_observation_sleeve_policy"
+  ],
+  "candidate_sectors": [
+    {
+      "sector_id": "bank",
+      "display_name": "Bank",
+      "sector_type": "financial_stable_cash_flow",
+      "basket_role": "core_candidate",
+      "strategy_ids": [
+        "bank_high_dividend_sustainability_v3"
+      ],
+      "knowledge_artifacts": [
+        "knowledge/research_agent/factor_theory/bank_value_investing_framework.md",
+        "knowledge/research_agent/factor_theory/bank_core_factor_hypotheses.md",
+        "knowledge/research_agent/factor_theory/bank_value_trap_identification.md",
+        "knowledge/research_agent/references/bank_factor_validation_handoff.md"
+      ],
+      "data_gate": "passed",
+      "pit_universe_gate": "passed",
+      "business_purity_gate": "passed",
+      "dividend_gate": "passed",
+      "fcf_gate": "not_primary_financial_sector",
+      "low_vol_gate": "passed_v56",
+      "external_state_burden": "medium",
+      "sample_size_risk": "medium",
+      "notes": "Core dividend sleeve; keep bank-specific quality separate from generic FCF logic."
+    },
+    {
+      "sector_id": "utilities_electricity",
+      "display_name": "Utilities / Electricity",
+      "sector_type": "regulated_stable_cash_flow",
+      "basket_role": "core_candidate",
+      "strategy_ids": [
+        "utilities_demand_state_v51f"
+      ],
+      "knowledge_artifacts": [
+        "knowledge/research_agent/factor_theory/utilities_value_investing_framework.md",
+        "knowledge/research_agent/factor_theory/utilities_core_factor_hypotheses.md",
+        "knowledge/research_agent/references/utilities_universe_definition.md",
+        "knowledge/research_agent/references/utilities_data_field_map.md",
+        "knowledge/research_agent/references/utilities_validation_handoff.md"
+      ],
+      "data_gate": "passed",
+      "pit_universe_gate": "passed",
+      "business_purity_gate": "passed",
+      "dividend_gate": "passed",
+      "fcf_gate": "enhancement_only_after_capex_review",
+      "low_vol_gate": "passed_v56",
+      "external_state_burden": "medium",
+      "sample_size_risk": "medium",
+      "notes": "Golden template; OCF and demand state remain stronger than raw FCF."
+    },
+    {
+      "sector_id": "highway_infrastructure",
+      "display_name": "Highway Infrastructure",
+      "sector_type": "toll_stable_cash_flow",
+      "basket_role": "core_candidate",
+      "strategy_ids": [
+        "highway_dividend_reviewed_operating_v54h_repaired_2021"
+      ],
+      "knowledge_artifacts": [
+        "knowledge/research_agent/strategy_cases/highway_v54g_reviewed_operating_result.md",
+        "docs/governance/v54h_highway_2021_pit_repair_pm_decision_v1.md"
+      ],
+      "data_gate": "passed",
+      "pit_universe_gate": "passed",
+      "business_purity_gate": "passed",
+      "dividend_gate": "passed",
+      "fcf_gate": "diagnostic_not_primary",
+      "low_vol_gate": "passed_v56",
+      "external_state_burden": "medium",
+      "sample_size_risk": "medium",
+      "notes": "Strong cash-flow sleeve; concession life and capex policy must remain as value-trap context."
+    },
+    {
+      "sector_id": "port_rail_infrastructure",
+      "display_name": "Port / Rail Infrastructure",
+      "sector_type": "transport_stable_cash_flow_with_trade_cycle",
+      "basket_role": "candidate_after_platform_replication",
+      "strategy_ids": [
+        "port_rail_cashflow_value_operating_diagnostic_v55j_reviewed_business_sources"
+      ],
+      "knowledge_artifacts": [
+        "knowledge/research_agent/factor_theory/port_rail_value_trap_framework.md",
+        "knowledge/research_agent/factor_theory/port_rail_operating_state_framework.md",
+        "knowledge/research_agent/references/port_rail_operating_field_map.md",
+        "knowledge/research_agent/references/port_rail_validation_handoff.md",
+        "docs/governance/v55j_port_rail_reviewed_business_sources_pm_decision_v1.md"
+      ],
+      "data_gate": "passed_with_review_notes",
+      "pit_universe_gate": "passed",
+      "business_purity_gate": "reviewed_source_repair_completed",
+      "dividend_gate": "passed",
+      "fcf_gate": "usable_with_capex_review",
+      "low_vol_gate": "passed_v56",
+      "external_state_burden": "medium_high",
+      "sample_size_risk": "medium",
+      "notes": "Eligible for shadow basket, but platform replication and benchmark purity remain pending."
+    },
+    {
+      "sector_id": "telecom_operators",
+      "display_name": "Telecom Operators",
+      "sector_type": "stable_cash_flow_small_sample",
+      "basket_role": "observation_candidate",
+      "strategy_ids": [
+        "telecom_operators_cashflow_dividend_v55a"
+      ],
+      "knowledge_artifacts": [
+        "docs/governance/v55_candidate_screening_packet_v1.md",
+        "knowledge/research_agent/strategy_cases/v55a_similar_sector_initial_model_result.md"
+      ],
+      "data_gate": "needs_manual_research",
+      "pit_universe_gate": "likely_pass",
+      "business_purity_gate": "simple_explicit_universe",
+      "dividend_gate": "likely_pass",
+      "fcf_gate": "needs_operator_capex_review",
+      "low_vol_gate": "can_build_from_daily_prices",
+      "external_state_burden": "medium",
+      "sample_size_risk": "high",
+      "notes": "Good business fit but only three core A-share operators; treat as observation sleeve."
+    },
+    {
+      "sector_id": "gas_water_operators",
+      "display_name": "Gas / Water Operators",
+      "sector_type": "regulated_stable_cash_flow",
+      "basket_role": "manual_research_candidate",
+      "strategy_ids": [
+        "gas_water_cashflow_dividend_v55a"
+      ],
+      "knowledge_artifacts": [
+        "docs/governance/v55_candidate_screening_packet_v1.md",
+        "knowledge/research_agent/strategy_cases/v55a_similar_sector_initial_model_result.md"
+      ],
+      "data_gate": "needs_manual_research",
+      "pit_universe_gate": "needs_operator_purity_review",
+      "business_purity_gate": "needs_review",
+      "dividend_gate": "likely_pass",
+      "fcf_gate": "needs_receivables_and_project_revenue_review",
+      "low_vol_gate": "can_build_from_daily_prices",
+      "external_state_burden": "medium",
+      "sample_size_risk": "medium",
+      "notes": "Closest expansion after electricity; must separate real operators from engineering/project companies."
+    },
+    {
+      "sector_id": "airport_transport_operators",
+      "display_name": "Airport / Transport Operators",
+      "sector_type": "transport_recovery_cash_flow",
+      "basket_role": "observation_candidate",
+      "strategy_ids": [],
+      "knowledge_artifacts": [
+        "knowledge/research_agent/references/transport_operator_source_collection_plan.md",
+        "knowledge/research_agent/factor_theory/transport_operator_cashflow_framework.md"
+      ],
+      "data_gate": "needs_manual_research",
+      "pit_universe_gate": "needs_operator_purity_review",
+      "business_purity_gate": "needs_review",
+      "dividend_gate": "mixed",
+      "fcf_gate": "needs_traffic_and_capex_review",
+      "low_vol_gate": "can_build_from_daily_prices",
+      "external_state_burden": "medium_high",
+      "sample_size_risk": "medium",
+      "notes": "Potential cash-flow operator sleeve, but traffic volume and recovery-cycle state are mandatory."
+    },
+    {
+      "sector_id": "oil_gas_pipeline_integrated",
+      "display_name": "Oil / Gas Pipeline and Integrated Energy",
+      "sector_type": "cycle_aware_cash_flow",
+      "basket_role": "cycle_aware_observation_candidate",
+      "strategy_ids": [],
+      "knowledge_artifacts": [
+        "knowledge/research_agent/references/oil_gas_source_collection_plan.md",
+        "knowledge/research_agent/factor_theory/oil_gas_cashflow_framework.md"
+      ],
+      "data_gate": "needs_manual_research",
+      "pit_universe_gate": "needs_business_exposure_pit",
+      "business_purity_gate": "needs_review",
+      "dividend_gate": "likely_pass_for_large_caps",
+      "fcf_gate": "needs_commodity_and_capex_policy_review",
+      "low_vol_gate": "can_build_from_daily_prices",
+      "external_state_burden": "high",
+      "sample_size_risk": "medium",
+      "notes": "High dividend candidates exist, but oil/gas price, refining spread and upstream/downstream exposure are required before formal modeling."
+    },
+    {
+      "sector_id": "consumer_staples_cashflow",
+      "display_name": "Consumer Staples Cash-Flow Leaders",
+      "sector_type": "non_regulated_stable_cash_flow",
+      "basket_role": "watchlist_candidate",
+      "strategy_ids": [],
+      "knowledge_artifacts": [
+        "knowledge/research_agent/references/consumer_staples_source_collection_plan.md",
+        "knowledge/research_agent/factor_theory/consumer_staples_cashflow_framework.md"
+      ],
+      "data_gate": "needs_manual_research",
+      "pit_universe_gate": "needs_business_quality_screen",
+      "business_purity_gate": "needs_review",
+      "dividend_gate": "mixed",
+      "fcf_gate": "potentially_usable_after_working_capital_review",
+      "low_vol_gate": "can_build_from_daily_prices",
+      "external_state_burden": "medium",
+      "sample_size_risk": "medium",
+      "notes": "May improve cash-flow coverage but valuation, brand cycle and working-capital risks differ from utilities."
+    },
+    {
+      "sector_id": "pharma_medical_services",
+      "display_name": "Pharma / Medical Services",
+      "sector_type": "policy_and_pipeline_sensitive",
+      "basket_role": "watchlist_candidate",
+      "strategy_ids": [],
+      "knowledge_artifacts": [
+        "knowledge/research_agent/references/pharma_source_collection_plan.md",
+        "knowledge/research_agent/factor_theory/pharma_cashflow_framework.md"
+      ],
+      "data_gate": "needs_manual_research",
+      "pit_universe_gate": "needs_subsector_split",
+      "business_purity_gate": "needs_review",
+      "dividend_gate": "mixed",
+      "fcf_gate": "needs_r_and_d_and_policy_review",
+      "low_vol_gate": "can_build_from_daily_prices",
+      "external_state_burden": "high",
+      "sample_size_risk": "medium",
+      "notes": "Not a first expansion sleeve; policy, R&D and pipeline risks need specialist knowledge."
+    },
+    {
+      "sector_id": "environmental_project_operators",
+      "display_name": "Environmental / Project Operators",
+      "sector_type": "project_cash_flow_trap_risk",
+      "basket_role": "blocked_until_research",
+      "strategy_ids": [],
+      "knowledge_artifacts": [
+        "knowledge/research_agent/references/environmental_operator_source_collection_plan.md",
+        "knowledge/research_agent/factor_theory/environmental_cashflow_trap_framework.md"
+      ],
+      "data_gate": "blocked",
+      "pit_universe_gate": "needs_operator_project_split",
+      "business_purity_gate": "incomplete",
+      "dividend_gate": "mixed",
+      "fcf_gate": "receivables_trap_high_risk",
+      "low_vol_gate": "can_build_from_daily_prices",
+      "external_state_burden": "medium",
+      "sample_size_risk": "medium",
+      "notes": "Receivables, PPP/project revenue and cash-conversion risk make this a value-trap watchlist before research repair."
+    },
+    {
+      "sector_id": "coal",
+      "display_name": "Coal",
+      "sector_type": "cyclical",
+      "basket_role": "blocked_observation_pool",
+      "strategy_ids": [
+        "coal_cashflow_cycle_value_v52b"
+      ],
+      "knowledge_artifacts": [
+        "knowledge/research_agent/factor_theory/coal_value_investing_framework.md",
+        "knowledge/research_agent/factor_theory/coal_core_factor_hypotheses.md",
+        "knowledge/research_agent/references/cyclical_sector_data_gate.md",
+        "docs/governance/v52b_coal_suspended_data_gate_v1.md"
+      ],
+      "data_gate": "blocked",
+      "pit_universe_gate": "needs_segment_pit_repair",
+      "business_purity_gate": "incomplete",
+      "dividend_gate": "likely_pass",
+      "fcf_gate": "capex_policy_required",
+      "low_vol_gate": "can_build_from_daily_prices",
+      "external_state_burden": "high",
+      "sample_size_risk": "medium",
+      "notes": "Excluded from first enhanced basket because commodity cycle-state gates remain incomplete."
+    },
+    {
+      "sector_id": "insurance",
+      "display_name": "Insurance",
+      "sector_type": "financial_specialist",
+      "basket_role": "specialist_observation_candidate",
+      "strategy_ids": [
+        "insurance_pev_value_v53g"
+      ],
+      "knowledge_artifacts": [
+        "knowledge/research_agent/factor_theory/insurance_pev_ev_nbv_research_framework.md",
+        "knowledge/research_agent/references/insurance_ev_nbv_reviewed_2020_2025_core5.csv",
+        "docs/governance/v53g_insurance_stage_closeout_v1.md"
+      ],
+      "data_gate": "specialist_data_partial",
+      "pit_universe_gate": "passed_core5",
+      "business_purity_gate": "passed_core5",
+      "dividend_gate": "passed",
+      "fcf_gate": "not_applicable",
+      "low_vol_gate": "can_build_from_daily_prices",
+      "external_state_burden": "high",
+      "sample_size_risk": "high",
+      "notes": "Specialist sleeve only; EV/NBV/P/EV and concentration risks prevent generic FCF basket treatment."
+    }
+  ]
+}

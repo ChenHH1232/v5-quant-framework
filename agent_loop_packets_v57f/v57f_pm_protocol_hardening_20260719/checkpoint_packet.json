@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "packet_type": "checkpoint_packet",
+  "protocol_id": "agent_operating_protocol_v1",
+  "objective": "V5 agent operating protocol hardening and V5.7f clean forward preparation",
+  "agent": "Project Manager Agent",
+  "experiment_layer": "pm_decision_gate",
+  "elapsed_timebox_minutes": 30,
+  "artifacts_created": [
+    "docs/governance/agent_operating_protocol_v1.md",
+    "config/agent_operating_protocol_v1.json",
+    "src/v5/agent_loop_packet_runner.py",
+    "src/v5/basket_forward_paper_gate_runner.py",
+    "paper_trading_gates_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/forward_paper_gate_summary.json"
+  ],
+  "evidence_found": [
+    "Agent protocol is now machine-readable and referenced by governance files.",
+    "V5.7f next clean forward rebalance is prepared for 2026-10-08 without changing frozen strategy logic.",
+    "PM checkpoint packet generation is now executable through CLI."
+  ],
+  "blockers": [],
+  "decision": "continue_same_loop",
+  "next_owner": "Project Manager Agent",
+  "stop_rule_status": "not_triggered",
+  "user_decision_required": false,
+  "user_decision_reason": "",
+  "allowed_next_action": "continue V5.7f platform-export wait state and clean forward preparation",
+  "restart_condition": "new JoinQuant exports arrive or next PIT refresh window opens",
+  "skill_status_change": "none",
+  "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
+  "created_at_utc": "2026-07-19T12:32:11+00:00"
+}

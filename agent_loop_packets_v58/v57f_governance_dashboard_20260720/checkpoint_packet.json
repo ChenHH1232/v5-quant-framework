@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "packet_type": "checkpoint_packet",
+  "protocol_id": "agent_operating_protocol_v1",
+  "objective": "V5.7f governance dashboard and paper-window control",
+  "agent": "Project Manager Agent",
+  "experiment_layer": "pm_decision_gate",
+  "elapsed_timebox_minutes": 30,
+  "artifacts_created": [
+    "src/v5/basket_governance_dashboard_runner.py",
+    "tests/test_basket_governance_dashboard_runner.py",
+    "docs/governance/v57f_governance_dashboard_v1.md",
+    "basket_governance_dashboards_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/basket_governance_dashboard_summary.json"
+  ],
+  "evidence_found": [
+    "Governance dashboard shows 0 blockers and 0 needs-review items.",
+    "Platform test remains deferred by user; no JoinQuant run was executed.",
+    "Paper trading workflow is waiting for the future refresh window before the 2026-10-08 rebalance gate.",
+    "V5.7f remains frozen; no model tuning, no new signal generation, and no strategy promotion occurred."
+  ],
+  "blockers": [],
+  "decision": "continue_next_timebox",
+  "next_owner": "Project Manager Agent",
+  "stop_rule_status": "not_triggered",
+  "user_decision_required": false,
+  "user_decision_reason": "",
+  "allowed_next_action": "wait_for_2026_10_refresh_window_or_user_supplied_platform_exports",
+  "restart_condition": "Future data refresh window opens, or user supplies JoinQuant daily returns/transactions/positions/logs for attribution.",
+  "skill_status_change": "none",
+  "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
+  "created_at_utc": "2026-07-19T16:21:00+00:00"
+}

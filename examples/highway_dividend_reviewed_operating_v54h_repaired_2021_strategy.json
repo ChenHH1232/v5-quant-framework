@@ -1,0 +1,209 @@
+{
+  "meta": {
+    "strategy_id": "highway_dividend_reviewed_operating_v54h_repaired_2021",
+    "name": "Highway Dividend + Repaired 2021 PIT Operating Data V5.4h",
+    "objective": "Repair the V5.4g pre-2022 no-signal gap by adding 2020 annual-report reviewed operating evidence and repaired PIT segment visibility for 2021. This is a separate repaired candidate, not a mutation of V5.4g.",
+    "status": "research_pit_validation_candidate"
+  },
+  "universe": {
+    "name": "A-share toll-road operators with PIT segment evidence and multi-year reviewed operating disclosure",
+    "construction": "JoinQuant HY03160 highway industry membership filtered by visible Eastmoney/Tushare segment evidence and multi-year original annual-report operating-disclosure review.",
+    "point_in_time": true,
+    "minimum_rebalance_coverage_ratio": 0.8
+  },
+  "data": {
+    "vendor": "JoinQuant/DataJQ + Eastmoney F10 BusinessAnalysis + Tushare disclosure_date + CNINFO annual-report operating-disclosure review",
+    "price_frequency": "quarterly_signal_panel",
+    "financial_as_of_policy": "trade_date_pit_get_fundamentals",
+    "segment_visibility_policy": "latest segment evidence with visible_date <= trade_date",
+    "reviewed_operating_visibility_policy": "latest reviewed annual-report operating disclosure with visible_date <= trade_date",
+    "operating_field_policy": "V5.4g certifies disclosure availability for traffic/toll table, toll revenue evidence, concession evidence and toll policy evidence. Exact numeric traffic/toll/concession values remain unpromoted.",
+    "price_adjustment": {
+      "research_panel": "pre_adjusted_close_to_close_return",
+      "status": "research_pit_validation_input"
+    },
+    "window": {
+      "research_start": "2021-05-06",
+      "research_end": "2026-04-01"
+    },
+    "source_warning": "V5.4h uses 2020 annual-report reviewed operating evidence to build 2021 PIT highway universe because JoinQuant HY03160 returns empty before 2021-12-13. This requires separate platform replication."
+  },
+  "signals": {
+    "factors": [
+      {
+        "name": "dividend_yield",
+        "source": "valuation.dividend_ratio",
+        "role": "main_shareholder_return_signal",
+        "direction": "higher_is_better",
+        "definition": "Visible dividend yield.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      },
+      {
+        "name": "highway_revenue_ratio",
+        "source": "Eastmoney F10 segment evidence joined with visible report date and spot-checked against annual reports",
+        "role": "business_purity",
+        "direction": "higher_is_better",
+        "definition": "Revenue ratio classified as toll-road/highway/road-bridge business.",
+        "as_of": "report_publish_date",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      },
+      {
+        "name": "non_highway_revenue_ratio",
+        "source": "Eastmoney F10 segment evidence joined with visible report date and spot-checked against annual reports",
+        "role": "business_contamination_risk",
+        "direction": "lower_is_better",
+        "definition": "Revenue ratio not classified as highway/toll-road business.",
+        "as_of": "report_publish_date",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      },
+      {
+        "name": "capex_burden",
+        "source": "cash_flow_statement",
+        "role": "capital_intensity_risk",
+        "direction": "lower_is_better",
+        "definition": "Capex divided by operating cash flow.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      },
+      {
+        "name": "reviewed_operating_disclosure_score",
+        "source": "CNINFO annual-report candidate evidence reviewed by operating-disclosure category",
+        "role": "data_quality_gate_diagnostic",
+        "direction": "higher_is_better",
+        "definition": "Share of reviewed operating disclosure categories available from original annual-report evidence.",
+        "as_of": "report_publish_date",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      }
+    ],
+    "scoring": {
+      "method": "weighted_composite",
+      "normalization_scope": "rebalance_cross_section",
+      "weights": {
+        "dividend_yield": 0.65,
+        "highway_revenue_ratio": 0.2,
+        "non_highway_revenue_ratio": 0.1,
+        "capex_burden": 0.05,
+        "reviewed_operating_disclosure_score": 0.0
+      },
+      "min_factor_count": 4,
+      "value_trap_guard": "Reviewed operating disclosure is required by panel construction; exact operating numeric values remain blocked."
+    }
+  },
+  "schedule": {
+    "signal_frequency": "quarterly",
+    "rebalance_frequency": "quarterly",
+    "rebalance_rule": "first frozen trade date when backtest starts mid-quarter, then first tradable day of quarter",
+    "rebalance_months": [
+      1,
+      4,
+      5,
+      7,
+      10
+    ]
+  },
+  "portfolio": {
+    "selection_count": 8,
+    "weighting": "equal_weight_research_candidate",
+    "max_position_weight": 0.15,
+    "cash_policy": "hold residual cash when fewer than 8 names pass filters; V5.4h adds a 2021-05-06 startup catch-up signal"
+  },
+  "risk": {
+    "defensive_asset": "cash",
+    "defensive_rule": {
+      "enabled": false,
+      "reason": "V5.4h repairs PIT data coverage; it still does not add a defensive overlay."
+    },
+    "individual_stop_loss_take_profit": {
+      "enabled": false,
+      "reason": "Fixed exits are not part of the research hypothesis."
+    }
+  },
+  "validation": {
+    "method": "rolling",
+    "train_years": 3,
+    "test_years": 1,
+    "review_years": 1,
+    "weak_years": [
+      "2024",
+      "2025",
+      "2026"
+    ],
+    "baselines": [
+      {
+        "name": "equal_weight_reviewed_operating_formal",
+        "mode": "equal_all"
+      },
+      {
+        "name": "high_dividend_reviewed_operating_top8",
+        "mode": "single_factor",
+        "factor": "dividend_yield",
+        "direction": "higher_is_better",
+        "selection_count": 8
+      },
+      {
+        "name": "reviewed_operating_segment_purity_composite",
+        "mode": "composite",
+        "selection_count": 8
+      }
+    ],
+    "common_sample_fields": [
+      "dividend_yield",
+      "highway_revenue_ratio",
+      "non_highway_revenue_ratio",
+      "capex_burden",
+      "reviewed_operating_disclosure_score"
+    ],
+    "common_sample_interactions": [
+      {
+        "name": "common_dividend_segment_with_reviewed_operating_gate",
+        "factors": [
+          "dividend_yield",
+          "highway_revenue_ratio",
+          "non_highway_revenue_ratio",
+          "capex_burden",
+          "reviewed_operating_disclosure_score"
+        ]
+      }
+    ],
+    "robustness": {
+      "selection_counts": [
+        6,
+        8,
+        10
+      ],
+      "weight_scale_factors": [
+        "dividend_yield",
+        "highway_revenue_ratio"
+      ],
+      "weight_scales": [
+        0.8,
+        1.0,
+        1.2
+      ]
+    },
+    "acceptance_rule": "V5.4g can move to Engineering only if rolling validation, baseline comparison and robustness remain stable. Historical return alone is insufficient."
+  },
+  "execution": {
+    "status": "not_started",
+    "next_gate": "platform_replication_after_v54h_repair_review",
+    "commission_bps": 3,
+    "slippage_bps": 5,
+    "suspension_policy": "skip_untradeable",
+    "limit_policy": "skip_limit_blocked"
+  },
+  "outputs": {
+    "save_holdings": true,
+    "save_rebalance_signals": true,
+    "report": "markdown",
+    "required_reports": [
+      "formal_validation_packet",
+      "pm_decision"
+    ]
+  }
+}

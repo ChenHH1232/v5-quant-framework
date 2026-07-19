@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "packet_type": "checkpoint_packet",
+  "protocol_id": "agent_operating_protocol_v1",
+  "objective": "V5.7f PM action routing and no-drift control",
+  "agent": "Project Manager Agent",
+  "experiment_layer": "pm_decision_gate",
+  "elapsed_timebox_minutes": 30,
+  "artifacts_created": [
+    "src/v5/basket_pm_action_router_runner.py",
+    "tests/test_basket_pm_action_router_runner.py",
+    "docs/governance/v57f_pm_action_router_v1.md",
+    "basket_pm_action_routes_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/basket_pm_action_route_summary.json"
+  ],
+  "evidence_found": [
+    "PM action router converted the governance dashboard into route_status=no_action_until_external_event.",
+    "The router says should_continue_agent_loop=false and user_decision_required=false.",
+    "Next trigger is the 2026-10-08 refresh window or user-supplied JoinQuant exports.",
+    "No JoinQuant run, no data refresh, no factor tuning, no basket change and no new paper signal occurred."
+  ],
+  "blockers": [],
+  "decision": "continue_next_timebox",
+  "next_owner": "Project Manager Agent",
+  "stop_rule_status": "not_triggered",
+  "user_decision_required": false,
+  "user_decision_reason": "",
+  "allowed_next_action": "stop_until_future_refresh_window_or_user_supplied_platform_exports",
+  "restart_condition": "2026-10-08 refresh window opens, user supplies platform exports, or PM starts a separate new candidate lane.",
+  "skill_status_change": "none",
+  "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
+  "created_at_utc": "2026-07-19T16:26:22+00:00"
+}

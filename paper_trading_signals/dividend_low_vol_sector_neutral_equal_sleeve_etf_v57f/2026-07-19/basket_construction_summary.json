@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "project": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f_paper_202607",
+  "experiment_layer": "paper_trading",
+  "created_at_utc": "2026-07-19T05:50:49+00:00",
+  "signal_count": 1,
+  "holding_count": 28,
+  "sector_holding_counts": {
+    "utilities_electricity": 7,
+    "highway_infrastructure": 7,
+    "port_rail_infrastructure": 7,
+    "bank": 7
+  },
+  "signals_path": "paper_trading_signals\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\2026-07-19\\basket_rebalance_signals.csv",
+  "report_path": "paper_trading_signals\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\2026-07-19\\basket_construction_report.md",
+  "pm_rule": "This is a basket-construction shadow signal file. It is not a backtest, platform replication or accepted strategy."
+}

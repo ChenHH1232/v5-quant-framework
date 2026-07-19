@@ -1,0 +1,161 @@
+{
+  "meta": {
+    "strategy_id": "v56_dividend_low_vol_fcf_shadow_basket",
+    "name": "Dividend Low-Vol FCF Shadow Basket V5.6",
+    "objective": "Construct a cross-sector dividend, low-volatility and cash-flow basket from PIT-validated stable cash-flow sleeves.",
+    "status": "research_pit_validation_completed_not_acceptance"
+  },
+  "universe": {
+    "name": "PIT candidate pool from bank, utilities/electricity, highway infrastructure and port/rail infrastructure sleeves",
+    "construction": "Each sleeve must pass its own PIT universe and data availability gate before entering the V5.6 basket constructor.",
+    "point_in_time": true,
+    "minimum_rebalance_coverage_ratio": 0.8
+  },
+  "data": {
+    "vendor": "JoinQuant/DataJQ PIT panels, reviewed sector evidence where available, and JoinQuant real daily open/close execution prices",
+    "price_frequency": "daily_open_close_for_local_simulation",
+    "financial_as_of_policy": "announcement_date_or_trade_date_lagged_by_factor",
+    "cash_dividend_policy": "real cash dividends from JoinQuant STK_XR_XD, net_cash_per_share after 20% tax, paid on ex-date proxy",
+    "price_adjustment": {
+      "execution_prices": "raw_unadjusted_real_price",
+      "research_panel_returns": "PIT total-return or forward-return fields by sleeve"
+    },
+    "window": {
+      "platform_confirmation_start": "2021-05-01",
+      "platform_confirmation_end": "2026-05-31"
+    }
+  },
+  "signals": {
+    "factors": [
+      {
+        "name": "dividend_yield",
+        "role": "shareholder_return",
+        "direction": "higher_is_better",
+        "as_of": "trade_date_lagged",
+        "missing_policy": "score_if_available"
+      },
+      {
+        "name": "operating_cash_flow_yield",
+        "role": "cash_flow_value",
+        "direction": "higher_is_better",
+        "as_of": "announcement_date",
+        "missing_policy": "score_if_available"
+      },
+      {
+        "name": "free_cash_flow_yield",
+        "role": "free_cash_flow_value",
+        "direction": "higher_is_better",
+        "as_of": "announcement_date",
+        "missing_policy": "score_if_available"
+      },
+      {
+        "name": "low_price_to_book",
+        "role": "asset_value",
+        "direction": "higher_is_better",
+        "as_of": "trade_date_lagged",
+        "missing_policy": "score_if_available"
+      },
+      {
+        "name": "low_vol_score",
+        "role": "low_volatility",
+        "direction": "higher_is_better",
+        "as_of": "trade_date_lagged",
+        "missing_policy": "required"
+      },
+      {
+        "name": "volatility_120d",
+        "role": "volatility_guard",
+        "direction": "lower_is_better",
+        "as_of": "trade_date_lagged",
+        "missing_policy": "required"
+      },
+      {
+        "name": "max_drawdown_120d",
+        "role": "drawdown_guard",
+        "direction": "lower_is_better",
+        "as_of": "trade_date_lagged",
+        "missing_policy": "score_if_available"
+      },
+      {
+        "name": "capex_burden",
+        "role": "capital_intensity_risk",
+        "direction": "lower_is_better",
+        "as_of": "announcement_date",
+        "missing_policy": "score_if_available"
+      }
+    ],
+    "scoring": {
+      "method": "weighted_composite",
+      "normalization_scope": "rebalance_cross_section",
+      "min_factor_count": 4,
+      "weights": {
+        "dividend_yield": 0.22,
+        "operating_cash_flow_yield": 0.16,
+        "free_cash_flow_yield": 0.12,
+        "low_price_to_book": 0.14,
+        "low_vol_score": 0.16,
+        "volatility_120d": 0.08,
+        "max_drawdown_120d": 0.08,
+        "capex_burden": 0.04
+      }
+    }
+  },
+  "schedule": {
+    "rebalance_frequency": "quarterly",
+    "rebalance_calendar_policy": "union_of_approved_sleeve_rebalance_dates"
+  },
+  "portfolio": {
+    "selection_count": 30,
+    "target_count": 30,
+    "sector_weight_cap": 0.35,
+    "single_stock_weight_cap": 0.05,
+    "target_exposure": 0.995,
+    "weighting": "equal_weight_after_sector_and_single_stock_caps"
+  },
+  "risk": {
+    "defensive_asset": "cash",
+    "defensive_rule": {
+      "enabled": false,
+      "reason": "V5.6 tests basket construction and low-vol/cash-flow selection; it does not add market-timing defense."
+    },
+    "individual_stop_loss_take_profit": {
+      "enabled": false,
+      "reason": "Fixed exits are not part of the research hypothesis."
+    }
+  },
+  "validation": {
+    "method": "rolling",
+    "required_tests": [
+      "baseline_comparison_same_pool_equal_weight",
+      "ic_rankic_full_candidate_panel",
+      "rolling_by_calendar_year",
+      "ablation_proxy_and_future_full_ablation",
+      "selection_count_parameter_robustness",
+      "random_window_stability",
+      "execution_time_shift_proxy",
+      "future_leakage_audit",
+      "survivorship_bias_audit"
+    ],
+    "acceptance_rule": "PM cannot accept the basket from 2021-2026 platform-confirmation returns alone. Promotion requires stable evidence, clean data gates, overfit audit, platform attribution and paper trading."
+  },
+  "execution": {
+    "status": "local_daily_simulation_completed_pending_platform_replication",
+    "commission_bps": 3,
+    "lot_size": 100,
+    "trade_price": "daily_open",
+    "valuation_price": "daily_close",
+    "suspension_policy": "skip_untradeable",
+    "limit_policy": "skip_limit_blocked"
+  },
+  "outputs": {
+    "save_holdings": true,
+    "save_rebalance_signals": true,
+    "save_daily_returns": true,
+    "save_dividend_log": true,
+    "required_reports": [
+      "basket_formal_validation_packet",
+      "overfit_audit_packet",
+      "pm_decision"
+    ]
+  }
+}

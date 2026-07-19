@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "packet_type": "checkpoint_packet",
+  "protocol_id": "agent_operating_protocol_v1",
+  "objective": "v58 airport transport resumable content cache initial layer",
+  "agent": "Engineering Agent",
+  "experiment_layer": "data_availability_gate",
+  "elapsed_timebox_minutes": 30,
+  "artifacts_created": [
+    "src/v5/airport_transport_operating_evidence_runner.py",
+    "src/v5/cli_sector.py",
+    "tests/test_airport_transport_operating_evidence_runner.py",
+    "数据库/processed/airport_transport_operating_evidence_v58/operating_content_cache/airport_operating_content_cache_manifest.json",
+    "数据库/processed/airport_transport_operating_evidence_v58/operating_state_values_cache20/airport_operating_state_value_candidates.csv"
+  ],
+  "evidence_found": [
+    "cache runner skips cached rows and supports isolated retry filters",
+    "formal cache first batch fetched 20 of 20 rows with 0 errors",
+    "cache-only extraction produced 20 of 20 complete candidate rows",
+    "14 relevant regression tests passed"
+  ],
+  "blockers": [
+    "full 261-row airport operating content cache is not complete",
+    "candidate values still need original announcement/PDF spot-check before Quant validation"
+  ],
+  "decision": "continue_next_timebox",
+  "next_owner": "Engineering Agent",
+  "stop_rule_status": "not_triggered",
+  "user_decision_required": false,
+  "user_decision_reason": "",
+  "allowed_next_action": "continue full airport content cache in resumable code/month batches, then extract cache-only values and prepare Research spot-check sample",
+  "restart_condition": "resume from uncached art_code rows or failed rows in airport_operating_content_cache_errors.csv",
+  "skill_status_change": "none",
+  "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
+  "created_at_utc": "2026-07-19T14:30:06+00:00"
+}

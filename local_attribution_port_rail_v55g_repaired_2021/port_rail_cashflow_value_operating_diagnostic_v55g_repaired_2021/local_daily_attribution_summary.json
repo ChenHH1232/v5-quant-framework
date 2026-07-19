@@ -1,0 +1,30 @@
+{
+  "strategy_id": "port_rail_cashflow_value_operating_diagnostic_v55g_repaired_2021",
+  "experiment_layer": "engineering_smoke_test_local_attribution",
+  "first_signal_date": "2021-05-06",
+  "signal_count": 21,
+  "daily_count": 1228,
+  "trade_count": 223,
+  "dividend_event_count": 44,
+  "full_period": {
+    "strategy_return": 0.7852228130999976,
+    "benchmark_return": 0.17694641051566862,
+    "excess_return": 0.3279628142576141,
+    "avg_cash_weight": 0.00925409683510266,
+    "max_drawdown": 0.20200479055136344,
+    "max_drawdown_start": "2023-05-08",
+    "max_drawdown_end": "2024-01-22"
+  },
+  "repair_result": {
+    "first_signal_repaired_to": "2021-05-06",
+    "first_trade_date": "2021-05-06",
+    "source": "2021 legacy JQ/SW industry classification repair plus May startup catch-up",
+    "not_tuning": "No factor weights, selection count, or risk rules changed."
+  },
+  "outputs": {
+    "annual_attribution": "annual_attribution.csv",
+    "rebalance_period_attribution": "rebalance_period_attribution.csv",
+    "top_loss_days": "top_loss_days.csv",
+    "top_gain_days": "top_gain_days.csv"
+  }
+}

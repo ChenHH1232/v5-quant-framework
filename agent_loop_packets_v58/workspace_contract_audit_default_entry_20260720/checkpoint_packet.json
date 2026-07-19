@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "packet_type": "checkpoint_packet",
+  "protocol_id": "agent_operating_protocol_v1",
+  "objective": "Make workspace contract audit the default PM entry check",
+  "agent": "Project Manager Agent",
+  "experiment_layer": "pm_decision_gate",
+  "elapsed_timebox_minutes": 30,
+  "artifacts_created": [
+    "src/v5/workspace_contract_audit_runner.py",
+    "tests/test_workspace_contract_audit_runner.py",
+    "docs/governance/workspace_contract_audit_v1.md",
+    "workspace_contract_audits_v58/latest/workspace_contract_audit_summary.json"
+  ],
+  "evidence_found": [
+    "audit-workspace-contract now validates config JSONs, example JSONs and status_registry consistency as a read-only PM entry check.",
+    "Current workspace contract audit passed with 0 blockers: 16 configs passed, 49 examples passed, status_registry has 0 missing paths and 0 accepted-status violations.",
+    "The audit blocks strategy promotion, platform-pass marking, paper-signal generation and new formal-candidate freeze if workflow evidence is inconsistent.",
+    "Full test suite passed: 148 tests."
+  ],
+  "blockers": [],
+  "decision": "continue_next_timebox",
+  "next_owner": "Project Manager Agent",
+  "stop_rule_status": "not_triggered",
+  "user_decision_required": false,
+  "user_decision_reason": "",
+  "allowed_next_action": "run_workspace_contract_audit_before_strategy_promotion_or_new_sector_freeze",
+  "restart_condition": "Next PM timebox, user requests commit, future refresh window opens, user supplies platform exports, or PM approves a new sector lane.",
+  "skill_status_change": "none",
+  "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
+  "created_at_utc": "2026-07-19T16:55:53+00:00"
+}

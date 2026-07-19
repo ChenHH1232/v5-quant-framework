@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "project": "v56_dividend_low_vol_fcf_enhanced_basket",
+  "created_at": "2026-07-18",
+  "experiment_layer": "data_availability_gate",
+  "purpose": "Batch-screen sectors for a dividend low-volatility and free-cash-flow enhanced ETF-style basket. Screening is not strategy acceptance.",
+  "global_missing_modules": [
+    "low_volatility_factor_runner",
+    "cross_sector_basket_constructor",
+    "sector_weight_cap_policy",
+    "single_stock_weight_cap_policy",
+    "basket_level_forward_paper_trading_log"
+  ],
+  "candidate_sectors": [
+    {
+      "sector_id": "bank",
+      "display_name": "Bank",
+      "sector_type": "financial",
+      "basket_role": "core_candidate",
+      "strategy_ids": [
+        "bank_high_dividend_sustainability_v3"
+      ],
+      "knowledge_artifacts": [
+        "knowledge/research_agent/factor_theory/bank_value_investing_framework.md",
+        "knowledge/research_agent/factor_theory/bank_core_factor_hypotheses.md",
+        "knowledge/research_agent/factor_theory/bank_value_trap_identification.md",
+        "knowledge/research_agent/references/bank_disclosure_field_map.md",
+        "knowledge/research_agent/references/bank_factor_validation_handoff.md"
+      ],
+      "data_gate": "passed",
+      "pit_universe_gate": "passed",
+      "business_purity_gate": "passed",
+      "dividend_gate": "passed",
+      "fcf_gate": "support_only",
+      "low_vol_gate": "pending_global_module",
+      "external_state_burden": "medium",
+      "sample_size_risk": "medium",
+      "notes": "Bank V3 is platform-replicated and suitable for the dividend sleeve, but bank-specific quality and PIT visibility remain separate from generic FCF logic."
+    },
+    {
+      "sector_id": "utilities_electricity",
+      "display_name": "Utilities / Electricity",
+      "sector_type": "stable_cash_flow",
+      "basket_role": "core_candidate",
+      "strategy_ids": [
+        "utilities_demand_state_v51f"
+      ],
+      "knowledge_artifacts": [
+        "knowledge/research_agent/factor_theory/utilities_value_investing_framework.md",
+        "knowledge/research_agent/factor_theory/utilities_core_factor_hypotheses.md",
+        "knowledge/research_agent/references/utilities_universe_definition.md",
+        "knowledge/research_agent/references/utilities_data_field_map.md",
+        "knowledge/research_agent/references/utilities_validation_handoff.md"
+      ],
+      "data_gate": "passed",
+      "pit_universe_gate": "passed",
+      "business_purity_gate": "passed",
+      "dividend_gate": "passed",
+      "fcf_gate": "usable_with_capex_review",
+      "low_vol_gate": "pending_global_module",
+      "external_state_burden": "medium",
+      "sample_size_risk": "medium",
+      "notes": "V5.1f is the golden template and should anchor the first basket sleeve."
+    },
+    {
+      "sector_id": "highway_infrastructure",
+      "display_name": "Highway Infrastructure",
+      "sector_type": "stable_cash_flow",
+      "basket_role": "core_candidate",
+      "strategy_ids": [
+        "highway_dividend_reviewed_operating_v54h_repaired_2021",
+        "highway_dividend_reviewed_operating_v54g"
+      ],
+      "knowledge_artifacts": [
+        "knowledge/research_agent/strategy_cases/highway_v54g_reviewed_operating_result.md",
+        "docs/governance/v54h_highway_2021_pit_repair_pm_decision_v1.md"
+      ],
+      "data_gate": "passed",
+      "pit_universe_gate": "passed",
+      "business_purity_gate": "passed",
+      "dividend_gate": "passed",
+      "fcf_gate": "diagnostic_not_primary",
+      "low_vol_gate": "pending_global_module",
+      "external_state_burden": "medium",
+      "sample_size_risk": "medium",
+      "notes": "Highway is a strong dividend-cash-flow sleeve after 2021 PIT repair; FCF remains diagnostic because toll-road capex and concession life matter."
+    },
+    {
+      "sector_id": "port_rail_infrastructure",
+      "display_name": "Port / Rail Infrastructure",
+      "sector_type": "stable_cash_flow_with_trade_cycle",
+      "basket_role": "candidate_after_platform_replication",
+      "strategy_ids": [
+        "port_rail_cashflow_value_operating_diagnostic_v55j_reviewed_business_sources"
+      ],
+      "knowledge_artifacts": [
+        "knowledge/research_agent/factor_theory/port_rail_value_trap_framework.md",
+        "knowledge/research_agent/factor_theory/port_rail_operating_state_framework.md",
+        "knowledge/research_agent/references/port_rail_operating_field_map.md",
+        "knowledge/research_agent/references/port_rail_validation_handoff.md",
+        "docs/governance/v55j_port_rail_reviewed_business_sources_pm_decision_v1.md"
+      ],
+      "data_gate": "passed_with_review_notes",
+      "pit_universe_gate": "passed",
+      "business_purity_gate": "reviewed_source_repair_completed",
+      "dividend_gate": "passed",
+      "fcf_gate": "usable_with_capex_review",
+      "low_vol_gate": "pending_global_module",
+      "external_state_burden": "medium_high",
+      "sample_size_risk": "medium",
+      "notes": "V5.5j is the preferred port/rail candidate, but platform replication and pure benchmark review are still pending."
+    },
+    {
+      "sector_id": "telecom_operators",
+      "display_name": "Telecom Operators",
+      "sector_type": "stable_cash_flow_small_sample",
+      "basket_role": "observation_candidate",
+      "strategy_ids": [
+        "telecom_operators_cashflow_dividend_v55a"
+      ],
+      "knowledge_artifacts": [
+        "docs/governance/v55_candidate_screening_packet_v1.md",
+        "knowledge/research_agent/strategy_cases/v55a_similar_sector_initial_model_result.md"
+      ],
+      "data_gate": "needs_manual_research",
+      "pit_universe_gate": "likely_pass",
+      "business_purity_gate": "simple_explicit_universe",
+      "dividend_gate": "likely_pass",
+      "fcf_gate": "needs_operator_capex_review",
+      "low_vol_gate": "pending_global_module",
+      "external_state_burden": "medium",
+      "sample_size_risk": "high",
+      "notes": "Only three A-share core operators; useful for basket observation but weak for cross-sectional IC."
+    },
+    {
+      "sector_id": "gas_water_operators",
+      "display_name": "Gas / Water Operators",
+      "sector_type": "stable_cash_flow",
+      "basket_role": "manual_research_candidate",
+      "strategy_ids": [
+        "gas_water_cashflow_dividend_v55a"
+      ],
+      "knowledge_artifacts": [
+        "docs/governance/v55_candidate_screening_packet_v1.md",
+        "knowledge/research_agent/strategy_cases/v55a_similar_sector_initial_model_result.md"
+      ],
+      "data_gate": "needs_manual_research",
+      "pit_universe_gate": "needs_operator_purity_review",
+      "business_purity_gate": "needs_review",
+      "dividend_gate": "likely_pass",
+      "fcf_gate": "needs_receivables_and_project_revenue_review",
+      "low_vol_gate": "pending_global_module",
+      "external_state_burden": "medium",
+      "sample_size_risk": "medium",
+      "notes": "Closest to utilities, but must separate real operators from engineering/project companies."
+    },
+    {
+      "sector_id": "insurance",
+      "display_name": "Insurance",
+      "sector_type": "financial_specialist",
+      "basket_role": "specialist_observation_candidate",
+      "strategy_ids": [
+        "insurance_pev_value_v53g"
+      ],
+      "knowledge_artifacts": [
+        "knowledge/research_agent/factor_theory/insurance_pev_ev_nbv_research_framework.md",
+        "knowledge/research_agent/references/insurance_ev_nbv_reviewed_2020_2025_core5.csv",
+        "docs/governance/v53g_insurance_stage_closeout_v1.md"
+      ],
+      "data_gate": "specialist_data_partial",
+      "pit_universe_gate": "passed_core5",
+      "business_purity_gate": "passed_core5",
+      "dividend_gate": "passed",
+      "fcf_gate": "not_applicable",
+      "low_vol_gate": "pending_global_module",
+      "external_state_burden": "high",
+      "sample_size_risk": "high",
+      "notes": "Insurance can be tracked as a specialist financial sleeve, but EV/NBV/P/EV and concentration risks prevent generic ETF-basket treatment."
+    },
+    {
+      "sector_id": "coal",
+      "display_name": "Coal",
+      "sector_type": "cyclical",
+      "basket_role": "blocked_observation_pool",
+      "strategy_ids": [
+        "coal_cashflow_cycle_value_v52b"
+      ],
+      "knowledge_artifacts": [
+        "knowledge/research_agent/factor_theory/coal_value_investing_framework.md",
+        "knowledge/research_agent/factor_theory/coal_core_factor_hypotheses.md",
+        "knowledge/research_agent/references/cyclical_sector_data_gate.md",
+        "docs/governance/v52b_coal_suspended_data_gate_v1.md"
+      ],
+      "data_gate": "blocked",
+      "pit_universe_gate": "needs_segment_pit_repair",
+      "business_purity_gate": "incomplete",
+      "dividend_gate": "likely_pass",
+      "fcf_gate": "capex_policy_required",
+      "low_vol_gate": "pending_global_module",
+      "external_state_burden": "high",
+      "sample_size_risk": "medium",
+      "notes": "Coal is excluded from the first enhanced basket because commodity price, output, inventory, spread, and PIT business exposure gates are incomplete."
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "status": "annual_report_sample_ready",
+  "manifest_csv": "research_reports\\insurance_original_annual_reports_2021_2024\\insurance_annual_report_manifest_v53f.csv",
+  "row_count": 11,
+  "sample_size": 3,
+  "seed": 17,
+  "sampled_codes": [
+    "601318.XSHG",
+    "601319.XSHG",
+    "601336.XSHG"
+  ],
+  "created_at_utc": "2026-07-17T07:26:31+00:00",
+  "next_step": "research_agent_review_sample_layout_then_run_batch_extraction"
+}

@@ -1,0 +1,4 @@
+sector,code,company_name,report_period,publish_date,visible_date,source_title,source_url,local_path
+insurance,601318.XSHG,Ping An Insurance,2023-12-31,2024-03-22,2024-03-22,Ping An Insurance 2023 Annual Report,https://www.pingan.com/app_upload/images/info/upload/55e017c8-da54-42f5-81cc-b4ff9586b461.pdf,research_reports\insurance_original_annual_reports_2021_2024\pingan_2023_annual.pdf
+insurance,601319.XSHG,PICC Group,2022-12-31,2023-03-25,2023-03-25,PICC 2022 Annual Report,https://www.picc.com.cn/xwzx/gkxx/ndxx/202303/P020240304645528810507.pdf,research_reports\insurance_original_annual_reports_2021_2024\picc_2022_annual.pdf
+insurance,601336.XSHG,New China Life Insurance,2023-12-31,2024-03-28,2024-03-28,New China Life 2023 Annual Report,https://static-cdn.newchinalife.com/ncl/pdf/20240327/308ba549-850f-4a9c-9bf4-aaadc0b8e6b4.pdf,research_reports\insurance_original_annual_reports_2021_2024\nci_2023_annual.pdf

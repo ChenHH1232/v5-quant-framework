@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "packet_type": "checkpoint_packet",
+  "protocol_id": "agent_operating_protocol_v1",
+  "objective": "V5.7f platform export intake and clean paper preflight hardening",
+  "agent": "Project Manager Agent",
+  "experiment_layer": "paper_trading_preparation",
+  "elapsed_timebox_minutes": 30,
+  "artifacts_created": [
+    "docs/governance/v57f_platform_export_intake_and_paper_preflight_v1.md",
+    "platform_exports_v57f/expected_exports_manifest.json",
+    "platform_exports_v57f/README.md",
+    "paper_trading_gates_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/forward_paper_gate_summary.json",
+    "docs/governance/status_registry.json"
+  ],
+  "evidence_found": [
+    "V5.7f remains frozen; platform attribution waits for dedicated JoinQuant exports",
+    "Forward paper gate confirms next clean rebalance date 2026-10-08",
+    "Dedicated platform_exports_v57f/pending intake folder is empty except .gitkeep"
+  ],
+  "blockers": [
+    "JoinQuant daily result, transaction, position and log exports are not present yet",
+    "Clean future paper signal cannot be generated before refreshing PIT panels near 2026-10-08"
+  ],
+  "decision": "continue_next_timebox",
+  "next_owner": "Engineering Agent",
+  "stop_rule_status": "not_triggered",
+  "user_decision_required": false,
+  "user_decision_reason": "",
+  "allowed_next_action": "Wait for JoinQuant exports or refresh PIT inputs before the 2026-10-08 paper signal; no tuning",
+  "restart_condition": "Resume platform attribution when result.csv, transaction.csv, position.csv and log.txt are placed in platform_exports_v57f/pending",
+  "skill_status_change": "none",
+  "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
+  "created_at_utc": "2026-07-19T15:50:29+00:00"
+}

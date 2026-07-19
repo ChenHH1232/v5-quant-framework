@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "packet_type": "checkpoint_packet",
+  "protocol_id": "agent_operating_protocol_v1",
+  "objective": "Workflow contract hardening after V5 repository review",
+  "agent": "Project Manager Agent",
+  "experiment_layer": "pm_decision_gate",
+  "elapsed_timebox_minutes": 30,
+  "artifacts_created": [
+    "src/v5/config_validation_runner.py",
+    "tests/test_config_validation_runner.py",
+    "tests/test_status_registry_consistency.py",
+    "tests/test_formal_validation_ablation_policy.py",
+    "docs/governance/unicode_path_cli_argument_policy_v1.md"
+  ],
+  "evidence_found": [
+    "v5.cli validate now routes legacy strategy specs, research candidate specs, basket runtime configs, PM protocols, status registries and project context files by type.",
+    "49 examples validate successfully with 0 failures after schema routing and PIT visible-date whitelist repair.",
+    "status_registry evidence paths are guarded by consistency tests and mojibake paths were repaired.",
+    "formal_validation_runner ablation and common-sample cases now lower min_factor_count to available factors.",
+    "Full test suite passed: 144 tests."
+  ],
+  "blockers": [],
+  "decision": "continue_next_timebox",
+  "next_owner": "Project Manager Agent",
+  "stop_rule_status": "not_triggered",
+  "user_decision_required": false,
+  "user_decision_reason": "",
+  "allowed_next_action": "continue_workflow_contract_hardening_or_start_small_next_sector_only_after_pm_gate",
+  "restart_condition": "Next PM timebox, user requests commit, future refresh window opens, or user supplies JoinQuant platform exports.",
+  "skill_status_change": "none",
+  "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
+  "created_at_utc": "2026-07-19T16:50:08+00:00"
+}

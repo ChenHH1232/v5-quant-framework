@@ -1,0 +1,274 @@
+{
+  "meta": {
+    "strategy_id": "highway_dividend_operating_state_v54c",
+    "name": "Highway Dividend With Operating-State Proxies V5.4c",
+    "objective": "Test whether toll-road high-dividend selection improves when PIT revenue growth and cash-collection quality are added as operating-state proxies.",
+    "status": "research_pit_validation_candidate"
+  },
+  "universe": {
+    "name": "A-share toll-road operators",
+    "construction": "JoinQuant HY03160 highway industry membership after 2021-12-13, excluding ports, airports, rail, shipping and logistics.",
+    "point_in_time": true,
+    "minimum_rebalance_coverage_ratio": 0.8
+  },
+  "data": {
+    "vendor": "JoinQuant/DataJQ PIT industry membership and fundamentals",
+    "price_frequency": "quarterly_signal_panel",
+    "financial_as_of_policy": "trade_date_pit_get_fundamentals",
+    "operating_state_policy": "revenue_growth_yoy and cash_collection_quality are PIT financial proxies, not direct traffic-volume or toll-revenue data.",
+    "price_adjustment": {
+      "research_panel": "pre_adjusted_close_to_close_return",
+      "status": "research_pit_validation_input"
+    },
+    "window": {
+      "research_start": "2022-01-04",
+      "research_end": "2026-04-01"
+    },
+    "source_warning": "HY03160 starts in JoinQuant from 2021-12-13, so V5.4c does not claim pre-2022 PIT industry history."
+  },
+  "signals": {
+    "factors": [
+      {
+        "name": "dividend_yield",
+        "source": "valuation.dividend_ratio",
+        "role": "main_shareholder_return_signal",
+        "direction": "higher_is_better",
+        "definition": "Visible dividend yield.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      },
+      {
+        "name": "revenue_growth_yoy",
+        "source": "indicator.inc_revenue_year_on_year",
+        "role": "operating_state_proxy",
+        "direction": "higher_is_better",
+        "definition": "Year-on-year operating revenue growth. Used as a proxy for traffic/toll revenue trend until direct operating data is joined.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      },
+      {
+        "name": "cash_collection_quality",
+        "source": "indicator.goods_sale_and_service_to_revenue",
+        "role": "cash_collection_proxy",
+        "direction": "higher_is_better",
+        "definition": "Cash received from selling goods and rendering services divided by revenue.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      },
+      {
+        "name": "ocf_to_revenue",
+        "source": "indicator.ocf_to_revenue",
+        "role": "cash_conversion_proxy",
+        "direction": "higher_is_better",
+        "definition": "Operating cash flow divided by revenue.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      },
+      {
+        "name": "capex_burden",
+        "source": "cash_flow_statement",
+        "role": "capital_intensity_risk",
+        "direction": "lower_is_better",
+        "definition": "Capex divided by operating cash flow.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      },
+      {
+        "name": "asset_liability_ratio",
+        "source": "balance_sheet",
+        "role": "leverage_pressure",
+        "direction": "lower_is_better",
+        "definition": "Liabilities divided by assets.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      }
+    ],
+    "scoring": {
+      "method": "weighted_composite",
+      "normalization_scope": "rebalance_cross_section",
+      "weights": {
+        "dividend_yield": 0.45,
+        "revenue_growth_yoy": 0.2,
+        "cash_collection_quality": 0.15,
+        "ocf_to_revenue": 0.1,
+        "capex_burden": 0.05,
+        "asset_liability_ratio": 0.05
+      },
+      "min_factor_count": 5,
+      "value_trap_guard": "Operating-state proxies must improve robustness or weak-year explanation; otherwise they remain diagnostics."
+    }
+  },
+  "schedule": {
+    "signal_frequency": "quarterly",
+    "rebalance_frequency": "quarterly",
+    "rebalance_rule": "first_tradable_day_of_quarter"
+  },
+  "portfolio": {
+    "selection_count": 8,
+    "weighting": "equal_weight_research_candidate",
+    "max_position_weight": 0.15,
+    "cash_policy": "hold residual cash when fewer than 8 names pass filters"
+  },
+  "risk": {
+    "defensive_asset": "cash",
+    "defensive_rule": {
+      "enabled": false,
+      "reason": "V5.4c tests operating-state stock selection and does not add market timing."
+    },
+    "individual_stop_loss_take_profit": {
+      "enabled": false,
+      "reason": "Fixed exits are not part of the research hypothesis."
+    }
+  },
+  "validation": {
+    "method": "rolling",
+    "train_years": 3,
+    "test_years": 1,
+    "review_years": 1,
+    "weak_years": [
+      "2022",
+      "2024",
+      "2026"
+    ],
+    "baselines": [
+      {
+        "name": "equal_weight_highway",
+        "mode": "equal_all"
+      },
+      {
+        "name": "high_dividend_highway_top8",
+        "mode": "single_factor",
+        "factor": "dividend_yield",
+        "direction": "higher_is_better",
+        "selection_count": 8
+      },
+      {
+        "name": "revenue_growth_top8",
+        "mode": "single_factor",
+        "factor": "revenue_growth_yoy",
+        "direction": "higher_is_better",
+        "selection_count": 8
+      },
+      {
+        "name": "cash_collection_top8",
+        "mode": "single_factor",
+        "factor": "cash_collection_quality",
+        "direction": "higher_is_better",
+        "selection_count": 8
+      },
+      {
+        "name": "high_dividend_after_revenue_growth_top70pct",
+        "mode": "single_factor",
+        "factor": "dividend_yield",
+        "direction": "higher_is_better",
+        "selection_count": 8,
+        "condition": {
+          "field": "revenue_growth_yoy",
+          "direction": "higher_is_better",
+          "quantile": 0.7,
+          "keep": "top"
+        }
+      },
+      {
+        "name": "high_dividend_after_cash_collection_top70pct",
+        "mode": "single_factor",
+        "factor": "dividend_yield",
+        "direction": "higher_is_better",
+        "selection_count": 8,
+        "condition": {
+          "field": "cash_collection_quality",
+          "direction": "higher_is_better",
+          "quantile": 0.7,
+          "keep": "top"
+        }
+      },
+      {
+        "name": "operating_state_composite_current",
+        "mode": "composite",
+        "selection_count": 8
+      }
+    ],
+    "common_sample_fields": [
+      "dividend_yield",
+      "revenue_growth_yoy",
+      "cash_collection_quality",
+      "ocf_to_revenue",
+      "capex_burden",
+      "asset_liability_ratio"
+    ],
+    "common_sample_interactions": [
+      {
+        "name": "common_dividend_only",
+        "factors": [
+          "dividend_yield"
+        ]
+      },
+      {
+        "name": "common_dividend_plus_revenue_growth",
+        "factors": [
+          "dividend_yield",
+          "revenue_growth_yoy"
+        ]
+      },
+      {
+        "name": "common_dividend_plus_cash_collection",
+        "factors": [
+          "dividend_yield",
+          "cash_collection_quality",
+          "ocf_to_revenue"
+        ]
+      },
+      {
+        "name": "common_all_operating_state",
+        "factors": [
+          "dividend_yield",
+          "revenue_growth_yoy",
+          "cash_collection_quality",
+          "ocf_to_revenue",
+          "capex_burden",
+          "asset_liability_ratio"
+        ]
+      }
+    ],
+    "robustness": {
+      "selection_counts": [
+        6,
+        8,
+        10
+      ],
+      "weight_scale_factors": [
+        "dividend_yield",
+        "revenue_growth_yoy"
+      ],
+      "weight_scales": [
+        0.8,
+        1.0,
+        1.2
+      ]
+    },
+    "acceptance_rule": "V5.4c can only enter engineering if operating-state proxies improve high-dividend robustness and help explain 2026 without relying on hindsight return tuning."
+  },
+  "execution": {
+    "status": "not_started",
+    "next_gate": "formal_research_validation",
+    "commission_bps": 3,
+    "slippage_bps": 5,
+    "suspension_policy": "skip_untradeable",
+    "limit_policy": "skip_limit_blocked"
+  },
+  "outputs": {
+    "save_holdings": true,
+    "save_rebalance_signals": true,
+    "report": "markdown",
+    "required_reports": [
+      "formal_validation_packet",
+      "pm_decision"
+    ]
+  }
+}

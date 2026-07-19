@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "packet_type": "failure_return_packet",
+  "protocol_id": "agent_operating_protocol_v1",
+  "objective": "v58 airport transport cashflow operating state formal validation",
+  "agent": "Quant Validation Agent",
+  "experiment_layer": "research_pit_validation",
+  "elapsed_timebox_minutes": 30,
+  "artifacts_created": [
+    "examples/airport_transport_cashflow_operating_state_v58_strategy.json",
+    "数据库/processed/airport_transport_formal_panel_v58/panel.csv",
+    "validation_formal_v58_airport_transport/airport_transport_cashflow_operating_state_v58/formal_validation_summary.json",
+    "validation_formal_v58_airport_transport/airport_transport_cashflow_operating_state_v58/formal_validation_report.md",
+    "docs/governance/v58_airport_transport_formal_validation_pm_decision_v1.md"
+  ],
+  "evidence_found": [
+    "PIT leakage audit passed and operating-state coverage is 100 percent across 20 rebalance dates",
+    "composite cumulative return -4.99 percent versus equal-weight airport pool -17.80 percent and high-dividend top3 -7.35 percent",
+    "airport operating-state score mean IC is -0.1264 and standalone operating-state top3 cumulative return is -21.10 percent",
+    "rolling validation is unstable: 2023 -14.94 percent, 2024 7.12 percent, 2025 9.25 percent, 2026 -14.88 percent"
+  ],
+  "blockers": [
+    "operating-state score is not validated as a positive alpha factor",
+    "absolute composite return remains negative and strategy should not be promoted",
+    "business-purity annual report spot-check remains incomplete"
+  ],
+  "decision": "return_to_research",
+  "next_owner": "Research Agent",
+  "stop_rule_status": "not_triggered",
+  "user_decision_required": false,
+  "user_decision_reason": "",
+  "allowed_next_action": "Research Agent should redesign airport hypothesis around franchise type, international/duty-free exposure and state buckets; no return tuning on 2021-2026",
+  "restart_condition": "resume Quant only after a revised airport hypothesis is specified or PM chooses another sector lane",
+  "skill_status_change": "none",
+  "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
+  "created_at_utc": "2026-07-19T15:18:10+00:00"
+}

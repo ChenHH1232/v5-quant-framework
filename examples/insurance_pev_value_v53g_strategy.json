@@ -1,0 +1,161 @@
+{
+  "meta": {
+    "strategy_id": "insurance_pev_value_v53g",
+    "name": "Insurance Low P/EV Value V5.3g",
+    "objective": "Test the insurance-specific value hypothesis that low price-to-embedded-value is a cleaner value anchor than generic low PB for listed A-share insurers.",
+    "status": "research_pit_validation_candidate"
+  },
+  "universe": {
+    "name": "A-share core listed insurance operating companies and groups",
+    "construction": "pm_reviewed_core_insurance_universe_v53_test1",
+    "point_in_time": true,
+    "minimum_rebalance_coverage_ratio": 0.8,
+    "exclude": [
+      "banks",
+      "brokers",
+      "asset_managers",
+      "financial_holding_contamination",
+      "st_or_delisted_special_cases"
+    ]
+  },
+  "data": {
+    "vendor": "JoinQuant/DataJQ PIT valuation fields plus reviewed annual-report EV/NBV repair",
+    "price_frequency": "quarterly_signal_panel",
+    "financial_as_of_policy": "original_announcement_visible_date",
+    "ev_nbv_policy": {
+      "status": "multi_year_repair_core5",
+      "covered_years": [
+        "2021",
+        "2022",
+        "2023",
+        "2024",
+        "2025",
+        "2026"
+      ],
+      "formal_validation_allowed": true,
+      "source_file": "knowledge/research_agent/references/insurance_ev_nbv_reviewed_2020_2025_core5.csv"
+    }
+  },
+  "signals": {
+    "factors": [
+      {
+        "name": "price_to_embedded_value",
+        "source": "derived_market_cap_div_latest_visible_embedded_value",
+        "role": "insurance_specific_value",
+        "direction": "lower_is_better",
+        "definition": "Market cap divided by latest PIT-visible embedded value. Market cap uses CNY 100m unit and EV uses CNY million.",
+        "as_of": "trade_date_market_cap_and_latest_visible_ev",
+        "disclosure_lag_days": 0,
+        "missing_policy": "drop_security",
+        "normalize": "rank_within_rebalance_date"
+      }
+    ],
+    "scoring": {
+      "method": "weighted_composite",
+      "normalization_scope": "rebalance_cross_section",
+      "weights": {
+        "price_to_embedded_value": 1.0
+      },
+      "min_factor_count": 1,
+      "value_trap_guard": "No guard approved. This is a value model candidate, not an accepted strategy."
+    }
+  },
+  "schedule": {
+    "signal_frequency": "quarterly",
+    "rebalance_frequency": "quarterly",
+    "rebalance_rule": "first_tradable_day_of_quarter_for_research_validation"
+  },
+  "portfolio": {
+    "selection_count": 3,
+    "weighting": "equal_weight_research_candidate",
+    "max_position_weight": 0.34,
+    "cash_policy": "hold_residual_cash_when_fewer_than_three_names_pass_filters"
+  },
+  "risk": {
+    "defensive_asset": "cash",
+    "defensive_rule": {
+      "enabled": false,
+      "reason": "No insurance state timing rule has passed validation."
+    },
+    "individual_stop_loss_take_profit": {
+      "enabled": false,
+      "reason": "Research validation excludes trading exits and return tuning."
+    }
+  },
+  "validation": {
+    "method": "formal_research_pit_validation",
+    "train_years": 5,
+    "test_years": 2,
+    "review_years": 1,
+    "required_tests": [
+      "coverage_gate",
+      "notice_date_leakage_audit",
+      "single_factor_ic_rankic",
+      "baseline_comparison",
+      "rolling_validation",
+      "ablation",
+      "robustness",
+      "weak_year_analysis"
+    ],
+    "baselines": [
+      {
+        "name": "equal_weight_covered_insurance",
+        "mode": "equal_all"
+      },
+      {
+        "name": "low_pev_top3",
+        "mode": "single_factor",
+        "factor": "price_to_embedded_value",
+        "direction": "lower_is_better",
+        "selection_count": 3
+      }
+    ],
+    "common_sample_fields": [
+      "price_to_embedded_value"
+    ],
+    "common_sample_interactions": [
+      {
+        "name": "common_low_pev_only",
+        "factors": [
+          "price_to_embedded_value"
+        ]
+      }
+    ],
+    "robustness": {
+      "selection_counts": [
+        2,
+        3,
+        4
+      ],
+      "weight_scale_factors": [
+        "price_to_embedded_value"
+      ],
+      "weight_scales": [
+        1.0
+      ]
+    },
+    "weak_years": [
+      "2021",
+      "2022",
+      "2026"
+    ],
+    "acceptance_rule": "Formal candidate may be considered only if PIT leakage passes, P/EV IC is positive, rolling validation is mostly stable, robustness is not parameter-fragile, and weak years are explainable."
+  },
+  "execution": {
+    "status": "not_started",
+    "next_gate": "formal_research_validation",
+    "commission_bps": 3,
+    "slippage_bps": 5,
+    "suspension_policy": "skip_untradeable",
+    "limit_policy": "skip_limit_blocked"
+  },
+  "outputs": {
+    "save_holdings": true,
+    "save_rebalance_signals": true,
+    "report": "markdown",
+    "required_reports": [
+      "formal_validation_packet",
+      "pm_candidate_decision"
+    ]
+  }
+}

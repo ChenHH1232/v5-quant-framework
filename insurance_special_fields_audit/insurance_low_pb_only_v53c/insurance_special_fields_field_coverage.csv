@@ -1,0 +1,9 @@
+field,row_count,pit_usable_rows,code_count,pit_usable_code_count,pit_usable_ratio,is_core_v53d_field,status
+combined_ratio,1,0,1,0,0.0,false,blocked
+comprehensive_solvency_ratio,1,0,1,0,0.0,true,blocked
+core_solvency_ratio,1,0,1,0,0.0,true,blocked
+embedded_value,1,0,1,0,0.0,true,blocked
+net_investment_yield,1,0,1,0,0.0,true,blocked
+new_business_value,1,0,1,0,0.0,true,blocked
+surrender_rate,1,0,1,0,0.0,false,blocked
+total_investment_yield,1,0,1,0,0.0,true,blocked

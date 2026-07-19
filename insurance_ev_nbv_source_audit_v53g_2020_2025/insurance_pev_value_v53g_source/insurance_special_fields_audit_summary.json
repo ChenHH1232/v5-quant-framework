@@ -1,0 +1,24 @@
+{
+  "strategy_id": "insurance_pev_value_v53g_source",
+  "status": "insurance_special_fields_source_repair_passed",
+  "source_csv": "knowledge\\research_agent\\references\\insurance_ev_nbv_reviewed_2020_2025_core5.csv",
+  "row_count": 60,
+  "pit_usable_rows": 60,
+  "field_count": 2,
+  "usable_core_fields": [
+    "embedded_value",
+    "new_business_value"
+  ],
+  "active_core_fields": [
+    "embedded_value",
+    "new_business_value"
+  ],
+  "missing_core_fields": [],
+  "coverage_blocked_core_fields": [],
+  "min_core_code_count": 5,
+  "missing_columns": [],
+  "pit_blocked_rows": 0,
+  "blocker_count": 0,
+  "created_at_utc": "2026-07-17T07:51:18+00:00",
+  "next_gate": "v53d_research_hypothesis_design"
+}

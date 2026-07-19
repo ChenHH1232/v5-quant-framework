@@ -1,0 +1,184 @@
+{
+  "meta": {
+    "strategy_id": "insurance_pev_nbv_v53f_diagnostic",
+    "name": "Insurance P/EV + NBV Diagnostic V5.3f",
+    "objective": "Diagnostic-only test after partial EV/NBV PIT repair. This is not a formal strategy candidate because EV/NBV history currently covers only 2025-2026.",
+    "status": "diagnostic_only_blocked_by_insufficient_pit_history"
+  },
+  "universe": {
+    "name": "A-share core listed insurance operating companies and groups",
+    "construction": "pm_reviewed_core_insurance_universe_v53_test1",
+    "point_in_time": true,
+    "minimum_rebalance_coverage_ratio": 0.8,
+    "exclude": [
+      "banks",
+      "brokers",
+      "asset_managers",
+      "financial_holding_contamination",
+      "st_or_delisted_special_cases"
+    ]
+  },
+  "data": {
+    "vendor": "JoinQuant/DataJQ PIT valuation fields plus reviewed annual-report EV/NBV repair",
+    "price_frequency": "quarterly_signal_panel",
+    "financial_as_of_policy": "original_announcement_visible_date",
+    "ev_nbv_policy": {
+      "status": "partial_repair_only",
+      "covered_years": [
+        "2025",
+        "2026"
+      ],
+      "formal_validation_allowed": false,
+      "reason": "P/EV coverage does not span enough years for rolling validation."
+    }
+  },
+  "signals": {
+    "factors": [
+      {
+        "name": "price_to_embedded_value",
+        "source": "derived_market_cap_div_latest_visible_embedded_value",
+        "role": "insurance_specific_value",
+        "direction": "lower_is_better",
+        "definition": "Market cap divided by latest PIT-visible embedded value. Market cap uses CNY 100m unit and EV uses CNY million.",
+        "as_of": "trade_date_market_cap_and_latest_visible_ev",
+        "disclosure_lag_days": 0,
+        "missing_policy": "drop_security",
+        "normalize": "rank_within_rebalance_date"
+      },
+      {
+        "name": "new_business_value_yoy",
+        "source": "reviewed_annual_report_ev_nbv_repair",
+        "role": "franchise_growth",
+        "direction": "higher_is_better",
+        "definition": "Year-over-year growth in latest visible NBV when prior reviewed PIT value exists.",
+        "as_of": "latest_visible_report_date",
+        "disclosure_lag_days": 0,
+        "missing_policy": "diagnostic_only",
+        "normalize": "rank_within_rebalance_date"
+      }
+    ],
+    "scoring": {
+      "method": "weighted_composite",
+      "normalization_scope": "rebalance_cross_section",
+      "weights": {
+        "price_to_embedded_value": 0.7,
+        "new_business_value_yoy": 0.3
+      },
+      "min_factor_count": 1,
+      "value_trap_guard": "No guard approved. This diagnostic does not authorize engineering handoff."
+    }
+  },
+  "schedule": {
+    "signal_frequency": "quarterly",
+    "rebalance_frequency": "quarterly",
+    "rebalance_rule": "first_tradable_day_of_quarter_for_research_validation"
+  },
+  "portfolio": {
+    "selection_count": 3,
+    "weighting": "equal_weight_research_candidate",
+    "max_position_weight": 0.34,
+    "cash_policy": "hold_residual_cash_when_fewer_than_three_names_pass_filters"
+  },
+  "risk": {
+    "defensive_asset": "cash",
+    "defensive_rule": {
+      "enabled": false,
+      "reason": "Diagnostic only."
+    },
+    "individual_stop_loss_take_profit": {
+      "enabled": false,
+      "reason": "Diagnostic only."
+    }
+  },
+  "validation": {
+    "method": "diagnostic_only",
+    "train_years": 5,
+    "test_years": 2,
+    "review_years": 1,
+    "required_tests": [
+      "coverage_gate",
+      "single_factor_ic_rankic",
+      "baseline_comparison",
+      "weak_year_note"
+    ],
+    "baselines": [
+      {
+        "name": "equal_weight_covered_insurance",
+        "mode": "equal_all"
+      },
+      {
+        "name": "low_pev_top3",
+        "mode": "single_factor",
+        "factor": "price_to_embedded_value",
+        "direction": "lower_is_better",
+        "selection_count": 3
+      },
+      {
+        "name": "high_nbv_growth_top3",
+        "mode": "single_factor",
+        "factor": "new_business_value_yoy",
+        "direction": "higher_is_better",
+        "selection_count": 3
+      },
+      {
+        "name": "pev_nbv_diagnostic_composite",
+        "mode": "composite",
+        "selection_count": 3
+      }
+    ],
+    "common_sample_fields": [
+      "price_to_embedded_value"
+    ],
+    "common_sample_interactions": [
+      {
+        "name": "common_low_pev_only",
+        "factors": [
+          "price_to_embedded_value"
+        ]
+      },
+      {
+        "name": "common_pev_plus_nbv_growth_if_visible",
+        "factors": [
+          "price_to_embedded_value",
+          "new_business_value_yoy"
+        ]
+      }
+    ],
+    "robustness": {
+      "selection_counts": [
+        2,
+        3,
+        4
+      ],
+      "weight_scale_factors": [
+        "price_to_embedded_value"
+      ],
+      "weight_scales": [
+        1.0
+      ]
+    },
+    "weak_years": [
+      "2021",
+      "2022",
+      "2026"
+    ],
+    "acceptance_rule": "No acceptance allowed until multi-year PIT EV/NBV coverage passes."
+  },
+  "execution": {
+    "status": "blocked",
+    "next_gate": "multi_year_ev_nbv_pit_repair",
+    "commission_bps": 3,
+    "slippage_bps": 5,
+    "suspension_policy": "skip_untradeable",
+    "limit_policy": "skip_limit_blocked"
+  },
+  "outputs": {
+    "save_holdings": true,
+    "save_rebalance_signals": true,
+    "report": "markdown",
+    "required_reports": [
+      "diagnostic_validation_packet",
+      "pm_data_gate_decision"
+    ]
+  }
+}

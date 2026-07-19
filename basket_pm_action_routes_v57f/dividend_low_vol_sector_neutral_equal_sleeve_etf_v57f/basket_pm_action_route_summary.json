@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "strategy_id": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f",
+  "experiment_layer": "pm_decision_gate",
+  "as_of_date": "2026-07-20",
+  "dashboard_summary": "basket_governance_dashboards_v57f\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\basket_governance_dashboard_summary.json",
+  "dashboard_status": "frozen_candidate_waiting_for_future_paper_window_platform_deferred",
+  "route_status": "no_action_until_external_event",
+  "pm_decision": "hold_frozen_candidate",
+  "should_continue_agent_loop": false,
+  "user_decision_required": false,
+  "user_decision_reason": "",
+  "next_owner": "Project Manager Agent",
+  "allowed_next_action": "wait_for_future_refresh_window_or_user_supplied_platform_exports",
+  "next_trigger": "2026-10-08 refresh window or JoinQuant exports supplied by user",
+  "blocked_actions": [
+    "accepted_strategy",
+    "live_trading_approved",
+    "return_tuning",
+    "platform_replication_passed_without_exports",
+    "late_recorded_clean_paper_signal"
+  ],
+  "source_statuses": {
+    "pm_gate": "formal_candidate_pending_platform_exports",
+    "platform_export_intake": "platform_test_deferred_by_user_waiting_for_exports",
+    "forward_paper_gate": "pending_clean_future_rebalance",
+    "paper_input_preflight": "pending_future_data_window",
+    "paper_refresh_queue": "queued_for_future_refresh_window",
+    "paper_refresh_status": "waiting_for_future_refresh_window"
+  },
+  "key_dates": {
+    "next_rebalance_date": "2026-10-08",
+    "last_recorded_signal_date": "2026-07-01",
+    "dashboard_as_of_date": "2026-07-20"
+  },
+  "checks": [
+    {
+      "check": "pm_gate",
+      "severity": "pass",
+      "detail": "PM gate status is formal_candidate_pending_platform_exports."
+    },
+    {
+      "check": "platform_export_intake",
+      "severity": "pass",
+      "detail": "Platform test is explicitly deferred by user."
+    },
+    {
+      "check": "forward_paper_gate",
+      "severity": "pass",
+      "detail": "Next clean rebalance is 2026-10-08."
+    },
+    {
+      "check": "paper_input_preflight",
+      "severity": "pass",
+      "detail": "Paper input preflight is waiting for the future data window."
+    },
+    {
+      "check": "paper_refresh_queue",
+      "severity": "pass",
+      "detail": "Refresh queue has 15 tasks queued."
+    },
+    {
+      "check": "paper_refresh_status",
+      "severity": "pass",
+      "detail": "Refresh status is waiting for future window with no blockers."
+    }
+  ],
+  "pm_rule": "The PM router may only route existing evidence; it must not refresh data, run JoinQuant, tune parameters, or generate a signal.",
+  "created_at_utc": "2026-07-19T16:25:30+00:00"
+}

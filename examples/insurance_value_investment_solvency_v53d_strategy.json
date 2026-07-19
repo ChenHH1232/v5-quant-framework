@@ -1,0 +1,261 @@
+{
+  "meta": {
+    "strategy_id": "insurance_value_investment_solvency_v53d",
+    "name": "Insurance Value Investment Solvency V5.3d",
+    "objective": "Test whether low PB remains useful after adding insurance-specific investment-quality and solvency evidence. EV/NBV are reviewed data enhancements but are not yet used in the rolling core model because historical PIT coverage is incomplete.",
+    "status": "research_hypothesis_candidate_v53d"
+  },
+  "universe": {
+    "name": "A-share core listed insurance operating companies and groups",
+    "construction": "pm_reviewed_core_insurance_universe_v53_test1",
+    "point_in_time": true,
+    "minimum_rebalance_coverage_ratio": 0.8,
+    "exclude": [
+      "banks",
+      "brokers",
+      "asset_managers",
+      "financial_holding_contamination",
+      "st_or_delisted_special_cases"
+    ]
+  },
+  "data": {
+    "vendor": "JoinQuant/DataJQ PIT valuation fields plus reviewed insurance-specific fields",
+    "price_frequency": "quarterly_signal_panel",
+    "financial_as_of_policy": "announcement_date",
+    "price_adjustment": {
+      "research_panel": "pre_adjusted_total_return",
+      "status": "research_pit_validation_only"
+    },
+    "insurance_special_fields_policy": {
+      "source_repair_status": "insurance_special_fields_source_repair_passed",
+      "core_fields": [
+        "embedded_value",
+        "new_business_value",
+        "core_solvency_ratio",
+        "comprehensive_solvency_ratio",
+        "total_investment_yield"
+      ],
+      "rolling_model_fields": [
+        "low_price_to_book",
+        "total_investment_rate_of_return",
+        "solvency_adequacy_ratio"
+      ],
+      "enhancement_only_fields": [
+        "embedded_value",
+        "new_business_value",
+        "net_investment_yield"
+      ],
+      "reason": "EV/NBV have reviewed 2025 coverage but not enough historical PIT observations for rolling validation. Net investment yield is optional because annual disclosure coverage is only three of five core insurers."
+    },
+    "window": {
+      "research_start": "2016-01-01",
+      "research_end": "2026-05-31"
+    }
+  },
+  "signals": {
+    "factors": [
+      {
+        "name": "low_price_to_book",
+        "source": "jqdatasdk.valuation",
+        "role": "balance_sheet_value",
+        "direction": "lower_is_better",
+        "definition": "PB ratio. Lower PB is preferred only when not contradicted by investment quality and solvency evidence.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security",
+        "normalize": "rank_within_rebalance_date"
+      },
+      {
+        "name": "total_investment_rate_of_return",
+        "source": "insurance_indicator_or_reviewed_annual_report",
+        "role": "investment_quality",
+        "direction": "higher_is_better",
+        "definition": "Total investment return rate. Used as the core investment-quality field because it has better reviewed PIT coverage than annual net investment yield.",
+        "as_of": "report_publish_date",
+        "disclosure_lag_days": 0,
+        "missing_policy": "drop_security",
+        "normalize": "rank_within_rebalance_date"
+      },
+      {
+        "name": "solvency_adequacy_ratio",
+        "source": "insurance_indicator_or_solvency_report",
+        "role": "balance_sheet_safety",
+        "direction": "higher_is_better",
+        "definition": "Solvency adequacy ratio. Higher solvency supports dividend safety and reduces low-PB value-trap risk.",
+        "as_of": "report_publish_date",
+        "disclosure_lag_days": 0,
+        "missing_policy": "drop_security",
+        "normalize": "rank_within_rebalance_date"
+      }
+    ],
+    "scoring": {
+      "method": "weighted_composite",
+      "normalization_scope": "rebalance_cross_section",
+      "weights": {
+        "low_price_to_book": 0.5,
+        "total_investment_rate_of_return": 0.25,
+        "solvency_adequacy_ratio": 0.25
+      },
+      "min_factor_count": 3,
+      "value_trap_guard": "No hard guard. Solvency and investment quality enter the score instead of being used as tuned defensive filters."
+    }
+  },
+  "schedule": {
+    "signal_frequency": "quarterly",
+    "rebalance_frequency": "quarterly",
+    "rebalance_rule": "first_tradable_day_of_quarter_for_research_validation"
+  },
+  "portfolio": {
+    "selection_count": 3,
+    "weighting": "equal_weight_research_candidate",
+    "max_position_weight": 0.34,
+    "cash_policy": "hold_residual_cash_when_fewer_than_three_names_pass_filters"
+  },
+  "risk": {
+    "defensive_asset": "cash",
+    "defensive_rule": {
+      "enabled": false,
+      "reason": "V5.3d validates insurance-specific factor evidence, not market timing."
+    },
+    "individual_stop_loss_take_profit": {
+      "enabled": false,
+      "reason": "Fixed exits are not part of the research hypothesis."
+    }
+  },
+  "validation": {
+    "method": "rolling",
+    "train_years": 5,
+    "test_years": 2,
+    "review_years": 1,
+    "required_tests": [
+      "pit_leakage_audit",
+      "baseline_comparison",
+      "single_factor_ic_rankic",
+      "rolling_validation",
+      "ablation",
+      "selection_count_2_3_4_5_robustness",
+      "failure_year_analysis_2021_2022_2026",
+      "comparison_against_v53c_low_pb_only"
+    ],
+    "baselines": [
+      {
+        "name": "equal_weight_core_insurance",
+        "mode": "equal_all"
+      },
+      {
+        "name": "low_pb_core_insurance_top3",
+        "mode": "single_factor",
+        "factor": "low_price_to_book",
+        "direction": "lower_is_better",
+        "selection_count": 3
+      },
+      {
+        "name": "high_total_investment_return_top3",
+        "mode": "single_factor",
+        "factor": "total_investment_rate_of_return",
+        "direction": "higher_is_better",
+        "selection_count": 3
+      },
+      {
+        "name": "high_solvency_top3",
+        "mode": "single_factor",
+        "factor": "solvency_adequacy_ratio",
+        "direction": "higher_is_better",
+        "selection_count": 3
+      },
+      {
+        "name": "v53d_composite",
+        "mode": "composite",
+        "selection_count": 3
+      }
+    ],
+    "common_sample_fields": [
+      "low_price_to_book",
+      "total_investment_rate_of_return",
+      "solvency_adequacy_ratio"
+    ],
+    "common_sample_interactions": [
+      {
+        "name": "common_low_pb_only",
+        "factors": [
+          "low_price_to_book"
+        ]
+      },
+      {
+        "name": "common_investment_quality_only",
+        "factors": [
+          "total_investment_rate_of_return"
+        ]
+      },
+      {
+        "name": "common_solvency_only",
+        "factors": [
+          "solvency_adequacy_ratio"
+        ]
+      },
+      {
+        "name": "common_low_pb_investment",
+        "factors": [
+          "low_price_to_book",
+          "total_investment_rate_of_return"
+        ]
+      },
+      {
+        "name": "common_low_pb_solvency",
+        "factors": [
+          "low_price_to_book",
+          "solvency_adequacy_ratio"
+        ]
+      },
+      {
+        "name": "common_v53d_all",
+        "factors": [
+          "low_price_to_book",
+          "total_investment_rate_of_return",
+          "solvency_adequacy_ratio"
+        ]
+      }
+    ],
+    "robustness": {
+      "selection_counts": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "weight_scale_factors": [
+        "low_price_to_book",
+        "total_investment_rate_of_return",
+        "solvency_adequacy_ratio"
+      ],
+      "weight_scales": [
+        0.8,
+        1.0,
+        1.2
+      ]
+    },
+    "weak_years": [
+      "2021",
+      "2022",
+      "2026"
+    ],
+    "acceptance_rule": "V5.3d may proceed only if it beats low-PB-only on common-sample validation and remains explainable under rolling, ablation and weak-year tests."
+  },
+  "execution": {
+    "status": "blocked_until_research_and_quant_validation_pass",
+    "next_gate": "research_pit_validation",
+    "commission_bps": 3,
+    "slippage_bps": 5,
+    "suspension_policy": "skip_untradeable",
+    "limit_policy": "skip_limit_blocked"
+  },
+  "outputs": {
+    "save_holdings": true,
+    "save_rebalance_signals": true,
+    "report": "markdown",
+    "required_reports": [
+      "formal_validation_packet",
+      "pm_formal_candidate_decision"
+    ]
+  }
+}

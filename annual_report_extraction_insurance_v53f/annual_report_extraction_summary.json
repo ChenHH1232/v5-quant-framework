@@ -1,0 +1,14 @@
+{
+  "status": "annual_report_candidates_extracted",
+  "manifest_csv": "research_reports\\insurance_original_annual_reports_2021_2024\\insurance_annual_report_manifest_v53f.csv",
+  "report_count": 11,
+  "candidate_count": 1515,
+  "shortlist_count": 91,
+  "error_count": 0,
+  "fields": [
+    "embedded_value",
+    "new_business_value"
+  ],
+  "review_policy": "candidates_are_unreviewed_and_must_not_enter_pit_panel_until_original_announcement_checked",
+  "created_at_utc": "2026-07-17T07:28:12+00:00"
+}

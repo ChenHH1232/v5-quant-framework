@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "project": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay",
+  "experiment_layer": "research_pit_validation",
+  "purpose": "V5.8 diagnostic overlay: add telecom operators as a small-sample observation sleeve to the frozen V5.7f basket family without changing the V5.7f main candidate.",
+  "sectors": [
+    {
+      "sector_id": "bank",
+      "strategy_id": "bank_high_dividend_sustainability_v3",
+      "panel_csv": "数据库/processed/low_volatility_factors_v57/bank_v3_repaired/panel_with_low_vol.csv",
+      "price_csv": "数据库/processed/bank_v3_joinquant_real_daily_prices.csv",
+      "dividend_csv": "数据库/processed/bank_v3_joinquant_cash_dividends.csv",
+      "role": "financial_value_quality_sleeve"
+    },
+    {
+      "sector_id": "utilities_electricity",
+      "strategy_id": "utilities_demand_state_v51f",
+      "panel_csv": "数据库/processed/low_volatility_factors_v56/utilities_v51f/panel_with_low_vol.csv",
+      "price_csv": "数据库/processed/utilities_joinquant_real_daily_prices.csv",
+      "dividend_csv": "数据库/processed/utilities_joinquant_cash_dividends.csv",
+      "role": "nonfinancial_cashflow_core"
+    },
+    {
+      "sector_id": "highway_infrastructure",
+      "strategy_id": "highway_dividend_reviewed_operating_v54h_repaired_2021",
+      "panel_csv": "数据库/processed/low_volatility_factors_v56/highway_v54h/panel_with_low_vol.csv",
+      "price_csv": "数据库/processed/highway_v54h_joinquant_real_daily_prices.csv",
+      "dividend_csv": "数据库/processed/highway_v54h_joinquant_cash_dividends.csv",
+      "role": "nonfinancial_cashflow_core"
+    },
+    {
+      "sector_id": "port_rail_infrastructure",
+      "strategy_id": "port_rail_cashflow_value_operating_diagnostic_v55j_reviewed_business_sources",
+      "panel_csv": "数据库/processed/low_volatility_factors_v56/port_rail_v55j/panel_with_low_vol.csv",
+      "price_csv": "数据库/processed/port_rail_v55c_joinquant_real_daily_prices.csv",
+      "dividend_csv": "数据库/processed/port_rail_v55c_joinquant_cash_dividends.csv",
+      "role": "nonfinancial_cashflow_candidate_pending_platform_replication"
+    },
+    {
+      "sector_id": "telecom_operators",
+      "strategy_id": "telecom_operators_cashflow_dividend_v55a",
+      "panel_csv": "数据库/processed/low_volatility_factors_v58/telecom_operators/telecom_operators_cashflow_dividend_v55a/panel_with_low_vol.csv",
+      "price_csv": "数据库/processed/telecom_joinquant_joinquant_real_daily_prices.csv",
+      "dividend_csv": "数据库/processed/telecom_joinquant_joinquant_cash_dividends.csv",
+      "role": "small_sample_observation_sleeve"
+    }
+  ],
+  "signals": {
+    "factors": [
+      {
+        "name": "operating_cash_flow_yield",
+        "direction": "higher_is_better"
+      },
+      {
+        "name": "dividend_yield_decimal",
+        "direction": "higher_is_better"
+      },
+      {
+        "name": "volatility_120d",
+        "direction": "lower_is_better"
+      },
+      {
+        "name": "max_drawdown_120d",
+        "direction": "lower_is_better"
+      },
+      {
+        "name": "capex_burden",
+        "direction": "lower_is_better"
+      },
+      {
+        "name": "low_price_to_book",
+        "direction": "lower_is_better"
+      },
+      {
+        "name": "non_performing_loan_ratio",
+        "direction": "lower_is_better"
+      },
+      {
+        "name": "provision_coverage_ratio",
+        "direction": "higher_is_better"
+      },
+      {
+        "name": "core_tier_1_capital_adequacy_ratio",
+        "direction": "higher_is_better"
+      }
+    ],
+    "scoring": {
+      "method": "weighted_composite",
+      "normalization_scope": "sector_adaptive",
+      "min_factor_count": 3,
+      "weights": {
+        "operating_cash_flow_yield": 0.38,
+        "volatility_120d": 0.23,
+        "max_drawdown_120d": 0.21,
+        "capex_burden": 0.10,
+        "low_price_to_book": 0.08
+      },
+      "sector_scoring_overrides": {
+        "_default": {
+          "min_factor_count": 3,
+          "factors": [
+            {
+              "name": "operating_cash_flow_yield",
+              "direction": "higher_is_better"
+            },
+            {
+              "name": "volatility_120d",
+              "direction": "lower_is_better"
+            },
+            {
+              "name": "max_drawdown_120d",
+              "direction": "lower_is_better"
+            },
+            {
+              "name": "capex_burden",
+              "direction": "lower_is_better"
+            },
+            {
+              "name": "low_price_to_book",
+              "direction": "lower_is_better"
+            }
+          ],
+          "weights": {
+            "operating_cash_flow_yield": 0.38,
+            "volatility_120d": 0.23,
+            "max_drawdown_120d": 0.21,
+            "capex_burden": 0.10,
+            "low_price_to_book": 0.08
+          }
+        },
+        "bank": {
+          "min_factor_count": 4,
+          "factors": [
+            {
+              "name": "low_price_to_book",
+              "direction": "lower_is_better"
+            },
+            {
+              "name": "volatility_120d",
+              "direction": "lower_is_better"
+            },
+            {
+              "name": "max_drawdown_120d",
+              "direction": "lower_is_better"
+            },
+            {
+              "name": "non_performing_loan_ratio",
+              "direction": "lower_is_better"
+            },
+            {
+              "name": "provision_coverage_ratio",
+              "direction": "higher_is_better"
+            },
+            {
+              "name": "core_tier_1_capital_adequacy_ratio",
+              "direction": "higher_is_better"
+            }
+          ],
+          "weights": {
+            "low_price_to_book": 0.24,
+            "volatility_120d": 0.20,
+            "max_drawdown_120d": 0.18,
+            "non_performing_loan_ratio": 0.13,
+            "provision_coverage_ratio": 0.12,
+            "core_tier_1_capital_adequacy_ratio": 0.13
+          }
+        }
+      }
+    }
+  },
+  "portfolio": {
+    "start_date": "2021-05-01",
+    "end_date": "2026-05-31",
+    "rebalance_calendar_policy": "union",
+    "required_fields": [
+      "low_vol_score",
+      "volatility_120d",
+      "dividend_yield"
+    ],
+    "target_count": 31,
+    "sector_weight_cap": 0.25,
+    "single_stock_weight_cap": 0.05,
+    "rebalance_frequency": "quarterly",
+    "weight_policy": "equal_weight_after_sector_and_single_stock_caps"
+  },
+  "governance": {
+    "status": "diagnostic_overlay_not_frozen_mainline",
+    "not_status": [
+      "accepted_strategy",
+      "platform_replication_passed",
+      "live_trading_approved",
+      "v57f_replacement"
+    ],
+    "telecom_policy": "small_sample_observation_sleeve_only",
+    "known_gaps": [
+      "Telecom has only three A-share core operators.",
+      "Telecom specialist operating data is not joined.",
+      "This overlay must be interpreted at basket contribution level only.",
+      "No JoinQuant strategy code should be generated from this diagnostic config."
+    ]
+  }
+}

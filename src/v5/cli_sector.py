@@ -92,6 +92,7 @@ from v5.oil_gas_source_gate_runner import (
     DEFAULT_PANEL as DEFAULT_OIL_GAS_SOURCE_GATE_PANEL,
     audit_oil_gas_source_gate,
     import_oil_gas_nbs_price_release,
+    import_oil_gas_tushare_futures_state,
     merge_oil_gas_state_sources,
     write_oil_gas_official_source_register,
     write_oil_gas_official_state_import_template,
@@ -219,6 +220,7 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     oil_gas_conditioned_panel_parser.add_argument("--out-dir", type=Path, default=DEFAULT_OIL_GAS_STATE_CONDITIONED_OUT)
     oil_gas_conditioned_panel_parser.add_argument("--strategy-id", default="oil_gas_state_conditioned_ocf_v58d")
     oil_gas_conditioned_panel_parser.add_argument("--min-history", type=int, default=4)
+    oil_gas_conditioned_panel_parser.add_argument("--state-source-csv", type=Path)
     oil_gas_conditioned_panel_parser.set_defaults(handler=_handle_build_oil_gas_state_conditioned_panel)
 
     oil_gas_source_register_parser = subparsers.add_parser("oil-gas-source-register")
@@ -248,6 +250,14 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     oil_gas_nbs_import_parser.add_argument("--out-dir", type=Path, default=DEFAULT_OIL_GAS_SOURCE_GATE_OUT)
     oil_gas_nbs_import_parser.add_argument("--timeout-seconds", type=float, default=20.0)
     oil_gas_nbs_import_parser.set_defaults(handler=_handle_import_oil_gas_nbs_price_release)
+
+    oil_gas_tushare_import_parser = subparsers.add_parser("import-oil-gas-tushare-futures-state")
+    oil_gas_tushare_import_parser.add_argument("--out-dir", type=Path, default=DEFAULT_OIL_GAS_SOURCE_GATE_OUT)
+    oil_gas_tushare_import_parser.add_argument("--panel", type=Path, default=DEFAULT_OIL_GAS_SOURCE_GATE_PANEL)
+    oil_gas_tushare_import_parser.add_argument("--token-env", default="TUSHARE_TOKEN")
+    oil_gas_tushare_import_parser.add_argument("--credential-file", type=Path)
+    oil_gas_tushare_import_parser.add_argument("--crude-barrel-per-ton", type=float, default=7.33)
+    oil_gas_tushare_import_parser.set_defaults(handler=_handle_import_oil_gas_tushare_futures_state)
 
     screen_parser = subparsers.add_parser("screen-dividend-low-vol-fcf-sectors")
     screen_parser.add_argument("--config", type=Path, default=DEFAULT_V56_SCREEN_CONFIG)
@@ -459,7 +469,7 @@ def _handle_validate_oil_gas_cycle_state(args: argparse.Namespace) -> int:
 
 
 def _handle_build_oil_gas_state_conditioned_panel(args: argparse.Namespace) -> int:
-    print(build_oil_gas_state_conditioned_panel(args.panel, args.out_dir, args.strategy_id, args.min_history))
+    print(build_oil_gas_state_conditioned_panel(args.panel, args.out_dir, args.strategy_id, args.min_history, args.state_source_csv))
     return 0
 
 
@@ -486,6 +496,26 @@ def _handle_merge_oil_gas_state_sources(args: argparse.Namespace) -> int:
 def _handle_import_oil_gas_nbs_price_release(args: argparse.Namespace) -> int:
     print(import_oil_gas_nbs_price_release(args.url, args.out_dir, args.timeout_seconds))
     return 0
+
+
+def _handle_import_oil_gas_tushare_futures_state(args: argparse.Namespace) -> int:
+    import os
+
+    token = os.environ.get(args.token_env, "")
+    if not token and args.credential_file:
+        token = _read_tushare_token(args.credential_file)
+    print(import_oil_gas_tushare_futures_state(token, args.out_dir, args.panel, args.crude_barrel_per_ton))
+    return 0
+
+
+def _read_tushare_token(path: Path) -> str:
+    import re
+
+    text = path.read_text(encoding="utf-8", errors="ignore")
+    match = re.search(r"Tushare\s*Token\s*[:：]\s*([^\s]+)", text, flags=re.IGNORECASE)
+    if not match:
+        raise ValueError(f"Tushare token not found in credential file: {path}")
+    return match.group(1).strip()
 
 
 def _handle_screen_dividend_low_vol_fcf_sectors(args: argparse.Namespace) -> int:

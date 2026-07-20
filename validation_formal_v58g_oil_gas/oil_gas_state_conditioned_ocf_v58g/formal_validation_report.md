@@ -1,0 +1,67 @@
+# Formal Validation Report: oil_gas_state_conditioned_ocf_v58g
+
+- Status: `formal_validation_completed_not_acceptance`
+
+## notice_date_leakage_audit
+
+- `pit_factor_visible_date_audit`: {'check': 'pit_factor_visible_date_audit', 'status': 'pass', 'checked_rows': 351, 'missing_notice_date_rows': 0, 'future_notice_violations': 0, 'detail': 'PIT-sensitive factor fields used in formal validation must have visible_date <= trade_date.'}
+
+## factor_ic_rankic
+
+- `None`: {'factor': 'state_conditioned_ocf_score', 'direction': 'higher_is_better', 'observations': 239, 'dates': 12, 'mean_ic': 0.19104734801948742, 'mean_rankic': 0.2152247820978471, 'positive_ic_ratio': 0.6666666666666666, 'top_minus_bottom_mean_return': 0.048259688915212304}
+- `None`: {'factor': 'cycle_defensive_low_vol_score', 'direction': 'higher_is_better', 'observations': 112, 'dates': 6, 'mean_ic': 0.07823995644709017, 'mean_rankic': 0.1710483316133471, 'positive_ic_ratio': 0.6666666666666666, 'top_minus_bottom_mean_return': 0.006054088974000005}
+- `None`: {'factor': 'cycle_low_pe_diagnostic_score', 'direction': 'lower_is_better', 'observations': 0, 'dates': 0, 'mean_ic': None, 'mean_rankic': None, 'positive_ic_ratio': None, 'top_minus_bottom_mean_return': None}
+- `None`: {'factor': 'operating_cash_flow_yield', 'direction': 'higher_is_better', 'observations': 351, 'dates': 18, 'mean_ic': 0.0919287280703299, 'mean_rankic': 0.11108949959569153, 'positive_ic_ratio': 0.5, 'top_minus_bottom_mean_return': 0.019150601425363758}
+- `None`: {'factor': 'low_vol_score', 'direction': 'higher_is_better', 'observations': 351, 'dates': 18, 'mean_ic': 0.055219235914786474, 'mean_rankic': 0.11905340817879516, 'positive_ic_ratio': 0.5, 'top_minus_bottom_mean_return': -0.005058768870813493}
+- `None`: {'factor': 'low_price_to_book', 'direction': 'lower_is_better', 'observations': 351, 'dates': 18, 'mean_ic': 0.07111067515721384, 'mean_rankic': 0.09940909909950156, 'positive_ic_ratio': 0.6111111111111112, 'top_minus_bottom_mean_return': -0.002878708260033065}
+- `None`: {'factor': 'dividend_yield', 'direction': 'higher_is_better', 'observations': 351, 'dates': 18, 'mean_ic': 0.05688019138675618, 'mean_rankic': 0.03139751393102313, 'positive_ic_ratio': 0.4444444444444444, 'top_minus_bottom_mean_return': -0.034916642717260575}
+
+## rolling_validation
+
+- `rolling_test_2024`: {'window': '2024', 'status': 'completed', 'case': 'rolling_test_2024', 'periods': 4, 'cum_return': 0.011687308945239172, 'mean_return': 0.006411159837656248, 'positive_ratio': 0.5, 'mean_selected_count': 8}
+- `rolling_test_2025`: {'window': '2025', 'status': 'completed', 'case': 'rolling_test_2025', 'periods': 4, 'cum_return': 0.453205208655183, 'mean_return': 0.09912719550512498, 'positive_ratio': 1.0, 'mean_selected_count': 8}
+- `rolling_test_2026`: {'window': '2026', 'status': 'completed', 'case': 'rolling_test_2026', 'periods': 2, 'cum_return': 0.06571631460484917, 'mean_return': 0.050387486125000006, 'positive_ratio': 0.5, 'mean_selected_count': 8}
+
+## baseline_tests
+
+- `equal_weight_oil_gas_pool`: {'case': 'equal_weight_oil_gas_pool', 'periods': 18, 'cum_return': 0.3926276454949531, 'mean_return': 0.02249739625931539, 'positive_ratio': 0.6111111111111112, 'mean_selected_count': 19.5}
+- `raw_high_ocf_yield_top8`: {'case': 'raw_high_ocf_yield_top8', 'periods': 18, 'cum_return': 0.8038155988578439, 'mean_return': 0.03783766747942361, 'positive_ratio': 0.7222222222222222, 'mean_selected_count': 8}
+- `raw_low_vol_top8`: {'case': 'raw_low_vol_top8', 'periods': 18, 'cum_return': 0.47414639099625466, 'mean_return': 0.024191318591805556, 'positive_ratio': 0.7222222222222222, 'mean_selected_count': 8}
+- `state_conditioned_ocf_top8`: {'case': 'state_conditioned_ocf_top8', 'periods': 18, 'cum_return': 1.270121296103325, 'mean_return': 0.04949186679995833, 'positive_ratio': 0.5555555555555556, 'mean_selected_count': 5.333333333333333}
+- `cycle_defensive_low_vol_top8`: {'case': 'cycle_defensive_low_vol_top8', 'periods': 18, 'cum_return': -0.026749316345953567, 'mean_return': -0.0005454579798124996, 'positive_ratio': 0.2222222222222222, 'mean_selected_count': 2.6666666666666665}
+- `state_conditioned_ocf_low_vol_composite_top8`: {'case': 'state_conditioned_ocf_low_vol_composite_top8', 'periods': 18, 'cum_return': 1.2093971034101703, 'mean_return': 0.04894640882014583, 'positive_ratio': 0.7777777777777778, 'mean_selected_count': 8}
+- `low_pe_diagnostic_top8`: {'case': 'low_pe_diagnostic_top8', 'periods': 18, 'cum_return': 0.0, 'mean_return': 0.0, 'positive_ratio': 0.0, 'mean_selected_count': 0}
+
+## ablation_tests
+
+- `composite_current`: {'case': 'composite_current', 'periods': 18, 'cum_return': 1.2093971034101703, 'mean_return': 0.04894640882014583, 'positive_ratio': 0.7777777777777778, 'mean_selected_count': 8}
+- `drop_state_conditioned_ocf_score`: {'case': 'drop_state_conditioned_ocf_score', 'periods': 18, 'cum_return': -0.026749316345953567, 'mean_return': -0.0005454579798124996, 'positive_ratio': 0.2222222222222222, 'mean_selected_count': 2.6666666666666665}
+- `drop_cycle_defensive_low_vol_score`: {'case': 'drop_cycle_defensive_low_vol_score', 'periods': 18, 'cum_return': 1.270121296103325, 'mean_return': 0.04949186679995833, 'positive_ratio': 0.5555555555555556, 'mean_selected_count': 5.333333333333333}
+- `drop_cycle_low_pe_diagnostic_score`: {'case': 'drop_cycle_low_pe_diagnostic_score', 'periods': 18, 'cum_return': 1.2093971034101703, 'mean_return': 0.04894640882014583, 'positive_ratio': 0.7777777777777778, 'mean_selected_count': 8}
+- `drop_operating_cash_flow_yield`: {'case': 'drop_operating_cash_flow_yield', 'periods': 18, 'cum_return': 1.2093971034101703, 'mean_return': 0.04894640882014583, 'positive_ratio': 0.7777777777777778, 'mean_selected_count': 8}
+- `drop_low_vol_score`: {'case': 'drop_low_vol_score', 'periods': 18, 'cum_return': 1.2093971034101703, 'mean_return': 0.04894640882014583, 'positive_ratio': 0.7777777777777778, 'mean_selected_count': 8}
+- `drop_low_price_to_book`: {'case': 'drop_low_price_to_book', 'periods': 18, 'cum_return': 1.2093971034101703, 'mean_return': 0.04894640882014583, 'positive_ratio': 0.7777777777777778, 'mean_selected_count': 8}
+- `drop_dividend_yield`: {'case': 'drop_dividend_yield', 'periods': 18, 'cum_return': 1.2093971034101703, 'mean_return': 0.04894640882014583, 'positive_ratio': 0.7777777777777778, 'mean_selected_count': 8}
+
+## robustness_tests
+
+- `selection_count_6`: {'case': 'selection_count_6', 'periods': 18, 'cum_return': 1.2919074626303648, 'mean_return': 0.05383005027476852, 'positive_ratio': 0.7777777777777778, 'mean_selected_count': 6}
+- `selection_count_8`: {'case': 'selection_count_8', 'periods': 18, 'cum_return': 1.2093971034101703, 'mean_return': 0.04894640882014583, 'positive_ratio': 0.7777777777777778, 'mean_selected_count': 8}
+- `selection_count_10`: {'case': 'selection_count_10', 'periods': 18, 'cum_return': 0.6836447337549112, 'mean_return': 0.032993669929938886, 'positive_ratio': 0.7222222222222222, 'mean_selected_count': 10}
+- `weight_scale_0.8`: {'case': 'weight_scale_0.8', 'periods': 18, 'cum_return': 1.2093971034101703, 'mean_return': 0.04894640882014583, 'positive_ratio': 0.7777777777777778, 'mean_selected_count': 8}
+- `weight_scale_1.0`: {'case': 'weight_scale_1.0', 'periods': 18, 'cum_return': 1.2093971034101703, 'mean_return': 0.04894640882014583, 'positive_ratio': 0.7777777777777778, 'mean_selected_count': 8}
+- `weight_scale_1.2`: {'case': 'weight_scale_1.2', 'periods': 18, 'cum_return': 1.2093971034101703, 'mean_return': 0.04894640882014583, 'positive_ratio': 0.7777777777777778, 'mean_selected_count': 8}
+
+## common_sample_interaction_tests
+
+- `common_state_conditioned_ocf_low_vol`: {'case': 'common_state_conditioned_ocf_low_vol', 'periods': 0, 'cum_return': None, 'mean_return': None, 'positive_ratio': None, 'mean_selected_count': None, 'common_sample_rows': 0, 'common_sample_dates': 0, 'common_sample_securities': 0, 'required_common_fields': 'state_conditioned_ocf_score;cycle_defensive_low_vol_score', 'tested_factors': 'state_conditioned_ocf_score;cycle_defensive_low_vol_score', 'status': 'insufficient_common_sample'}
+
+## failure_mode_analysis
+
+- `None`: {'year': '2022', 'periods': 4, 'selected_cum_return': 0.027151685052596797, 'selected_mean_return': 0.0068509223299062505, 'selected_positive_ratio': 0.75, 'all_universe_mean_return': -0.002561950634234522, 'low_pb_mean_return': -3.2104476562479993e-06, 'relative_to_all_universe_mean': 0.009412872964140773, 'relative_to_low_pb_mean': 0.0068541327775624985, 'selected_codes_by_date': '2022-01-04:600028.XSHG;000096.XSHE;002492.XSHE;601857.XSHG;600207.XSHG;603689.XSHG;603223.XSHG;000554.XSHE | 2022-04-01:600028.XSHG;603223.XSHG;603689.XSHG;002492.XSHE;000096.XSHE;601857.XSHG;600207.XSHG;600688.XSHG | 2022-07-01:600028.XSHG;601857.XSHG;600688.XSHG;000059.XSHE;000096.XSHE;002221.XSHE;000159.XSHE;603353.XSHG | 2022-10-10:600028.XSHG;600688.XSHG;601857.XSHG;603353.XSHG;000159.XSHE;000059.XSHE;002221.XSHE;002492.XSHE', 'factor_mean_notes': 'state_conditioned_ocf_score:selected_mean=None,all_mean=None ; cycle_defensive_low_vol_score:selected_mean=-0.27918002478125,all_mean=-0.3544679178486111 ; cycle_low_pe_diagnostic_score:selected_mean=None,all_mean=None ; operating_cash_flow_yield:selected_mean=0.0201225014613625,all_mean=0.0153643047381625 ; low_vol_score:selected_mean=-0.27918002478125,all_mean=-0.3544679178486111 ; low_price_to_book:selected_mean=1.767171875,all_mean=2.038695833333333 ; dividend_yield:selected_mean=2.64530625,all_mean=1.6582194444444445', 'interpretation': '2022: outperformed_all_universe,outperformed_low_pb'}
+- `None`: {'year': '2024', 'periods': 4, 'selected_cum_return': 0.011687308945239172, 'selected_mean_return': 0.006411159837656248, 'selected_positive_ratio': 0.5, 'all_universe_mean_return': -0.01386278854572055, 'low_pb_mean_return': 0.008860138099718752, 'relative_to_all_universe_mean': 0.020273948383376796, 'relative_to_low_pb_mean': -0.0024489782620625046, 'selected_codes_by_date': '2024-01-02:600028.XSHG;601857.XSHG;600777.XSHG;600938.XSHG;300839.XSHE;300483.XSHE;002221.XSHE;000968.XSHE | 2024-04-01:600777.XSHG;600028.XSHG;601857.XSHG;600688.XSHG;300483.XSHE;300839.XSHE;600938.XSHG;002221.XSHE | 2024-07-01:000554.XSHE;600777.XSHG;601857.XSHG;300483.XSHE;600256.XSHG;600938.XSHG;000159.XSHE;603393.XSHG | 2024-10-08:000059.XSHE;600777.XSHG;000703.XSHE;300839.XSHE;600028.XSHG;603353.XSHG;601857.XSHG;002221.XSHE', 'factor_mean_notes': 'state_conditioned_ocf_score:selected_mean=0.0654626388653125,all_mean=0.011495552738455 ; cycle_defensive_low_vol_score:selected_mean=None,all_mean=None ; cycle_low_pe_diagnostic_score:selected_mean=None,all_mean=None ; operating_cash_flow_yield:selected_mean=0.0654626388653125,all_mean=0.011495552738455 ; low_vol_score:selected_mean=-0.287295424090625,all_mean=-0.3100696965975 ; low_price_to_book:selected_mean=1.381703125,all_mean=1.6397375 ; dividend_yield:selected_mean=2.094025,all_mean=1.71970875', 'interpretation': '2024: outperformed_all_universe,underperformed_low_pb'}
+- `None`: {'year': '2026', 'periods': 2, 'selected_cum_return': 0.06571631460484917, 'selected_mean_return': 0.050387486125000006, 'selected_positive_ratio': 0.5, 'all_universe_mean_return': 0.049396695811750005, 'low_pb_mean_return': 0.035617784181375, 'relative_to_all_universe_mean': 0.0009907903132500007, 'relative_to_low_pb_mean': 0.014769701943625008, 'selected_codes_by_date': '2026-01-05:600028.XSHG;600688.XSHG;601857.XSHG;300483.XSHE;600777.XSHG;603619.XSHG;600256.XSHG;600938.XSHG | 2026-04-01:601857.XSHG;600938.XSHG;600777.XSHG;600028.XSHG;603393.XSHG;600256.XSHG;000059.XSHE;603223.XSHG', 'factor_mean_notes': 'state_conditioned_ocf_score:selected_mean=0.05764903152625,all_mean=0.02207725534955 ; cycle_defensive_low_vol_score:selected_mean=-0.27201653388749997,all_mean=-0.35586921063 ; cycle_low_pe_diagnostic_score:selected_mean=None,all_mean=None ; operating_cash_flow_yield:selected_mean=0.03578234472125,all_mean=0.01783887252805 ; low_vol_score:selected_mean=-0.24849934368124998,all_mean=-0.3070116035025 ; low_price_to_book:selected_mean=1.50045625,all_mean=2.656785 ; dividend_yield:selected_mean=3.14070625,all_mean=1.532945', 'interpretation': '2026: outperformed_all_universe,outperformed_low_pb'}
+
+## Governance
+
+Do not use 2021-2026 platform-confirmation results for tuning. Single-model acceptance requires rolling validation.

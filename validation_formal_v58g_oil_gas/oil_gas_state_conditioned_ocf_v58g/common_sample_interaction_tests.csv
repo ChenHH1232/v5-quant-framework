@@ -1,0 +1,2 @@
+case,periods,cum_return,mean_return,positive_ratio,mean_selected_count,common_sample_rows,common_sample_dates,common_sample_securities,required_common_fields,tested_factors,status
+common_state_conditioned_ocf_low_vol,0,,,,,0,0,0,state_conditioned_ocf_score;cycle_defensive_low_vol_score,state_conditioned_ocf_score;cycle_defensive_low_vol_score,insufficient_common_sample

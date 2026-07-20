@@ -6,7 +6,7 @@ import re
 from html.parser import HTMLParser
 from urllib.request import Request, urlopen
 from dataclasses import dataclass
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -310,6 +310,58 @@ def import_oil_gas_nbs_price_release_from_html(html: str, source_url: str, out_d
     return out_path
 
 
+def import_oil_gas_tushare_futures_state(
+    token: str,
+    out_dir: Path = DEFAULT_OUT_DIR,
+    panel_path: Path = DEFAULT_PANEL,
+    crude_barrel_per_ton: float = 7.33,
+) -> Path:
+    if not token:
+        raise ValueError("Tushare token is required")
+    try:
+        import tushare as ts  # type: ignore[import-not-found]
+    except ImportError as exc:
+        raise RuntimeError("tushare is required for licensed oil/gas futures state import") from exc
+
+    trade_dates = _trade_dates(panel_path)
+    if not trade_dates:
+        raise ValueError(f"panel has no trade_date rows: {panel_path}")
+    start = _yyyymmdd(_parse_iso_date(trade_dates[0]) - timedelta(days=45))
+    end = _yyyymmdd(_parse_iso_date(trade_dates[-1]) - timedelta(days=1))
+    ts.set_token(token)
+    pro = ts.pro_api()
+    source = _load_tushare_continuous_state(pro, start, end, trade_dates)
+    rows = _tushare_state_rows_for_trade_dates(source, trade_dates, crude_barrel_per_ton)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / "oil_gas_tushare_futures_state_v58g.csv"
+    write_csv_rows(out_path, STATE_FIELDS, rows)
+    audit = audit_oil_gas_source_gate(out_path, panel_path=panel_path, out_dir=out_dir)
+    write_json_file(
+        out_dir / "oil_gas_tushare_futures_state_v58g_manifest.json",
+        {
+            "dataset": "oil_gas_tushare_futures_state_v58g",
+            "source_name": "Tushare licensed futures mapping and daily prices",
+            "panel_path": str(panel_path),
+            "output": str(out_path),
+            "row_count": len(rows),
+            "trade_date_count": len(trade_dates),
+            "core_metric_counts": _count_by_metric(rows, CORE_V58D_STATE_METRICS),
+            "status": audit.status,
+            "core_ready": audit.core_ready,
+            "promotion_ready": audit.promotion_ready,
+            "crude_barrel_per_ton": crude_barrel_per_ton,
+            "pit_visible_date_rule": "Daily futures close is conservatively visible on the next calendar day. Rebalance-day observations are not used.",
+            "limitations": [
+                "This is licensed vendor data, not direct exchange export.",
+                "refining_spread_proxy_state uses low-sulfur fuel-oil futures minus SC crude converted by crude_barrel_per_ton; replace with reviewed refining margin when available.",
+                "The import is designed to open research validation, not Engineering handoff or JoinQuant code generation.",
+            ],
+            "created_at_utc": _now_utc(),
+        },
+    )
+    return out_path
+
+
 def audit_oil_gas_source_gate(
     state_csv: Path,
     panel_path: Path = DEFAULT_PANEL,
@@ -554,6 +606,157 @@ def _number_text(value: str) -> str:
     return match.group(0) if match else ""
 
 
+def _load_tushare_continuous_state(pro: Any, start_date: str, end_date: str, trade_dates: list[str]) -> dict[str, dict[str, Any]]:
+    continuous_map = {
+        "SC.INE": ("crude_oil_price_state", "upstream_integrated", "cny_per_barrel", "INE crude oil active futures close."),
+        "BU.SHF": ("bitumen_price_state", "refining_bitumen", "cny_per_ton", "SHFE bitumen active futures close."),
+        "PG.DCE": ("gas_liquid_price_state", "natural_gas_lpg", "cny_per_ton", "DCE LPG active futures close."),
+        "LU.INE": ("refined_product_price_state", "low_sulfur_fuel_oil", "cny_per_ton", "INE low-sulfur fuel-oil active futures close; refining-spread component."),
+    }
+    loaded: dict[str, dict[str, Any]] = {}
+    for continuous_code, (metric, sub_industry, unit, notes) in continuous_map.items():
+        mapping_df = pro.fut_mapping(ts_code=continuous_code, start_date=start_date, end_date=end_date)
+        mapping_rows = sorted(_records(mapping_df), key=lambda row: str(row.get("trade_date") or ""))
+        needed_mappings = _needed_tushare_mappings(mapping_rows, trade_dates)
+        daily_by_date: dict[str, dict[str, str]] = {}
+        for mapping in needed_mappings:
+            trade_date = str(mapping.get("trade_date") or "")
+            mapped_code = str(mapping.get("mapping_ts_code") or "")
+            if not trade_date or not mapped_code:
+                continue
+            daily = pro.fut_daily(ts_code=mapped_code, start_date=trade_date, end_date=trade_date)
+            daily_rows = _records(daily)
+            if not daily_rows:
+                continue
+            close = _number_text(str(daily_rows[0].get("close") or ""))
+            if not close:
+                continue
+            daily_by_date[_iso_from_yyyymmdd(trade_date)] = {
+                "value": close,
+                "mapped_code": mapped_code,
+                "source_trade_date": _iso_from_yyyymmdd(trade_date),
+            }
+        loaded[continuous_code] = {
+            "metric": metric,
+            "sub_industry": sub_industry,
+            "unit": unit,
+            "notes": notes,
+            "daily_by_date": daily_by_date,
+        }
+    return loaded
+
+
+def _needed_tushare_mappings(mapping_rows: list[dict[str, Any]], trade_dates: list[str]) -> list[dict[str, Any]]:
+    selected: dict[tuple[str, str], dict[str, Any]] = {}
+    for rebalance_date in trade_dates:
+        eligible = []
+        for mapping in mapping_rows:
+            trade_date = str(mapping.get("trade_date") or "")
+            if not trade_date:
+                continue
+            visible_date = (_iso_from_yyyymmdd(trade_date))
+            if (_parse_iso_date(visible_date) + timedelta(days=1)).isoformat() <= rebalance_date:
+                eligible.append(mapping)
+        if eligible:
+            latest = eligible[-1]
+            selected[(str(latest.get("mapping_ts_code") or ""), str(latest.get("trade_date") or ""))] = latest
+    return list(selected.values())
+
+
+def _tushare_state_rows_for_trade_dates(source: dict[str, dict[str, Any]], trade_dates: list[str], crude_barrel_per_ton: float) -> list[dict[str, str]]:
+    rows: list[dict[str, str]] = []
+    snapshots: dict[tuple[str, str], dict[str, str]] = {}
+    for rebalance_date in trade_dates:
+        for continuous_code in ["SC.INE", "BU.SHF", "PG.DCE", "LU.INE"]:
+            snapshot = _latest_visible_tushare_snapshot(source.get(continuous_code, {}), rebalance_date)
+            if not snapshot:
+                continue
+            snapshots[(rebalance_date, continuous_code)] = snapshot
+            rows.append(_tushare_state_row(source[continuous_code], continuous_code, snapshot))
+        crude = snapshots.get((rebalance_date, "SC.INE"))
+        refined = snapshots.get((rebalance_date, "LU.INE"))
+        if crude and refined:
+            crude_ton = float(crude["value"]) * crude_barrel_per_ton
+            spread = float(refined["value"]) - crude_ton
+            visible_date = max(crude["visible_date"], refined["visible_date"])
+            state_date = min(crude["state_date"], refined["state_date"])
+            rows.append(
+                {
+                    "visible_date": visible_date,
+                    "state_date": state_date,
+                    "state_scope": "licensed_derived_futures_proxy",
+                    "sub_industry": "refining",
+                    "metric": "refining_spread_proxy_state",
+                    "value": f"{spread:.6f}",
+                    "unit": "cny_per_ton_proxy",
+                    "source_name": "Tushare licensed futures daily prices: LU active minus SC active converted to CNY/ton",
+                    "source_url": "tushare://fut_mapping+fut_daily",
+                    "source_publication_date": visible_date,
+                    "pit_usable": "true",
+                    "review_status": "licensed_reviewed",
+                    "notes": f"Formula: LU_close({refined['mapped_code']}) - SC_close({crude['mapped_code']}) * {crude_barrel_per_ton}. Proxy only; replace with reviewed refining margin when available.",
+                }
+            )
+    return rows
+
+
+def _latest_visible_tushare_snapshot(series: dict[str, Any], rebalance_date: str) -> dict[str, str] | None:
+    daily_by_date = series.get("daily_by_date") or {}
+    eligible = []
+    for state_date, row in daily_by_date.items():
+        visible_date = (_parse_iso_date(state_date) + timedelta(days=1)).isoformat()
+        if visible_date <= rebalance_date:
+            enriched = dict(row)
+            enriched["state_date"] = state_date
+            enriched["visible_date"] = visible_date
+            eligible.append(enriched)
+    if not eligible:
+        return None
+    return sorted(eligible, key=lambda row: row["state_date"])[-1]
+
+
+def _tushare_state_row(series: dict[str, Any], continuous_code: str, snapshot: dict[str, str]) -> dict[str, str]:
+    return {
+        "visible_date": snapshot["visible_date"],
+        "state_date": snapshot["state_date"],
+        "state_scope": "licensed_futures_market",
+        "sub_industry": str(series["sub_industry"]),
+        "metric": str(series["metric"]),
+        "value": snapshot["value"],
+        "unit": str(series["unit"]),
+        "source_name": f"Tushare licensed futures mapping and daily prices: {continuous_code} active contract",
+        "source_url": "tushare://fut_mapping+fut_daily",
+        "source_publication_date": snapshot["visible_date"],
+        "pit_usable": "true",
+        "review_status": "licensed_reviewed",
+        "notes": f"{series['notes']} Active contract {snapshot['mapped_code']} state_date={snapshot['state_date']}; visible next calendar day.",
+    }
+
+
+def _records(frame: Any) -> list[dict[str, Any]]:
+    if frame is None:
+        return []
+    if hasattr(frame, "to_dict"):
+        return list(frame.to_dict("records"))
+    return list(frame)
+
+
+def _count_by_metric(rows: list[dict[str, str]], metrics: Iterable[str]) -> dict[str, int]:
+    return {metric: sum(1 for row in rows if row.get("metric") == metric) for metric in metrics}
+
+
+def _parse_iso_date(value: str) -> date:
+    return datetime.strptime(value[:10], "%Y-%m-%d").date()
+
+
+def _yyyymmdd(value: date) -> str:
+    return value.strftime("%Y%m%d")
+
+
+def _iso_from_yyyymmdd(value: str) -> str:
+    return datetime.strptime(value[:8], "%Y%m%d").date().isoformat()
+
+
 def _now_utc() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
@@ -612,6 +815,11 @@ def main(argv: list[str] | None = None) -> int:
     nbs_parser.add_argument("url")
     nbs_parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
     nbs_parser.add_argument("--timeout-seconds", type=float, default=20.0)
+    tushare_parser = subparsers.add_parser("import-tushare-futures-state")
+    tushare_parser.add_argument("--token", required=True)
+    tushare_parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
+    tushare_parser.add_argument("--panel", type=Path, default=DEFAULT_PANEL)
+    tushare_parser.add_argument("--crude-barrel-per-ton", type=float, default=7.33)
     args = parser.parse_args(argv)
     if args.command == "source-register":
         print(write_oil_gas_official_source_register(args.out_dir))
@@ -627,6 +835,9 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if args.command == "import-nbs-price-release":
         print(import_oil_gas_nbs_price_release(args.url, args.out_dir, args.timeout_seconds))
+        return 0
+    if args.command == "import-tushare-futures-state":
+        print(import_oil_gas_tushare_futures_state(args.token, args.out_dir, args.panel, args.crude_barrel_per_ton))
         return 0
     return 1
 

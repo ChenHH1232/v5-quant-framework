@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "packet_type": "checkpoint_packet",
+  "protocol_id": "agent_operating_protocol_v1",
+  "objective": "v58g_oil_gas_core_source_repaired_formal_validation",
+  "agent": "Project Manager Agent",
+  "experiment_layer": "research_pit_validation",
+  "elapsed_timebox_minutes": 30,
+  "artifacts_created": [
+    "src/v5/oil_gas_source_gate_runner.py",
+    "src/v5/oil_gas_state_conditioned_panel_runner.py",
+    "examples/oil_gas_state_conditioned_ocf_v58g_strategy.json",
+    "数据库/processed/oil_gas_source_gate_v58e/oil_gas_tushare_futures_state_v58g.csv",
+    "数据库/processed/oil_gas_source_gate_v58e/oil_gas_official_state_formal_candidate.csv",
+    "数据库/processed/oil_gas_state_conditioned_panel_v58g/oil_gas_state_conditioned_ocf_v58g/panel.csv",
+    "validation_formal_v58g_oil_gas/oil_gas_state_conditioned_ocf_v58g/formal_validation_summary.json",
+    "docs/governance/v58g_oil_gas_core_source_repaired_validation_pm_decision_v1.md"
+  ],
+  "evidence_found": [
+    "Core source gate repaired: crude, bitumen, gas/liquid and refining-spread proxy cover 18/18 V5.8d rebalance dates.",
+    "Formal validation completed with PIT leakage audit pass.",
+    "State-conditioned OCF composite outperformed equal-weight, raw OCF and raw low-vol baselines in the research window."
+  ],
+  "blockers": [
+    "Promotion source gate remains incomplete: inventory/demand and pipeline tariff/policy states are missing.",
+    "Business exposure is still industry-proxy based, not reviewed annual-report segment evidence.",
+    "Cash dividend events remain unrepaired; no Engineering handoff is allowed."
+  ],
+  "decision": "return_to_research",
+  "next_owner": "Research Agent",
+  "stop_rule_status": "not_triggered",
+  "user_decision_required": false,
+  "user_decision_reason": "",
+  "allowed_next_action": "Research Agent repairs promotion state, reviewed business exposure and cash dividend event evidence before PM can consider Engineering preparation.",
+  "restart_condition": "Promotion data gate repaired and rerun formal validation confirms stable evidence without changing V5.8g weights.",
+  "skill_status_change": "none",
+  "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
+  "created_at_utc": "2026-07-20T10:39:26+00:00"
+}

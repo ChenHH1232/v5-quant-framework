@@ -1,11 +1,12 @@
 {
   "dataset": "oil_gas_official_state_formal_candidate_v58e",
   "sources": [
+    "数据库\\processed\\oil_gas_source_gate_v58e\\oil_gas_tushare_futures_state_v58g.csv",
     "数据库\\processed\\oil_gas_source_gate_v58e\\oil_gas_nbs_price_release_20260624.csv"
   ],
   "output": "数据库\\processed\\oil_gas_source_gate_v58e\\oil_gas_official_state_formal_candidate.csv",
-  "row_count": 4,
+  "row_count": 94,
   "audit_summary": "数据库\\processed\\oil_gas_source_gate_v58e\\oil_gas_source_gate_summary.json",
-  "status": "source_repair_blocked",
-  "created_at_utc": "2026-07-20T10:25:51+00:00"
+  "status": "core_state_ready_needs_promotion_sources",
+  "created_at_utc": "2026-07-20T10:36:22+00:00"
 }

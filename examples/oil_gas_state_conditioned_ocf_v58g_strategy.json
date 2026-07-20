@@ -1,0 +1,254 @@
+{
+  "meta": {
+    "strategy_id": "oil_gas_state_conditioned_ocf_v58g",
+    "name": "Oil / Gas State-Conditioned OCF V5.8g",
+    "objective": "Rerun the frozen V5.8d state-conditioned OCF hypothesis with PIT source-gate repaired licensed futures state inputs.",
+    "status": "research_pit_validation_candidate_core_source_gate_repaired_not_engineering_handoff"
+  },
+  "universe": {
+    "name": "A-share oil/gas upstream, integrated, refining, natural-gas processing and distribution candidates",
+    "construction": "V5.8a PIT universe with V5.8d state-conditioned factor panel. HY01102 oilfield services remain excluded.",
+    "point_in_time": true,
+    "minimum_rebalance_coverage_ratio": 0.8
+  },
+  "data": {
+    "vendor": "JoinQuant/DataJQ PIT financial fields + Tushare licensed futures state metrics injected through V5.8g source gate",
+    "price_frequency": "quarterly_signal_panel",
+    "financial_as_of_policy": "announcement_date",
+    "external_state_policy": "core source gate repaired with licensed futures data for crude, bitumen, LPG and refining-spread proxy; promotion sources still missing",
+    "business_exposure_policy": "PIT JoinQuant industry membership proxy only; annual-report segment review is still required",
+    "price_adjustment": {
+      "research_panel": "pre_adjusted_close_to_close_return",
+      "low_vol_panel": "raw daily close history strictly before trade_date",
+      "status": "research_pit_validation_input"
+    },
+    "window": {
+      "research_start": "2021-05-01",
+      "research_end": "2026-05-31"
+    },
+    "source_warning": "V5.8g is a research validation candidate with core source gate repaired. It still cannot be promoted without inventory/demand, tariff/policy, reviewed business exposure and cash dividend event repair."
+  },
+  "signals": {
+    "factors": [
+      {
+        "name": "state_conditioned_ocf_score",
+        "source": "V5.8g PIT source-gate state buckets + operating_cash_flow_yield",
+        "role": "primary_state_conditioned_cash_generation_signal",
+        "direction": "higher_is_better",
+        "definition": "OCF yield is active only when PIT cycle policy supports OCF interpretation.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "inactive_when_state_not_supportive"
+      },
+      {
+        "name": "cycle_defensive_low_vol_score",
+        "source": "V5.8g PIT source-gate state buckets + low_vol_score",
+        "role": "defensive_fallback_under_warmup_or_strong_commodity_state",
+        "direction": "higher_is_better",
+        "definition": "Low-volatility score is active when commodity state makes raw OCF less reliable.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "inactive_when_state_supports_ocf"
+      },
+      {
+        "name": "cycle_low_pe_diagnostic_score",
+        "source": "V5.8g refining-spread proxy policy + pe_ratio",
+        "role": "diagnostic_only_cyclical_earnings_check",
+        "direction": "lower_is_better",
+        "definition": "Low PE diagnostic under refining-spread state; not a primary factor because cyclical earnings may be distorted.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "diagnostic_only"
+      },
+      {
+        "name": "operating_cash_flow_yield",
+        "source": "cash_flow_statement / market_cap",
+        "role": "raw_ocf_baseline",
+        "direction": "higher_is_better",
+        "definition": "Raw operating cash flow divided by market capitalization.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      },
+      {
+        "name": "low_vol_score",
+        "source": "daily close returns strictly before trade_date",
+        "role": "raw_low_vol_baseline",
+        "direction": "higher_is_better",
+        "definition": "Composite of negative realized volatility, downside volatility and max drawdown.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      },
+      {
+        "name": "low_price_to_book",
+        "source": "valuation.pb_ratio",
+        "role": "diagnostic_valuation_discipline",
+        "direction": "lower_is_better",
+        "definition": "Lower PB is a diagnostic valuation reference.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "diagnostic_only"
+      },
+      {
+        "name": "dividend_yield",
+        "source": "valuation.dividend_ratio",
+        "role": "diagnostic_shareholder_return_support",
+        "direction": "higher_is_better",
+        "definition": "Visible dividend yield, diagnostic until cash dividend events are repaired.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "diagnostic_only"
+      }
+    ],
+    "scoring": {
+      "method": "weighted_composite",
+      "normalization_scope": "rebalance_cross_section",
+      "weights": {
+        "state_conditioned_ocf_score": 0.65,
+        "cycle_defensive_low_vol_score": 0.35,
+        "cycle_low_pe_diagnostic_score": 0.0,
+        "operating_cash_flow_yield": 0.0,
+        "low_vol_score": 0.0,
+        "low_price_to_book": 0.0,
+        "dividend_yield": 0.0
+      },
+      "min_factor_count": 1,
+      "value_trap_guard": "No hard guard is approved. State-conditioned OCF and defensive low-vol are a research hypothesis only."
+    }
+  },
+  "schedule": {
+    "signal_frequency": "quarterly",
+    "rebalance_frequency": "quarterly",
+    "rebalance_rule": "first tradable day of quarter after PIT visibility check",
+    "rebalance_months": [
+      1,
+      4,
+      7,
+      10
+    ]
+  },
+  "portfolio": {
+    "selection_count": 8,
+    "weighting": "equal_weight_research_candidate",
+    "max_position_weight": 0.15,
+    "cash_policy": "hold residual cash when fewer than eight names pass filters"
+  },
+  "risk": {
+    "defensive_asset": "cash",
+    "defensive_rule": {
+      "enabled": false,
+      "reason": "V5.8d tests state-conditioned factor activation, not market timing."
+    },
+    "individual_stop_loss_take_profit": {
+      "enabled": false,
+      "reason": "Fixed exits are not part of the research hypothesis."
+    }
+  },
+  "validation": {
+    "method": "rolling",
+    "train_years": 3,
+    "test_years": 1,
+    "review_years": 1,
+    "weak_years": [
+      "2022",
+      "2024",
+      "2026"
+    ],
+    "baselines": [
+      {
+        "name": "equal_weight_oil_gas_pool",
+        "mode": "equal_all"
+      },
+      {
+        "name": "raw_high_ocf_yield_top8",
+        "mode": "single_factor",
+        "factor": "operating_cash_flow_yield",
+        "direction": "higher_is_better",
+        "selection_count": 8
+      },
+      {
+        "name": "raw_low_vol_top8",
+        "mode": "single_factor",
+        "factor": "low_vol_score",
+        "direction": "higher_is_better",
+        "selection_count": 8
+      },
+      {
+        "name": "state_conditioned_ocf_top8",
+        "mode": "single_factor",
+        "factor": "state_conditioned_ocf_score",
+        "direction": "higher_is_better",
+        "selection_count": 8
+      },
+      {
+        "name": "cycle_defensive_low_vol_top8",
+        "mode": "single_factor",
+        "factor": "cycle_defensive_low_vol_score",
+        "direction": "higher_is_better",
+        "selection_count": 8
+      },
+      {
+        "name": "state_conditioned_ocf_low_vol_composite_top8",
+        "mode": "composite",
+        "selection_count": 8
+      },
+      {
+        "name": "low_pe_diagnostic_top8",
+        "mode": "single_factor",
+        "factor": "cycle_low_pe_diagnostic_score",
+        "direction": "lower_is_better",
+        "selection_count": 8
+      }
+    ],
+    "common_sample_fields": [
+      "state_conditioned_ocf_score",
+      "cycle_defensive_low_vol_score"
+    ],
+    "common_sample_interactions": [
+      {
+        "name": "common_state_conditioned_ocf_low_vol",
+        "factors": [
+          "state_conditioned_ocf_score",
+          "cycle_defensive_low_vol_score"
+        ]
+      }
+    ],
+    "robustness": {
+      "selection_counts": [
+        6,
+        8,
+        10
+      ],
+      "weight_scale_factors": [
+        "state_conditioned_ocf_score",
+        "cycle_defensive_low_vol_score"
+      ],
+      "weight_scales": [
+        0.8,
+        1.0,
+        1.2
+      ]
+    },
+    "acceptance_rule": "V5.8g may decide whether source-repaired state-conditioned OCF deserves Engineering preparation. It cannot become accepted from 2021-2026 evidence."
+  },
+  "execution": {
+    "status": "not_started",
+    "next_gate": "quant_research_pit_validation_with_core_source_gate_repaired",
+    "commission_bps": 3,
+    "slippage_bps": 5,
+    "suspension_policy": "skip_untradeable",
+    "limit_policy": "skip_limit_blocked"
+  },
+  "outputs": {
+    "save_holdings": true,
+    "save_rebalance_signals": true,
+    "report": "markdown",
+    "required_reports": [
+      "formal_validation_packet",
+      "source_gate_summary",
+      "failure_year_analysis",
+      "pm_decision"
+    ]
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "strategy_id": "oil_gas_state_conditioned_ocf_v58g",
+  "source_panel": "数据库\\processed\\oil_gas_low_vol_panel_v58a\\oil_gas_ocf_dividend_cycle_probe_v58a\\panel_with_low_vol.csv",
+  "state_source_csv": "数据库\\processed\\oil_gas_source_gate_v58e\\oil_gas_official_state_formal_candidate.csv",
+  "panel_path": "数据库\\processed\\oil_gas_state_conditioned_panel_v58g\\oil_gas_state_conditioned_ocf_v58g\\panel.csv",
+  "row_count": 351,
+  "date_count": 18,
+  "state_metrics": [
+    "crude_oil_price_state",
+    "bitumen_price_state",
+    "refining_spread_proxy_state",
+    "gas_liquid_price_state"
+  ],
+  "min_history": 4,
+  "policy_counts": {
+    "warmup_defensive": 72,
+    "ocf_supported_weak_commodity": 239,
+    "defensive_strong_commodity": 40
+  },
+  "status": "research_pit_validation_ready",
+  "pit_policy": "State buckets use expanding history strictly before each trade_date.",
+  "limitations": [
+    "State metrics are sourced from the supplied PIT state source when state_source_csv is set; otherwise they remain V5.8a futures proxies.",
+    "This panel is for research validation only and cannot approve Engineering handoff.",
+    "Low-PE remains diagnostic because cyclical earnings can create false cheapness."
+  ],
+  "created_at_utc": "2026-07-20T10:37:53+00:00"
+}

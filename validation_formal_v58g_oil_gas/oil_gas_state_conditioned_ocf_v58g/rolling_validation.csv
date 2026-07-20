@@ -1,0 +1,4 @@
+window,status,case,periods,cum_return,mean_return,positive_ratio,mean_selected_count
+2024,completed,rolling_test_2024,4,0.011687308945239172,0.006411159837656248,0.5,8
+2025,completed,rolling_test_2025,4,0.453205208655183,0.09912719550512498,1.0,8
+2026,completed,rolling_test_2026,2,0.06571631460484917,0.050387486125000006,0.5,8

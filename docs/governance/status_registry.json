@@ -1561,6 +1561,57 @@
         "No Engineering handoff, JoinQuant code, paper trading or V5.7f basket inclusion is allowed."
       ],
       "next_gate": "research_import_reviewed_official_oil_gas_history_then_rerun_source_gate"
+    },
+    {
+      "strategy_id": "oil_gas_state_conditioned_ocf_v58g",
+      "sector": "oil_gas_pipeline_integrated",
+      "current_status": [
+        "core_source_gate_repaired",
+        "research_pit_validation_completed",
+        "pit_leakage_audit_passed",
+        "state_conditioned_ocf_signal_confirmed",
+        "not_engineering_handoff",
+        "returned_to_research_agent_for_promotion_data_gate"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "engineering_handoff",
+        "platform_replication",
+        "paper_trading_ready",
+        "accepted_strategy",
+        "joinquant_code_ready",
+        "v57f_basket_member"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "examples/oil_gas_state_conditioned_ocf_v58g_strategy.json",
+        "src/v5/oil_gas_source_gate_runner.py",
+        "src/v5/oil_gas_state_conditioned_panel_runner.py",
+        "tests/test_oil_gas_source_gate_runner.py",
+        "tests/test_oil_gas_state_conditioned_panel_runner.py",
+        "数据库/processed/oil_gas_source_gate_v58e/oil_gas_tushare_futures_state_v58g.csv",
+        "数据库/processed/oil_gas_source_gate_v58e/oil_gas_tushare_futures_state_v58g_manifest.json",
+        "数据库/processed/oil_gas_source_gate_v58e/oil_gas_official_state_formal_candidate.csv",
+        "数据库/processed/oil_gas_source_gate_v58e/oil_gas_official_state_formal_candidate_manifest.json",
+        "数据库/processed/oil_gas_source_gate_v58e/oil_gas_source_gate_summary.json",
+        "数据库/processed/oil_gas_state_conditioned_panel_v58g/oil_gas_state_conditioned_ocf_v58g/collection_manifest.json",
+        "数据库/processed/oil_gas_state_conditioned_panel_v58g/oil_gas_state_conditioned_ocf_v58g/panel.csv",
+        "validation_formal_v58g_oil_gas/oil_gas_state_conditioned_ocf_v58g/formal_validation_summary.json",
+        "validation_formal_v58g_oil_gas/oil_gas_state_conditioned_ocf_v58g/formal_validation_report.md",
+        "validation_formal_v58g_oil_gas/oil_gas_state_conditioned_ocf_v58g/factor_ic_rankic.csv",
+        "validation_formal_v58g_oil_gas/oil_gas_state_conditioned_ocf_v58g/rolling_validation.csv",
+        "validation_formal_v58g_oil_gas/oil_gas_state_conditioned_ocf_v58g/baseline_tests.csv",
+        "docs/governance/v58g_oil_gas_core_source_repaired_validation_pm_decision_v1.md",
+        "agent_loop_packets_v58/v58g_oil_gas_core_source_repaired_validation_20260720/checkpoint_packet.json"
+      ],
+      "blockers": [
+        "Promotion source gate remains incomplete: inventory/demand and pipeline tariff/policy states are missing.",
+        "Refining spread remains a licensed futures proxy, not a reviewed operating refining-margin source.",
+        "Business exposure remains JoinQuant industry proxy, not reviewed annual-report segment evidence.",
+        "Cash dividend events are not repaired for local daily simulation.",
+        "No Engineering handoff, JoinQuant code, paper trading or V5.7f basket inclusion is allowed."
+      ],
+      "next_gate": "research_repair_promotion_state_business_exposure_and_dividend_events_before_engineering_preparation"
     }
   ],
   "sector_test_policy": {
@@ -1568,7 +1619,7 @@
     "agent_operating_protocol": "docs/governance/agent_operating_protocol_v1.md",
     "agent_operating_protocol_config": "config/agent_operating_protocol_v1.json",
     "agent_loop_packet_runner": "src/v5/agent_loop_packet_runner.py",
-    "latest_agent_loop_checkpoint": "agent_loop_packets_v58/v58f_oil_gas_nbs_price_seed_blocker_20260720/blocker_packet.json",
+    "latest_agent_loop_checkpoint": "agent_loop_packets_v58/v58g_oil_gas_core_source_repaired_validation_20260720/checkpoint_packet.json",
     "default_agent_loop_timebox_minutes": 30,
     "extended_agent_loop_timebox_minutes": 60,
     "agent_loop_policy": "default_continue_without_asking_inside_approved_objective_checkpoint_at_timebox_stop_after_two_no_new_evidence_loops",
@@ -2084,6 +2135,9 @@
     "v58f_oil_gas_nbs_price_seed_status": "source_repair_progress_but_still_blocked",
     "v58f_oil_gas_nbs_price_seed_pm_decision": "docs/governance/v58f_oil_gas_nbs_price_seed_pm_decision_v1.md",
     "v58f_oil_gas_nbs_price_seed_csv": "数据库/processed/oil_gas_source_gate_v58e/oil_gas_nbs_price_release_20260624.csv",
-    "v58f_oil_gas_official_state_formal_candidate": "数据库/processed/oil_gas_source_gate_v58e/oil_gas_official_state_formal_candidate.csv"
+    "v58f_oil_gas_official_state_formal_candidate": "数据库/processed/oil_gas_source_gate_v58e/oil_gas_official_state_formal_candidate.csv",
+    "v58g_oil_gas_status": "research_pit_validation_completed_core_source_gate_repaired_not_engineering_handoff",
+    "v58g_oil_gas_pm_decision": "docs/governance/v58g_oil_gas_core_source_repaired_validation_pm_decision_v1.md",
+    "v58g_oil_gas_formal_summary": "validation_formal_v58g_oil_gas/oil_gas_state_conditioned_ocf_v58g/formal_validation_summary.json"
   }
 }

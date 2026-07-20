@@ -6,6 +6,7 @@ from v5.io_utils import read_csv_rows, write_csv_rows
 from v5.oil_gas_source_gate_runner import (
     CORE_V58D_STATE_METRICS,
     STATE_FIELDS,
+    _tushare_state_rows_for_trade_dates,
     audit_oil_gas_source_gate,
     import_oil_gas_nbs_price_release_from_html,
     merge_oil_gas_state_sources,
@@ -85,6 +86,23 @@ def test_import_oil_gas_nbs_price_release_from_html_extracts_reviewed_rows(tmp_p
     assert {row["state_date"] for row in rows} == {"2026-06-20"}
 
 
+def test_tushare_state_rows_use_only_prior_visible_futures_closes() -> None:
+    source = {
+        "SC.INE": _series("crude_oil_price_state", "upstream_integrated", "cny_per_barrel", {"2021-06-30": ("450", "SC2108.INE"), "2021-07-01": ("999", "SC2108.INE")}),
+        "BU.SHF": _series("bitumen_price_state", "refining_bitumen", "cny_per_ton", {"2021-06-30": ("3500", "BU2109.SHF")}),
+        "PG.DCE": _series("gas_liquid_price_state", "natural_gas_lpg", "cny_per_ton", {"2021-06-30": ("4200", "PG2108.DCE")}),
+        "LU.INE": _series("refined_product_price_state", "low_sulfur_fuel_oil", "cny_per_ton", {"2021-06-30": ("3900", "LU2109.INE")}),
+    }
+
+    rows = _tushare_state_rows_for_trade_dates(source, ["2021-07-01"], 7.33)
+
+    by_metric = {row["metric"]: row for row in rows}
+    assert by_metric["crude_oil_price_state"]["value"] == "450"
+    assert by_metric["crude_oil_price_state"]["visible_date"] == "2021-07-01"
+    assert by_metric["refining_spread_proxy_state"]["review_status"] == "licensed_reviewed"
+    assert float(by_metric["refining_spread_proxy_state"]["value"]) == 3900 - 450 * 7.33
+
+
 def _write_panel(tmp_path: Path) -> Path:
     panel = tmp_path / "panel.csv"
     write_csv_rows(
@@ -96,6 +114,19 @@ def _write_panel(tmp_path: Path) -> Path:
         ],
     )
     return panel
+
+
+def _series(metric: str, sub_industry: str, unit: str, values: dict[str, tuple[str, str]]) -> dict[str, object]:
+    return {
+        "metric": metric,
+        "sub_industry": sub_industry,
+        "unit": unit,
+        "notes": "unit test",
+        "daily_by_date": {
+            date: {"value": value, "mapped_code": mapped_code, "source_trade_date": date}
+            for date, (value, mapped_code) in values.items()
+        },
+    }
 
 
 def _state_row(metric: str, visible_date: str, value: str) -> dict[str, str]:

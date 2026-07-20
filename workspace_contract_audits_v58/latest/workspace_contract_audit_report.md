@@ -8,7 +8,7 @@
 ## Checks
 
 - `pass` config_validation: passed=16, failed=0, warnings=0
-- `warning` example_validation: passed=52, failed=0, warnings=4
+- `warning` example_validation: passed=53, failed=0, warnings=4
 - `pass` status_registry: missing_paths=0, missing_fields=0, accepted_violations=0
 
 ## Config Validation
@@ -21,7 +21,7 @@
 
 ## Example Validation
 
-- legacy_strategy_spec: `43`
+- legacy_strategy_spec: `44`
 - research_candidate_spec: `9`
 
 ## PM Rule

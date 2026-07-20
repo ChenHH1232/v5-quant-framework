@@ -36,3 +36,50 @@ def test_build_oil_gas_state_conditioned_panel_adds_pit_cycle_scores(tmp_path: P
     assert "oil_gas_cycle_policy" in out_rows[0]
     assert any(row["state_conditioned_ocf_score"] for row in out_rows)
     assert any(row["cycle_defensive_low_vol_score"] for row in out_rows)
+
+
+def test_build_oil_gas_state_conditioned_panel_uses_visible_state_source(tmp_path: Path) -> None:
+    rows = []
+    dates = ["2022-01-04", "2022-04-01", "2022-07-01", "2022-10-10", "2023-01-03", "2023-04-03"]
+    for trade_date in dates:
+        rows.append(
+            {
+                "trade_date": trade_date,
+                "code": "600028.XSHG",
+                "future_return": "0.01",
+                "operating_cash_flow_yield": "1.2",
+                "low_vol_score": "0.5",
+                "pe_ratio": "8",
+                "crude_oil_price_state": "1",
+                "bitumen_price_state": "1",
+                "refining_spread_proxy_state": "1",
+                "gas_liquid_price_state": "1",
+            }
+        )
+    panel = tmp_path / "panel.csv"
+    write_csv_rows(panel, rows[0].keys(), rows)
+    source = tmp_path / "source.csv"
+    write_csv_rows(
+        source,
+        [
+            "visible_date",
+            "state_date",
+            "metric",
+            "value",
+            "pit_usable",
+            "review_status",
+        ],
+        [
+            {"visible_date": "2022-01-01", "state_date": "2021-12-31", "metric": "crude_oil_price_state", "value": "100", "pit_usable": "true", "review_status": "licensed_reviewed"},
+            {"visible_date": "2022-04-02", "state_date": "2022-04-01", "metric": "crude_oil_price_state", "value": "999", "pit_usable": "true", "review_status": "licensed_reviewed"},
+        ],
+    )
+
+    result = build_oil_gas_state_conditioned_panel(panel, tmp_path / "out", min_history=2, state_source_csv=source)
+
+    out_rows = read_csv_rows(result.panel_path)
+    first = [row for row in out_rows if row["trade_date"] == "2022-04-01"][0]
+    second = [row for row in out_rows if row["trade_date"] == "2022-07-01"][0]
+    assert first["crude_oil_price_state"] == "100"
+    assert second["crude_oil_price_state"] == "999"
+    assert first["crude_oil_price_state_source_review_status"] == "licensed_reviewed"

@@ -35,8 +35,11 @@ def build_oil_gas_state_conditioned_panel(
     out_dir: Path = DEFAULT_OUT_DIR,
     strategy_id: str = "oil_gas_state_conditioned_ocf_v58d",
     min_history: int = 4,
+    state_source_csv: Path | None = None,
 ) -> OilGasStateConditionedPanelResult:
     rows = read_csv_rows(panel_path)
+    if state_source_csv is not None:
+        rows = _attach_state_source(rows, read_csv_rows(state_source_csv))
     by_date = _group_by_date(rows)
     state_buckets = _state_buckets_by_date(by_date, min_history)
     enriched = []
@@ -62,6 +65,7 @@ def build_oil_gas_state_conditioned_panel(
         "schema_version": 1,
         "strategy_id": strategy_id,
         "source_panel": str(panel_path),
+        "state_source_csv": str(state_source_csv) if state_source_csv else "",
         "panel_path": str(panel_out),
         "row_count": len(enriched),
         "date_count": len({row.get("trade_date") for row in enriched}),
@@ -71,7 +75,7 @@ def build_oil_gas_state_conditioned_panel(
         "status": "research_pit_validation_ready",
         "pit_policy": "State buckets use expanding history strictly before each trade_date.",
         "limitations": [
-            "State metrics are V5.8a futures proxies, not official reviewed spot, spread, tariff or inventory sources.",
+            "State metrics are sourced from the supplied PIT state source when state_source_csv is set; otherwise they remain V5.8a futures proxies.",
             "This panel is for research validation only and cannot approve Engineering handoff.",
             "Low-PE remains diagnostic because cyclical earnings can create false cheapness.",
         ],
@@ -85,6 +89,38 @@ def build_oil_gas_state_conditioned_panel(
         date_count=int(manifest["date_count"]),
         status=str(manifest["status"]),
     )
+
+
+def _attach_state_source(rows: list[dict[str, str]], source_rows: list[dict[str, str]]) -> list[dict[str, str]]:
+    by_metric = {
+        metric: sorted(
+            [
+                row
+                for row in source_rows
+                if row.get("metric") == metric
+                and str(row.get("pit_usable", "")).lower() == "true"
+                and row.get("visible_date")
+                and row.get("value") not in {None, ""}
+            ],
+            key=lambda row: str(row.get("visible_date"))[:10],
+        )
+        for metric in STATE_METRICS
+    }
+    enriched = []
+    for row in rows:
+        item = dict(row)
+        trade_date = str(row.get("trade_date") or "")[:10]
+        if trade_date:
+            for metric, metric_rows in by_metric.items():
+                visible = [source for source in metric_rows if str(source.get("visible_date"))[:10] <= trade_date]
+                if visible:
+                    latest = visible[-1]
+                    item[metric] = str(latest.get("value") or "")
+                    item[f"{metric}_source_visible_date"] = str(latest.get("visible_date") or "")[:10]
+                    item[f"{metric}_source_state_date"] = str(latest.get("state_date") or "")[:10]
+                    item[f"{metric}_source_review_status"] = str(latest.get("review_status") or "")
+        enriched.append(item)
+    return enriched
 
 
 def _attach_conditioned_scores(row: dict[str, Any], policy: str) -> None:
@@ -199,8 +235,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
     parser.add_argument("--strategy-id", default="oil_gas_state_conditioned_ocf_v58d")
     parser.add_argument("--min-history", type=int, default=4)
+    parser.add_argument("--state-source-csv", type=Path)
     args = parser.parse_args(argv)
-    print(build_oil_gas_state_conditioned_panel(args.panel, args.out_dir, args.strategy_id, args.min_history))
+    print(build_oil_gas_state_conditioned_panel(args.panel, args.out_dir, args.strategy_id, args.min_history, args.state_source_csv))
     return 0
 
 

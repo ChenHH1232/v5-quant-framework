@@ -4,7 +4,7 @@
   "status": "formal_candidate_pending_platform_exports",
   "experiment_layer": "pm_decision_gate",
   "blocker_count": 0,
-  "needs_review_count": 3,
+  "needs_review_count": 5,
   "pass_count": 7,
   "checks": [
     {
@@ -21,6 +21,11 @@
       "check": "local_daily_simulation",
       "severity": "pass",
       "detail": "Local daily simulation produced 709 trades."
+    },
+    {
+      "check": "rebalance_order_health",
+      "severity": "pass",
+      "detail": "All 19 rebalance signals have executable order/holding evidence; first order=2021-10-08, first position=2021-10-08."
     },
     {
       "check": "dividend_accounting",
@@ -54,8 +59,13 @@
     },
     {
       "check": "paper_trading",
-      "severity": "pass",
-      "detail": "Paper trading signal exists with 28 selected stocks."
+      "severity": "needs_review",
+      "detail": "Paper trading is waiting for the next clean future rebalance signal."
+    },
+    {
+      "check": "paper_recording_timing",
+      "severity": "needs_review",
+      "detail": "Paper signal appears to be late-recorded; next future rebalance must be clean."
     }
   ],
   "metrics_snapshot": {
@@ -75,7 +85,7 @@
     "overfit_summary": "validation_overfit_v57f_etf\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\overfit_audit_summary.json",
     "ablation_summary": "validation_ablation_v57f_etf\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\basket_ablation_summary.json",
     "platform_packet": "platform_replication_packets_v57f_etf\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\platform_replication_packet.json",
-    "paper_signal_summary": "paper_trading_signals\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\2026-07-19\\basket_construction_summary.json"
+    "paper_signal_summary": "paper_trading_gates_v57f\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\forward_paper_gate_summary.json"
   },
   "pm_rules": [
     "Historical performance alone is never sufficient evidence for accepting a strategy.",
@@ -83,5 +93,5 @@
     "A frozen candidate may enter platform replication or paper trading, but not live trading approval.",
     "Platform replication requires JoinQuant daily, transaction and position attribution."
   ],
-  "created_at_utc": "2026-07-19T06:04:54+00:00"
+  "created_at_utc": "2026-07-20T16:57:27+00:00"
 }

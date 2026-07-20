@@ -2289,6 +2289,9 @@
     "rebalance_order_health_pm_gate": "src/v5/basket_pm_gate_runner.py",
     "v51f_rebalance_order_health_summary": "local_daily_backtests_utilities_v51f/utilities_demand_state_v51f/summary.json",
     "v57f_rebalance_order_health_summary": "local_daily_backtests_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/summary.json",
-    "v58i_rebalance_order_health_summary": "validation_daily_v58h_oil_gas_sector_benchmark/oil_gas_state_conditioned_ocf_v58g/summary.json"
+    "v58i_rebalance_order_health_summary": "validation_daily_v58h_oil_gas_sector_benchmark/oil_gas_state_conditioned_ocf_v58g/summary.json",
+    "v51f_rebalance_order_health_csv": "local_daily_backtests_utilities_v51f/utilities_demand_state_v51f/rebalance_order_health.csv",
+    "v57f_rebalance_order_health_csv": "local_daily_backtests_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/rebalance_order_health.csv",
+    "v58i_rebalance_order_health_csv": "validation_daily_v58h_oil_gas_sector_benchmark/oil_gas_state_conditioned_ocf_v58g/rebalance_order_health.csv"
   }
 }

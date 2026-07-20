@@ -2,7 +2,7 @@
 
 - Status: `formal_candidate_pending_platform_exports`
 - Blockers: `0`
-- Needs review: `3`
+- Needs review: `5`
 
 ## Metrics Snapshot
 
@@ -21,13 +21,15 @@
 - `pass` formal_validation: Formal validation completed with 19 signals.
 - `needs_review` weak_year_analysis: Weak years still need monitoring/diagnosis: 2021, 2026.
 - `pass` local_daily_simulation: Local daily simulation produced 709 trades.
+- `pass` rebalance_order_health: All 19 rebalance signals have executable order/holding evidence; first order=2021-10-08, first position=2021-10-08.
 - `pass` dividend_accounting: Cash dividend accounting applied 128 events.
 - `pass` drawdown_control: Max drawdown is 11.75%.
 - `pass` overfit_audit: Overfit audit has no blockers.
 - `needs_review` overfit_review_items: Overfit audit has 1 review items.
 - `pass` ablation: Ablation completed without blocked cases.
 - `needs_review` platform_replication: Platform replication is waiting for JoinQuant exports.
-- `pass` paper_trading: Paper trading signal exists with 28 selected stocks.
+- `needs_review` paper_trading: Paper trading is waiting for the next clean future rebalance signal.
+- `needs_review` paper_recording_timing: Paper signal appears to be late-recorded; next future rebalance must be clean.
 
 ## PM Rules
 

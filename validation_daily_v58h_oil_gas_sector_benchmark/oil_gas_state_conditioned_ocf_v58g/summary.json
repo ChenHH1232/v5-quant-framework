@@ -35,6 +35,19 @@
   },
   "signal_count": 18,
   "daily_count": 1228,
+  "rebalance_order_health": {
+    "rebalance_signal_count": 18,
+    "normal_rebalance_count": 18,
+    "no_order_rebalance_count": 0,
+    "no_order_no_position_count": 0,
+    "blocked_or_unfilled_rebalance_count": 0,
+    "missing_daily_rebalance_count": 0,
+    "leading_no_order_no_position_count": 0,
+    "first_executed_order_date": "2022-01-04",
+    "first_position_date": "2022-01-04",
+    "needs_review": false,
+    "pm_rule": "Every rebalance signal must be checked for actual local orders and post-rebalance holdings before comparing with JoinQuant."
+  },
   "metrics": {
     "strategy_return": 0.9979237083499972,
     "annualized_return": 0.15260981925332207,
@@ -65,7 +78,8 @@
     "holdings": "holdings.csv",
     "trades": "trades.csv",
     "dividends": "dividends.csv",
-    "rebalance_signals": "rebalance_signals.csv"
+    "rebalance_signals": "rebalance_signals.csv",
+    "rebalance_order_health": "rebalance_order_health.csv"
   },
   "notes": [
     "This runner is for JoinQuant comparison. It simulates daily path, open-price rebalancing, close-price valuation, A-share lot rounding, cash, and commissions.",

@@ -2257,6 +2257,11 @@
       "item": "v58_airport_transport_resumable_operating_content_cache_runner",
       "status": "completed_initial_layer",
       "reason": "cache-airport-operating-announcement-contents now writes one JSON per art_code, skips cached rows, supports code/month/limit/retry filters, and isolates errors. Cache-only extraction produced 261/261 complete candidate rows after full content caching. Original PDF spot-check and unit normalization remain required before Quant validation."
+    },
+    {
+      "item": "rebalance_order_health_engineering_gate",
+      "status": "completed_initial_layer",
+      "reason": "Local JoinQuant-like simulations now output rebalance_order_health, Basket PM Gate blocks missing or failed rebalance execution health, and V5.1f/V5.7f/V5.8i priority candidates were rerun with clean order-health summaries."
     }
   ],
   "references": {
@@ -2278,6 +2283,12 @@
     "v58j_oil_gas_export_intake_summary": "platform_export_intake_checks_v58i_oil_gas/oil_gas_state_conditioned_ocf_v58g/platform_export_intake_summary.json",
     "v58j_oil_gas_platform_packet": "platform_replication_packets_v58i_oil_gas/oil_gas_state_conditioned_ocf_v58g/platform_replication_packet.json",
     "v58j_oil_gas_pm_decision": "docs/governance/v58j_oil_gas_platform_replication_preparation_pm_decision_v1.md",
-    "v58j_oil_gas_agent_checkpoint": "agent_loop_packets_v58/v58j_oil_gas_platform_replication_preparation_20260721/checkpoint_packet.json"
+    "v58j_oil_gas_agent_checkpoint": "agent_loop_packets_v58/v58j_oil_gas_platform_replication_preparation_20260721/checkpoint_packet.json",
+    "rebalance_order_health_gate_doc": "docs/governance/rebalance_order_health_engineering_gate_v1.md",
+    "rebalance_order_health_runner": "src/v5/rebalance_order_health.py",
+    "rebalance_order_health_pm_gate": "src/v5/basket_pm_gate_runner.py",
+    "v51f_rebalance_order_health_summary": "local_daily_backtests_utilities_v51f/utilities_demand_state_v51f/summary.json",
+    "v57f_rebalance_order_health_summary": "local_daily_backtests_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/summary.json",
+    "v58i_rebalance_order_health_summary": "validation_daily_v58h_oil_gas_sector_benchmark/oil_gas_state_conditioned_ocf_v58g/summary.json"
   }
 }

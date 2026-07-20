@@ -116,6 +116,7 @@ def _build_checks(loaded: dict[str, dict[str, Any] | None]) -> list[dict[str, st
             checks.append(_check("local_daily_simulation", "blocker", "Local daily simulation produced no trades."))
         else:
             checks.append(_check("local_daily_simulation", "pass", f"Local daily simulation produced {trade_count} trades."))
+        checks.extend(_rebalance_order_health_checks(daily))
         if dividend_count <= 0:
             checks.append(_check("dividend_accounting", "needs_review", "No cash dividend events were applied."))
         else:
@@ -163,8 +164,11 @@ def _build_checks(loaded: dict[str, dict[str, Any] | None]) -> list[dict[str, st
     if paper is None:
         checks.append(_check("paper_trading", "needs_review", "Paper trading signal summary is missing."))
     else:
+        paper_status = str(paper.get("status") or "")
         selected_count = int(to_float(paper.get("selected_count")) or to_float(paper.get("holding_count")) or 0)
-        if selected_count <= 0:
+        if paper_status == "pending_clean_future_rebalance":
+            checks.append(_check("paper_trading", "needs_review", "Paper trading is waiting for the next clean future rebalance signal."))
+        elif selected_count <= 0:
             checks.append(_check("paper_trading", "blocker", "Paper trading signal selected no stocks."))
         else:
             checks.append(_check("paper_trading", "pass", f"Paper trading signal exists with {selected_count} selected stocks."))
@@ -176,6 +180,54 @@ def _build_checks(loaded: dict[str, dict[str, Any] | None]) -> list[dict[str, st
 
 def _check(name: str, severity: str, detail: str) -> dict[str, str]:
     return {"check": name, "severity": severity, "detail": detail}
+
+
+def _rebalance_order_health_checks(daily: dict[str, Any]) -> list[dict[str, str]]:
+    health = daily.get("rebalance_order_health")
+    if not isinstance(health, dict):
+        return [
+            _check(
+                "rebalance_order_health",
+                "blocker",
+                "Local JoinQuant-like simulation is missing rebalance_order_health; every rebalance date must prove order and holding execution before platform replication.",
+            )
+        ]
+    signal_count = int(to_float(health.get("rebalance_signal_count")) or 0)
+    missing_daily = int(to_float(health.get("missing_daily_rebalance_count")) or 0)
+    no_order = int(to_float(health.get("no_order_rebalance_count")) or 0)
+    no_order_no_position = int(to_float(health.get("no_order_no_position_count")) or 0)
+    blocked_or_unfilled = int(to_float(health.get("blocked_or_unfilled_rebalance_count")) or 0)
+    leading_empty = int(to_float(health.get("leading_no_order_no_position_count")) or 0)
+    first_order = health.get("first_executed_order_date")
+    first_position = health.get("first_position_date")
+    blockers = []
+    if signal_count <= 0:
+        blockers.append("no rebalance signals were checked")
+    if missing_daily > 0:
+        blockers.append(f"{missing_daily} rebalance dates are missing daily rows")
+    if no_order > 0:
+        blockers.append(f"{no_order} rebalance dates had no executed orders")
+    if no_order_no_position > 0:
+        blockers.append(f"{no_order_no_position} rebalance dates had neither orders nor selected holdings")
+    if blocked_or_unfilled > 0:
+        blockers.append(f"{blocked_or_unfilled} rebalance dates had blocked or unfilled orders")
+    if leading_empty > 0:
+        blockers.append(f"{leading_empty} leading rebalance dates had no orders and no selected holdings")
+    if blockers:
+        return [
+            _check(
+                "rebalance_order_health",
+                "blocker",
+                "Rebalance order health requires attribution before platform replication: " + "; ".join(blockers) + ".",
+            )
+        ]
+    return [
+        _check(
+            "rebalance_order_health",
+            "pass",
+            f"All {signal_count} rebalance signals have executable order/holding evidence; first order={first_order}, first position={first_position}.",
+        )
+    ]
 
 
 def _decide_status(loaded: dict[str, dict[str, Any] | None], blocker_count: int, needs_review_count: int) -> str:

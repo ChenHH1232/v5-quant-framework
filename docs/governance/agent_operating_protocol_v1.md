@@ -200,6 +200,7 @@ PM must not allow silent indefinite exploration.
 
 - Receives only frozen candidates or approved engineering tasks.
 - Builds local simulation, platform attribution, runners, and audits.
+- Local JoinQuant-like simulations must output and review `rebalance_order_health`; if any rebalance signal has no executed order, no selected holding, blocked/unfilled orders, missing daily rows, or leading no-order/no-position dates, Engineering must stop and explain the execution gap before platform replication.
 - Must not modify research conclusions, weights, or theory.
 - Must stop if platform mismatch requires changing frozen logic.
 

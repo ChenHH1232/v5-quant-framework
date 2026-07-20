@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "protocol_id": "agent_operating_protocol_v1",
-  "updated_at": "2026-07-19",
+  "updated_at": "2026-07-21",
   "owner": "Project Manager Agent",
   "purpose": "Govern exploratory V5 agent loops with timeboxes, checkpoints, stop rules, and user-decision gates.",
   "default_timebox_minutes": 30,
@@ -66,6 +66,14 @@
     "disable_or_revise_skill",
     "ask_user_for_stage_gate",
     "ask_user_for_external_input"
+  ],
+  "engineering_gate_rules": [
+    "local_joinquant_like_simulations_must_output_rebalance_order_health",
+    "block_platform_replication_when_rebalance_signal_has_no_executed_order",
+    "block_platform_replication_when_rebalance_signal_has_no_selected_holding",
+    "block_platform_replication_when_orders_are_blocked_or_unfilled",
+    "block_platform_replication_when_rebalance_daily_rows_are_missing",
+    "explain_leading_no_order_no_position_dates_before_platform_replication"
   ],
   "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy."
 }

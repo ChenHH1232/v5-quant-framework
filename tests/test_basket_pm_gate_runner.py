@@ -26,6 +26,16 @@ def test_basket_pm_gate_flags_pending_platform_exports(tmp_path: Path) -> None:
         {
             "trade_count": 4,
             "dividend_count": 1,
+            "rebalance_order_health": {
+                "rebalance_signal_count": 2,
+                "no_order_rebalance_count": 0,
+                "no_order_no_position_count": 0,
+                "blocked_or_unfilled_rebalance_count": 0,
+                "missing_daily_rebalance_count": 0,
+                "leading_no_order_no_position_count": 0,
+                "first_executed_order_date": "2021-01-04",
+                "first_position_date": "2021-01-04",
+            },
             "metrics": {
                 "strategy_return": 0.2,
                 "benchmark_return": 0.1,
@@ -59,7 +69,22 @@ def test_basket_pm_gate_flags_pending_platform_exports(tmp_path: Path) -> None:
 
 def test_basket_pm_gate_blocks_missing_daily_trades(tmp_path: Path) -> None:
     formal = _write_json(tmp_path / "formal.json", {"status": "formal_validation_completed_not_acceptance", "signal_count": 2})
-    daily = _write_json(tmp_path / "daily.json", {"trade_count": 0, "dividend_count": 0, "metrics": {}})
+    daily = _write_json(
+        tmp_path / "daily.json",
+        {
+            "trade_count": 0,
+            "dividend_count": 0,
+            "rebalance_order_health": {
+                "rebalance_signal_count": 1,
+                "no_order_rebalance_count": 1,
+                "no_order_no_position_count": 1,
+                "blocked_or_unfilled_rebalance_count": 0,
+                "missing_daily_rebalance_count": 0,
+                "leading_no_order_no_position_count": 1,
+            },
+            "metrics": {},
+        },
+    )
     overfit = _write_json(tmp_path / "overfit.json", {"blocker_count": 0, "needs_review_count": 0})
 
     result = run_basket_pm_gate(
@@ -71,4 +96,62 @@ def test_basket_pm_gate_blocks_missing_daily_trades(tmp_path: Path) -> None:
     )
 
     assert result.status == "blocked"
-    assert result.blocker_count == 1
+    assert result.blocker_count == 2
+
+
+def test_basket_pm_gate_blocks_missing_rebalance_order_health(tmp_path: Path) -> None:
+    formal = _write_json(tmp_path / "formal.json", {"status": "formal_validation_completed_not_acceptance", "signal_count": 2})
+    daily = _write_json(tmp_path / "daily.json", {"trade_count": 4, "dividend_count": 1, "metrics": {}})
+    overfit = _write_json(tmp_path / "overfit.json", {"blocker_count": 0, "needs_review_count": 0})
+
+    result = run_basket_pm_gate(
+        strategy_id="test_basket",
+        formal_summary=formal,
+        daily_summary=daily,
+        overfit_summary=overfit,
+        out_dir=tmp_path / "out",
+    )
+
+    summary = json.loads(result.summary_path.read_text(encoding="utf-8"))
+    assert result.status == "blocked"
+    assert any(check["check"] == "rebalance_order_health" and check["severity"] == "blocker" for check in summary["checks"])
+
+
+def test_basket_pm_gate_treats_future_paper_gate_as_review_not_blocker(tmp_path: Path) -> None:
+    formal = _write_json(tmp_path / "formal.json", {"status": "formal_validation_completed_not_acceptance", "signal_count": 2})
+    daily = _write_json(
+        tmp_path / "daily.json",
+        {
+            "trade_count": 4,
+            "dividend_count": 1,
+            "rebalance_order_health": {
+                "rebalance_signal_count": 2,
+                "no_order_rebalance_count": 0,
+                "no_order_no_position_count": 0,
+                "blocked_or_unfilled_rebalance_count": 0,
+                "missing_daily_rebalance_count": 0,
+                "leading_no_order_no_position_count": 0,
+                "first_executed_order_date": "2021-01-04",
+                "first_position_date": "2021-01-04",
+            },
+            "metrics": {},
+        },
+    )
+    overfit = _write_json(tmp_path / "overfit.json", {"blocker_count": 0, "needs_review_count": 0})
+    paper = _write_json(tmp_path / "paper.json", {"status": "pending_clean_future_rebalance"})
+
+    result = run_basket_pm_gate(
+        strategy_id="test_basket",
+        formal_summary=formal,
+        daily_summary=daily,
+        overfit_summary=overfit,
+        paper_signal_summary=paper,
+        out_dir=tmp_path / "out",
+    )
+
+    summary = json.loads(result.summary_path.read_text(encoding="utf-8"))
+    assert result.blocker_count == 0
+    assert any(
+        check["check"] == "paper_trading" and check["severity"] == "needs_review" and "next clean future" in check["detail"]
+        for check in summary["checks"]
+    )

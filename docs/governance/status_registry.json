@@ -1387,6 +1387,46 @@
         "Cash dividend events and official / reviewed oil, gas, spread and tariff sources are not repaired."
       ],
       "next_gate": "oil_gas_ocf_signal_diagnostics_or_source_repair_before_any_engineering"
+    },
+    {
+      "strategy_id": "oil_gas_ocf_state_diagnostic_v58c",
+      "sector": "oil_gas_pipeline_integrated",
+      "current_status": [
+        "cycle_state_diagnostic_completed",
+        "ocf_signal_cycle_conditioned",
+        "static_ocf_model_not_promoted",
+        "not_engineering_handoff",
+        "returned_to_research_agent"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "engineering_handoff",
+        "platform_replication",
+        "paper_trading_ready",
+        "accepted_strategy",
+        "live_trading_approved",
+        "joinquant_code_ready"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "src/v5/oil_gas_cycle_state_validation_runner.py",
+        "tests/test_oil_gas_cycle_state_validation_runner.py",
+        "validation_state_v58c_oil_gas/oil_gas_ocf_state_diagnostic_v58c/cycle_state_crude_oil_price_state/cycle_state_validation_summary.json",
+        "validation_state_v58c_oil_gas/oil_gas_ocf_state_diagnostic_v58c/cycle_state_refining_spread_proxy_state/cycle_state_validation_summary.json",
+        "validation_state_v58c_oil_gas/oil_gas_ocf_state_diagnostic_v58c/cycle_state_gas_liquid_price_state/cycle_state_validation_summary.json",
+        "validation_state_v58c_oil_gas/oil_gas_ocf_state_diagnostic_v58c/cycle_state_bitumen_price_state/cycle_state_validation_summary.json",
+        "docs/governance/v58c_oil_gas_cycle_state_diagnostic_pm_decision_v1.md",
+        "agent_loop_packets_v58/v58c_oil_gas_cycle_state_diagnostic_20260720/checkpoint_packet.json"
+      ],
+      "blockers": [
+        "OCF is cycle-conditioned and cannot be promoted as a static OCF-only model.",
+        "Official / reviewed oil, gas, refining-spread, pipeline-tariff and inventory state sources are not repaired.",
+        "Business-exposure tags are still not reviewed annual-report segment evidence.",
+        "Cash dividend events are not repaired for local daily simulation.",
+        "Low-PE strength may be a cyclical earnings artifact and requires Research review.",
+        "2026 failure mode remains unresolved."
+      ],
+      "next_gate": "research_repair_official_oil_gas_state_sources_or_design_state_conditioned_ocf_hypothesis"
     }
   ],
   "sector_test_policy": {
@@ -1394,7 +1434,7 @@
     "agent_operating_protocol": "docs/governance/agent_operating_protocol_v1.md",
     "agent_operating_protocol_config": "config/agent_operating_protocol_v1.json",
     "agent_loop_packet_runner": "src/v5/agent_loop_packet_runner.py",
-    "latest_agent_loop_checkpoint": "agent_loop_packets_v58/v58b_oil_gas_validation_completed_20260720/checkpoint_packet.json",
+    "latest_agent_loop_checkpoint": "agent_loop_packets_v58/v58c_oil_gas_cycle_state_diagnostic_20260720/checkpoint_packet.json",
     "default_agent_loop_timebox_minutes": 30,
     "extended_agent_loop_timebox_minutes": 60,
     "agent_loop_policy": "default_continue_without_asking_inside_approved_objective_checkpoint_at_timebox_stop_after_two_no_new_evidence_loops",

@@ -1,0 +1,1137 @@
+{
+  "strategy_id": "oil_gas_ocf_state_diagnostic_v58c",
+  "experiment_layer": "research_pit_validation",
+  "status": "cycle_state_diagnostic_completed_not_acceptance",
+  "not_status": [
+    "formal_strategy_candidate",
+    "platform_replication",
+    "accepted_strategy"
+  ],
+  "panel": "数据库\\processed\\oil_gas_low_vol_panel_v58a\\oil_gas_ocf_dividend_cycle_probe_v58a\\panel_with_low_vol.csv",
+  "metric": "crude_oil_price_state",
+  "coverage": {
+    "panel_dates": 18,
+    "state_covered_dates": 18
+  },
+  "best_all_bucket_case": {
+    "bucket": "all",
+    "case": "low_pe_top8",
+    "periods": 18,
+    "cum_return": 1.0430738374572814,
+    "mean_return": 0.048568634211270834,
+    "positive_ratio": 0.6666666666666666
+  },
+  "best_weak_bucket_case": {
+    "bucket": "weak",
+    "case": "low_pe_top8",
+    "periods": 9,
+    "cum_return": 1.4458496460246666,
+    "mean_return": 0.11179877339455556,
+    "positive_ratio": 0.8888888888888888
+  },
+  "best_mid_bucket_case": {
+    "bucket": "mid",
+    "case": "equal_weight_oil_gas_pool",
+    "periods": 3,
+    "cum_return": 0.11855547229718844,
+    "mean_return": 0.04323782199256725,
+    "positive_ratio": 0.6666666666666666
+  },
+  "best_strong_bucket_case": {
+    "bucket": "strong",
+    "case": "low_vol_top8",
+    "periods": 2,
+    "cum_return": -0.05247618456254621,
+    "mean_return": -0.018610966478124998,
+    "positive_ratio": 0.5
+  },
+  "ocf_all_bucket_case": {
+    "bucket": "all",
+    "case": "high_ocf_yield_top8",
+    "periods": 18,
+    "cum_return": 0.8038155988578439,
+    "mean_return": 0.03783766747942361,
+    "positive_ratio": 0.7222222222222222
+  },
+  "low_vol_all_bucket_case": {
+    "bucket": "all",
+    "case": "low_vol_top8",
+    "periods": 18,
+    "cum_return": 0.47414639099625466,
+    "mean_return": 0.024191318591805556,
+    "positive_ratio": 0.7222222222222222
+  },
+  "equal_weight_all_bucket_case": {
+    "bucket": "all",
+    "case": "equal_weight_oil_gas_pool",
+    "periods": 18,
+    "cum_return": 0.3926276454949531,
+    "mean_return": 0.02249739625931539,
+    "positive_ratio": 0.6111111111111112
+  },
+  "state_bucket_tests": [
+    {
+      "bucket": "warmup",
+      "case": "equal_weight_oil_gas_pool",
+      "periods": 4,
+      "cum_return": -0.014277856482674767,
+      "mean_return": -0.002561950634234522,
+      "positive_ratio": 0.75
+    },
+    {
+      "bucket": "warmup",
+      "case": "high_ocf_yield_top8",
+      "periods": 4,
+      "cum_return": -0.04886895726418372,
+      "mean_return": -0.011536263524531251,
+      "positive_ratio": 0.5
+    },
+    {
+      "bucket": "warmup",
+      "case": "low_vol_top8",
+      "periods": 4,
+      "cum_return": 0.027151685052596797,
+      "mean_return": 0.0068509223299062505,
+      "positive_ratio": 0.75
+    },
+    {
+      "bucket": "warmup",
+      "case": "low_pb_top8",
+      "periods": 4,
+      "cum_return": -0.0041687814541289114,
+      "mean_return": -3.2104476562479993e-06,
+      "positive_ratio": 0.5
+    },
+    {
+      "bucket": "warmup",
+      "case": "low_pe_top8",
+      "periods": 4,
+      "cum_return": -0.012300990788415511,
+      "mean_return": -0.0017962413504687509,
+      "positive_ratio": 0.5
+    },
+    {
+      "bucket": "warmup",
+      "case": "high_dividend_top8",
+      "periods": 4,
+      "cum_return": -0.06808272923316483,
+      "mean_return": -0.015811282737656248,
+      "positive_ratio": 0.5
+    },
+    {
+      "bucket": "warmup",
+      "case": "high_fcf_yield_top8",
+      "periods": 4,
+      "cum_return": -0.04560707464809821,
+      "mean_return": -0.01104183707609375,
+      "positive_ratio": 0.25
+    },
+    {
+      "bucket": "weak",
+      "case": "equal_weight_oil_gas_pool",
+      "periods": 9,
+      "cum_return": 0.42196661124880497,
+      "mean_return": 0.04389019425542926,
+      "positive_ratio": 0.5555555555555556
+    },
+    {
+      "bucket": "weak",
+      "case": "high_ocf_yield_top8",
+      "periods": 9,
+      "cum_return": 1.1360652660563813,
+      "mean_return": 0.090756742113875,
+      "positive_ratio": 0.8888888888888888
+    },
+    {
+      "bucket": "weak",
+      "case": "low_vol_top8",
+      "periods": 9,
+      "cum_return": 0.46680851028599046,
+      "mean_return": 0.04565923663090278,
+      "positive_ratio": 0.8888888888888888
+    },
+    {
+      "bucket": "weak",
+      "case": "low_pb_top8",
+      "periods": 9,
+      "cum_return": 0.5720731716620977,
+      "mean_return": 0.05379024142733333,
+      "positive_ratio": 0.6666666666666666
+    },
+    {
+      "bucket": "weak",
+      "case": "low_pe_top8",
+      "periods": 9,
+      "cum_return": 1.4458496460246666,
+      "mean_return": 0.11179877339455556,
+      "positive_ratio": 0.8888888888888888
+    },
+    {
+      "bucket": "weak",
+      "case": "high_dividend_top8",
+      "periods": 9,
+      "cum_return": 0.5727148216601101,
+      "mean_return": 0.05472991365245833,
+      "positive_ratio": 0.7777777777777778
+    },
+    {
+      "bucket": "weak",
+      "case": "high_fcf_yield_top8",
+      "periods": 9,
+      "cum_return": 0.8002873840580602,
+      "mean_return": 0.07013002080961112,
+      "positive_ratio": 0.8888888888888888
+    },
+    {
+      "bucket": "mid",
+      "case": "equal_weight_oil_gas_pool",
+      "periods": 3,
+      "cum_return": 0.11855547229718844,
+      "mean_return": 0.04323782199256725,
+      "positive_ratio": 0.6666666666666666
+    },
+    {
+      "bucket": "mid",
+      "case": "high_ocf_yield_top8",
+      "periods": 3,
+      "cum_return": 0.06275839609266165,
+      "mean_return": 0.024680974458124998,
+      "positive_ratio": 0.6666666666666666
+    },
+    {
+      "bucket": "mid",
+      "case": "low_vol_top8",
+      "periods": 3,
+      "cum_return": 0.03262461928118765,
+      "mean_return": 0.011442949537000001,
+      "positive_ratio": 0.3333333333333333
+    },
+    {
+      "bucket": "mid",
+      "case": "low_pb_top8",
+      "periods": 3,
+      "cum_return": 0.06426926672876432,
+      "mean_return": 0.027246327940333333,
+      "positive_ratio": 0.3333333333333333
+    },
+    {
+      "bucket": "mid",
+      "case": "low_pe_top8",
+      "periods": 3,
+      "cum_return": 0.093588723116661,
+      "mean_return": 0.035709065542499994,
+      "positive_ratio": 0.6666666666666666
+    },
+    {
+      "bucket": "mid",
+      "case": "high_dividend_top8",
+      "periods": 3,
+      "cum_return": -0.051927829892450705,
+      "mean_return": -0.016481258923458333,
+      "positive_ratio": 0.3333333333333333
+    },
+    {
+      "bucket": "mid",
+      "case": "high_fcf_yield_top8",
+      "periods": 3,
+      "cum_return": 0.03245093340552452,
+      "mean_return": 0.014189648679375,
+      "positive_ratio": 0.6666666666666666
+    },
+    {
+      "bucket": "strong",
+      "case": "equal_weight_oil_gas_pool",
+      "periods": 2,
+      "cum_return": -0.11175335937796138,
+      "mean_return": -0.054762139535975,
+      "positive_ratio": 0.5
+    },
+    {
+      "bucket": "strong",
+      "case": "high_ocf_yield_top8",
+      "periods": 2,
+      "cum_return": -0.16458413377460812,
+      "mean_return": -0.08181526683575001,
+      "positive_ratio": 0.5
+    },
+    {
+      "bucket": "strong",
+      "case": "low_vol_top8",
+      "periods": 2,
+      "cum_return": -0.05247618456254621,
+      "mean_return": -0.018610966478124998,
+      "positive_ratio": 0.5
+    },
+    {
+      "bucket": "strong",
+      "case": "low_pb_top8",
+      "periods": 2,
+      "cum_return": -0.13964765119614897,
+      "mean_return": -0.072019745233125,
+      "positive_ratio": 0.0
+    },
+    {
+      "bucket": "strong",
+      "case": "low_pe_top8",
+      "periods": 2,
+      "cum_return": -0.22665075645711008,
+      "mean_return": -0.115947887986875,
+      "positive_ratio": 0.0
+    },
+    {
+      "bucket": "strong",
+      "case": "high_dividend_top8",
+      "periods": 2,
+      "cum_return": -0.16154249139529686,
+      "mean_return": -0.07898746028437499,
+      "positive_ratio": 0.5
+    },
+    {
+      "bucket": "strong",
+      "case": "high_fcf_yield_top8",
+      "periods": 2,
+      "cum_return": -0.19647083725691694,
+      "mean_return": -0.099441605756375,
+      "positive_ratio": 0.0
+    },
+    {
+      "bucket": "all",
+      "case": "equal_weight_oil_gas_pool",
+      "periods": 18,
+      "cum_return": 0.3926276454949531,
+      "mean_return": 0.02249739625931539,
+      "positive_ratio": 0.6111111111111112
+    },
+    {
+      "bucket": "all",
+      "case": "high_ocf_yield_top8",
+      "periods": 18,
+      "cum_return": 0.8038155988578439,
+      "mean_return": 0.03783766747942361,
+      "positive_ratio": 0.7222222222222222
+    },
+    {
+      "bucket": "all",
+      "case": "low_vol_top8",
+      "periods": 18,
+      "cum_return": 0.47414639099625466,
+      "mean_return": 0.024191318591805556,
+      "positive_ratio": 0.7222222222222222
+    },
+    {
+      "bucket": "all",
+      "case": "low_pb_top8",
+      "periods": 18,
+      "cum_return": 0.43346258871633814,
+      "mean_return": 0.023433268022784722,
+      "positive_ratio": 0.5
+    },
+    {
+      "bucket": "all",
+      "case": "low_pe_top8",
+      "periods": 18,
+      "cum_return": 1.0430738374572814,
+      "mean_return": 0.048568634211270834,
+      "positive_ratio": 0.6666666666666666
+    },
+    {
+      "bucket": "all",
+      "case": "high_dividend_top8",
+      "periods": 18,
+      "cum_return": 0.16506403712218898,
+      "mean_return": 0.012328077476798613,
+      "positive_ratio": 0.6111111111111112
+    },
+    {
+      "bucket": "all",
+      "case": "high_fcf_yield_top8",
+      "periods": 18,
+      "cum_return": 0.4254110266035771,
+      "mean_return": 0.023927142972638888,
+      "positive_ratio": 0.6111111111111112
+    }
+  ],
+  "state_conditioned_factor_ic": [
+    {
+      "bucket": "warmup",
+      "factor_case": "high_ocf_yield_top8",
+      "factor": "operating_cash_flow_yield",
+      "observations": 72,
+      "dates": 4,
+      "mean_ic": -0.07354867025375654,
+      "mean_rankic": -0.11231295149638804,
+      "positive_ic_ratio": 0.25,
+      "top_minus_bottom_mean_return": -0.01059108995725
+    },
+    {
+      "bucket": "warmup",
+      "factor_case": "low_vol_top8",
+      "factor": "low_vol_score",
+      "observations": 72,
+      "dates": 4,
+      "mean_ic": 0.1306066860735872,
+      "mean_rankic": 0.2618356553147575,
+      "positive_ic_ratio": 0.75,
+      "top_minus_bottom_mean_return": 0.037219353756
+    },
+    {
+      "bucket": "warmup",
+      "factor_case": "low_pb_top8",
+      "factor": "low_price_to_book",
+      "observations": 72,
+      "dates": 4,
+      "mean_ic": 0.06165752145079833,
+      "mean_rankic": 0.05982972136222911,
+      "positive_ic_ratio": 0.75,
+      "top_minus_bottom_mean_return": -0.003105207438833333
+    },
+    {
+      "bucket": "warmup",
+      "factor_case": "low_pe_top8",
+      "factor": "pe_ratio",
+      "observations": 72,
+      "dates": 4,
+      "mean_ic": 0.013484173429211065,
+      "mean_rankic": -0.013719040247678047,
+      "positive_ic_ratio": 0.5,
+      "top_minus_bottom_mean_return": 0.021834631151916667
+    },
+    {
+      "bucket": "warmup",
+      "factor_case": "high_dividend_top8",
+      "factor": "dividend_yield",
+      "observations": 72,
+      "dates": 4,
+      "mean_ic": 0.06333614327424376,
+      "mean_rankic": 0.0718094649855181,
+      "positive_ic_ratio": 0.5,
+      "top_minus_bottom_mean_return": 0.005631065290416671
+    },
+    {
+      "bucket": "warmup",
+      "factor_case": "high_fcf_yield_top8",
+      "factor": "free_cash_flow_yield",
+      "observations": 72,
+      "dates": 4,
+      "mean_ic": -0.050281254400275095,
+      "mean_rankic": -0.05445046439628483,
+      "positive_ic_ratio": 0.25,
+      "top_minus_bottom_mean_return": -0.002459911509083333
+    },
+    {
+      "bucket": "weak",
+      "factor_case": "high_ocf_yield_top8",
+      "factor": "operating_cash_flow_yield",
+      "observations": 178,
+      "dates": 9,
+      "mean_ic": 0.3064634390009987,
+      "mean_rankic": 0.3383650748975826,
+      "positive_ic_ratio": 0.8888888888888888,
+      "top_minus_bottom_mean_return": 0.09691247415243387
+    },
+    {
+      "bucket": "weak",
+      "factor_case": "low_vol_top8",
+      "factor": "low_vol_score",
+      "observations": 178,
+      "dates": 9,
+      "mean_ic": 0.088291777191392,
+      "mean_rankic": 0.14083366467267394,
+      "positive_ic_ratio": 0.4444444444444444,
+      "top_minus_bottom_mean_return": -0.00919377483374604
+    },
+    {
+      "bucket": "weak",
+      "factor_case": "low_pb_top8",
+      "factor": "low_price_to_book",
+      "observations": 178,
+      "dates": 9,
+      "mean_ic": 0.2128044124497483,
+      "mean_rankic": 0.23801288723889338,
+      "positive_ic_ratio": 0.7777777777777778,
+      "top_minus_bottom_mean_return": 0.035253580655777786
+    },
+    {
+      "bucket": "weak",
+      "factor_case": "low_pe_top8",
+      "factor": "pe_ratio",
+      "observations": 178,
+      "dates": 9,
+      "mean_ic": 0.2930250947648446,
+      "mean_rankic": 0.2374583219784458,
+      "positive_ic_ratio": 0.7777777777777778,
+      "top_minus_bottom_mean_return": 0.12535350665808465
+    },
+    {
+      "bucket": "weak",
+      "factor_case": "high_dividend_top8",
+      "factor": "dividend_yield",
+      "observations": 178,
+      "dates": 9,
+      "mean_ic": 0.16022200497390282,
+      "mean_rankic": 0.11568196350216907,
+      "positive_ic_ratio": 0.5555555555555556,
+      "top_minus_bottom_mean_return": -0.01351205600629894
+    },
+    {
+      "bucket": "weak",
+      "factor_case": "high_fcf_yield_top8",
+      "factor": "free_cash_flow_yield",
+      "observations": 178,
+      "dates": 9,
+      "mean_ic": 0.18390239315094276,
+      "mean_rankic": 0.22025682149521159,
+      "positive_ic_ratio": 0.8888888888888888,
+      "top_minus_bottom_mean_return": 0.041952488690896815
+    },
+    {
+      "bucket": "mid",
+      "factor_case": "high_ocf_yield_top8",
+      "factor": "operating_cash_flow_yield",
+      "observations": 61,
+      "dates": 3,
+      "mean_ic": -0.15520092492504636,
+      "mean_rankic": -0.15419609630135944,
+      "positive_ic_ratio": 0.0,
+      "top_minus_bottom_mean_return": -0.09769866679645238
+    },
+    {
+      "bucket": "mid",
+      "factor_case": "low_vol_top8",
+      "factor": "low_vol_score",
+      "observations": 61,
+      "dates": 3,
+      "mean_ic": -0.09003982897963751,
+      "mean_rankic": -0.05027720817194503,
+      "positive_ic_ratio": 0.3333333333333333,
+      "top_minus_bottom_mean_return": -0.014879466671642855
+    },
+    {
+      "bucket": "mid",
+      "factor_case": "low_pb_top8",
+      "factor": "low_price_to_book",
+      "observations": 61,
+      "dates": 3,
+      "mean_ic": -0.1257228627643553,
+      "mean_rankic": -0.038459785828206874,
+      "positive_ic_ratio": 0.3333333333333333,
+      "top_minus_bottom_mean_return": -0.03607624102953175
+    },
+    {
+      "bucket": "mid",
+      "factor_case": "low_pe_top8",
+      "factor": "pe_ratio",
+      "observations": 61,
+      "dates": 3,
+      "mean_ic": -0.06991789097452258,
+      "mean_rankic": -0.06858813700918964,
+      "positive_ic_ratio": 0.3333333333333333,
+      "top_minus_bottom_mean_return": -0.01025087782633334
+    },
+    {
+      "bucket": "mid",
+      "factor_case": "high_dividend_top8",
+      "factor": "dividend_yield",
+      "observations": 61,
+      "dates": 3,
+      "mean_ic": -0.10747306484233825,
+      "mean_rankic": -0.1655914118527402,
+      "positive_ic_ratio": 0.3333333333333333,
+      "top_minus_bottom_mean_return": -0.09435361881527778
+    },
+    {
+      "bucket": "mid",
+      "factor_case": "high_fcf_yield_top8",
+      "factor": "free_cash_flow_yield",
+      "observations": 61,
+      "dates": 3,
+      "mean_ic": -0.18557474613095384,
+      "mean_rankic": -0.17233234601655653,
+      "positive_ic_ratio": 0.0,
+      "top_minus_bottom_mean_return": -0.08048836097319842
+    },
+    {
+      "bucket": "strong",
+      "factor_case": "high_ocf_yield_top8",
+      "factor": "operating_cash_flow_yield",
+      "observations": 40,
+      "dates": 2,
+      "mean_ic": -0.17182819497644236,
+      "mean_rankic": -0.06691729323308271,
+      "positive_ic_ratio": 0.0,
+      "top_minus_bottom_mean_return": -0.0960205407485
+    },
+    {
+      "bucket": "strong",
+      "factor_case": "low_vol_top8",
+      "factor": "low_vol_score",
+      "observations": 40,
+      "dates": 2,
+      "mean_ic": -0.026493502805903874,
+      "mean_rankic": -0.01052631578947369,
+      "positive_ic_ratio": 0.5,
+      "top_minus_bottom_mean_return": -0.05627644058999999
+    },
+    {
+      "bucket": "strong",
+      "factor_case": "low_pb_top8",
+      "factor": "low_price_to_book",
+      "observations": 40,
+      "dates": 2,
+      "mean_ic": -0.2523545283640065,
+      "mean_rankic": -0.23834586466165414,
+      "positive_ic_ratio": 0.0,
+      "top_minus_bottom_mean_return": -0.12422471086933332
+    },
+    {
+      "bucket": "strong",
+      "factor_case": "low_pe_top8",
+      "factor": "pe_ratio",
+      "observations": 40,
+      "dates": 2,
+      "mean_ic": -0.41993655531089574,
+      "mean_rankic": -0.1,
+      "positive_ic_ratio": 0.0,
+      "top_minus_bottom_mean_return": -0.16399286800258334
+    },
+    {
+      "bucket": "strong",
+      "factor_case": "high_dividend_top8",
+      "factor": "dividend_yield",
+      "observations": 40,
+      "dates": 2,
+      "mean_ic": -0.1745399891867373,
+      "mean_rankic": -0.13322302257247856,
+      "positive_ic_ratio": 0.0,
+      "top_minus_bottom_mean_return": -0.12317723478491666
+    },
+    {
+      "bucket": "strong",
+      "factor_case": "high_fcf_yield_top8",
+      "factor": "free_cash_flow_yield",
+      "observations": 40,
+      "dates": 2,
+      "mean_ic": -0.06696903671471802,
+      "mean_rankic": 0.017293233082706763,
+      "positive_ic_ratio": 0.5,
+      "top_minus_bottom_mean_return": -0.06183452659933334
+    },
+    {
+      "bucket": "all",
+      "factor_case": "high_ocf_yield_top8",
+      "factor": "operating_cash_flow_yield",
+      "observations": 351,
+      "dates": 18,
+      "mean_ic": 0.0919287280703299,
+      "mean_rankic": 0.11108949959569153,
+      "positive_ic_ratio": 0.5,
+      "top_minus_bottom_mean_return": 0.019150601425363758
+    },
+    {
+      "bucket": "all",
+      "factor_case": "low_vol_top8",
+      "factor": "low_vol_score",
+      "observations": 351,
+      "dates": 18,
+      "mean_ic": 0.055219235914786474,
+      "mean_rankic": 0.11905340817879516,
+      "positive_ic_ratio": 0.5,
+      "top_minus_bottom_mean_return": -0.005058768870813493
+    },
+    {
+      "bucket": "all",
+      "factor_case": "low_pb_top8",
+      "factor": "low_price_to_book",
+      "observations": 351,
+      "dates": 18,
+      "mean_ic": 0.07111067515721384,
+      "mean_rankic": 0.09940909909950156,
+      "positive_ic_ratio": 0.6111111111111112,
+      "top_minus_bottom_mean_return": -0.002878708260033065
+    },
+    {
+      "bucket": "all",
+      "factor_case": "low_pe_top8",
+      "factor": "pe_ratio",
+      "observations": 351,
+      "dates": 18,
+      "mean_ic": 0.09119643128083814,
+      "mean_rankic": 0.0931380180993184,
+      "positive_ic_ratio": 0.5555555555555556,
+      "top_minus_bottom_mean_return": 0.047598984169236774
+    },
+    {
+      "bucket": "all",
+      "factor_case": "high_dividend_top8",
+      "factor": "dividend_yield",
+      "observations": 351,
+      "dates": 18,
+      "mean_ic": 0.05688019138675618,
+      "mean_rankic": 0.03139751393102313,
+      "positive_ic_ratio": 0.4444444444444444,
+      "top_minus_bottom_mean_return": -0.034916642717260575
+    },
+    {
+      "bucket": "all",
+      "factor_case": "high_fcf_yield_top8",
+      "factor": "free_cash_flow_yield",
+      "observations": 351,
+      "dates": 18,
+      "mean_ic": 0.042407456051949274,
+      "mean_rankic": 0.07122772022152826,
+      "positive_ic_ratio": 0.5555555555555556,
+      "top_minus_bottom_mean_return": 0.00014436755908200504
+    }
+  ],
+  "yearly_state_summary": [
+    {
+      "year": "2022",
+      "buckets": "warmup;warmup;warmup;warmup",
+      "equal_weight_cum_return": -0.014277856482674767,
+      "high_ocf_cum_return": -0.04886895726418372,
+      "low_vol_cum_return": 0.027151685052596797,
+      "low_pb_cum_return": -0.0041687814541289114,
+      "low_pe_cum_return": -0.012300990788415511,
+      "high_dividend_cum_return": -0.06808272923316483,
+      "high_fcf_cum_return": -0.04560707464809821
+    },
+    {
+      "year": "2023",
+      "buckets": "weak;weak;weak;strong",
+      "equal_weight_cum_return": 0.04503874903252836,
+      "high_ocf_cum_return": 0.24794265257156178,
+      "low_vol_cum_return": 0.33727513793003716,
+      "low_pb_cum_return": 0.15634698367967115,
+      "low_pe_cum_return": 0.12475303512681024,
+      "high_dividend_cum_return": 0.24190720278575228,
+      "high_fcf_cum_return": 0.11971059381888116
+    },
+    {
+      "year": "2024",
+      "buckets": "weak;mid;mid;weak",
+      "equal_weight_cum_return": -0.07165995151137383,
+      "high_ocf_cum_return": 0.011687308945239172,
+      "low_vol_cum_return": -0.02526846749560363,
+      "low_pb_cum_return": 0.015175042015343143,
+      "low_pe_cum_return": -0.047629002089906836,
+      "high_dividend_cum_return": -0.08135185952383661,
+      "high_fcf_cum_return": -0.029917982820153455
+    },
+    {
+      "year": "2025",
+      "buckets": "mid;weak;weak;weak",
+      "equal_weight_cum_return": 0.36087762675100854,
+      "high_ocf_cum_return": 0.453205208655183,
+      "low_vol_cum_return": 0.06908909138813857,
+      "low_pb_cum_return": 0.16334591525745812,
+      "low_pe_cum_return": 0.8826415721507883,
+      "high_dividend_cum_return": 0.1328489776773356,
+      "high_fcf_cum_return": 0.3781922980751051
+    },
+    {
+      "year": "2026",
+      "buckets": "weak;strong",
+      "equal_weight_cum_return": 0.07009403955099724,
+      "high_ocf_cum_return": 0.03367474519307323,
+      "low_vol_cum_return": 0.02987934056062458,
+      "low_pb_cum_return": 0.054053495290861564,
+      "low_pe_cum_return": 0.025719151770085213,
+      "high_dividend_cum_return": -0.032698027989810474,
+      "high_fcf_cum_return": -0.002325566732714557
+    }
+  ],
+  "selection_count_robustness": [
+    {
+      "selection_count": 6,
+      "bucket": "weak",
+      "case": "high_ocf_yield_top8",
+      "periods": 9,
+      "cum_return": 1.6311488628516484,
+      "positive_ratio": 0.8888888888888888
+    },
+    {
+      "selection_count": 6,
+      "bucket": "weak",
+      "case": "low_vol_top8",
+      "periods": 9,
+      "cum_return": 0.3828706204074743,
+      "positive_ratio": 0.8888888888888888
+    },
+    {
+      "selection_count": 6,
+      "bucket": "weak",
+      "case": "low_pb_top8",
+      "periods": 9,
+      "cum_return": 0.715541759304483,
+      "positive_ratio": 0.7777777777777778
+    },
+    {
+      "selection_count": 6,
+      "bucket": "weak",
+      "case": "low_pe_top8",
+      "periods": 9,
+      "cum_return": 1.502202764285209,
+      "positive_ratio": 0.6666666666666666
+    },
+    {
+      "selection_count": 6,
+      "bucket": "mid",
+      "case": "high_ocf_yield_top8",
+      "periods": 3,
+      "cum_return": 0.007403319675979514,
+      "positive_ratio": 0.6666666666666666
+    },
+    {
+      "selection_count": 6,
+      "bucket": "mid",
+      "case": "low_vol_top8",
+      "periods": 3,
+      "cum_return": 0.09826738720093098,
+      "positive_ratio": 1.0
+    },
+    {
+      "selection_count": 6,
+      "bucket": "mid",
+      "case": "low_pb_top8",
+      "periods": 3,
+      "cum_return": 0.0634752817733677,
+      "positive_ratio": 0.3333333333333333
+    },
+    {
+      "selection_count": 6,
+      "bucket": "mid",
+      "case": "low_pe_top8",
+      "periods": 3,
+      "cum_return": 0.20854586405679454,
+      "positive_ratio": 0.6666666666666666
+    },
+    {
+      "selection_count": 6,
+      "bucket": "strong",
+      "case": "high_ocf_yield_top8",
+      "periods": 2,
+      "cum_return": -0.13476587920599292,
+      "positive_ratio": 0.5
+    },
+    {
+      "selection_count": 6,
+      "bucket": "strong",
+      "case": "low_vol_top8",
+      "periods": 2,
+      "cum_return": -0.15360096175133142,
+      "positive_ratio": 0.5
+    },
+    {
+      "selection_count": 6,
+      "bucket": "strong",
+      "case": "low_pb_top8",
+      "periods": 2,
+      "cum_return": -0.22553996354340666,
+      "positive_ratio": 0.0
+    },
+    {
+      "selection_count": 6,
+      "bucket": "strong",
+      "case": "low_pe_top8",
+      "periods": 2,
+      "cum_return": -0.20086214732772867,
+      "positive_ratio": 0.0
+    },
+    {
+      "selection_count": 6,
+      "bucket": "all",
+      "case": "high_ocf_yield_top8",
+      "periods": 18,
+      "cum_return": 1.2300003851764458,
+      "positive_ratio": 0.7222222222222222
+    },
+    {
+      "selection_count": 6,
+      "bucket": "all",
+      "case": "low_vol_top8",
+      "periods": 18,
+      "cum_return": 0.3132213012585692,
+      "positive_ratio": 0.8333333333333334
+    },
+    {
+      "selection_count": 6,
+      "bucket": "all",
+      "case": "low_pb_top8",
+      "periods": 18,
+      "cum_return": 0.4860908536614179,
+      "positive_ratio": 0.5555555555555556
+    },
+    {
+      "selection_count": 6,
+      "bucket": "all",
+      "case": "low_pe_top8",
+      "periods": 18,
+      "cum_return": 1.399408346170346,
+      "positive_ratio": 0.5555555555555556
+    },
+    {
+      "selection_count": 8,
+      "bucket": "weak",
+      "case": "high_ocf_yield_top8",
+      "periods": 9,
+      "cum_return": 1.1360652660563813,
+      "positive_ratio": 0.8888888888888888
+    },
+    {
+      "selection_count": 8,
+      "bucket": "weak",
+      "case": "low_vol_top8",
+      "periods": 9,
+      "cum_return": 0.46680851028599046,
+      "positive_ratio": 0.8888888888888888
+    },
+    {
+      "selection_count": 8,
+      "bucket": "weak",
+      "case": "low_pb_top8",
+      "periods": 9,
+      "cum_return": 0.5720731716620977,
+      "positive_ratio": 0.6666666666666666
+    },
+    {
+      "selection_count": 8,
+      "bucket": "weak",
+      "case": "low_pe_top8",
+      "periods": 9,
+      "cum_return": 1.4458496460246666,
+      "positive_ratio": 0.8888888888888888
+    },
+    {
+      "selection_count": 8,
+      "bucket": "mid",
+      "case": "high_ocf_yield_top8",
+      "periods": 3,
+      "cum_return": 0.06275839609266165,
+      "positive_ratio": 0.6666666666666666
+    },
+    {
+      "selection_count": 8,
+      "bucket": "mid",
+      "case": "low_vol_top8",
+      "periods": 3,
+      "cum_return": 0.03262461928118765,
+      "positive_ratio": 0.3333333333333333
+    },
+    {
+      "selection_count": 8,
+      "bucket": "mid",
+      "case": "low_pb_top8",
+      "periods": 3,
+      "cum_return": 0.06426926672876432,
+      "positive_ratio": 0.3333333333333333
+    },
+    {
+      "selection_count": 8,
+      "bucket": "mid",
+      "case": "low_pe_top8",
+      "periods": 3,
+      "cum_return": 0.093588723116661,
+      "positive_ratio": 0.6666666666666666
+    },
+    {
+      "selection_count": 8,
+      "bucket": "strong",
+      "case": "high_ocf_yield_top8",
+      "periods": 2,
+      "cum_return": -0.16458413377460812,
+      "positive_ratio": 0.5
+    },
+    {
+      "selection_count": 8,
+      "bucket": "strong",
+      "case": "low_vol_top8",
+      "periods": 2,
+      "cum_return": -0.05247618456254621,
+      "positive_ratio": 0.5
+    },
+    {
+      "selection_count": 8,
+      "bucket": "strong",
+      "case": "low_pb_top8",
+      "periods": 2,
+      "cum_return": -0.13964765119614897,
+      "positive_ratio": 0.0
+    },
+    {
+      "selection_count": 8,
+      "bucket": "strong",
+      "case": "low_pe_top8",
+      "periods": 2,
+      "cum_return": -0.22665075645711008,
+      "positive_ratio": 0.0
+    },
+    {
+      "selection_count": 8,
+      "bucket": "all",
+      "case": "high_ocf_yield_top8",
+      "periods": 18,
+      "cum_return": 0.8038155988578439,
+      "positive_ratio": 0.7222222222222222
+    },
+    {
+      "selection_count": 8,
+      "bucket": "all",
+      "case": "low_vol_top8",
+      "periods": 18,
+      "cum_return": 0.47414639099625466,
+      "positive_ratio": 0.7222222222222222
+    },
+    {
+      "selection_count": 8,
+      "bucket": "all",
+      "case": "low_pb_top8",
+      "periods": 18,
+      "cum_return": 0.43346258871633814,
+      "positive_ratio": 0.5
+    },
+    {
+      "selection_count": 8,
+      "bucket": "all",
+      "case": "low_pe_top8",
+      "periods": 18,
+      "cum_return": 1.0430738374572814,
+      "positive_ratio": 0.6666666666666666
+    },
+    {
+      "selection_count": 10,
+      "bucket": "weak",
+      "case": "high_ocf_yield_top8",
+      "periods": 9,
+      "cum_return": 0.7759258815763248,
+      "positive_ratio": 0.8888888888888888
+    },
+    {
+      "selection_count": 10,
+      "bucket": "weak",
+      "case": "low_vol_top8",
+      "periods": 9,
+      "cum_return": 0.3611345380485711,
+      "positive_ratio": 0.6666666666666666
+    },
+    {
+      "selection_count": 10,
+      "bucket": "weak",
+      "case": "low_pb_top8",
+      "periods": 9,
+      "cum_return": 0.38062439565635864,
+      "positive_ratio": 0.6666666666666666
+    },
+    {
+      "selection_count": 10,
+      "bucket": "weak",
+      "case": "low_pe_top8",
+      "periods": 9,
+      "cum_return": 1.1017730211787513,
+      "positive_ratio": 0.7777777777777778
+    },
+    {
+      "selection_count": 10,
+      "bucket": "mid",
+      "case": "high_ocf_yield_top8",
+      "periods": 3,
+      "cum_return": 0.044065557029651314,
+      "positive_ratio": 0.6666666666666666
+    },
+    {
+      "selection_count": 10,
+      "bucket": "mid",
+      "case": "low_vol_top8",
+      "periods": 3,
+      "cum_return": 0.045778207857385844,
+      "positive_ratio": 0.3333333333333333
+    },
+    {
+      "selection_count": 10,
+      "bucket": "mid",
+      "case": "low_pb_top8",
+      "periods": 3,
+      "cum_return": 0.10976920273966795,
+      "positive_ratio": 0.3333333333333333
+    },
+    {
+      "selection_count": 10,
+      "bucket": "mid",
+      "case": "low_pe_top8",
+      "periods": 3,
+      "cum_return": 0.04415384020951252,
+      "positive_ratio": 0.6666666666666666
+    },
+    {
+      "selection_count": 10,
+      "bucket": "strong",
+      "case": "high_ocf_yield_top8",
+      "periods": 2,
+      "cum_return": -0.22147416751348203,
+      "positive_ratio": 0.0
+    },
+    {
+      "selection_count": 10,
+      "bucket": "strong",
+      "case": "low_vol_top8",
+      "periods": 2,
+      "cum_return": -0.09155284251682416,
+      "positive_ratio": 0.5
+    },
+    {
+      "selection_count": 10,
+      "bucket": "strong",
+      "case": "low_pb_top8",
+      "periods": 2,
+      "cum_return": -0.18686446486798935,
+      "positive_ratio": 0.0
+    },
+    {
+      "selection_count": 10,
+      "bucket": "strong",
+      "case": "low_pe_top8",
+      "periods": 2,
+      "cum_return": -0.20822061294265215,
+      "positive_ratio": 0.0
+    },
+    {
+      "selection_count": 10,
+      "bucket": "all",
+      "case": "high_ocf_yield_top8",
+      "periods": 18,
+      "cum_return": 0.3725852268404424,
+      "positive_ratio": 0.6666666666666666
+    },
+    {
+      "selection_count": 10,
+      "bucket": "all",
+      "case": "low_vol_top8",
+      "periods": 18,
+      "cum_return": 0.2925236328605665,
+      "positive_ratio": 0.5555555555555556
+    },
+    {
+      "selection_count": 10,
+      "bucket": "all",
+      "case": "low_pb_top8",
+      "periods": 18,
+      "cum_return": 0.21855910227101427,
+      "positive_ratio": 0.5
+    },
+    {
+      "selection_count": 10,
+      "bucket": "all",
+      "case": "low_pe_top8",
+      "periods": 18,
+      "cum_return": 0.826933635598367,
+      "positive_ratio": 0.6666666666666666
+    }
+  ],
+  "pm_read": "OCF signal remains stronger than equal-weight in this diagnostic, but source and failure-mode blockers remain.",
+  "limitations": [
+    "Buckets use expanding historical tertiles, not optimized thresholds.",
+    "External state metrics are futures proxies in V5.8a/V5.8c and are not official spot/spread/tariff evidence.",
+    "The metric is same for all stocks on a rebalance date, so stock-level IC is interpreted within state buckets.",
+    "This diagnostic can support Research/Quant iteration but cannot approve Engineering handoff."
+  ],
+  "created_at_utc": "2026-07-20T08:57:13+00:00"
+}

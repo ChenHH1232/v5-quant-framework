@@ -77,6 +77,11 @@ from v5.oil_gas_state_runner import (
     collect_oil_gas_external_state,
     validate_oil_gas_external_state,
 )
+from v5.oil_gas_cycle_state_validation_runner import (
+    DEFAULT_OUT_DIR as DEFAULT_OIL_GAS_CYCLE_STATE_OUT,
+    DEFAULT_PANEL as DEFAULT_OIL_GAS_CYCLE_STATE_PANEL,
+    run_oil_gas_cycle_state_validation,
+)
 
 
 def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.ArgumentParser]) -> None:
@@ -185,6 +190,15 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     oil_gas_panel_parser.add_argument("--out-dir", type=Path, default=DEFAULT_OIL_GAS_PANEL_OUT)
     oil_gas_panel_parser.add_argument("--strategy-id", default="oil_gas_ocf_dividend_cycle_probe_v58a")
     oil_gas_panel_parser.set_defaults(handler=_handle_build_oil_gas_research_panel)
+
+    oil_gas_cycle_parser = subparsers.add_parser("validate-oil-gas-cycle-state")
+    oil_gas_cycle_parser.add_argument("--panel", type=Path, default=DEFAULT_OIL_GAS_CYCLE_STATE_PANEL)
+    oil_gas_cycle_parser.add_argument("--out", type=Path, default=DEFAULT_OIL_GAS_CYCLE_STATE_OUT)
+    oil_gas_cycle_parser.add_argument("--metric", default="crude_oil_price_state")
+    oil_gas_cycle_parser.add_argument("--selection-count", type=int, default=8)
+    oil_gas_cycle_parser.add_argument("--min-history", type=int, default=4)
+    oil_gas_cycle_parser.add_argument("--strategy-id", default="oil_gas_ocf_state_diagnostic_v58c")
+    oil_gas_cycle_parser.set_defaults(handler=_handle_validate_oil_gas_cycle_state)
 
     screen_parser = subparsers.add_parser("screen-dividend-low-vol-fcf-sectors")
     screen_parser.add_argument("--config", type=Path, default=DEFAULT_V56_SCREEN_CONFIG)
@@ -387,6 +401,11 @@ def _handle_validate_oil_gas_external_state(args: argparse.Namespace) -> int:
 
 def _handle_build_oil_gas_research_panel(args: argparse.Namespace) -> int:
     print(build_oil_gas_research_panel(args.panel, args.external_state, args.out_dir, strategy_id=args.strategy_id))
+    return 0
+
+
+def _handle_validate_oil_gas_cycle_state(args: argparse.Namespace) -> int:
+    print(run_oil_gas_cycle_state_validation(args.panel, args.out, args.metric, args.selection_count, args.min_history, args.strategy_id))
     return 0
 
 

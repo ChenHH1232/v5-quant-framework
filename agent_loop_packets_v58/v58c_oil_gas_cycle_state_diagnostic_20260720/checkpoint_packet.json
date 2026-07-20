@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "packet_type": "checkpoint_packet",
+  "protocol_id": "agent_operating_protocol_v1",
+  "objective": "V5.8c oil gas cycle-state diagnostic completed",
+  "agent": "Project Manager Agent",
+  "experiment_layer": "research_pit_validation",
+  "elapsed_timebox_minutes": 30,
+  "artifacts_created": [
+    "src/v5/oil_gas_cycle_state_validation_runner.py",
+    "tests/test_oil_gas_cycle_state_validation_runner.py",
+    "docs/governance/v58c_oil_gas_cycle_state_diagnostic_pm_decision_v1.md"
+  ],
+  "evidence_found": [
+    "OCF signal remains stronger than equal-weight but is cycle-conditioned.",
+    "Weak crude/bitumen proxy states support OCF; strong crude proxy states weaken or reverse it."
+  ],
+  "blockers": [
+    "Official/reviewed oil, gas, spread, tariff and inventory state sources are not repaired.",
+    "Business exposure tags remain unreviewed proxies.",
+    "No Engineering handoff and no JoinQuant code from V5.8c."
+  ],
+  "decision": "return_to_research",
+  "next_owner": "Research Agent",
+  "stop_rule_status": "not_triggered",
+  "user_decision_required": false,
+  "user_decision_reason": "",
+  "allowed_next_action": "Research Agent repairs official state sources or designs state-conditioned OCF hypothesis.",
+  "restart_condition": "Official/reviewed oil-gas state sources repaired or Research writes a state-conditioned hypothesis.",
+  "skill_status_change": "none",
+  "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
+  "created_at_utc": "2026-07-20T09:05:07+00:00"
+}

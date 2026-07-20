@@ -4,7 +4,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from v5.experiment_governance import validate_daily_run_contract, validate_experiment_layer
+from v5.experiment_governance import build_run_manifest, validate_daily_run_contract, validate_experiment_layer
 from v5.formal_validation_runner import (
     _baseline_tests,
     _common_sample_interaction_tests,
@@ -17,6 +17,26 @@ class ExperimentGovernanceTests(unittest.TestCase):
     def test_unknown_experiment_layer_is_rejected(self):
         with self.assertRaises(ValueError):
             validate_experiment_layer("backtest")
+
+    def test_run_manifest_uses_pre_run_git_dirty_scope(self) -> None:
+        manifest = build_run_manifest(
+            strategy_id="test_strategy",
+            experiment_layer="engineering_smoke_test",
+            command_profile={"runner": "unit_test"},
+            outputs={"summary": "summary.json"},
+            pre_run_git={
+                "commit": "abc123",
+                "dirty": False,
+                "status_short": [],
+                "captured_at_utc": "2026-07-21T00:00:00+00:00",
+            },
+        )
+
+        self.assertEqual(manifest["git"]["commit"], "abc123")
+        self.assertFalse(manifest["git"]["dirty"])
+        self.assertEqual(manifest["git"]["dirty_scope"], "pre_run")
+        self.assertEqual(manifest["git"]["pre_run"]["status_short"], [])
+        self.assertIn("manifest_created", manifest["git"])
 
     def test_research_pit_requires_notice_date_visibility(self):
         with tempfile.TemporaryDirectory() as tmp:

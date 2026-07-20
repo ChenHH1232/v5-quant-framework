@@ -71,9 +71,91 @@ class PlatformReplicationRunnerTests(unittest.TestCase):
 
         self.assertEqual(packet["status"], "platform_replication_passed")
         self.assertEqual(packet["coverage"]["latest_expected_rebalance_date"], "2026-04-01")
+        self.assertTrue(packet["local_rebalance_order_health"]["passed"])
+        self.assertEqual(packet["local_rebalance_order_health"]["rebalance_signal_count"], 2)
         self.assertEqual(packet["position_rebalance_summary"]["code_mismatch_dates"], 0)
 
-    def _write_local_run(self, local: Path, signal_dates: list[str]) -> None:
+    def test_missing_rebalance_order_health_blocks_packet(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            local = root / "local" / "strategy"
+            local.mkdir(parents=True)
+            self._write_local_run(local, signal_dates=["2026-01-05", "2026-04-01"], include_order_health=False)
+            panel = root / "panel.csv"
+            self._write_csv(
+                panel,
+                ["trade_date", "code"],
+                [
+                    {"trade_date": "2026-01-05", "code": "A"},
+                    {"trade_date": "2026-04-01", "code": "A"},
+                ],
+            )
+            jq_daily = root / "daily.csv"
+            self._write_joinquant_daily(jq_daily)
+            jq_tx = root / "tx.csv"
+            self._write_joinquant_transactions(jq_tx, dates=["2026-01-05", "2026-04-01"])
+            jq_pos = root / "pos.csv"
+            self._write_joinquant_positions(jq_pos)
+
+            report = run_platform_replication_packet(
+                local,
+                jq_daily,
+                root / "packet",
+                "test_strategy",
+                panel_csv=panel,
+                joinquant_transaction_csv=jq_tx,
+                joinquant_position_csv=jq_pos,
+            )
+            packet = json.loads((report.parent / "platform_replication_packet.json").read_text(encoding="utf-8"))
+
+        self.assertEqual(packet["status"], "data_gap")
+        self.assertFalse(packet["local_rebalance_order_health"]["passed"])
+        self.assertEqual(packet["local_rebalance_order_health"]["reason"], "missing rebalance_order_health.csv")
+
+    def test_unhealthy_rebalance_order_health_blocks_packet(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            local = root / "local" / "strategy"
+            local.mkdir(parents=True)
+            self._write_local_run(local, signal_dates=["2026-01-05", "2026-04-01"], unhealthy_order_health=True)
+            panel = root / "panel.csv"
+            self._write_csv(
+                panel,
+                ["trade_date", "code"],
+                [
+                    {"trade_date": "2026-01-05", "code": "A"},
+                    {"trade_date": "2026-04-01", "code": "A"},
+                ],
+            )
+            jq_daily = root / "daily.csv"
+            self._write_joinquant_daily(jq_daily)
+            jq_tx = root / "tx.csv"
+            self._write_joinquant_transactions(jq_tx, dates=["2026-01-05", "2026-04-01"])
+            jq_pos = root / "pos.csv"
+            self._write_joinquant_positions(jq_pos)
+
+            report = run_platform_replication_packet(
+                local,
+                jq_daily,
+                root / "packet",
+                "test_strategy",
+                panel_csv=panel,
+                joinquant_transaction_csv=jq_tx,
+                joinquant_position_csv=jq_pos,
+            )
+            packet = json.loads((report.parent / "platform_replication_packet.json").read_text(encoding="utf-8"))
+
+        self.assertEqual(packet["status"], "data_gap")
+        self.assertFalse(packet["local_rebalance_order_health"]["passed"])
+        self.assertEqual(packet["local_rebalance_order_health"]["blocker_count"], 1)
+
+    def _write_local_run(
+        self,
+        local: Path,
+        signal_dates: list[str],
+        include_order_health: bool = True,
+        unhealthy_order_health: bool = False,
+    ) -> None:
         self._write_csv(
             local / "daily_returns.csv",
             ["trade_date", "strategy_nav", "benchmark_nav", "cash_weight"],
@@ -104,6 +186,38 @@ class PlatformReplicationRunnerTests(unittest.TestCase):
             ],
         )
         self._write_csv(local / "dividends.csv", ["trade_date", "code", "dividend_cash"], [])
+        if include_order_health:
+            rows = [
+                {
+                    "trade_date": date,
+                    "order_health_status": "normal_ordered",
+                    "selected_count": "1",
+                    "selected_codes": "000001.XSHE",
+                    "executed_order_count": "1",
+                    "buy_order_count": "1",
+                    "sell_order_count": "0",
+                    "skipped_order_count": "0",
+                    "buy_skipped_count": "0",
+                    "sell_skipped_count": "0",
+                    "buy_turnover": "1000",
+                    "sell_turnover": "0",
+                    "holding_count_after_rebalance": "1",
+                    "cash_weight_after_rebalance": "0.1",
+                    "portfolio_value_after_rebalance": "100000",
+                    "diagnosis": "ok",
+                }
+                for date in signal_dates
+            ]
+            if unhealthy_order_health:
+                rows[0]["order_health_status"] = "no_order_no_position"
+                rows[0]["executed_order_count"] = "0"
+                rows[0]["holding_count_after_rebalance"] = "0"
+                rows[0]["buy_turnover"] = "0"
+            self._write_csv(
+                local / "rebalance_order_health.csv",
+                list(rows[0].keys()),
+                rows,
+            )
 
     def _write_joinquant_daily(self, path: Path) -> None:
         self._write_csv(

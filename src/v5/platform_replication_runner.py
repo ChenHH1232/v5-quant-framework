@@ -41,8 +41,10 @@ def run_platform_replication_packet(
     local_trades_csv = local_run_dir / "trades.csv"
     local_holdings_csv = local_run_dir / "holdings.csv"
     local_dividends_csv = local_run_dir / "dividends.csv"
+    local_order_health_csv = local_run_dir / "rebalance_order_health.csv"
 
     signal_dates = _load_dates(local_signals_csv, "trade_date")
+    local_order_health_summary = _summarize_local_order_health(local_order_health_csv)
     platform_rebalance_dates = _derive_platform_rebalance_dates(
         joinquant_transaction_csv,
         expected_rebalance_dates,
@@ -102,6 +104,7 @@ def run_platform_replication_packet(
         daily_summary=daily_summary,
         transaction_summary=transaction_summary,
         position_rebalance_summary=position_rebalance_summary,
+        local_order_health_summary=local_order_health_summary,
         final_strategy_diff_threshold=final_strategy_diff_threshold,
         max_strategy_diff_threshold=max_strategy_diff_threshold,
     )
@@ -116,6 +119,7 @@ def run_platform_replication_packet(
         "joinquant_transaction_csv": str(joinquant_transaction_csv) if joinquant_transaction_csv else None,
         "joinquant_position_csv": str(joinquant_position_csv) if joinquant_position_csv else None,
         "coverage": coverage,
+        "local_rebalance_order_health": local_order_health_summary,
         "daily_summary": _compact_daily(daily_summary),
         "transaction_summary": _compact_transaction(transaction_summary),
         "position_rebalance_summary": position_rebalance_summary,
@@ -194,16 +198,81 @@ def _summarize_position_rebalance_dates(position_summary_csv: Path) -> dict[str,
     }
 
 
+def _summarize_local_order_health(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return {
+            "available": False,
+            "passed": False,
+            "reason": "missing rebalance_order_health.csv",
+            "blocker_statuses": ["missing_rebalance_order_health"],
+        }
+    rows = _read_csv(path)
+    status_counts: dict[str, int] = {}
+    leading_no_order_no_position_count = 0
+    first_executed_order_date = None
+    first_position_date = None
+    still_leading = True
+    blocker_rows: list[dict[str, Any]] = []
+    blocker_statuses = {
+        "missing_daily_row",
+        "no_selected_stocks",
+        "no_order_no_position",
+        "order_blocked_or_unfilled",
+        "ordered_but_no_position",
+    }
+    for row in rows:
+        status = str(row.get("order_health_status") or "")
+        status_counts[status] = status_counts.get(status, 0) + 1
+        day = str(row.get("trade_date") or "")[:10]
+        executed_count = _to_int(row.get("executed_order_count"))
+        held_count = _to_int(row.get("holding_count_after_rebalance"))
+        selected_count = _to_int(row.get("selected_count"))
+        if executed_count > 0 and first_executed_order_date is None:
+            first_executed_order_date = day
+        if held_count > 0 and first_position_date is None:
+            first_position_date = day
+        if still_leading and executed_count == 0 and held_count == 0:
+            leading_no_order_no_position_count += 1
+        else:
+            still_leading = False
+        if status in blocker_statuses or (selected_count > 0 and held_count <= 0):
+            blocker_rows.append(
+                {
+                    "trade_date": day,
+                    "status": status,
+                    "selected_count": selected_count,
+                    "executed_order_count": executed_count,
+                    "holding_count_after_rebalance": held_count,
+                }
+            )
+    passed = bool(rows) and not blocker_rows and leading_no_order_no_position_count == 0
+    return {
+        "available": True,
+        "passed": passed,
+        "reason": "passed" if passed else "local rebalance order health failed",
+        "rebalance_signal_count": len(rows),
+        "status_counts": status_counts,
+        "blocker_count": len(blocker_rows),
+        "blocker_rows": blocker_rows[:20],
+        "leading_no_order_no_position_count": leading_no_order_no_position_count,
+        "first_executed_order_date": first_executed_order_date,
+        "first_position_date": first_position_date,
+    }
+
+
 def _decide(
     coverage: dict[str, Any],
     daily_summary: dict[str, Any] | None,
     transaction_summary: dict[str, Any] | None,
     position_rebalance_summary: dict[str, Any] | None,
+    local_order_health_summary: dict[str, Any],
     final_strategy_diff_threshold: float,
     max_strategy_diff_threshold: float,
 ) -> PlatformReplicationDecision:
     if not coverage["passed"]:
         return PlatformReplicationDecision("data_gap", "local PIT panel or rebalance signals do not cover platform rebalance dates")
+    if not local_order_health_summary.get("passed"):
+        return PlatformReplicationDecision("data_gap", "local rebalance order health is missing or failed")
     if daily_summary is None or transaction_summary is None or position_rebalance_summary is None:
         return PlatformReplicationDecision("pending_attribution", "daily, transaction, and position attribution are all required")
 
@@ -278,6 +347,10 @@ def _write_report(path: Path, packet: dict[str, Any]) -> None:
         f"- Latest local signal: `{packet['coverage']['latest_local_signal_date']}`",
         f"- Missing panel dates: `{';'.join(packet['coverage']['missing_panel_dates'])}`",
         f"- Missing signal dates: `{';'.join(packet['coverage']['missing_signal_dates'])}`",
+        "",
+        "## Local Rebalance Order Health",
+        "",
+        f"- Summary: `{packet['local_rebalance_order_health']}`",
         "",
         "## Daily",
         "",

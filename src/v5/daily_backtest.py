@@ -13,6 +13,7 @@ from typing import Any
 from v5.engine import load_spec
 from v5.experiment_governance import (
     build_run_manifest,
+    capture_git_state,
     freeze_snapshot,
     validate_daily_run_contract,
     write_run_manifest,
@@ -51,6 +52,7 @@ def run_daily_joinquant_like_backtest(
     snapshot_out: Path | None = None,
 ) -> Path:
     options = options or BacktestOptions(execution_mode="joinquant_like")
+    pre_run_git = capture_git_state()
     spec = load_spec(spec_path)
     governance_warnings = validate_daily_run_contract(
         experiment_layer=experiment_layer,
@@ -180,6 +182,7 @@ def run_daily_joinquant_like_backtest(
         },
         outputs=summary["outputs"] | {"run_manifest": "RUN_MANIFEST.json"},
         warnings=governance_warnings,
+        pre_run_git=pre_run_git,
     )
     write_run_manifest(out / "RUN_MANIFEST.json", manifest)
     if snapshot_out is not None:

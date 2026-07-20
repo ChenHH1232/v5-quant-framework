@@ -62,14 +62,20 @@ def build_run_manifest(
     command_profile: dict[str, Any],
     outputs: dict[str, str],
     warnings: list[str] | None = None,
+    pre_run_git: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
+    pre_run = pre_run_git or capture_git_state()
+    manifest_created = capture_git_state()
     return {
         "strategy_id": strategy_id,
         "experiment_layer": validate_experiment_layer(experiment_layer),
         "created_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
         "git": {
-            "commit": _git(["rev-parse", "HEAD"]),
-            "dirty": bool(_git(["status", "--short"])),
+            "commit": pre_run.get("commit"),
+            "dirty": bool(pre_run.get("dirty")),
+            "dirty_scope": "pre_run",
+            "pre_run": pre_run,
+            "manifest_created": manifest_created,
         },
         "command_profile": command_profile,
         "outputs": outputs,
@@ -93,6 +99,17 @@ def freeze_snapshot(source_dir: Path, snapshot_root: Path, manifest: dict[str, A
             shutil.copy2(path, snapshot_dir / path.name)
     write_run_manifest(snapshot_dir / "RUN_MANIFEST.json", manifest)
     return snapshot_dir
+
+
+def capture_git_state() -> dict[str, Any]:
+    status_short = _git(["status", "--short"])
+    status_lines = status_short.splitlines() if status_short else []
+    return {
+        "commit": _git(["rev-parse", "HEAD"]),
+        "dirty": bool(status_lines),
+        "status_short": status_lines,
+        "captured_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
+    }
 
 
 def _git(args: list[str]) -> str | None:

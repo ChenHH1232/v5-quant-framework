@@ -15,6 +15,7 @@ from v5.daily_backtest import (
     _simulate_daily,
 )
 from v5.local_backtest import BacktestOptions, _compute_metrics, _parse_date, _to_float, _write_csv, _write_json
+from v5.rebalance_order_health import build_rebalance_order_health
 from v5.utilities_demand_state_validation_runner import _expanding_bucket, _latest_visible_state_by_date
 
 
@@ -55,6 +56,24 @@ DAILY_RETURN_FIELDS = [
 HOLDING_FIELDS = ["trade_date", "code", "target_weight", "effective_target_weight", "actual_weight", "amount", "close"]
 TRADE_FIELDS = ["trade_date", "code", "side", "amount", "price", "value", "commission", "target_amount", "reason"]
 DIVIDEND_FIELDS = ["trade_date", "code", "amount", "net_cash_per_share", "dividend_cash"]
+ORDER_HEALTH_FIELDS = [
+    "trade_date",
+    "order_health_status",
+    "selected_count",
+    "selected_codes",
+    "executed_order_count",
+    "buy_order_count",
+    "sell_order_count",
+    "skipped_order_count",
+    "buy_skipped_count",
+    "sell_skipped_count",
+    "buy_turnover",
+    "sell_turnover",
+    "holding_count_after_rebalance",
+    "cash_weight_after_rebalance",
+    "portfolio_value_after_rebalance",
+    "diagnosis",
+]
 SIGNAL_FIELDS = [
     "trade_date",
     "state_visible_date",
@@ -147,6 +166,7 @@ def run_utilities_daily_joinquant_like_backtest(
     daily_rows, holding_rows, trade_rows, dividend_rows = _simulate_daily(prices_by_date, benchmarks, cash_dividends, signals, raw_spec, options)
     for row in daily_rows:
         row["benchmark_source"] = benchmark_id
+    order_health_rows, order_health_summary = build_rebalance_order_health(signals, daily_rows, trade_rows, holding_rows)
     metrics = _compute_metrics(daily_rows)
     out = out_dir / raw_spec["meta"]["strategy_id"]
     out.mkdir(parents=True, exist_ok=True)
@@ -163,6 +183,7 @@ def run_utilities_daily_joinquant_like_backtest(
         "readiness": readiness,
         "signal_count": len(signals),
         "daily_count": len(daily_rows),
+        "rebalance_order_health": order_health_summary,
         "metrics": metrics,
         "execution": {
             "initial_cash": options.initial_cash,
@@ -180,6 +201,7 @@ def run_utilities_daily_joinquant_like_backtest(
             "holdings": "holdings.csv",
             "trades": "trades.csv",
             "dividends": "dividends.csv",
+            "rebalance_order_health": "rebalance_order_health.csv",
             "rebalance_signals": "rebalance_signals.csv",
         },
         "created_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
@@ -193,6 +215,7 @@ def run_utilities_daily_joinquant_like_backtest(
     _write_csv(out / "holdings.csv", HOLDING_FIELDS, holding_rows)
     _write_csv(out / "trades.csv", TRADE_FIELDS, trade_rows)
     _write_csv(out / "dividends.csv", DIVIDEND_FIELDS, dividend_rows)
+    _write_csv(out / "rebalance_order_health.csv", ORDER_HEALTH_FIELDS, order_health_rows)
     _write_csv(out / "rebalance_signals.csv", SIGNAL_FIELDS, signal_rows)
     return out / "summary.json"
 

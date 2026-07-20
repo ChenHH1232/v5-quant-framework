@@ -56,5 +56,54 @@ def test_basket_daily_backtest_writes_daily_trades_dividends_and_benchmark(tmp_p
     assert (result.output_dir / "corporate_actions.csv").exists()
     summary = json.loads(result.summary_path.read_text(encoding="utf-8"))
     assert summary["metrics"]["strategy_return"] > 0
+    assert summary["rebalance_order_health"]["first_executed_order_date"] == "2021-01-04"
+    assert summary["rebalance_order_health"]["leading_no_order_no_position_count"] == 0
+    assert (result.output_dir / "rebalance_order_health.csv").exists()
     benchmark_text = result.benchmark_path.read_text(encoding="utf-8")
     assert "dividend_constituent_count" in benchmark_text
+
+
+def test_basket_daily_backtest_flags_initial_rebalance_without_orders(tmp_path: Path) -> None:
+    prices = tmp_path / "prices.csv"
+    prices.write_text(
+        "date,code,open,close,high_limit,low_limit,paused\n"
+        "2021-01-04,A,100,100,110,90,0\n"
+        "2021-01-05,A,10,10,11,9,0\n"
+        "2021-01-06,A,10,11,11,9,0\n",
+        encoding="utf-8",
+    )
+    dividends = tmp_path / "dividends.csv"
+    dividends.write_text("code,ex_date,pay_date,net_cash_per_share,stock_dividend_ratio\n", encoding="utf-8")
+    signals = tmp_path / "signals.csv"
+    signals.write_text(
+        "trade_date,code,target_weight\n"
+        "2021-01-04,A,1\n"
+        "2021-01-05,A,1\n",
+        encoding="utf-8",
+    )
+    config = {
+        "project": "test_initial_no_order",
+        "portfolio": {"start_date": "2021-01-04", "end_date": "2021-01-06"},
+        "sectors": [{"sector_id": "s", "strategy_id": "x", "price_csv": str(prices), "dividend_csv": str(dividends)}],
+    }
+    config_path = tmp_path / "config.json"
+    config_path.write_text(json.dumps(config), encoding="utf-8")
+
+    result = run_basket_daily_backtest(
+        config_path,
+        signals,
+        tmp_path / "out",
+        initial_cash=5000,
+        target_exposure=1.0,
+        lot_size=100,
+        open_commission=0.0,
+        close_commission=0.0,
+        min_commission=0.0,
+    )
+
+    summary = json.loads(result.summary_path.read_text(encoding="utf-8"))
+    health_rows = (result.output_dir / "rebalance_order_health.csv").read_text(encoding="utf-8")
+    assert summary["rebalance_order_health"]["leading_no_order_no_position_count"] == 1
+    assert summary["rebalance_order_health"]["first_executed_order_date"] == "2021-01-05"
+    assert summary["rebalance_order_health"]["needs_review"] is True
+    assert "no_order_no_position" in health_rows

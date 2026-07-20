@@ -29,6 +29,7 @@ from v5.local_backtest import (
     _write_csv,
     _write_json,
 )
+from v5.rebalance_order_health import build_rebalance_order_health
 from v5.scoring import apply_value_trap_guard, merge_eastmoney_quality, score_rows
 
 
@@ -86,6 +87,7 @@ def run_daily_joinquant_like_backtest(
         row["benchmark_source"] = benchmark_id
     for row in signal_rows:
         row["experiment_layer"] = experiment_layer
+    order_health_rows, order_health_summary = build_rebalance_order_health(signals, daily_rows, trade_rows, holding_rows)
     metrics = _compute_metrics(daily_rows)
     summary = {
         "strategy_id": spec.strategy_id,
@@ -124,6 +126,7 @@ def run_daily_joinquant_like_backtest(
         },
         "signal_count": len(signals),
         "daily_count": len(daily_rows),
+        "rebalance_order_health": order_health_summary,
         "metrics": metrics,
         "outputs": {
             "summary": "summary.json",
@@ -132,6 +135,7 @@ def run_daily_joinquant_like_backtest(
             "trades": "trades.csv",
             "dividends": "dividends.csv",
             "rebalance_signals": "rebalance_signals.csv",
+            "rebalance_order_health": "rebalance_order_health.csv",
         },
         "notes": [
             "This runner is for JoinQuant comparison. It simulates daily path, open-price rebalancing, close-price valuation, A-share lot rounding, cash, and commissions.",
@@ -146,6 +150,7 @@ def run_daily_joinquant_like_backtest(
     _write_csv(out / "trades.csv", list(trade_rows[0].keys()) if trade_rows else [], trade_rows)
     _write_csv(out / "dividends.csv", list(dividend_rows[0].keys()) if dividend_rows else [], dividend_rows)
     _write_csv(out / "rebalance_signals.csv", list(signal_rows[0].keys()) if signal_rows else [], signal_rows)
+    _write_csv(out / "rebalance_order_health.csv", list(order_health_rows[0].keys()) if order_health_rows else [], order_health_rows)
     manifest = build_run_manifest(
         strategy_id=spec.strategy_id,
         experiment_layer=experiment_layer,

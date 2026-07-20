@@ -696,12 +696,14 @@ class DataValidationRunnerTests(unittest.TestCase):
             summary = json.loads((report.parent / "summary.json").read_text(encoding="utf-8"))
             signals = self._read_csv(report.parent / "rebalance_signals.csv")
             daily = self._read_csv(report.parent / "daily_returns.csv")
+            order_health = self._read_csv(report.parent / "rebalance_order_health.csv")
             dividends_file_exists = (report.parent / "dividends.csv").exists()
 
         self.assertEqual(readiness["status"], "ready")
         self.assertEqual(summary["strategy_id"], "utilities_demand_state_v51f_test")
         self.assertEqual(signals[0]["selected_codes"], "B")
         self.assertEqual(daily[0]["benchmark_source"], "utilities_benchmark")
+        self.assertEqual(order_health[0]["order_health_status"], "normal_ordered")
         self.assertTrue(dividends_file_exists)
 
     def test_insurance_daily_backtest_builds_internal_equal_weight_benchmark(self) -> None:
@@ -790,6 +792,7 @@ class DataValidationRunnerTests(unittest.TestCase):
             summary = json.loads((report.parent / "summary.json").read_text(encoding="utf-8"))
             signals = self._read_csv(report.parent / "rebalance_signals.csv")
             daily = self._read_csv(report.parent / "daily_returns.csv")
+            order_health = self._read_csv(report.parent / "rebalance_order_health.csv")
             benchmark = self._read_csv(tmp_path / "out" / "insurance_core_equal_weight.csv")
 
         self.assertEqual(readiness["status"], "ready")
@@ -797,6 +800,7 @@ class DataValidationRunnerTests(unittest.TestCase):
         self.assertEqual(summary["benchmark_policy"]["type"], "internal_equal_weight_core_insurance")
         self.assertEqual(signals[0]["selected_codes"], "A")
         self.assertEqual(daily[0]["benchmark_source"], "insurance_core_equal_weight")
+        self.assertEqual(order_health[0]["order_health_status"], "normal_ordered")
         self.assertEqual(benchmark[0]["code"], "insurance_core_equal_weight")
 
     def test_joinquant_real_data_output_prefix_keeps_sector_files_separate(self) -> None:

@@ -11,6 +11,7 @@ from typing import Any
 
 from v5.io_utils import read_csv_rows, write_csv_rows, write_json_file
 from v5.math_utils import fmt_float, to_float
+from v5.rebalance_order_health import build_rebalance_order_health
 
 
 DEFAULT_CONFIG = Path("config/dividend_low_vol_fcf_basket_v56.json")
@@ -28,6 +29,7 @@ class BasketDailyBacktestResult:
     dividends_path: Path
     corporate_actions_path: Path
     benchmark_path: Path
+    order_health_path: Path
     daily_count: int
     trade_count: int
     dividend_count: int
@@ -83,15 +85,18 @@ def run_basket_daily_backtest(
     dividends_path = out / "dividends.csv"
     corporate_actions_path = out / "corporate_actions.csv"
     benchmark_path = out / "same_pool_equal_weight_benchmark.csv"
+    order_health_path = out / "rebalance_order_health.csv"
     signals_copy_path = out / "rebalance_signals.csv"
     summary_path = out / "summary.json"
     report_path = out / "basket_daily_backtest_report.md"
+    order_health_rows, order_health_summary = build_rebalance_order_health(signals, daily_rows, trade_rows, holding_rows)
 
     write_csv_rows(daily_path, _fieldnames(daily_rows), daily_rows)
     write_csv_rows(holdings_path, _fieldnames(holding_rows), holding_rows)
     write_csv_rows(trades_path, _fieldnames(trade_rows), trade_rows)
     write_csv_rows(dividends_path, _fieldnames(dividend_rows), dividend_rows)
     write_csv_rows(corporate_actions_path, _fieldnames(corporate_action_rows), corporate_action_rows)
+    write_csv_rows(order_health_path, _fieldnames(order_health_rows), order_health_rows)
     write_csv_rows(
         benchmark_path,
         ["trade_date", "benchmark_return", "benchmark_nav", "constituent_count", "dividend_constituent_count"],
@@ -130,6 +135,7 @@ def run_basket_daily_backtest(
         "trade_count": len(trade_rows),
         "dividend_count": len(dividend_rows),
         "corporate_action_count": len(corporate_action_rows),
+        "rebalance_order_health": order_health_summary,
         "metrics": metrics,
         "outputs": {
             "summary": "summary.json",
@@ -138,6 +144,7 @@ def run_basket_daily_backtest(
             "trades": "trades.csv",
             "dividends": "dividends.csv",
             "corporate_actions": "corporate_actions.csv",
+            "rebalance_order_health": "rebalance_order_health.csv",
             "rebalance_signals": "rebalance_signals.csv",
             "same_pool_equal_weight_benchmark": "same_pool_equal_weight_benchmark.csv",
             "report": "basket_daily_backtest_report.md",
@@ -161,6 +168,7 @@ def run_basket_daily_backtest(
         dividends_path=dividends_path,
         corporate_actions_path=corporate_actions_path,
         benchmark_path=benchmark_path,
+        order_health_path=order_health_path,
         daily_count=len(daily_rows),
         trade_count=len(trade_rows),
         dividend_count=len(dividend_rows),
@@ -762,6 +770,26 @@ def _build_report(summary: dict[str, Any]) -> str:
         "max_drawdown_interval",
     ]:
         lines.append(f"- `{key}`: `{fmt_float(metrics.get(key)) if key != 'max_drawdown_interval' else metrics.get(key)}`")
+    lines.extend(
+        [
+            "",
+            "## Rebalance Order Health",
+            "",
+        ]
+    )
+    health = summary.get("rebalance_order_health", {})
+    for key in [
+        "rebalance_signal_count",
+        "normal_rebalance_count",
+        "no_order_rebalance_count",
+        "no_order_no_position_count",
+        "blocked_or_unfilled_rebalance_count",
+        "leading_no_order_no_position_count",
+        "first_executed_order_date",
+        "first_position_date",
+        "needs_review",
+    ]:
+        lines.append(f"- `{key}`: `{health.get(key)}`")
     lines.extend(
         [
             "",

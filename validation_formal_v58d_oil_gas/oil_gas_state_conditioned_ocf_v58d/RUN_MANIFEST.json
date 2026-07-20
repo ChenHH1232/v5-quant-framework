@@ -1,0 +1,30 @@
+{
+  "strategy_id": "oil_gas_state_conditioned_ocf_v58d",
+  "experiment_layer": "research_pit_validation",
+  "created_at_utc": "2026-07-20T09:27:54+00:00",
+  "git": {
+    "commit": "79263847b54a2b4f4bbf8868e85b5217d6866fa8",
+    "dirty": true
+  },
+  "command_profile": {
+    "spec": "examples\\oil_gas_state_conditioned_ocf_v58d_strategy.json",
+    "panel": "数据库\\processed\\oil_gas_state_conditioned_panel_v58d\\oil_gas_state_conditioned_ocf_v58d\\panel.csv",
+    "out": "validation_formal_v58d_oil_gas"
+  },
+  "outputs": {
+    "formal_validation_summary": "formal_validation_summary.json",
+    "formal_validation_report": "formal_validation_report.md",
+    "notice_date_leakage_audit": "notice_date_leakage_audit.csv",
+    "rolling_validation": "rolling_validation.csv",
+    "baseline_tests": "baseline_tests.csv",
+    "ablation_tests": "ablation_tests.csv",
+    "robustness_tests": "robustness_tests.csv",
+    "common_sample_interaction_tests": "common_sample_interaction_tests.csv",
+    "factor_ic_rankic": "factor_ic_rankic.csv",
+    "failure_mode_analysis": "failure_mode_analysis.csv"
+  },
+  "warnings": [
+    "Formal validation output is evidence, not automatic strategy acceptance."
+  ],
+  "governance_rule": "Project Manager Agent must not mix research validation, platform replication, engineering smoke tests, and paper trading evidence."
+}

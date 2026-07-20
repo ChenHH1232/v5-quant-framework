@@ -82,6 +82,11 @@ from v5.oil_gas_cycle_state_validation_runner import (
     DEFAULT_PANEL as DEFAULT_OIL_GAS_CYCLE_STATE_PANEL,
     run_oil_gas_cycle_state_validation,
 )
+from v5.oil_gas_state_conditioned_panel_runner import (
+    DEFAULT_OUT_DIR as DEFAULT_OIL_GAS_STATE_CONDITIONED_OUT,
+    DEFAULT_PANEL as DEFAULT_OIL_GAS_STATE_CONDITIONED_PANEL,
+    build_oil_gas_state_conditioned_panel,
+)
 
 
 def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.ArgumentParser]) -> None:
@@ -199,6 +204,13 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     oil_gas_cycle_parser.add_argument("--min-history", type=int, default=4)
     oil_gas_cycle_parser.add_argument("--strategy-id", default="oil_gas_ocf_state_diagnostic_v58c")
     oil_gas_cycle_parser.set_defaults(handler=_handle_validate_oil_gas_cycle_state)
+
+    oil_gas_conditioned_panel_parser = subparsers.add_parser("build-oil-gas-state-conditioned-panel")
+    oil_gas_conditioned_panel_parser.add_argument("--panel", type=Path, default=DEFAULT_OIL_GAS_STATE_CONDITIONED_PANEL)
+    oil_gas_conditioned_panel_parser.add_argument("--out-dir", type=Path, default=DEFAULT_OIL_GAS_STATE_CONDITIONED_OUT)
+    oil_gas_conditioned_panel_parser.add_argument("--strategy-id", default="oil_gas_state_conditioned_ocf_v58d")
+    oil_gas_conditioned_panel_parser.add_argument("--min-history", type=int, default=4)
+    oil_gas_conditioned_panel_parser.set_defaults(handler=_handle_build_oil_gas_state_conditioned_panel)
 
     screen_parser = subparsers.add_parser("screen-dividend-low-vol-fcf-sectors")
     screen_parser.add_argument("--config", type=Path, default=DEFAULT_V56_SCREEN_CONFIG)
@@ -406,6 +418,11 @@ def _handle_build_oil_gas_research_panel(args: argparse.Namespace) -> int:
 
 def _handle_validate_oil_gas_cycle_state(args: argparse.Namespace) -> int:
     print(run_oil_gas_cycle_state_validation(args.panel, args.out, args.metric, args.selection_count, args.min_history, args.strategy_id))
+    return 0
+
+
+def _handle_build_oil_gas_state_conditioned_panel(args: argparse.Namespace) -> int:
+    print(build_oil_gas_state_conditioned_panel(args.panel, args.out_dir, args.strategy_id, args.min_history))
     return 0
 
 

@@ -1427,6 +1427,53 @@
         "2026 failure mode remains unresolved."
       ],
       "next_gate": "research_repair_official_oil_gas_state_sources_or_design_state_conditioned_ocf_hypothesis"
+    },
+    {
+      "strategy_id": "oil_gas_state_conditioned_ocf_v58d",
+      "sector": "oil_gas_pipeline_integrated",
+      "current_status": [
+        "research_pit_validation_completed",
+        "pit_leakage_audit_passed",
+        "state_conditioned_ocf_signal_strengthened",
+        "formal_validation_opened",
+        "not_engineering_handoff",
+        "source_repair_required"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "engineering_handoff",
+        "platform_replication",
+        "paper_trading_ready",
+        "accepted_strategy",
+        "live_trading_approved",
+        "joinquant_code_ready",
+        "v57f_basket_member"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "knowledge/research_agent/factor_theory/oil_gas_v58d_state_conditioned_ocf_hypothesis.md",
+        "src/v5/oil_gas_state_conditioned_panel_runner.py",
+        "tests/test_oil_gas_state_conditioned_panel_runner.py",
+        "examples/oil_gas_state_conditioned_ocf_v58d_strategy.json",
+        "数据库/processed/oil_gas_state_conditioned_panel_v58d/oil_gas_state_conditioned_ocf_v58d/collection_manifest.json",
+        "数据库/processed/oil_gas_state_conditioned_panel_v58d/oil_gas_state_conditioned_ocf_v58d/panel.csv",
+        "validation_formal_v58d_oil_gas/oil_gas_state_conditioned_ocf_v58d/formal_validation_summary.json",
+        "validation_formal_v58d_oil_gas/oil_gas_state_conditioned_ocf_v58d/formal_validation_report.md",
+        "validation_formal_v58d_oil_gas/oil_gas_state_conditioned_ocf_v58d/baseline_tests.csv",
+        "validation_formal_v58d_oil_gas/oil_gas_state_conditioned_ocf_v58d/factor_ic_rankic.csv",
+        "validation_formal_v58d_oil_gas/oil_gas_state_conditioned_ocf_v58d/rolling_validation.csv",
+        "docs/governance/v58d_oil_gas_state_conditioned_ocf_pm_decision_v1.md",
+        "agent_loop_packets_v58/v58d_oil_gas_state_conditioned_ocf_validation_20260720/checkpoint_packet.json"
+      ],
+      "blockers": [
+        "V5.8d uses proxy oil/gas state metrics, not official or reviewed state sources.",
+        "Business exposure is still JoinQuant industry proxy, not reviewed annual-report segment evidence.",
+        "Cash dividend events are not repaired for local daily simulation.",
+        "The 2021-2026 window remains research/platform-confirmation context, not accepted-strategy evidence.",
+        "2026 has only two validation periods and cannot prove forward stability.",
+        "Engineering Agent remains blocked until source repair and PM approval."
+      ],
+      "next_gate": "research_source_repair_then_rerun_state_conditioned_ocf_validation"
     }
   ],
   "sector_test_policy": {
@@ -1434,7 +1481,7 @@
     "agent_operating_protocol": "docs/governance/agent_operating_protocol_v1.md",
     "agent_operating_protocol_config": "config/agent_operating_protocol_v1.json",
     "agent_loop_packet_runner": "src/v5/agent_loop_packet_runner.py",
-    "latest_agent_loop_checkpoint": "agent_loop_packets_v58/v58c_oil_gas_cycle_state_diagnostic_20260720/checkpoint_packet.json",
+    "latest_agent_loop_checkpoint": "agent_loop_packets_v58/v58d_oil_gas_state_conditioned_ocf_validation_20260720/checkpoint_packet.json",
     "default_agent_loop_timebox_minutes": 30,
     "extended_agent_loop_timebox_minutes": 60,
     "agent_loop_policy": "default_continue_without_asking_inside_approved_objective_checkpoint_at_timebox_stop_after_two_no_new_evidence_loops",

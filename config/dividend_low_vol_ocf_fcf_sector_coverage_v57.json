@@ -142,15 +142,15 @@
         "docs/governance/v55_candidate_screening_packet_v1.md",
         "knowledge/research_agent/strategy_cases/v55a_similar_sector_initial_model_result.md"
       ],
-      "data_gate": "needs_manual_research",
-      "pit_universe_gate": "needs_operator_purity_review",
-      "business_purity_gate": "needs_review",
-      "dividend_gate": "likely_pass",
+      "data_gate": "passed_with_governance_review",
+      "pit_universe_gate": "passed",
+      "business_purity_gate": "passed_first_layer_spot_check_pending",
+      "dividend_gate": "passed",
       "fcf_gate": "needs_receivables_and_project_revenue_review",
       "low_vol_gate": "can_build_from_daily_prices",
       "external_state_burden": "medium",
       "sample_size_risk": "medium",
-      "notes": "Closest expansion after electricity; must separate real operators from engineering/project companies."
+      "notes": "Research and data repair are materially complete: business purity, direct receivables/debt evidence, real daily prices, dividends and local simulation exist. Keep out of basket until strict coverage policy, 2026 ex-ante state hypothesis and benchmark policy are resolved."
     },
     {
       "sector_id": "airport_transport_operators",
@@ -162,15 +162,15 @@
         "knowledge/research_agent/references/transport_operator_source_collection_plan.md",
         "knowledge/research_agent/factor_theory/transport_operator_cashflow_framework.md"
       ],
-      "data_gate": "needs_manual_research",
-      "pit_universe_gate": "needs_operator_purity_review",
-      "business_purity_gate": "needs_review",
+      "data_gate": "strategy_candidate_failed",
+      "pit_universe_gate": "passed",
+      "business_purity_gate": "passed_first_layer_spot_check_pending",
       "dividend_gate": "mixed",
-      "fcf_gate": "needs_traffic_and_capex_review",
+      "fcf_gate": "failed_for_basket_until_new_domain_data",
       "low_vol_gate": "can_build_from_daily_prices",
       "external_state_burden": "medium_high",
       "sample_size_risk": "medium",
-      "notes": "Potential cash-flow operator sleeve, but traffic volume and recovery-cycle state are mandatory."
+      "notes": "Workflow replication passed, but V5.8 and V5.8b strategy hypotheses failed. Archive until new ex-ante airport domain data such as international recovery, duty-free/lease terms, concession policy and capex cycle are available."
     },
     {
       "sector_id": "oil_gas_pipeline_integrated",
@@ -182,15 +182,15 @@
         "knowledge/research_agent/references/oil_gas_source_collection_plan.md",
         "knowledge/research_agent/factor_theory/oil_gas_cashflow_framework.md"
       ],
-      "data_gate": "needs_manual_research",
-      "pit_universe_gate": "needs_business_exposure_pit",
-      "business_purity_gate": "needs_review",
-      "dividend_gate": "likely_pass_for_large_caps",
+      "data_gate": "platform_replication_pending_exports",
+      "pit_universe_gate": "passed_proxy_business_exposure_review_pending",
+      "business_purity_gate": "needs_annual_report_exposure_review",
+      "dividend_gate": "passed_for_local_simulation",
       "fcf_gate": "needs_commodity_and_capex_policy_review",
       "low_vol_gate": "can_build_from_daily_prices",
       "external_state_burden": "high",
       "sample_size_risk": "medium",
-      "notes": "High dividend candidates exist, but oil/gas price, refining spread and upstream/downstream exposure are required before formal modeling."
+      "notes": "V5.8g/V5.8i has research validation, local daily simulation, sector benchmark and platform-replication packet prepared. Do not add to enhanced ETF basket until platform exports, business-exposure review and remaining source gates are resolved."
     },
     {
       "sector_id": "consumer_staples_cashflow",

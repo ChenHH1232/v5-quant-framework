@@ -1,0 +1,81 @@
+{
+  "strategy_id": "gas_water_value_serviceability_v57b",
+  "experiment_layer": "research_pit_validation",
+  "created_at_utc": "2026-07-20T17:14:47+00:00",
+  "git": {
+    "commit": "9c15af8573a135c6fe58e12fcb59437c95f721cd",
+    "dirty": true,
+    "dirty_scope": "pre_run",
+    "pre_run": {
+      "commit": "9c15af8573a135c6fe58e12fcb59437c95f721cd",
+      "dirty": true,
+      "status_short": [
+        "M config/dividend_low_vol_ocf_fcf_sector_coverage_v57.json",
+        " M roadmaps_v58_sector_replication/agent_queues/project_manager_queue.csv",
+        " M roadmaps_v58_sector_replication/agent_queues/quant_validation_agent_queue.csv",
+        " M roadmaps_v58_sector_replication/agent_queues/research_agent_queue.csv",
+        " M roadmaps_v58_sector_replication/sector_replication_roadmap.csv",
+        " M roadmaps_v58_sector_replication/sector_replication_roadmap_pm_report.md",
+        " M roadmaps_v58_sector_replication/sector_replication_roadmap_summary.json",
+        " M src/v5/dividend_low_vol_fcf_screener_runner.py",
+        " M src/v5/sector_replication_roadmap_runner.py",
+        " M tests/test_dividend_low_vol_fcf_screener_runner.py",
+        " M tests/test_sector_replication_roadmap_runner.py",
+        "?? knowledge/research_agent/factor_theory/consumer_staples_cashflow_framework.md",
+        "?? knowledge/research_agent/factor_theory/environmental_cashflow_trap_framework.md",
+        "?? knowledge/research_agent/factor_theory/pharma_cashflow_framework.md",
+        "?? knowledge/research_agent/references/consumer_staples_source_collection_plan.md",
+        "?? knowledge/research_agent/references/environmental_operator_source_collection_plan.md",
+        "?? knowledge/research_agent/references/pharma_source_collection_plan.md",
+        "?? research_reports_v59_expansion/"
+      ],
+      "captured_at_utc": "2026-07-20T17:14:47+00:00"
+    },
+    "manifest_created": {
+      "commit": "9c15af8573a135c6fe58e12fcb59437c95f721cd",
+      "dirty": true,
+      "status_short": [
+        "M config/dividend_low_vol_ocf_fcf_sector_coverage_v57.json",
+        " M roadmaps_v58_sector_replication/agent_queues/project_manager_queue.csv",
+        " M roadmaps_v58_sector_replication/agent_queues/quant_validation_agent_queue.csv",
+        " M roadmaps_v58_sector_replication/agent_queues/research_agent_queue.csv",
+        " M roadmaps_v58_sector_replication/sector_replication_roadmap.csv",
+        " M roadmaps_v58_sector_replication/sector_replication_roadmap_pm_report.md",
+        " M roadmaps_v58_sector_replication/sector_replication_roadmap_summary.json",
+        " M src/v5/dividend_low_vol_fcf_screener_runner.py",
+        " M src/v5/sector_replication_roadmap_runner.py",
+        " M tests/test_dividend_low_vol_fcf_screener_runner.py",
+        " M tests/test_sector_replication_roadmap_runner.py",
+        "?? knowledge/research_agent/factor_theory/consumer_staples_cashflow_framework.md",
+        "?? knowledge/research_agent/factor_theory/environmental_cashflow_trap_framework.md",
+        "?? knowledge/research_agent/factor_theory/pharma_cashflow_framework.md",
+        "?? knowledge/research_agent/references/consumer_staples_source_collection_plan.md",
+        "?? knowledge/research_agent/references/environmental_operator_source_collection_plan.md",
+        "?? knowledge/research_agent/references/pharma_source_collection_plan.md",
+        "?? research_reports_v59_expansion/"
+      ],
+      "captured_at_utc": "2026-07-20T17:14:47+00:00"
+    }
+  },
+  "command_profile": {
+    "spec": "examples\\gas_water_value_serviceability_v57b_strategy.json",
+    "panel": "数据库\\processed\\gas_water_financial_evidence_v57\\panel_with_direct_financial_evidence.csv",
+    "out": "validation_formal_v59_expansion_batch"
+  },
+  "outputs": {
+    "formal_validation_summary": "formal_validation_summary.json",
+    "formal_validation_report": "formal_validation_report.md",
+    "notice_date_leakage_audit": "notice_date_leakage_audit.csv",
+    "rolling_validation": "rolling_validation.csv",
+    "baseline_tests": "baseline_tests.csv",
+    "ablation_tests": "ablation_tests.csv",
+    "robustness_tests": "robustness_tests.csv",
+    "common_sample_interaction_tests": "common_sample_interaction_tests.csv",
+    "factor_ic_rankic": "factor_ic_rankic.csv",
+    "failure_mode_analysis": "failure_mode_analysis.csv"
+  },
+  "warnings": [
+    "Formal validation output is evidence, not automatic strategy acceptance."
+  ],
+  "governance_rule": "Project Manager Agent must not mix research validation, platform replication, engineering smoke tests, and paper trading evidence."
+}

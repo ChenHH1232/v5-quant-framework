@@ -1,0 +1,17 @@
+﻿{
+  "source": "fxbaogao",
+  "api_base_url": "https://api.fxbaogao.com",
+  "keywords": "环保 运营 PPP 应收账款 现金流 分红",
+  "org_names": [],
+  "start_time": null,
+  "end_time": "last1year",
+  "status": "completed",
+  "report_count": 20,
+  "outputs": [
+    "raw_search_response.json",
+    "report_candidates.csv",
+    "collection_manifest.json"
+  ],
+  "credential_policy": "api key loaded from environment or vault; never written to output files",
+  "pit_policy": "research reports are knowledge sources only; any financial field still requires original announcement date before PIT validation"
+}

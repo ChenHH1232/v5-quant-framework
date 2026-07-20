@@ -135,6 +135,10 @@ def _decide(candidate: dict[str, Any], registry_statuses: list[str]) -> tuple[st
         return "blocked_by_cycle_data_gate", "repair cycle-state and PIT business-exposure data only"
     if data_gate == "blocked":
         return "blocked_by_data_gate", "repair data before any modeling"
+    if data_gate == "strategy_candidate_failed":
+        return "archived_strategy_candidate_failed", "archive until Research Agent supplies new ex-ante domain data"
+    if data_gate == "platform_replication_pending_exports":
+        return "platform_replication_pending_before_basket", "wait for platform exports and attribution; do not add to basket yet"
     if data_gate in {"needs_manual_research", "specialist_data_partial"}:
         if sample_size_risk == "high" or "specialist" in sector_type:
             return "basket_observation_only", "track as specialist or concentrated sleeve; do not run broad IC acceptance"

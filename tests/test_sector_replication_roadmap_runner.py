@@ -61,6 +61,36 @@ def test_build_sector_replication_roadmap_assigns_agent_lanes(tmp_path: Path) ->
                         "sample_size_risk": "medium",
                         "notes": "cycle gate",
                     },
+                    {
+                        "sector_id": "airport_transport_operators",
+                        "display_name": "Airport",
+                        "sector_type": "transport_recovery_cash_flow",
+                        "basket_role": "archived",
+                        "data_gate": "strategy_candidate_failed",
+                        "pit_universe_gate": "passed",
+                        "business_purity_gate": "passed",
+                        "dividend_gate": "mixed",
+                        "fcf_gate": "failed",
+                        "low_vol_gate": "can_build",
+                        "external_state_burden": "medium",
+                        "sample_size_risk": "medium",
+                        "notes": "archive",
+                    },
+                    {
+                        "sector_id": "oil_gas_pipeline_integrated",
+                        "display_name": "Oil / Gas",
+                        "sector_type": "cycle_aware_cash_flow",
+                        "basket_role": "platform_pending",
+                        "data_gate": "platform_replication_pending_exports",
+                        "pit_universe_gate": "passed",
+                        "business_purity_gate": "needs_review",
+                        "dividend_gate": "passed",
+                        "fcf_gate": "needs_review",
+                        "low_vol_gate": "passed",
+                        "external_state_burden": "high",
+                        "sample_size_risk": "medium",
+                        "notes": "platform pending",
+                    },
                 ]
             }
         ),
@@ -72,6 +102,8 @@ def test_build_sector_replication_roadmap_assigns_agent_lanes(tmp_path: Path) ->
         writer.writerow({"sector_id": "bank", "pm_screening_decision": "ready_for_basket_shadow_pool"})
         writer.writerow({"sector_id": "gas_water_operators", "pm_screening_decision": "needs_manual_research_before_formal"})
         writer.writerow({"sector_id": "coal", "pm_screening_decision": "blocked_by_cycle_data_gate"})
+        writer.writerow({"sector_id": "airport_transport_operators", "pm_screening_decision": "archived_strategy_candidate_failed"})
+        writer.writerow({"sector_id": "oil_gas_pipeline_integrated", "pm_screening_decision": "platform_replication_pending_before_basket"})
 
     config.write_text(
         json.dumps(
@@ -114,6 +146,14 @@ def test_build_sector_replication_roadmap_assigns_agent_lanes(tmp_path: Path) ->
                         "allowed_next_action": "repair data",
                         "forbidden_action": "no backtest",
                     },
+                    "observation_only": {
+                        "next_agent": "Project Manager Agent",
+                        "loop_type": "observe",
+                        "timebox_minutes": 30,
+                        "required_packet": "checkpoint_packet",
+                        "allowed_next_action": "wait",
+                        "forbidden_action": "no basket inclusion",
+                    },
                 },
             }
         ),
@@ -122,10 +162,11 @@ def test_build_sector_replication_roadmap_assigns_agent_lanes(tmp_path: Path) ->
 
     result = build_sector_replication_roadmap(config, tmp_path / "out")
 
-    assert result.sector_count == 3
+    assert result.sector_count == 5
     assert result.lane_counts["basket_core_shadow_pool"] == 1
     assert result.lane_counts["manual_research_before_formal"] == 1
-    assert result.lane_counts["blocked_data_repair"] == 1
+    assert result.lane_counts["blocked_data_repair"] == 2
+    assert result.lane_counts["observation_only"] == 1
     assert (result.queue_dir / "research_agent_queue.csv").exists()
     assert (result.queue_dir / "engineering_agent_queue.csv").exists()
     report = result.report_path.read_text(encoding="utf-8")

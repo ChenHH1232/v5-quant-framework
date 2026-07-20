@@ -1,6 +1,6 @@
 # V5.8 Dividend Low-Vol Cash-Flow Sector Replication Roadmap
 
-Created at UTC: `2026-07-19T12:52:06+00:00`
+Created at UTC: `2026-07-20T17:14:20+00:00`
 
 ## PM Decision
 
@@ -18,9 +18,10 @@ Broad replication roadmap is active, but no new sector is promoted to formal mod
 | Lane | Count |
 | --- | ---: |
 | `basket_core_shadow_pool` | 4 |
-| `blocked_data_repair` | 2 |
-| `manual_research_before_formal` | 5 |
-| `observation_only` | 2 |
+| `batch_initial_validation` | 1 |
+| `blocked_data_repair` | 3 |
+| `manual_research_before_formal` | 2 |
+| `observation_only` | 3 |
 
 ## Agent Work Queue
 
@@ -30,11 +31,11 @@ Broad replication roadmap is active, but no new sector is promoted to formal mod
 | 11 | Utilities / Electricity | `basket_core_shadow_pool` | `Engineering Agent` | 30 | `paper_trading_record_or_platform_attribution_packet_completed` |
 | 12 | Highway Infrastructure | `basket_core_shadow_pool` | `Engineering Agent` | 30 | `paper_trading_record_or_platform_attribution_packet_completed` |
 | 13 | Port / Rail Infrastructure | `basket_core_shadow_pool` | `Engineering Agent` | 30 | `paper_trading_record_or_platform_attribution_packet_completed` |
-| 20 | Gas / Water Operators | `manual_research_before_formal` | `Research Agent` | 60 | `industry_knowledge_and_data_availability_gate_passed` |
+| 20 | Gas / Water Operators | `batch_initial_validation` | `Quant Validation Agent` | 60 | `baseline_ic_rankic_rolling_ablation_robustness_passed` |
 | 30 | Telecom Operators | `observation_only` | `Project Manager Agent` | 30 | `PM_approves_specialist_or_small_sample_policy` |
-| 31 | Airport / Transport Operators | `manual_research_before_formal` | `Research Agent` | 60 | `industry_knowledge_and_data_availability_gate_passed` |
+| 31 | Airport / Transport Operators | `blocked_data_repair` | `Research Agent` | 60 | `hard_data_gate_repaired_before_modeling` |
 | 40 | Insurance | `observation_only` | `Project Manager Agent` | 30 | `PM_approves_specialist_or_small_sample_policy` |
-| 50 | Oil / Gas Pipeline and Integrated Energy | `manual_research_before_formal` | `Research Agent` | 60 | `industry_knowledge_and_data_availability_gate_passed` |
+| 50 | Oil / Gas Pipeline and Integrated Energy | `observation_only` | `Project Manager Agent` | 30 | `PM_approves_specialist_or_small_sample_policy` |
 | 60 | Consumer Staples Cash-Flow Leaders | `manual_research_before_formal` | `Research Agent` | 60 | `industry_knowledge_and_data_availability_gate_passed` |
 | 70 | Pharma / Medical Services | `manual_research_before_formal` | `Research Agent` | 60 | `industry_knowledge_and_data_availability_gate_passed` |
 | 90 | Environmental / Project Operators | `blocked_data_repair` | `Research Agent` | 60 | `hard_data_gate_repaired_before_modeling` |

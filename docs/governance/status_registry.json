@@ -2262,6 +2262,11 @@
       "item": "rebalance_order_health_engineering_gate",
       "status": "completed_initial_layer",
       "reason": "Local JoinQuant-like simulations now output rebalance_order_health, Basket PM Gate blocks missing or failed rebalance execution health, and V5.1f/V5.7f/V5.8i priority candidates were rerun with clean order-health summaries."
+    },
+    {
+      "item": "v59_enhanced_etf_expansion_batch_screening",
+      "status": "completed_initial_gate",
+      "reason": "Enhanced ETF expansion candidates were rerouted through research knowledge and data availability gates. Gas/Water is the only batch-initial-validation queue item; Airport is archived as strategy-candidate failed; Oil/Gas waits for platform exports; Consumer, Pharma and Environmental knowledge seeds were added."
     }
   ],
   "references": {
@@ -2292,6 +2297,17 @@
     "v58i_rebalance_order_health_summary": "validation_daily_v58h_oil_gas_sector_benchmark/oil_gas_state_conditioned_ocf_v58g/summary.json",
     "v51f_rebalance_order_health_csv": "local_daily_backtests_utilities_v51f/utilities_demand_state_v51f/rebalance_order_health.csv",
     "v57f_rebalance_order_health_csv": "local_daily_backtests_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/rebalance_order_health.csv",
-    "v58i_rebalance_order_health_csv": "validation_daily_v58h_oil_gas_sector_benchmark/oil_gas_state_conditioned_ocf_v58g/rebalance_order_health.csv"
+    "v58i_rebalance_order_health_csv": "validation_daily_v58h_oil_gas_sector_benchmark/oil_gas_state_conditioned_ocf_v58g/rebalance_order_health.csv",
+    "v59_expansion_pm_decision": "docs/governance/v59_enhanced_etf_expansion_batch_screening_pm_decision_v1.md",
+    "v59_expansion_screening_summary": "validation_formal_v57_sector_coverage/sector_screening_summary.json",
+    "v59_expansion_screening_results": "validation_formal_v57_sector_coverage/sector_screening_results.csv",
+    "v59_expansion_roadmap_summary": "roadmaps_v58_sector_replication/sector_replication_roadmap_summary.json",
+    "v59_gas_water_validation_summary": "validation_formal_v59_expansion_batch/gas_water_value_serviceability_v57b/formal_validation_summary.json",
+    "v59_consumer_knowledge_framework": "knowledge/research_agent/factor_theory/consumer_staples_cashflow_framework.md",
+    "v59_pharma_knowledge_framework": "knowledge/research_agent/factor_theory/pharma_cashflow_framework.md",
+    "v59_environmental_trap_framework": "knowledge/research_agent/factor_theory/environmental_cashflow_trap_framework.md",
+    "v59_consumer_report_search_manifest": "research_reports_v59_expansion/consumer_staples/collection_manifest.json",
+    "v59_pharma_report_search_manifest": "research_reports_v59_expansion/pharma_medical/collection_manifest.json",
+    "v59_environmental_report_search_manifest": "research_reports_v59_expansion/environmental_project_operators/collection_manifest.json"
   }
 }

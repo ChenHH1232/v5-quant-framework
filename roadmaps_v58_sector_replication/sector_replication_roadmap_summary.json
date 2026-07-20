@@ -2,19 +2,21 @@
   "schema_version": 1,
   "project": "v58_dividend_low_vol_cashflow_sector_replication_roadmap",
   "experiment_layer": "pm_decision_gate",
-  "created_at_utc": "2026-07-19T12:52:06+00:00",
+  "created_at_utc": "2026-07-20T17:14:20+00:00",
   "objective": "Apply the nearby-sector replication process to all dividend low-volatility, operating-cash-flow and sector-approved free-cash-flow sectors without prematurely promoting strategies.",
   "sector_count": 13,
   "lane_counts": {
     "basket_core_shadow_pool": 4,
-    "manual_research_before_formal": 5,
-    "observation_only": 2,
-    "blocked_data_repair": 2
+    "batch_initial_validation": 1,
+    "observation_only": 3,
+    "blocked_data_repair": 3,
+    "manual_research_before_formal": 2
   },
   "next_agent_counts": {
     "Engineering Agent": 4,
-    "Research Agent": 7,
-    "Project Manager Agent": 2
+    "Quant Validation Agent": 1,
+    "Project Manager Agent": 3,
+    "Research Agent": 5
   },
   "factor_policy": {
     "primary_cross_sector_factors": [

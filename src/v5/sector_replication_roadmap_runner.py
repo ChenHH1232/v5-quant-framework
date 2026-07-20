@@ -145,6 +145,10 @@ def _infer_screening_decision(candidate: dict[str, Any]) -> str:
         return "blocked_by_cycle_data_gate"
     if data_gate == "blocked":
         return "blocked_by_data_gate"
+    if data_gate == "strategy_candidate_failed":
+        return "archived_strategy_candidate_failed"
+    if data_gate == "platform_replication_pending_exports":
+        return "platform_replication_pending_before_basket"
     if data_gate in {"needs_manual_research", "specialist_data_partial"}:
         if sample_size_risk == "high" or "specialist" in sector_type:
             return "basket_observation_only"
@@ -165,6 +169,10 @@ def _lane_from_decision(decision: str) -> str:
         return "batch_initial_validation"
     if decision == "basket_observation_only":
         return "observation_only"
+    if decision == "platform_replication_pending_before_basket":
+        return "observation_only"
+    if decision == "archived_strategy_candidate_failed":
+        return "blocked_data_repair"
     if decision.startswith("blocked"):
         return "blocked_data_repair"
     return "manual_research_before_formal"

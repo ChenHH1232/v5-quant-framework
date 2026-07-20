@@ -48,6 +48,40 @@ def test_dividend_low_vol_fcf_batch_screening_classifies_candidates(tmp_path: Pa
                 "sample_size_risk": "medium",
                 "notes": "cycle note",
             },
+            {
+                "sector_id": "failed",
+                "display_name": "Failed",
+                "sector_type": "stable_cash_flow",
+                "basket_role": "archived",
+                "strategy_ids": [],
+                "knowledge_artifacts": [],
+                "data_gate": "strategy_candidate_failed",
+                "pit_universe_gate": "passed",
+                "business_purity_gate": "passed",
+                "dividend_gate": "mixed",
+                "fcf_gate": "failed",
+                "low_vol_gate": "can_build",
+                "external_state_burden": "medium",
+                "sample_size_risk": "medium",
+                "notes": "failed note",
+            },
+            {
+                "sector_id": "platform_pending",
+                "display_name": "Platform Pending",
+                "sector_type": "cycle_aware_cash_flow",
+                "basket_role": "platform_pending",
+                "strategy_ids": [],
+                "knowledge_artifacts": [],
+                "data_gate": "platform_replication_pending_exports",
+                "pit_universe_gate": "passed",
+                "business_purity_gate": "needs_review",
+                "dividend_gate": "passed",
+                "fcf_gate": "needs_review",
+                "low_vol_gate": "passed",
+                "external_state_burden": "high",
+                "sample_size_risk": "medium",
+                "notes": "pending note",
+            },
         ],
     }
     registry = {
@@ -73,9 +107,11 @@ def test_dividend_low_vol_fcf_batch_screening_classifies_candidates(tmp_path: Pa
 
     result = run_dividend_low_vol_fcf_batch_screening(config_path, registry_path, tmp_path / "out")
 
-    assert result.sector_count == 2
+    assert result.sector_count == 4
     assert result.core_candidate_count == 1
     assert result.blocked_count == 1
     report = result.report_path.read_text(encoding="utf-8")
     assert "ready_for_basket_shadow_pool" in report
     assert "blocked_by_cycle_data_gate" in report
+    assert "archived_strategy_candidate_failed" in report
+    assert "platform_replication_pending_before_basket" in report

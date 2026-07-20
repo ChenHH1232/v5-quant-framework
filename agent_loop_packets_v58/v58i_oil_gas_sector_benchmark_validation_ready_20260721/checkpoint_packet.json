@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "packet_type": "checkpoint_packet",
+  "protocol_id": "agent_operating_protocol_v1",
+  "objective": "v58i_oil_gas_sector_benchmark_validation_ready",
+  "agent": "Project Manager Agent",
+  "experiment_layer": "engineering_smoke_test",
+  "elapsed_timebox_minutes": 30,
+  "artifacts_created": [
+    "数据库/processed/oil_gas_v58h_joinquant_sector_benchmark_prices.csv",
+    "数据库/manifests/oil_gas_v58h_joinquant_sector_benchmark_prices_manifest.json",
+    "validation_daily_v58h_oil_gas_sector_benchmark/oil_gas_state_conditioned_ocf_v58g/summary.json",
+    "overfit_audits_v58h_oil_gas_sector_benchmark/oil_gas_state_conditioned_ocf_v58g/overfit_audit_summary.json",
+    "docs/governance/v58i_oil_gas_sector_benchmark_validation_ready_pm_decision_v1.md"
+  ],
+  "evidence_found": [
+    "Oil/gas sector benchmark 399439.XSHE was imported from JoinQuant and covers 1228 trading days.",
+    "Sector-benchmark engineering smoke test completed with 18 signals, 197 trades and 29 dividend rows.",
+    "Overfit audit has 0 blockers, 1 expected needs-review item and 13 pass checks."
+  ],
+  "blockers": [
+    "2021-2026 remains platform-confirmation context and cannot accept the strategy.",
+    "Inventory/demand state, pipeline tariff/policy state and reviewed business exposure remain acceptance blockers."
+  ],
+  "decision": "return_to_engineering",
+  "next_owner": "Engineering Agent",
+  "stop_rule_status": "not_triggered",
+  "user_decision_required": false,
+  "user_decision_reason": "",
+  "allowed_next_action": "Engineering Agent may prepare platform-replication intake and attribution framework without generating JoinQuant code unless explicitly requested.",
+  "restart_condition": "User provides or requests platform run/export; otherwise continue data-gate repair and attribution preparation only.",
+  "skill_status_change": "none",
+  "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
+  "created_at_utc": "2026-07-20T16:34:20+00:00"
+}

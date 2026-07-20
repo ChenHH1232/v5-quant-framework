@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "packet_type": "checkpoint_packet",
+  "protocol_id": "agent_operating_protocol_v1",
+  "objective": "V5.8b oil gas OCF-led validation opened and completed",
+  "agent": "Project Manager Agent",
+  "experiment_layer": "research_pit_validation",
+  "elapsed_timebox_minutes": 30,
+  "artifacts_created": [
+    "knowledge/research_agent/factor_theory/oil_gas_v58b_ocf_led_hypothesis.md",
+    "examples/oil_gas_ocf_low_vol_value_v58b_strategy.json",
+    "validation_formal_v58b_oil_gas/oil_gas_ocf_low_vol_value_v58b/formal_validation_summary.json",
+    "docs/governance/v58b_oil_gas_ocf_low_vol_value_pm_decision_v1.md"
+  ],
+  "evidence_found": [
+    "V5.8b config validation passed and formal validation completed.",
+    "OCF-only baseline cum_return 80.38% remains stronger than V5.8b composite 46.68%.",
+    "OCF mean IC / RankIC 0.0919 / 0.1111; low-vol RankIC 0.1191 but weak top-minus-bottom return spread."
+  ],
+  "blockers": [
+    "Composite hypothesis is not promoted because it underperforms OCF-only baseline.",
+    "2026 failure remains unresolved.",
+    "Official spot/spread/tariff sources, annual-report business exposure and cash dividend events remain unrepaired."
+  ],
+  "decision": "return_to_quant",
+  "next_owner": "Quant Validation Agent",
+  "stop_rule_status": "not_triggered",
+  "user_decision_required": false,
+  "user_decision_reason": "",
+  "allowed_next_action": "Quant diagnostics on OCF-only signal, state buckets and 2026 failure; Research repairs official state and segment evidence.",
+  "restart_condition": "Proceed to Engineering only after PM approves a candidate whose evidence is stable beyond OCF-only diagnostic and data-source blockers are repaired.",
+  "skill_status_change": "none",
+  "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
+  "created_at_utc": "2026-07-20T08:42:42+00:00"
+}

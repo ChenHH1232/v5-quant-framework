@@ -1349,6 +1349,44 @@
         "Cash dividends are not yet collected; real daily open / close prices were collected for low-vol factors but have not been used for local daily simulation."
       ],
       "next_gate": "research_redesign_v58b_ocf_led_oil_gas_value_low_vol_support"
+    },
+    {
+      "strategy_id": "oil_gas_ocf_low_vol_value_v58b",
+      "sector": "oil_gas_pipeline_integrated",
+      "current_status": [
+        "research_pit_validation_completed",
+        "pit_leakage_audit_passed",
+        "ocf_signal_confirmed",
+        "composite_hypothesis_not_promoted",
+        "not_engineering_handoff"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "engineering_handoff",
+        "platform_replication",
+        "paper_trading_ready",
+        "accepted_strategy",
+        "live_trading_approved",
+        "joinquant_code_ready"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "knowledge/research_agent/factor_theory/oil_gas_v58b_ocf_led_hypothesis.md",
+        "examples/oil_gas_ocf_low_vol_value_v58b_strategy.json",
+        "数据库/processed/oil_gas_low_vol_panel_v58a/oil_gas_ocf_dividend_cycle_probe_v58a/panel_with_low_vol.csv",
+        "validation_formal_v58b_oil_gas/oil_gas_ocf_low_vol_value_v58b/formal_validation_summary.json",
+        "validation_formal_v58b_oil_gas/oil_gas_ocf_low_vol_value_v58b/formal_validation_report.md",
+        "docs/governance/v58b_oil_gas_ocf_low_vol_value_pm_decision_v1.md",
+        "agent_loop_packets_v58/v58b_oil_gas_validation_completed_20260720/checkpoint_packet.json"
+      ],
+      "blockers": [
+        "OCF-only baseline outperformed the V5.8b composite, so composite hypothesis is not promoted.",
+        "Low-vol top-half filter weakened OCF rather than improving it.",
+        "2026 failure remains unresolved.",
+        "External state is futures-proxy based and business exposure is still JQ industry proxy.",
+        "Cash dividend events and official / reviewed oil, gas, spread and tariff sources are not repaired."
+      ],
+      "next_gate": "oil_gas_ocf_signal_diagnostics_or_source_repair_before_any_engineering"
     }
   ],
   "sector_test_policy": {
@@ -1356,7 +1394,7 @@
     "agent_operating_protocol": "docs/governance/agent_operating_protocol_v1.md",
     "agent_operating_protocol_config": "config/agent_operating_protocol_v1.json",
     "agent_loop_packet_runner": "src/v5/agent_loop_packet_runner.py",
-    "latest_agent_loop_checkpoint": "agent_loop_packets_v58/v58a_oil_gas_validation_start_20260720/checkpoint_packet.json",
+    "latest_agent_loop_checkpoint": "agent_loop_packets_v58/v58b_oil_gas_validation_completed_20260720/checkpoint_packet.json",
     "default_agent_loop_timebox_minutes": 30,
     "extended_agent_loop_timebox_minutes": 60,
     "agent_loop_policy": "default_continue_without_asking_inside_approved_objective_checkpoint_at_timebox_stop_after_two_no_new_evidence_loops",

@@ -40,6 +40,8 @@
 - [V5.7 Fxbaogao source register](references/v57_fxbaogao_source_register.md) - first-pass report source register and paragraph-screening outputs for V5.7 sector coverage.
 - [V5.7 external source collection execution](../../docs/governance/v57_external_source_collection_execution_v1.md) - PM execution record for FxBaogao report collection and source-role handoff.
 - [Gas / water V5.7 external state source register](references/gas_water_v57_external_state_source_register.csv) - gas procurement, pass-through, water-tariff, receivables and financing-risk report sources; research-only until PIT state fields are built.
+- [Oil / gas V5.8a source collection plan](references/oil_gas_source_collection_plan.md) - MECE source plan for business exposure, OCF quality, FCF/capex, dividend sustainability and commodity/spread states.
+- [Oil / gas V5.8a Fxbaogao source register](references/oil_gas_v58_source_register.md) - first-pass report search outputs for oil/gas cash-flow dividend research; research-only until PIT state data exists.
 
 ## Factor Theory
 
@@ -60,6 +62,7 @@
 - [Gas / water operator cash-flow dividend framework](factor_theory/gas_water_operator_cashflow_dividend_framework_v57.md) - V5.7 preferred next sector; OCF first, FCF conditional, receivables/debt/operator-purity gates required.
 - [Telecom operator observation framework](factor_theory/telecom_operator_cashflow_dividend_observation_framework_v57.md) - small-sample observation sleeve; capex-cycle-aware FCF and basket-level validation required.
 - [Transport infrastructure cash-flow dividend refresh](factor_theory/transport_infrastructure_cashflow_dividend_refresh_v57.md) - report-backed refresh supporting V5.4/V5.5 transport infrastructure workflow.
+- [Oil / gas cash-flow dividend framework](factor_theory/oil_gas_cashflow_framework.md) - V5.8a cycle-aware framework; OCF first, FCF conditional, external oil/gas/spread states required before Quant.
 
 ## Strategy Cases
 

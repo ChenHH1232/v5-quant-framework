@@ -1286,6 +1286,42 @@
         "No JoinQuant platform replication or paper-trading approval exists for the overlay."
       ],
       "next_gate": "observation_only_or_future_specialist_data_research"
+    },
+    {
+      "strategy_id": "oil_gas_cashflow_cycle_data_gate_v58a",
+      "sector": "oil_gas_pipeline_integrated",
+      "current_status": [
+        "industry_knowledge_gate_started",
+        "fxbaogao_first_pass_completed",
+        "cycle_state_data_gate_required",
+        "business_exposure_pit_required",
+        "blocked_before_quant"
+      ],
+      "not_status": [
+        "research_pit_validation_completed",
+        "formal_strategy_candidate",
+        "engineering_handoff",
+        "platform_replication",
+        "paper_trading_ready",
+        "accepted_strategy",
+        "live_trading_approved"
+      ],
+      "experiment_layer": "data_availability_gate",
+      "evidence_paths": [
+        "docs/governance/v58a_oil_gas_knowledge_gate_pm_checkpoint_v1.md",
+        "knowledge/research_agent/references/oil_gas_source_collection_plan.md",
+        "knowledge/research_agent/factor_theory/oil_gas_cashflow_framework.md",
+        "knowledge/research_agent/references/oil_gas_v58_source_register.md",
+        "config/dividend_low_vol_ocf_fcf_sector_coverage_v57.json"
+      ],
+      "blockers": [
+        "PIT oil / gas universe has not been built.",
+        "PIT business-exposure tags are missing for upstream, integrated, pipeline, refining and oilfield-service exposure.",
+        "Oil price, natural-gas price, refining-spread and pipeline-tariff state panels are missing.",
+        "FCF cannot be promoted until capex-to-OCF and capex-cycle meaning are reviewed.",
+        "Cash dividends and real daily open / close prices are not yet collected for this sector line."
+      ],
+      "next_gate": "oil_gas_pit_universe_and_cycle_state_data_gate"
     }
   ],
   "sector_test_policy": {
@@ -1513,6 +1549,18 @@
     "v58_airport_transport_research_status": "workflow_replication_passed_strategy_candidate_failed_blocked_until_new_domain_data",
     "v58_airport_transport_source_plan": "knowledge/research_agent/references/transport_operator_source_collection_plan.md",
     "v58_airport_transport_cashflow_framework": "knowledge/research_agent/factor_theory/transport_operator_cashflow_framework.md",
+    "v58a_oil_gas_research_status": "industry_knowledge_gate_started_blocked_before_quant",
+    "v58a_oil_gas_pm_checkpoint": "docs/governance/v58a_oil_gas_knowledge_gate_pm_checkpoint_v1.md",
+    "v58a_oil_gas_source_plan": "knowledge/research_agent/references/oil_gas_source_collection_plan.md",
+    "v58a_oil_gas_cashflow_framework": "knowledge/research_agent/factor_theory/oil_gas_cashflow_framework.md",
+    "v58a_oil_gas_source_register": "knowledge/research_agent/references/oil_gas_v58_source_register.md",
+    "v58a_oil_gas_next_gate": "oil_gas_pit_universe_and_cycle_state_data_gate",
+    "v58a_oil_gas_blockers": [
+      "pit_universe_missing",
+      "business_exposure_pit_tags_missing",
+      "oil_gas_refining_spread_state_missing",
+      "capex_cycle_policy_missing"
+    ],
     "v58_airport_transport_initial_pit_panel": "数据库/processed/similar_sector_pit_panel_v58/airport_transport_operators/panel.csv",
     "v58_airport_transport_initial_pit_manifest": "数据库/processed/similar_sector_pit_panel_v58/airport_transport_operators/collection_manifest.json",
     "v58_airport_transport_remaining_data_gates": [

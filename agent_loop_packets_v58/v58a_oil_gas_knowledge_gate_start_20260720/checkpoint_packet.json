@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "packet_type": "checkpoint_packet",
+  "protocol_id": "agent_operating_protocol_v1",
+  "objective": "Start V5.8a oil gas pipeline integrated sector knowledge and data availability gate",
+  "agent": "Project Manager Agent",
+  "experiment_layer": "data_availability_gate",
+  "elapsed_timebox_minutes": 30,
+  "artifacts_created": [
+    "docs\\governance\\v58a_oil_gas_knowledge_gate_pm_checkpoint_v1.md",
+    "knowledge\\research_agent\\references\\oil_gas_source_collection_plan.md",
+    "knowledge\\research_agent\\factor_theory\\oil_gas_cashflow_framework.md",
+    "knowledge\\research_agent\\references\\oil_gas_v58_source_register.md",
+    "docs\\governance\\status_registry.json"
+  ],
+  "evidence_found": [
+    "research_reports\\fxbaogao_v58_oil_gas_fcf_dividend\\business_cashflow_capex\\collection_manifest.json",
+    "research_reports\\fxbaogao_v58_oil_gas_fcf_dividend\\external_state_price_tariff\\collection_manifest.json",
+    "workspace_contract_audits_v58\\latest\\workspace_contract_audit_summary.json"
+  ],
+  "blockers": [
+    "PIT oil gas universe is not built",
+    "Commodity price and refining spread state panels are missing",
+    "Business exposure PIT tags are missing",
+    "FCF cannot be promoted before capex cycle review"
+  ],
+  "decision": "return_to_research",
+  "next_owner": "Research Agent",
+  "stop_rule_status": "data_gate_blocked_before_quant",
+  "user_decision_required": false,
+  "user_decision_reason": "",
+  "allowed_next_action": "research_agent_build_pit_universe_business_exposure_and_cycle_state_data_gate",
+  "restart_condition": "PIT universe plus oil/gas/spread state source path exists",
+  "skill_status_change": "none",
+  "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
+  "created_at_utc": "2026-07-20T07:02:14+00:00"
+}

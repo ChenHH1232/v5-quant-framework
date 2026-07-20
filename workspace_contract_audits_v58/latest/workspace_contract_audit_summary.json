@@ -17,8 +17,8 @@
     {
       "check": "example_validation",
       "severity": "warning",
-      "detail": "passed=49, failed=0, warnings=4",
-      "file_count": 49,
+      "detail": "passed=50, failed=0, warnings=4",
+      "file_count": 50,
       "failed": [],
       "warnings": [
         {
@@ -118,11 +118,11 @@
     "failed": []
   },
   "example_validation": {
-    "file_count": 49,
-    "passed_count": 49,
+    "file_count": 50,
+    "passed_count": 50,
     "failed_count": 0,
     "counts_by_config_type": {
-      "legacy_strategy_spec": 40,
+      "legacy_strategy_spec": 41,
       "research_candidate_spec": 9
     },
     "failed": []
@@ -138,5 +138,5 @@
   },
   "blocked_actions": [],
   "pm_rule": "Workspace contract audit is a read-only governance check; it does not run backtests, refresh data, tune models, or call JoinQuant.",
-  "created_at_utc": "2026-07-20T07:30:24+00:00"
+  "created_at_utc": "2026-07-20T08:20:21+00:00"
 }

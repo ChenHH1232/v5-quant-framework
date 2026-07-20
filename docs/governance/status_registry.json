@@ -1295,14 +1295,15 @@
         "fxbaogao_first_pass_completed",
         "pit_universe_probe_completed",
         "initial_pit_panel_collected",
-        "cycle_state_data_gate_required",
-        "business_exposure_pit_required",
-        "cycle_state_data_missing",
-        "business_exposure_pit_missing",
-        "blocked_before_quant"
+        "cycle_state_proxy_collected",
+        "business_exposure_proxy_collected",
+        "low_vol_panel_collected",
+        "research_pit_validation_started",
+        "test1_formal_validation_completed",
+        "research_signal_exists_needs_redesign",
+        "not_engineering_handoff"
       ],
       "not_status": [
-        "research_pit_validation_completed",
         "formal_strategy_candidate",
         "engineering_handoff",
         "platform_replication",
@@ -1323,16 +1324,31 @@
         "agent_loop_packets_v58/v58a_oil_gas_pit_universe_data_gate_20260720/checkpoint_packet.json",
         "数据库/processed/similar_sector_pit_panel_v58/oil_gas_pipeline_integrated/collection_manifest.json",
         "数据库/processed/similar_sector_pit_panel_v58/oil_gas_pipeline_integrated/panel.csv",
+        "src/v5/oil_gas_state_runner.py",
+        "tests/test_oil_gas_state_runner.py",
+        "数据库/processed/oil_gas_external_state_v58a/collection_manifest.json",
+        "数据库/processed/oil_gas_external_state_v58a/oil_gas_external_state.csv",
+        "数据库/processed/oil_gas_formal_panel_v58a/collection_manifest.json",
+        "数据库/processed/oil_gas_formal_panel_v58a/panel.csv",
+        "数据库/processed/oil_gas_low_vol_panel_v58a/oil_gas_ocf_dividend_cycle_probe_v58a/low_volatility_factor_manifest.json",
+        "数据库/processed/oil_gas_low_vol_panel_v58a/oil_gas_ocf_dividend_cycle_probe_v58a/panel_with_low_vol.csv",
+        "examples/oil_gas_ocf_dividend_cycle_probe_v58a_strategy.json",
+        "validation_formal_v58a_oil_gas/oil_gas_ocf_dividend_cycle_probe_v58a/formal_validation_summary.json",
+        "validation_formal_v58a_oil_gas/oil_gas_ocf_dividend_cycle_probe_v58a/formal_validation_report.md",
+        "docs/governance/v58a_oil_gas_quant_validation_start_pm_decision_v1.md",
+        "agent_loop_packets_v58/v58a_oil_gas_validation_start_20260720/checkpoint_packet.json",
         "config/dividend_low_vol_ocf_fcf_sector_coverage_v57.json"
       ],
       "blockers": [
         "PIT oil / gas universe probe is collected, but 2021-07-01 and 2021-10-08 have no effective rows after price / fundamental coverage filters.",
-        "PIT business-exposure tags are missing for upstream, integrated, pipeline, refining and oilfield-service exposure.",
-        "Oil price, natural-gas price, refining-spread and pipeline-tariff state panels are missing.",
+        "Business-exposure tags are currently JoinQuant industry proxies, not reviewed annual-report segment evidence.",
+        "Oil/gas external state uses futures proxies, not official spot gas, refining spread or pipeline tariff evidence.",
+        "Composite V5.8a underperformed OCF-only baseline, so the hypothesis must return to Research / Quant redesign.",
+        "2026 failure mode remains unresolved.",
         "FCF cannot be promoted until capex-to-OCF and capex-cycle meaning are reviewed.",
-        "Cash dividends and real daily open / close prices are not yet collected for this sector line."
+        "Cash dividends are not yet collected; real daily open / close prices were collected for low-vol factors but have not been used for local daily simulation."
       ],
-      "next_gate": "oil_gas_external_state_and_business_exposure_pit_repair"
+      "next_gate": "research_redesign_v58b_ocf_led_oil_gas_value_low_vol_support"
     }
   ],
   "sector_test_policy": {
@@ -1340,7 +1356,7 @@
     "agent_operating_protocol": "docs/governance/agent_operating_protocol_v1.md",
     "agent_operating_protocol_config": "config/agent_operating_protocol_v1.json",
     "agent_loop_packet_runner": "src/v5/agent_loop_packet_runner.py",
-    "latest_agent_loop_checkpoint": "agent_loop_packets_v58/v58a_oil_gas_pit_universe_data_gate_20260720/checkpoint_packet.json",
+    "latest_agent_loop_checkpoint": "agent_loop_packets_v58/v58a_oil_gas_validation_start_20260720/checkpoint_packet.json",
     "default_agent_loop_timebox_minutes": 30,
     "extended_agent_loop_timebox_minutes": 60,
     "agent_loop_policy": "default_continue_without_asking_inside_approved_objective_checkpoint_at_timebox_stop_after_two_no_new_evidence_loops",

@@ -1,0 +1,249 @@
+{
+  "meta": {
+    "strategy_id": "oil_gas_ocf_dividend_cycle_probe_v58a",
+    "name": "Oil / Gas OCF + Dividend + Low Vol Cycle Probe V5.8a",
+    "objective": "Test whether oil/gas candidates have preliminary OCF, dividend and low-volatility evidence after adding cycle-state proxy data and PIT industry-exposure tags.",
+    "status": "research_pit_validation_probe_not_formal_candidate"
+  },
+  "universe": {
+    "name": "A-share oil/gas upstream, integrated, refining, natural-gas processing and distribution candidates",
+    "construction": "JoinQuant PIT industry membership: HY01103, HY01104, HY01105 and HY01106. HY01102 oilfield services are excluded from the first pass.",
+    "point_in_time": true,
+    "minimum_rebalance_coverage_ratio": 0.8
+  },
+  "data": {
+    "vendor": "JoinQuant/DataJQ PIT financial fields + V5.8a futures-proxy external state + JQ industry-exposure proxy",
+    "price_frequency": "quarterly_signal_panel",
+    "financial_as_of_policy": "announcement_date",
+    "external_state_policy": "preliminary futures proxies only; allowed for Test-1 research validation, not formal promotion",
+    "business_exposure_policy": "PIT JoinQuant industry membership proxy only; annual-report segment review is still required",
+    "price_adjustment": {
+      "research_panel": "pre_adjusted_close_to_close_return",
+      "low_vol_panel": "raw daily close history strictly before trade_date",
+      "status": "research_pit_validation_input"
+    },
+    "window": {
+      "research_start": "2021-05-01",
+      "research_end": "2026-05-31"
+    },
+    "source_warning": "V5.8a is a data-gate repair and preliminary Quant probe. It must not be promoted without official spot/spread/tariff and annual-report exposure evidence."
+  },
+  "signals": {
+    "factors": [
+      {
+        "name": "operating_cash_flow_yield",
+        "source": "cash_flow_statement / market_cap",
+        "role": "primary_cash_generation_signal",
+        "direction": "higher_is_better",
+        "definition": "Operating cash flow divided by market capitalization.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      },
+      {
+        "name": "low_vol_score",
+        "source": "daily close returns strictly before trade_date",
+        "role": "low_volatility_risk_signal",
+        "direction": "higher_is_better",
+        "definition": "Composite of negative realized volatility, downside volatility and max drawdown.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      },
+      {
+        "name": "dividend_yield",
+        "source": "valuation.dividend_ratio",
+        "role": "shareholder_return_support",
+        "direction": "higher_is_better",
+        "definition": "Visible dividend yield from valuation table.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      },
+      {
+        "name": "low_price_to_book",
+        "source": "valuation.pb_ratio",
+        "role": "valuation_discipline",
+        "direction": "lower_is_better",
+        "definition": "Lower PB is preferred if not explained by impaired or non-core assets.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      },
+      {
+        "name": "pe_ratio",
+        "source": "valuation.pe_ratio",
+        "role": "earnings_valuation_diagnostic",
+        "direction": "lower_is_better",
+        "definition": "Lower PE is preferred, but cyclical earnings distortion must be reviewed.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      },
+      {
+        "name": "capex_burden",
+        "source": "cash_flow_statement",
+        "role": "capex_cycle_risk",
+        "direction": "lower_is_better",
+        "definition": "Cash paid for fixed / intangible assets divided by operating cash flow.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      },
+      {
+        "name": "free_cash_flow_yield",
+        "source": "cash_flow_statement / market_cap",
+        "role": "diagnostic_only_until_capex_cycle_review",
+        "direction": "higher_is_better",
+        "definition": "Operating cash flow minus capex, divided by market capitalization.",
+        "as_of": "announcement_date",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      }
+    ],
+    "scoring": {
+      "method": "weighted_composite",
+      "normalization_scope": "rebalance_cross_section",
+      "weights": {
+        "operating_cash_flow_yield": 0.3,
+        "low_vol_score": 0.25,
+        "dividend_yield": 0.2,
+        "low_price_to_book": 0.1,
+        "pe_ratio": 0.1,
+        "capex_burden": 0.05,
+        "free_cash_flow_yield": 0.0
+      },
+      "min_factor_count": 5,
+      "value_trap_guard": "No hard oil/gas value-trap guard is approved in V5.8a. Capex burden and FCF are diagnostics until capex-cycle evidence is reviewed."
+    }
+  },
+  "schedule": {
+    "signal_frequency": "quarterly",
+    "rebalance_frequency": "quarterly",
+    "rebalance_rule": "first tradable day of quarter after PIT visibility check",
+    "rebalance_months": [
+      1,
+      4,
+      7,
+      10
+    ]
+  },
+  "portfolio": {
+    "selection_count": 8,
+    "weighting": "equal_weight_research_candidate",
+    "max_position_weight": 0.15,
+    "cash_policy": "hold residual cash when fewer than eight names pass filters"
+  },
+  "risk": {
+    "defensive_asset": "cash",
+    "defensive_rule": {
+      "enabled": false,
+      "reason": "V5.8a is a research PIT probe, not a timing model."
+    },
+    "individual_stop_loss_take_profit": {
+      "enabled": false,
+      "reason": "Fixed exits are not part of the research hypothesis."
+    }
+  },
+  "validation": {
+    "method": "rolling",
+    "train_years": 3,
+    "test_years": 1,
+    "review_years": 1,
+    "weak_years": [
+      "2022",
+      "2024",
+      "2026"
+    ],
+    "baselines": [
+      {
+        "name": "equal_weight_oil_gas_pool",
+        "mode": "equal_all"
+      },
+      {
+        "name": "high_ocf_yield_top8",
+        "mode": "single_factor",
+        "factor": "operating_cash_flow_yield",
+        "direction": "higher_is_better",
+        "selection_count": 8
+      },
+      {
+        "name": "low_vol_top8",
+        "mode": "single_factor",
+        "factor": "low_vol_score",
+        "direction": "higher_is_better",
+        "selection_count": 8
+      },
+      {
+        "name": "high_dividend_top8",
+        "mode": "single_factor",
+        "factor": "dividend_yield",
+        "direction": "higher_is_better",
+        "selection_count": 8
+      },
+      {
+        "name": "ocf_dividend_low_vol_composite_top8",
+        "mode": "composite",
+        "selection_count": 8
+      }
+    ],
+    "common_sample_fields": [
+      "operating_cash_flow_yield",
+      "low_vol_score",
+      "dividend_yield",
+      "low_price_to_book",
+      "pe_ratio",
+      "capex_burden"
+    ],
+    "common_sample_interactions": [
+      {
+        "name": "common_ocf_dividend_low_vol_value",
+        "factors": [
+          "operating_cash_flow_yield",
+          "low_vol_score",
+          "dividend_yield",
+          "low_price_to_book",
+          "pe_ratio",
+          "capex_burden"
+        ]
+      }
+    ],
+    "robustness": {
+      "selection_counts": [
+        6,
+        8,
+        10
+      ],
+      "weight_scale_factors": [
+        "operating_cash_flow_yield",
+        "low_vol_score",
+        "dividend_yield"
+      ],
+      "weight_scales": [
+        0.8,
+        1.0,
+        1.2
+      ]
+    },
+    "acceptance_rule": "V5.8a may only decide whether oil/gas deserves deeper source repair. Historical return alone is insufficient and this probe cannot become an accepted strategy."
+  },
+  "execution": {
+    "status": "not_started",
+    "next_gate": "quant_test1_research_pit_validation_only",
+    "commission_bps": 3,
+    "slippage_bps": 5,
+    "suspension_policy": "skip_untradeable",
+    "limit_policy": "skip_limit_blocked"
+  },
+  "outputs": {
+    "save_holdings": true,
+    "save_rebalance_signals": true,
+    "report": "markdown",
+    "required_reports": [
+      "formal_validation_packet",
+      "cycle_state_proxy_coverage",
+      "business_exposure_proxy_coverage",
+      "pm_decision"
+    ]
+  }
+}

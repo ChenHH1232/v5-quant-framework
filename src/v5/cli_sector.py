@@ -70,6 +70,13 @@ from v5.airport_transport_operating_evidence_runner import (
     collect_eastmoney_airport_segment_evidence,
     extract_airport_operating_state_values,
 )
+from v5.oil_gas_state_runner import (
+    DEFAULT_OUT_DIR as DEFAULT_OIL_GAS_STATE_OUT,
+    DEFAULT_PANEL_OUT_DIR as DEFAULT_OIL_GAS_PANEL_OUT,
+    build_oil_gas_research_panel,
+    collect_oil_gas_external_state,
+    validate_oil_gas_external_state,
+)
 
 
 def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.ArgumentParser]) -> None:
@@ -161,6 +168,23 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     airport_content_cache_parser.add_argument("--end-month")
     airport_content_cache_parser.add_argument("--retry-failed", action="store_true")
     airport_content_cache_parser.set_defaults(handler=_handle_cache_airport_operating_announcement_contents)
+
+    oil_gas_state_parser = subparsers.add_parser("collect-oil-gas-external-state")
+    oil_gas_state_parser.add_argument("--out-dir", type=Path, default=DEFAULT_OIL_GAS_STATE_OUT)
+    oil_gas_state_parser.add_argument("--start-date", default="2021-01-01")
+    oil_gas_state_parser.add_argument("--end-date", default="2026-05-31")
+    oil_gas_state_parser.set_defaults(handler=_handle_collect_oil_gas_external_state)
+
+    oil_gas_state_validate_parser = subparsers.add_parser("validate-oil-gas-external-state")
+    oil_gas_state_validate_parser.add_argument("csv_path", type=Path)
+    oil_gas_state_validate_parser.set_defaults(handler=_handle_validate_oil_gas_external_state)
+
+    oil_gas_panel_parser = subparsers.add_parser("build-oil-gas-research-panel")
+    oil_gas_panel_parser.add_argument("panel", type=Path)
+    oil_gas_panel_parser.add_argument("external_state", type=Path)
+    oil_gas_panel_parser.add_argument("--out-dir", type=Path, default=DEFAULT_OIL_GAS_PANEL_OUT)
+    oil_gas_panel_parser.add_argument("--strategy-id", default="oil_gas_ocf_dividend_cycle_probe_v58a")
+    oil_gas_panel_parser.set_defaults(handler=_handle_build_oil_gas_research_panel)
 
     screen_parser = subparsers.add_parser("screen-dividend-low-vol-fcf-sectors")
     screen_parser.add_argument("--config", type=Path, default=DEFAULT_V56_SCREEN_CONFIG)
@@ -348,6 +372,21 @@ def _handle_extract_airport_operating_state_values(args: argparse.Namespace) -> 
             limit=args.limit,
         )
     )
+    return 0
+
+
+def _handle_collect_oil_gas_external_state(args: argparse.Namespace) -> int:
+    print(collect_oil_gas_external_state(args.out_dir, start_date=args.start_date, end_date=args.end_date))
+    return 0
+
+
+def _handle_validate_oil_gas_external_state(args: argparse.Namespace) -> int:
+    print(validate_oil_gas_external_state(args.csv_path))
+    return 0
+
+
+def _handle_build_oil_gas_research_panel(args: argparse.Namespace) -> int:
+    print(build_oil_gas_research_panel(args.panel, args.external_state, args.out_dir, strategy_id=args.strategy_id))
     return 0
 
 

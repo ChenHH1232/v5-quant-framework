@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-20",
+  "updated_at": "2026-07-21",
   "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
   "strategies": [
     {
@@ -1701,6 +1701,45 @@
         "JoinQuant code generation and platform run require explicit user request."
       ],
       "next_gate": "engineering_prepare_platform_replication_intake_without_running_joinquant"
+    },
+    {
+      "strategy_id": "oil_gas_platform_replication_preparation_v58j",
+      "sector": "oil_gas_pipeline_integrated",
+      "current_status": [
+        "platform_replication_preparation_completed",
+        "platform_export_intake_manifest_created",
+        "platform_test_deferred_by_user_waiting_for_exports",
+        "pending_attribution",
+        "not_platform_replication_passed",
+        "not_accepted_strategy"
+      ],
+      "not_status": [
+        "platform_replication_passed",
+        "accepted_strategy",
+        "paper_trading_ready",
+        "live_trading_approved",
+        "joinquant_code_ready_without_user_request",
+        "basket_inclusion_approved"
+      ],
+      "experiment_layer": "platform_replication",
+      "evidence_paths": [
+        "platform_exports_v58i_oil_gas/expected_exports_manifest.json",
+        "platform_export_intake_checks_v58i_oil_gas/oil_gas_state_conditioned_ocf_v58g/platform_export_intake_summary.json",
+        "platform_export_intake_checks_v58i_oil_gas/oil_gas_state_conditioned_ocf_v58g/platform_export_intake_report.md",
+        "platform_replication_packets_v58i_oil_gas/oil_gas_state_conditioned_ocf_v58g/platform_replication_packet.json",
+        "platform_replication_packets_v58i_oil_gas/oil_gas_state_conditioned_ocf_v58g/platform_replication_packet.md",
+        "docs/governance/v58j_oil_gas_platform_replication_preparation_pm_decision_v1.md",
+        "agent_loop_packets_v58/v58j_oil_gas_platform_replication_preparation_20260721/checkpoint_packet.json",
+        "validation_daily_v58h_oil_gas_sector_benchmark/oil_gas_state_conditioned_ocf_v58g/summary.json",
+        "validation_daily_v58h_oil_gas_sector_benchmark/oil_gas_state_conditioned_ocf_v58g/rebalance_signals.csv"
+      ],
+      "blockers": [
+        "JoinQuant daily result, transaction, position and log exports have not been supplied.",
+        "Prepared platform replication packet is pending_attribution, not platform_replication_passed.",
+        "The 2021 empty-position period must be explained in platform attribution before any promotion.",
+        "Oil / gas remains outside V5.7f or any enhanced ETF basket until platform and forward evidence exist."
+      ],
+      "next_gate": "wait_for_user_supplied_joinquant_exports_then_run_platform_attribution_without_tuning"
     }
   ],
   "sector_test_policy": {
@@ -2233,6 +2272,12 @@
     "v58h_oil_gas_daily_summary": "validation_daily_v58g_oil_gas/oil_gas_state_conditioned_ocf_v58g/summary.json",
     "v58i_oil_gas_status": "validation_ready_for_platform_replication_preparation_not_accepted",
     "v58i_oil_gas_pm_decision": "docs/governance/v58i_oil_gas_sector_benchmark_validation_ready_pm_decision_v1.md",
-    "v58i_oil_gas_sector_benchmark_summary": "validation_daily_v58h_oil_gas_sector_benchmark/oil_gas_state_conditioned_ocf_v58g/summary.json"
+    "v58i_oil_gas_sector_benchmark_summary": "validation_daily_v58h_oil_gas_sector_benchmark/oil_gas_state_conditioned_ocf_v58g/summary.json",
+    "v58j_oil_gas_status": "platform_replication_preparation_completed_waiting_for_exports_not_passed",
+    "v58j_oil_gas_export_manifest": "platform_exports_v58i_oil_gas/expected_exports_manifest.json",
+    "v58j_oil_gas_export_intake_summary": "platform_export_intake_checks_v58i_oil_gas/oil_gas_state_conditioned_ocf_v58g/platform_export_intake_summary.json",
+    "v58j_oil_gas_platform_packet": "platform_replication_packets_v58i_oil_gas/oil_gas_state_conditioned_ocf_v58g/platform_replication_packet.json",
+    "v58j_oil_gas_pm_decision": "docs/governance/v58j_oil_gas_platform_replication_preparation_pm_decision_v1.md",
+    "v58j_oil_gas_agent_checkpoint": "agent_loop_packets_v58/v58j_oil_gas_platform_replication_preparation_20260721/checkpoint_packet.json"
   }
 }

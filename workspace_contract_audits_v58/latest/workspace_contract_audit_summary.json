@@ -101,7 +101,7 @@
       "missing_paths": [],
       "missing_fields": [],
       "accepted_violations": [],
-      "strategy_count": 40
+      "strategy_count": 41
     }
   ],
   "config_validation": {
@@ -134,9 +134,9 @@
     "missing_paths": [],
     "missing_fields": [],
     "accepted_violations": [],
-    "strategy_count": 40
+    "strategy_count": 41
   },
   "blocked_actions": [],
   "pm_rule": "Workspace contract audit is a read-only governance check; it does not run backtests, refresh data, tune models, or call JoinQuant.",
-  "created_at_utc": "2026-07-20T16:35:01+00:00"
+  "created_at_utc": "2026-07-20T16:40:55+00:00"
 }

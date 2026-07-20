@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "strategy_id": "oil_gas_state_conditioned_ocf_v58g",
+  "experiment_layer": "platform_replication",
+  "status": "waiting_for_joinquant_exports",
+  "intake_dir": "platform_exports_v58i_oil_gas/pending",
+  "expected_joinquant_setup": {
+    "start_date": "2021-05-01",
+    "end_date": "2026-05-31",
+    "initial_cash": 2000000,
+    "frequency": "daily",
+    "rebalance_time": "09:40",
+    "display_benchmark": "399439.XSHE",
+    "benchmark_name": "国证石油天然气行业指数",
+    "frozen_strategy_id": "oil_gas_state_conditioned_ocf_v58g",
+    "frozen_strategy_logic": "V5.8g state-conditioned OCF model with V5.8i sector benchmark; no factor, weight, universe, guard, or rebalance tuning allowed."
+  },
+  "required_exports": [
+    {
+      "name": "daily_result",
+      "target_path": "platform_exports_v58i_oil_gas/pending/result.csv",
+      "source_hint": "JoinQuant daily result / result_*.csv export",
+      "required_for": "daily_nav_attribution"
+    },
+    {
+      "name": "transaction_detail",
+      "target_path": "platform_exports_v58i_oil_gas/pending/transaction.csv",
+      "source_hint": "JoinQuant transaction detail export",
+      "required_for": "transaction_attribution"
+    },
+    {
+      "name": "position_detail",
+      "target_path": "platform_exports_v58i_oil_gas/pending/position.csv",
+      "source_hint": "JoinQuant position export",
+      "required_for": "position_attribution"
+    },
+    {
+      "name": "full_log",
+      "target_path": "platform_exports_v58i_oil_gas/pending/log.txt",
+      "source_hint": "JoinQuant full run log",
+      "required_for": "manual_execution_diagnostics"
+    }
+  ],
+  "local_reference": {
+    "local_run_dir": "validation_daily_v58h_oil_gas_sector_benchmark/oil_gas_state_conditioned_ocf_v58g",
+    "daily_returns_csv": "validation_daily_v58h_oil_gas_sector_benchmark/oil_gas_state_conditioned_ocf_v58g/daily_returns.csv",
+    "trades_csv": "validation_daily_v58h_oil_gas_sector_benchmark/oil_gas_state_conditioned_ocf_v58g/trades.csv",
+    "holdings_csv": "validation_daily_v58h_oil_gas_sector_benchmark/oil_gas_state_conditioned_ocf_v58g/holdings.csv",
+    "dividends_csv": "validation_daily_v58h_oil_gas_sector_benchmark/oil_gas_state_conditioned_ocf_v58g/dividends.csv",
+    "rebalance_signals_csv": "validation_daily_v58h_oil_gas_sector_benchmark/oil_gas_state_conditioned_ocf_v58g/rebalance_signals.csv",
+    "panel_csv": "数据库/processed/oil_gas_state_conditioned_panel_v58g/oil_gas_state_conditioned_ocf_v58g/panel.csv",
+    "sector_benchmark_prices_csv": "数据库/processed/oil_gas_v58h_joinquant_sector_benchmark_prices.csv",
+    "cash_dividends_csv": "数据库/processed/oil_gas_v58g_joinquant_cash_dividends.csv"
+  },
+  "known_alignment_items": [
+    "Local simulation uses daily open execution and close valuation; JoinQuant scheduled 09:40 execution may differ from daily open.",
+    "Local first selected rebalance signal is 2022-01-04; 2021 empty-position period must be explained in platform attribution.",
+    "Cash dividends use real JoinQuant cash-dividend events with 20% tax net cash treatment.",
+    "Sector benchmark is 399439.XSHE with pre-adjusted JoinQuant prices."
+  ],
+  "attribution_commands_after_exports_arrive": {
+    "intake_check": "python -m v5.cli check-platform-export-intake platform_exports_v58i_oil_gas/expected_exports_manifest.json --out platform_export_intake_checks_v58i_oil_gas",
+    "platform_packet": "python -m v5.cli platform-replication-packet validation_daily_v58h_oil_gas_sector_benchmark/oil_gas_state_conditioned_ocf_v58g --out platform_replication_packets_v58i_oil_gas --strategy-id oil_gas_state_conditioned_ocf_v58g --panel-csv 数据库/processed/oil_gas_state_conditioned_panel_v58g/oil_gas_state_conditioned_ocf_v58g/panel.csv --joinquant-daily-csv platform_exports_v58i_oil_gas/pending/result.csv --joinquant-transaction-csv platform_exports_v58i_oil_gas/pending/transaction.csv --joinquant-position-csv platform_exports_v58i_oil_gas/pending/position.csv"
+  },
+  "pm_rules": [
+    "Do not tune V5.8g/V5.8i from platform output.",
+    "Do not mix exports from any other oil/gas strategy version.",
+    "Do not mark platform_replication_passed unless daily, transaction, and position attribution all pass.",
+    "Do not add oil/gas to V5.7f or any enhanced ETF basket before platform and paper evidence exist.",
+    "Do not mark accepted_strategy from 2021-2026 platform-confirmation evidence alone."
+  ],
+  "created_at": "2026-07-21"
+}

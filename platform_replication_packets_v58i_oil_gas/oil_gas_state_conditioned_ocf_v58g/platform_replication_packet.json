@@ -1,0 +1,30 @@
+{
+  "strategy_id": "oil_gas_state_conditioned_ocf_v58g",
+  "status": "pending_attribution",
+  "reason": "daily, transaction, and position attribution are all required",
+  "local_run_dir": "validation_daily_v58h_oil_gas_sector_benchmark\\oil_gas_state_conditioned_ocf_v58g",
+  "panel_csv": "数据库\\processed\\oil_gas_state_conditioned_panel_v58g\\oil_gas_state_conditioned_ocf_v58g\\panel.csv",
+  "joinquant_daily_csv": null,
+  "joinquant_transaction_csv": null,
+  "joinquant_position_csv": null,
+  "coverage": {
+    "expected_rebalance_dates": [],
+    "panel_date_count": 18,
+    "signal_date_count": 18,
+    "latest_expected_rebalance_date": null,
+    "latest_local_signal_date": "2026-04-01",
+    "missing_panel_dates": [],
+    "missing_signal_dates": [],
+    "missing_last_signal": false,
+    "passed": true
+  },
+  "daily_summary": null,
+  "transaction_summary": null,
+  "position_rebalance_summary": null,
+  "thresholds": {
+    "final_strategy_diff": 0.01,
+    "max_strategy_diff": 0.03
+  },
+  "outputs": {},
+  "created_at_utc": "2026-07-20T16:39:35+00:00"
+}

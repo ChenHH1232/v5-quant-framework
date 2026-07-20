@@ -1,0 +1,337 @@
+visible_date,state_date,state_scope,sub_industry,metric,value,unit,source_name,source_url,source_publication_date,pit_usable,review_status,notes
+,2021-01-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2021-01-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2021-01-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2021-01-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2021-01-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2021-02-28,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2021-02-28,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2021-02-28,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2021-02-28,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2021-02-28,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2021-03-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2021-03-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2021-03-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2021-03-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2021-03-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2021-04-30,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2021-04-30,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2021-04-30,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2021-04-30,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2021-04-30,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2021-05-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2021-05-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2021-05-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2021-05-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2021-05-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2021-06-30,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2021-06-30,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2021-06-30,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2021-06-30,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2021-06-30,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2021-07-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2021-07-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2021-07-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2021-07-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2021-07-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2021-08-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2021-08-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2021-08-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2021-08-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2021-08-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2021-09-30,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2021-09-30,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2021-09-30,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2021-09-30,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2021-09-30,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2021-10-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2021-10-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2021-10-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2021-10-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2021-10-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2021-11-30,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2021-11-30,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2021-11-30,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2021-11-30,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2021-11-30,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2021-12-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2021-12-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2021-12-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2021-12-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2021-12-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2021-12-31,policy_event,pipeline_storage_lng,pipeline_tariff_policy_state,,policy_state_index,,,,false,template_pending_review,NDRC / company announcement / annual report policy event row.
+,2022-01-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2022-01-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2022-01-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2022-01-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2022-01-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2022-02-28,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2022-02-28,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2022-02-28,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2022-02-28,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2022-02-28,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2022-03-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2022-03-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2022-03-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2022-03-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2022-03-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2022-04-30,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2022-04-30,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2022-04-30,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2022-04-30,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2022-04-30,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2022-05-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2022-05-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2022-05-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2022-05-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2022-05-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2022-06-30,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2022-06-30,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2022-06-30,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2022-06-30,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2022-06-30,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2022-07-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2022-07-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2022-07-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2022-07-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2022-07-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2022-08-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2022-08-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2022-08-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2022-08-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2022-08-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2022-09-30,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2022-09-30,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2022-09-30,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2022-09-30,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2022-09-30,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2022-10-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2022-10-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2022-10-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2022-10-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2022-10-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2022-11-30,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2022-11-30,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2022-11-30,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2022-11-30,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2022-11-30,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2022-12-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2022-12-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2022-12-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2022-12-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2022-12-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2022-12-31,policy_event,pipeline_storage_lng,pipeline_tariff_policy_state,,policy_state_index,,,,false,template_pending_review,NDRC / company announcement / annual report policy event row.
+,2023-01-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2023-01-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2023-01-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2023-01-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2023-01-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2023-02-28,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2023-02-28,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2023-02-28,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2023-02-28,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2023-02-28,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2023-03-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2023-03-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2023-03-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2023-03-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2023-03-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2023-04-30,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2023-04-30,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2023-04-30,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2023-04-30,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2023-04-30,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2023-05-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2023-05-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2023-05-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2023-05-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2023-05-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2023-06-30,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2023-06-30,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2023-06-30,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2023-06-30,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2023-06-30,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2023-07-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2023-07-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2023-07-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2023-07-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2023-07-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2023-08-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2023-08-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2023-08-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2023-08-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2023-08-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2023-09-30,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2023-09-30,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2023-09-30,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2023-09-30,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2023-09-30,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2023-10-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2023-10-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2023-10-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2023-10-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2023-10-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2023-11-30,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2023-11-30,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2023-11-30,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2023-11-30,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2023-11-30,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2023-12-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2023-12-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2023-12-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2023-12-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2023-12-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2023-12-31,policy_event,pipeline_storage_lng,pipeline_tariff_policy_state,,policy_state_index,,,,false,template_pending_review,NDRC / company announcement / annual report policy event row.
+,2024-01-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2024-01-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2024-01-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2024-01-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2024-01-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2024-02-29,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2024-02-29,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2024-02-29,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2024-02-29,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2024-02-29,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2024-03-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2024-03-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2024-03-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2024-03-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2024-03-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2024-04-30,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2024-04-30,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2024-04-30,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2024-04-30,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2024-04-30,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2024-05-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2024-05-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2024-05-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2024-05-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2024-05-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2024-06-30,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2024-06-30,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2024-06-30,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2024-06-30,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2024-06-30,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2024-07-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2024-07-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2024-07-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2024-07-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2024-07-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2024-08-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2024-08-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2024-08-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2024-08-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2024-08-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2024-09-30,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2024-09-30,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2024-09-30,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2024-09-30,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2024-09-30,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2024-10-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2024-10-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2024-10-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2024-10-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2024-10-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2024-11-30,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2024-11-30,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2024-11-30,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2024-11-30,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2024-11-30,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2024-12-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2024-12-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2024-12-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2024-12-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2024-12-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2024-12-31,policy_event,pipeline_storage_lng,pipeline_tariff_policy_state,,policy_state_index,,,,false,template_pending_review,NDRC / company announcement / annual report policy event row.
+,2025-01-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2025-01-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2025-01-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2025-01-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2025-01-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2025-02-28,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2025-02-28,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2025-02-28,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2025-02-28,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2025-02-28,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2025-03-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2025-03-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2025-03-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2025-03-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2025-03-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2025-04-30,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2025-04-30,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2025-04-30,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2025-04-30,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2025-04-30,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2025-05-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2025-05-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2025-05-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2025-05-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2025-05-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2025-06-30,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2025-06-30,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2025-06-30,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2025-06-30,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2025-06-30,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2025-07-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2025-07-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2025-07-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2025-07-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2025-07-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2025-08-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2025-08-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2025-08-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2025-08-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2025-08-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2025-09-30,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2025-09-30,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2025-09-30,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2025-09-30,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2025-09-30,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2025-10-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2025-10-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2025-10-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2025-10-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2025-10-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2025-11-30,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2025-11-30,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2025-11-30,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2025-11-30,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2025-11-30,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2025-12-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2025-12-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2025-12-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2025-12-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2025-12-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2025-12-31,policy_event,pipeline_storage_lng,pipeline_tariff_policy_state,,policy_state_index,,,,false,template_pending_review,NDRC / company announcement / annual report policy event row.
+,2026-01-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2026-01-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2026-01-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2026-01-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2026-01-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2026-02-28,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2026-02-28,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2026-02-28,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2026-02-28,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2026-02-28,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2026-03-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2026-03-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2026-03-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2026-03-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2026-03-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2026-04-30,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2026-04-30,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2026-04-30,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2026-04-30,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2026-04-30,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2026-05-31,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2026-05-31,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2026-05-31,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2026-05-31,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2026-05-31,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2026-06-30,exchange_market,upstream_integrated,crude_oil_price_state,,cny_per_barrel_or_usd_per_barrel,,,,false,template_pending_review,INE / Brent / WTI reviewed source row.
+,2026-06-30,exchange_market,refining,bitumen_price_state,,cny_per_ton,,,,false,template_pending_review,SHFE bitumen reviewed source row.
+,2026-06-30,official_statistics,natural_gas_lpg,gas_liquid_price_state,,cny_per_ton,,,,false,template_pending_review,NBS LNG/LPG or DCE LPG reviewed source row.
+,2026-06-30,derived_reviewed,refining,refining_spread_proxy_state,,documented_formula,,,,false,template_pending_review,Reviewed product-price minus crude formula or licensed refining margin.
+,2026-06-30,official_statistics,all_oil_gas,inventory_or_demand_state,,index_or_yoy,,,,false,template_pending_review,NBS crude processing / apparent demand / reviewed inventory source.
+,2026-12-31,policy_event,pipeline_storage_lng,pipeline_tariff_policy_state,,policy_state_index,,,,false,template_pending_review,NDRC / company announcement / annual report policy event row.

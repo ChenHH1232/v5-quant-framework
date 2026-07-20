@@ -1,0 +1,8 @@
+{
+  "dataset": "oil_gas_official_source_register_v58e",
+  "output": "数据库\\processed\\oil_gas_source_gate_v58e\\oil_gas_official_source_register.csv",
+  "row_count": 6,
+  "status": "source_register_ready_manual_import_required",
+  "anti_crawler_rule": "Use official download/export or licensed vendor access. Do not bypass WAF, login, robots, rate limits or paywalls.",
+  "created_at_utc": "2026-07-20T10:08:52+00:00"
+}

@@ -1474,6 +1474,49 @@
         "Engineering Agent remains blocked until source repair and PM approval."
       ],
       "next_gate": "research_source_repair_then_rerun_state_conditioned_ocf_validation"
+    },
+    {
+      "strategy_id": "oil_gas_official_source_gate_v58e",
+      "sector": "oil_gas_pipeline_integrated",
+      "current_status": [
+        "source_gate_runner_completed",
+        "official_source_register_created",
+        "official_state_import_template_created",
+        "source_repair_blocked",
+        "not_engineering_handoff",
+        "returned_to_research_agent"
+      ],
+      "not_status": [
+        "research_pit_validation_ready_with_official_sources",
+        "formal_strategy_candidate",
+        "engineering_handoff",
+        "platform_replication",
+        "paper_trading_ready",
+        "accepted_strategy",
+        "joinquant_code_ready",
+        "v57f_basket_member"
+      ],
+      "experiment_layer": "data_availability_gate",
+      "evidence_paths": [
+        "src/v5/oil_gas_source_gate_runner.py",
+        "tests/test_oil_gas_source_gate_runner.py",
+        "数据库/processed/oil_gas_source_gate_v58e/oil_gas_official_source_register.csv",
+        "数据库/processed/oil_gas_source_gate_v58e/oil_gas_official_source_register_manifest.json",
+        "数据库/processed/oil_gas_source_gate_v58e/oil_gas_official_state_import_template.csv",
+        "数据库/processed/oil_gas_source_gate_v58e/oil_gas_official_state_import_manifest.json",
+        "数据库/processed/oil_gas_source_gate_v58e/oil_gas_source_gate_summary.json",
+        "数据库/processed/oil_gas_source_gate_v58e/oil_gas_source_gate_report.md",
+        "docs/governance/v58e_oil_gas_source_gate_pm_decision_v1.md",
+        "agent_loop_packets_v58/v58e_oil_gas_source_gate_blocker_20260720/blocker_packet.json"
+      ],
+      "blockers": [
+        "Core official state coverage is 0/18 rebalance dates for crude, bitumen, gas/liquid and refining-spread metrics.",
+        "Inventory/demand and pipeline tariff/policy promotion metrics are also empty.",
+        "Template rows are intentionally pit_usable=false until Research fills reviewed official or licensed source rows.",
+        "No further oil/gas factor tuning should proceed on proxy data.",
+        "Engineering handoff remains blocked."
+      ],
+      "next_gate": "research_fill_reviewed_official_source_rows_then_rerun_oil_gas_source_gate"
     }
   ],
   "sector_test_policy": {
@@ -1481,7 +1524,7 @@
     "agent_operating_protocol": "docs/governance/agent_operating_protocol_v1.md",
     "agent_operating_protocol_config": "config/agent_operating_protocol_v1.json",
     "agent_loop_packet_runner": "src/v5/agent_loop_packet_runner.py",
-    "latest_agent_loop_checkpoint": "agent_loop_packets_v58/v58d_oil_gas_state_conditioned_ocf_validation_20260720/checkpoint_packet.json",
+    "latest_agent_loop_checkpoint": "agent_loop_packets_v58/v58e_oil_gas_source_gate_blocker_20260720/blocker_packet.json",
     "default_agent_loop_timebox_minutes": 30,
     "extended_agent_loop_timebox_minutes": 60,
     "agent_loop_policy": "default_continue_without_asking_inside_approved_objective_checkpoint_at_timebox_stop_after_two_no_new_evidence_loops",

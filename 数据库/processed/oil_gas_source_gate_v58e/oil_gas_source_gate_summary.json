@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "experiment_layer": "data_availability_gate",
+  "status": "source_repair_blocked",
+  "state_csv": "数据库\\processed\\oil_gas_source_gate_v58e\\oil_gas_official_state_import_template.csv",
+  "panel_path": "数据库\\processed\\oil_gas_state_conditioned_panel_v58d\\oil_gas_state_conditioned_ocf_v58d\\panel.csv",
+  "trade_date_count": 18,
+  "row_count": 336,
+  "validation": {
+    "missing_required": [],
+    "future_or_invalid_visible_dates": 0,
+    "unreviewed_pit_usable_rows": 0,
+    "pit_usable_count": 0,
+    "metric_counts": {
+      "crude_oil_price_state": 66,
+      "bitumen_price_state": 66,
+      "gas_liquid_price_state": 66,
+      "refining_spread_proxy_state": 66,
+      "inventory_or_demand_state": 66,
+      "pipeline_tariff_policy_state": 6
+    },
+    "usable_metric_counts": {},
+    "blocker_count": 0
+  },
+  "core_metrics": [
+    "crude_oil_price_state",
+    "bitumen_price_state",
+    "gas_liquid_price_state",
+    "refining_spread_proxy_state"
+  ],
+  "promotion_metrics": [
+    "crude_oil_price_state",
+    "bitumen_price_state",
+    "gas_liquid_price_state",
+    "refining_spread_proxy_state",
+    "inventory_or_demand_state",
+    "pipeline_tariff_policy_state"
+  ],
+  "core_coverage": {
+    "crude_oil_price_state": {
+      "usable_rows": 0,
+      "covered_trade_dates": 0,
+      "coverage_ratio": 0.0,
+      "first_covered_trade_date": "",
+      "last_covered_trade_date": ""
+    },
+    "bitumen_price_state": {
+      "usable_rows": 0,
+      "covered_trade_dates": 0,
+      "coverage_ratio": 0.0,
+      "first_covered_trade_date": "",
+      "last_covered_trade_date": ""
+    },
+    "gas_liquid_price_state": {
+      "usable_rows": 0,
+      "covered_trade_dates": 0,
+      "coverage_ratio": 0.0,
+      "first_covered_trade_date": "",
+      "last_covered_trade_date": ""
+    },
+    "refining_spread_proxy_state": {
+      "usable_rows": 0,
+      "covered_trade_dates": 0,
+      "coverage_ratio": 0.0,
+      "first_covered_trade_date": "",
+      "last_covered_trade_date": ""
+    }
+  },
+  "promotion_coverage": {
+    "crude_oil_price_state": {
+      "usable_rows": 0,
+      "covered_trade_dates": 0,
+      "coverage_ratio": 0.0,
+      "first_covered_trade_date": "",
+      "last_covered_trade_date": ""
+    },
+    "bitumen_price_state": {
+      "usable_rows": 0,
+      "covered_trade_dates": 0,
+      "coverage_ratio": 0.0,
+      "first_covered_trade_date": "",
+      "last_covered_trade_date": ""
+    },
+    "gas_liquid_price_state": {
+      "usable_rows": 0,
+      "covered_trade_dates": 0,
+      "coverage_ratio": 0.0,
+      "first_covered_trade_date": "",
+      "last_covered_trade_date": ""
+    },
+    "refining_spread_proxy_state": {
+      "usable_rows": 0,
+      "covered_trade_dates": 0,
+      "coverage_ratio": 0.0,
+      "first_covered_trade_date": "",
+      "last_covered_trade_date": ""
+    },
+    "inventory_or_demand_state": {
+      "usable_rows": 0,
+      "covered_trade_dates": 0,
+      "coverage_ratio": 0.0,
+      "first_covered_trade_date": "",
+      "last_covered_trade_date": ""
+    },
+    "pipeline_tariff_policy_state": {
+      "usable_rows": 0,
+      "covered_trade_dates": 0,
+      "coverage_ratio": 0.0,
+      "first_covered_trade_date": "",
+      "last_covered_trade_date": ""
+    }
+  },
+  "core_ready": false,
+  "promotion_ready": false,
+  "min_coverage_ratio": 0.8,
+  "pm_rule": "Core official/reviewed state coverage can reopen research validation; promotion still requires inventory/demand and pipeline tariff/policy evidence.",
+  "created_at_utc": "2026-07-20T10:11:16+00:00"
+}

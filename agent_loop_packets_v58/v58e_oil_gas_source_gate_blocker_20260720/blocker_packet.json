@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "packet_type": "blocker_packet",
+  "protocol_id": "agent_operating_protocol_v1",
+  "objective": "V5.8e oil gas official source gate established but blocked",
+  "agent": "Project Manager Agent",
+  "experiment_layer": "data_availability_gate",
+  "elapsed_timebox_minutes": 30,
+  "artifacts_created": [
+    "src/v5/oil_gas_source_gate_runner.py",
+    "tests/test_oil_gas_source_gate_runner.py",
+    "数据库/processed/oil_gas_source_gate_v58e/oil_gas_official_source_register.csv",
+    "数据库/processed/oil_gas_source_gate_v58e/oil_gas_official_state_import_template.csv",
+    "数据库/processed/oil_gas_source_gate_v58e/oil_gas_source_gate_summary.json",
+    "docs/governance/v58e_oil_gas_source_gate_pm_decision_v1.md"
+  ],
+  "evidence_found": [
+    "Oil/gas official source gate runner, source register and import template are ready.",
+    "Current template audit is source_repair_blocked: 0/18 core state coverage."
+  ],
+  "blockers": [
+    "No reviewed PIT usable official rows for crude, bitumen, gas/liquid or refining-spread state.",
+    "Inventory/demand and pipeline tariff/policy state are also empty.",
+    "No Engineering handoff, no JoinQuant code and no V5.7f basket inclusion until source gate passes."
+  ],
+  "decision": "return_to_research",
+  "next_owner": "Research Agent",
+  "stop_rule_status": "not_triggered",
+  "user_decision_required": false,
+  "user_decision_reason": "",
+  "allowed_next_action": "Research Agent fills reviewed official/licensed source rows and reruns audit-oil-gas-source-gate.",
+  "restart_condition": "Core official state metrics reach at least 80% rebalance-date coverage.",
+  "skill_status_change": "none",
+  "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
+  "created_at_utc": "2026-07-20T10:11:59+00:00"
+}

@@ -87,6 +87,14 @@ from v5.oil_gas_state_conditioned_panel_runner import (
     DEFAULT_PANEL as DEFAULT_OIL_GAS_STATE_CONDITIONED_PANEL,
     build_oil_gas_state_conditioned_panel,
 )
+from v5.oil_gas_source_gate_runner import (
+    DEFAULT_OUT_DIR as DEFAULT_OIL_GAS_SOURCE_GATE_OUT,
+    DEFAULT_PANEL as DEFAULT_OIL_GAS_SOURCE_GATE_PANEL,
+    audit_oil_gas_source_gate,
+    merge_oil_gas_state_sources,
+    write_oil_gas_official_source_register,
+    write_oil_gas_official_state_import_template,
+)
 
 
 def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.ArgumentParser]) -> None:
@@ -211,6 +219,28 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     oil_gas_conditioned_panel_parser.add_argument("--strategy-id", default="oil_gas_state_conditioned_ocf_v58d")
     oil_gas_conditioned_panel_parser.add_argument("--min-history", type=int, default=4)
     oil_gas_conditioned_panel_parser.set_defaults(handler=_handle_build_oil_gas_state_conditioned_panel)
+
+    oil_gas_source_register_parser = subparsers.add_parser("oil-gas-source-register")
+    oil_gas_source_register_parser.add_argument("--out-dir", type=Path, default=DEFAULT_OIL_GAS_SOURCE_GATE_OUT)
+    oil_gas_source_register_parser.set_defaults(handler=_handle_oil_gas_source_register)
+
+    oil_gas_state_template_parser = subparsers.add_parser("oil-gas-official-state-template")
+    oil_gas_state_template_parser.add_argument("--out-dir", type=Path, default=DEFAULT_OIL_GAS_SOURCE_GATE_OUT)
+    oil_gas_state_template_parser.add_argument("--start-year", type=int, default=2021)
+    oil_gas_state_template_parser.add_argument("--end-year", type=int, default=2026)
+    oil_gas_state_template_parser.set_defaults(handler=_handle_oil_gas_official_state_template)
+
+    oil_gas_source_audit_parser = subparsers.add_parser("audit-oil-gas-source-gate")
+    oil_gas_source_audit_parser.add_argument("state_csv", type=Path)
+    oil_gas_source_audit_parser.add_argument("--panel", type=Path, default=DEFAULT_OIL_GAS_SOURCE_GATE_PANEL)
+    oil_gas_source_audit_parser.add_argument("--out-dir", type=Path, default=DEFAULT_OIL_GAS_SOURCE_GATE_OUT)
+    oil_gas_source_audit_parser.set_defaults(handler=_handle_audit_oil_gas_source_gate)
+
+    oil_gas_source_merge_parser = subparsers.add_parser("merge-oil-gas-state-sources")
+    oil_gas_source_merge_parser.add_argument("--out-dir", type=Path, default=DEFAULT_OIL_GAS_SOURCE_GATE_OUT)
+    oil_gas_source_merge_parser.add_argument("--panel", type=Path, default=DEFAULT_OIL_GAS_SOURCE_GATE_PANEL)
+    oil_gas_source_merge_parser.add_argument("state_csvs", nargs="+", type=Path)
+    oil_gas_source_merge_parser.set_defaults(handler=_handle_merge_oil_gas_state_sources)
 
     screen_parser = subparsers.add_parser("screen-dividend-low-vol-fcf-sectors")
     screen_parser.add_argument("--config", type=Path, default=DEFAULT_V56_SCREEN_CONFIG)
@@ -423,6 +453,26 @@ def _handle_validate_oil_gas_cycle_state(args: argparse.Namespace) -> int:
 
 def _handle_build_oil_gas_state_conditioned_panel(args: argparse.Namespace) -> int:
     print(build_oil_gas_state_conditioned_panel(args.panel, args.out_dir, args.strategy_id, args.min_history))
+    return 0
+
+
+def _handle_oil_gas_source_register(args: argparse.Namespace) -> int:
+    print(write_oil_gas_official_source_register(args.out_dir))
+    return 0
+
+
+def _handle_oil_gas_official_state_template(args: argparse.Namespace) -> int:
+    print(write_oil_gas_official_state_import_template(args.out_dir, args.start_year, args.end_year))
+    return 0
+
+
+def _handle_audit_oil_gas_source_gate(args: argparse.Namespace) -> int:
+    print(audit_oil_gas_source_gate(args.state_csv, args.panel, args.out_dir))
+    return 0
+
+
+def _handle_merge_oil_gas_state_sources(args: argparse.Namespace) -> int:
+    print(merge_oil_gas_state_sources(args.out_dir, *args.state_csvs, panel_path=args.panel))
     return 0
 
 

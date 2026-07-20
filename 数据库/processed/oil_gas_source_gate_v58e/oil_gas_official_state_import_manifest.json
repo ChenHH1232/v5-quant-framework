@@ -1,0 +1,25 @@
+{
+  "dataset": "oil_gas_official_state_import_template_v58e",
+  "output": "数据库\\processed\\oil_gas_source_gate_v58e\\oil_gas_official_state_import_template.csv",
+  "start_year": 2021,
+  "end_year": 2026,
+  "row_count": 336,
+  "pit_usable_count": 0,
+  "core_metrics": [
+    "crude_oil_price_state",
+    "bitumen_price_state",
+    "gas_liquid_price_state",
+    "refining_spread_proxy_state"
+  ],
+  "promotion_metrics": [
+    "crude_oil_price_state",
+    "bitumen_price_state",
+    "gas_liquid_price_state",
+    "refining_spread_proxy_state",
+    "inventory_or_demand_state",
+    "pipeline_tariff_policy_state"
+  ],
+  "required_rule": "Rows become PIT usable only after value, visible_date, source_publication_date and review_status are filled from official/reviewed sources.",
+  "anti_crawler_rule": "Manual download or licensed export is preferred. Do not bypass WAF, login, robots, rate limits or paywalls.",
+  "created_at_utc": "2026-07-20T10:08:52+00:00"
+}

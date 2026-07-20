@@ -1612,6 +1612,53 @@
         "No Engineering handoff, JoinQuant code, paper trading or V5.7f basket inclusion is allowed."
       ],
       "next_gate": "research_repair_promotion_state_business_exposure_and_dividend_events_before_engineering_preparation"
+    },
+    {
+      "strategy_id": "oil_gas_engineering_smoke_v58h",
+      "sector": "oil_gas_pipeline_integrated",
+      "current_status": [
+        "engineering_smoke_test_completed",
+        "real_daily_price_execution_completed",
+        "cash_dividend_events_repaired",
+        "overfit_audit_completed_needs_review",
+        "not_platform_replication_ready",
+        "not_paper_trading_ready"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "platform_replication",
+        "paper_trading_ready",
+        "accepted_strategy",
+        "joinquant_code_ready",
+        "v57f_basket_member"
+      ],
+      "experiment_layer": "engineering_smoke_test",
+      "evidence_paths": [
+        "docs/governance/v58h_oil_gas_engineering_smoke_test_pm_decision_v1.md",
+        "agent_loop_packets_v58/v58h_oil_gas_engineering_smoke_test_20260720/checkpoint_packet.json",
+        "examples/oil_gas_state_conditioned_ocf_v58g_strategy.json",
+        "数据库/processed/oil_gas_state_conditioned_panel_v58g/oil_gas_state_conditioned_ocf_v58g/panel.csv",
+        "数据库/processed/oil_gas_v58a_joinquant_real_daily_prices.csv",
+        "数据库/processed/oil_gas_v58a_joinquant_real_benchmark_prices.csv",
+        "数据库/processed/oil_gas_v58g_joinquant_cash_dividends.csv",
+        "数据库/manifests/oil_gas_v58g_joinquant_cash_dividends_manifest.json",
+        "validation_daily_v58g_oil_gas/oil_gas_state_conditioned_ocf_v58g/summary.json",
+        "validation_daily_v58g_oil_gas/oil_gas_state_conditioned_ocf_v58g/daily_returns.csv",
+        "validation_daily_v58g_oil_gas/oil_gas_state_conditioned_ocf_v58g/rebalance_signals.csv",
+        "validation_daily_v58g_oil_gas/oil_gas_state_conditioned_ocf_v58g/trades.csv",
+        "validation_daily_v58g_oil_gas/oil_gas_state_conditioned_ocf_v58g/holdings.csv",
+        "validation_daily_v58g_oil_gas/oil_gas_state_conditioned_ocf_v58g/dividends.csv",
+        "overfit_audits_v58g_oil_gas/oil_gas_state_conditioned_ocf_v58g/overfit_audit_summary.json",
+        "overfit_audits_v58g_oil_gas/oil_gas_state_conditioned_ocf_v58g/overfit_audit_report.md"
+      ],
+      "blockers": [
+        "Platform replication is blocked until a proper oil/gas sector benchmark replaces HS300 for comparison.",
+        "Promotion state remains incomplete: inventory/demand and pipeline tariff/policy data are missing.",
+        "Business exposure remains JoinQuant industry proxy rather than reviewed annual-report segment evidence.",
+        "Overfit audit has no hard blocker, but parameter perturbation contract still needs review.",
+        "2021-2026 smoke-test result cannot be used as clean out-of-sample acceptance evidence."
+      ],
+      "next_gate": "repair_promotion_data_gate_and_oil_gas_sector_benchmark_before_platform_replication"
     }
   ],
   "sector_test_policy": {
@@ -1619,7 +1666,7 @@
     "agent_operating_protocol": "docs/governance/agent_operating_protocol_v1.md",
     "agent_operating_protocol_config": "config/agent_operating_protocol_v1.json",
     "agent_loop_packet_runner": "src/v5/agent_loop_packet_runner.py",
-    "latest_agent_loop_checkpoint": "agent_loop_packets_v58/v58g_oil_gas_core_source_repaired_validation_20260720/checkpoint_packet.json",
+    "latest_agent_loop_checkpoint": "agent_loop_packets_v58/v58h_oil_gas_engineering_smoke_test_20260720/checkpoint_packet.json",
     "default_agent_loop_timebox_minutes": 30,
     "extended_agent_loop_timebox_minutes": 60,
     "agent_loop_policy": "default_continue_without_asking_inside_approved_objective_checkpoint_at_timebox_stop_after_two_no_new_evidence_loops",
@@ -2138,6 +2185,9 @@
     "v58f_oil_gas_official_state_formal_candidate": "数据库/processed/oil_gas_source_gate_v58e/oil_gas_official_state_formal_candidate.csv",
     "v58g_oil_gas_status": "research_pit_validation_completed_core_source_gate_repaired_not_engineering_handoff",
     "v58g_oil_gas_pm_decision": "docs/governance/v58g_oil_gas_core_source_repaired_validation_pm_decision_v1.md",
-    "v58g_oil_gas_formal_summary": "validation_formal_v58g_oil_gas/oil_gas_state_conditioned_ocf_v58g/formal_validation_summary.json"
+    "v58g_oil_gas_formal_summary": "validation_formal_v58g_oil_gas/oil_gas_state_conditioned_ocf_v58g/formal_validation_summary.json",
+    "v58h_oil_gas_status": "engineering_smoke_test_completed_needs_review_not_platform_replication",
+    "v58h_oil_gas_pm_decision": "docs/governance/v58h_oil_gas_engineering_smoke_test_pm_decision_v1.md",
+    "v58h_oil_gas_daily_summary": "validation_daily_v58g_oil_gas/oil_gas_state_conditioned_ocf_v58g/summary.json"
   }
 }

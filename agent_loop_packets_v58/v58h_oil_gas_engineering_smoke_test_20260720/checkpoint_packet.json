@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "packet_type": "checkpoint_packet",
+  "protocol_id": "agent_operating_protocol_v1",
+  "objective": "v58h_oil_gas_engineering_smoke_test",
+  "agent": "Project Manager Agent",
+  "experiment_layer": "engineering_smoke_test",
+  "elapsed_timebox_minutes": 30,
+  "artifacts_created": [
+    "validation_daily_v58g_oil_gas/oil_gas_state_conditioned_ocf_v58g/summary.json",
+    "validation_daily_v58g_oil_gas/oil_gas_state_conditioned_ocf_v58g/daily_returns.csv",
+    "validation_daily_v58g_oil_gas/oil_gas_state_conditioned_ocf_v58g/rebalance_signals.csv",
+    "validation_daily_v58g_oil_gas/oil_gas_state_conditioned_ocf_v58g/trades.csv",
+    "validation_daily_v58g_oil_gas/oil_gas_state_conditioned_ocf_v58g/holdings.csv",
+    "validation_daily_v58g_oil_gas/oil_gas_state_conditioned_ocf_v58g/dividends.csv",
+    "overfit_audits_v58g_oil_gas/oil_gas_state_conditioned_ocf_v58g/overfit_audit_summary.json",
+    "docs/governance/v58h_oil_gas_engineering_smoke_test_pm_decision_v1.md"
+  ],
+  "evidence_found": [
+    "Engineering smoke test completed with 18 rebalance signals, 1228 daily rows, 197 trades, 144 holding snapshots and 29 dividend rows.",
+    "JoinQuant cash dividends were collected with 20 percent tax and used in local daily cash accounting.",
+    "Overfit audit has 0 blockers, 2 needs-review items and 12 pass checks."
+  ],
+  "blockers": [
+    "Platform replication is blocked until oil/gas sector benchmark, inventory/demand state, pipeline tariff/policy state and reviewed business exposure are repaired.",
+    "2021-2026 engineering result is not clean OOS acceptance evidence."
+  ],
+  "decision": "return_to_research",
+  "next_owner": "Research Agent",
+  "stop_rule_status": "not_triggered",
+  "user_decision_required": false,
+  "user_decision_reason": "",
+  "allowed_next_action": "Repair promotion data gate and oil/gas benchmark; rerun engineering smoke test before any platform replication request.",
+  "restart_condition": "Promotion data gate and sector benchmark are repaired without changing frozen V5.8g model weights.",
+  "skill_status_change": "none",
+  "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
+  "created_at_utc": "2026-07-20T10:57:31+00:00"
+}

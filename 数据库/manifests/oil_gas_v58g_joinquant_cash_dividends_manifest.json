@@ -1,0 +1,32 @@
+{
+  "dataset": "joinquant_cash_dividends",
+  "source": "jqdatasdk.finance.STK_XR_XD",
+  "panel": "数据库\\processed\\oil_gas_state_conditioned_panel_v58g\\oil_gas_state_conditioned_ocf_v58g\\panel.csv",
+  "database_dir": "数据库",
+  "output_prefix": "oil_gas_v58g_",
+  "raw_path": "数据库\\raw\\dividends\\oil_gas_v58g_joinquant_dividends_raw.csv",
+  "processed_path": "数据库\\processed\\oil_gas_v58g_joinquant_cash_dividends.csv",
+  "code_count": 26,
+  "event_count": 116,
+  "start_date": "2021-05-01",
+  "end_date": "2026-05-31",
+  "dividend_tax_rate": 0.2,
+  "schema": {
+    "bonus_ratio_rmb": "Cash dividend per 10 shares before tax.",
+    "cash_per_share": "bonus_ratio_rmb / 10.",
+    "dividend_ratio": "Bonus shares per 10 shares when JoinQuant reports stock dividend shares.",
+    "transfer_ratio": "Transferred shares per 10 shares.",
+    "stock_dividend_ratio": "(dividend_ratio + transfer_ratio) / 10. Used to adjust local unadjusted-price holdings.",
+    "position_multiplier": "1 + stock_dividend_ratio.",
+    "net_cash_per_share": "cash_per_share * (1 - dividend_tax_rate).",
+    "pay_date": "Uses a_xr_date because STK_XR_XD does not expose a separate cash arrival date in the validated field set.",
+    "announce_date": "implementation_pub_date, falling back to shareholders_plan_pub_date."
+  },
+  "warnings": [],
+  "credential_policy": "Credentials loaded from JQDATA_USERNAME/JQDATA_PASSWORD; credentials are never written.",
+  "agent_access": [
+    "Quant Validation Agent",
+    "Engineering Agent"
+  ],
+  "created_at_utc": "2026-07-20T10:54:09+00:00"
+}

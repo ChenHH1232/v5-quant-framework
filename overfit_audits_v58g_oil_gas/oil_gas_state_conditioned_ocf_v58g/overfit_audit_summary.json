@@ -1,0 +1,17 @@
+{
+  "strategy_id": "oil_gas_state_conditioned_ocf_v58g",
+  "status": "needs_review",
+  "spec": "examples\\oil_gas_state_conditioned_ocf_v58g_strategy.json",
+  "panel": "数据库\\processed\\oil_gas_state_conditioned_panel_v58g\\oil_gas_state_conditioned_ocf_v58g\\panel.csv",
+  "daily_returns_csv": "validation_daily_v58g_oil_gas\\oil_gas_state_conditioned_ocf_v58g\\daily_returns.csv",
+  "rebalance_signals_csv": "validation_daily_v58g_oil_gas\\oil_gas_state_conditioned_ocf_v58g\\rebalance_signals.csv",
+  "check_count": 14,
+  "blocker_count": 0,
+  "needs_review_count": 2,
+  "pass_count": 12,
+  "random_seed": 20260716,
+  "random_windows": 100,
+  "min_window_days": 252,
+  "governance": "This is an Engineering Agent anti-overfitting audit. It does not accept a strategy. It blocks or flags risks before PM can promote a candidate.",
+  "created_at_utc": "2026-07-20T10:56:28+00:00"
+}

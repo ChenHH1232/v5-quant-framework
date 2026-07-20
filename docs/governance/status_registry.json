@@ -1109,6 +1109,8 @@
         "direct_financial_evidence_repair_passed",
         "local_joinquant_style_simulation_ready",
         "engineering_pre_simulation_completed",
+        "local_daily_simulation_review_completed",
+        "platform_replication_deferred",
         "coverage_policy_frozen_conservative_80",
         "research_pit_validation_completed",
         "pit_leakage_audit_passed",
@@ -1149,6 +1151,7 @@
         "docs/governance/v57b_gas_water_business_purity_financial_repair_pm_decision_v1.md",
         "docs/governance/v57b_gas_water_local_jq_simulation_readiness_v1.md",
         "docs/governance/v57b_gas_water_coverage_policy_freeze_v1.md",
+        "docs/governance/v57b_gas_water_local_simulation_pm_checkpoint_v1.md",
         "docs/engineering/v57b_gas_water_local_simulation_handoff_v1.md",
         "knowledge/research_agent/references/gas_water_v57_external_state_source_register.csv",
         "knowledge/research_agent/strategy_cases/gas_water_v57b_initial_model_result.md",
@@ -1162,9 +1165,10 @@
         "2026 failure remains unresolved at formal state-variable level; external-state reports are mostly post-rebalance research evidence.",
         "Same-pool benchmark is available for local simulation, but a formal JoinQuant sector benchmark is not confirmed.",
         "Real daily open/close, true cash dividends and same-pool benchmark are collected for local simulation; platform export is not yet requested.",
-        "2021-2026 remains platform-confirmation context and cannot be accepted-strategy evidence."
+        "2021-2026 remains platform-confirmation context and cannot be accepted-strategy evidence.",
+        "Strict 80% local daily simulation underperformed same-pool benchmark; V5.7b should not move to platform replication without a new ex-ante state hypothesis or PM-approved coverage policy."
       ],
-      "next_gate": "local_simulation_packet_review_then_decide_platform_script"
+      "next_gate": "archive_as_research_signal_candidate_or_wait_for_new_ex_ante_state_hypothesis"
     },
     {
       "strategy_id": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f",
@@ -1450,13 +1454,14 @@
     "v57_telecom_observation_framework": "knowledge/research_agent/factor_theory/telecom_operator_cashflow_dividend_observation_framework_v57.md",
     "v57_transport_infrastructure_refresh": "knowledge/research_agent/factor_theory/transport_infrastructure_cashflow_dividend_refresh_v57.md",
     "v57_gas_water_initial_model": "gas_water_value_serviceability_v57b",
-    "v57_gas_water_initial_model_status": "coverage_policy_frozen_conservative_80_local_simulation_ready_not_platform_replication_ready",
+    "v57_gas_water_initial_model_status": "coverage_policy_frozen_conservative_80_local_simulation_reviewed_platform_replication_deferred",
     "v57_gas_water_initial_model_decision": "docs/governance/v57b_gas_water_initial_model_pm_decision_v1.md",
     "v57_gas_water_repair_decision": "docs/governance/v57b_gas_water_business_purity_financial_repair_pm_decision_v1.md",
     "v57_gas_water_local_simulation_readiness": "docs/governance/v57b_gas_water_local_jq_simulation_readiness_v1.md",
     "v57_gas_water_coverage_policy_freeze": "docs/governance/v57b_gas_water_coverage_policy_freeze_v1.md",
+    "v57_gas_water_local_simulation_pm_checkpoint": "docs/governance/v57b_gas_water_local_simulation_pm_checkpoint_v1.md",
     "v57_gas_water_engineering_handoff": "docs/engineering/v57b_gas_water_local_simulation_handoff_v1.md",
-    "v57_gas_water_next_gate": "local_simulation_packet_review_then_decide_platform_script",
+    "v57_gas_water_next_gate": "archive_as_research_signal_candidate_or_wait_for_new_ex_ante_state_hypothesis",
     "current_enhanced_etf_candidate": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f",
     "v57f_etf_pm_decision": "docs/governance/v57f_dividend_low_vol_cashflow_enhanced_etf_pm_decision_v1.md",
     "v57f_etf_forward_paper_trading_log": "docs/governance/v57f_dividend_low_vol_cashflow_enhanced_etf_forward_paper_trading_log.md",

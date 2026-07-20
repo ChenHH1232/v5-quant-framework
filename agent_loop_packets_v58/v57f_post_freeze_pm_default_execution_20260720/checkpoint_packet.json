@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "packet_type": "checkpoint_packet",
+  "protocol_id": "agent_operating_protocol_v1",
+  "objective": "Execute V5 post-freeze default PM workflow for V5.7f without JoinQuant test or parameter tuning",
+  "agent": "Project Manager Agent",
+  "experiment_layer": "pm_decision_gate",
+  "elapsed_timebox_minutes": 30,
+  "artifacts_created": [
+    "basket_governance_dashboards_v57f\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\basket_governance_dashboard_summary.json",
+    "basket_pm_action_routes_v57f\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\basket_pm_action_route_summary.json"
+  ],
+  "evidence_found": [
+    "workspace_contract_audits_v58\\latest\\workspace_contract_audit_summary.json",
+    "paper_refresh_status_checks_v57f\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\paper_refresh_task_status_summary.json",
+    "strategy_state_gates_v58\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\accepted_strategy\\strategy_state_gate_summary.json"
+  ],
+  "blockers": [],
+  "decision": "freeze_candidate",
+  "next_owner": "Project Manager Agent",
+  "stop_rule_status": "external_event_required",
+  "user_decision_required": false,
+  "user_decision_reason": "",
+  "allowed_next_action": "wait_for_2026_10_08_refresh_window_or_user_supplied_joinquant_exports",
+  "restart_condition": "2026-10-08 refresh window arrives or user supplies JoinQuant platform exports",
+  "skill_status_change": "none",
+  "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
+  "created_at_utc": "2026-07-20T04:00:03+00:00"
+}

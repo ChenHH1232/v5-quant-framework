@@ -23,5 +23,5 @@
   "status_csv": "paper_refresh_status_checks_v57f\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\paper_refresh_task_status.csv",
   "next_gate": "wait_until_refresh_window",
   "pm_rule": "This status check does not refresh data, tune the model, or generate a paper signal.",
-  "created_at_utc": "2026-07-19T16:13:04+00:00"
+  "created_at_utc": "2026-07-20T03:58:59+00:00"
 }

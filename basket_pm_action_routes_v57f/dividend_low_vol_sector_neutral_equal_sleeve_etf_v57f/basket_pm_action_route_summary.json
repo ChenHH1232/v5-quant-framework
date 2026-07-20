@@ -66,5 +66,5 @@
     }
   ],
   "pm_rule": "The PM router may only route existing evidence; it must not refresh data, run JoinQuant, tune parameters, or generate a signal.",
-  "created_at_utc": "2026-07-19T16:25:30+00:00"
+  "created_at_utc": "2026-07-20T03:59:22+00:00"
 }

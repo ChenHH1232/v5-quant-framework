@@ -1,0 +1,4 @@
+code,company_name,report_period,visible_date,source_name,source_url,original_announcement_checked,upstream_exposure_share,pipeline_storage_lng_exposure_share,refining_chemical_exposure_share,retail_trade_exposure_share,oilfield_service_exposure_share,other_exposure_share,exposure_basis,review_status,notes
+600028.XSHG,Sinopec,2024-12-31,,,,false,,,,,,,revenue_or_profit,needs_review,
+601857.XSHG,PetroChina,2024-12-31,,,,false,,,,,,,revenue_or_profit,needs_review,
+600938.XSHG,CNOOC,2024-12-31,,,,false,,,,,,,revenue_or_profit,needs_review,

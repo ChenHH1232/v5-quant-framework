@@ -78,6 +78,23 @@ SECTOR_CONFIGS: dict[str, dict[str, Any]] = {
             "Airlines and aviation fuel / FX-cycle exposures are intentionally excluded from this operator panel.",
         ],
     },
+    "oil_gas_pipeline_integrated": {
+        "description": "A-share oil / gas upstream, integrated, refining and oil / gas distribution candidates. Oilfield services are excluded from the first dividend cash-flow universe.",
+        "explicit_codes": {},
+        "industry_codes": {
+            "HY01103": "integrated_oil_gas",
+            "HY01104": "fuel_refining",
+            "HY01105": "natural_gas_processing",
+            "HY01106": "oil_gas_distribution_other",
+        },
+        "benchmark_policy": "equal_weight_same_pool_until_oil_gas_subindex_confirmed",
+        "limitations": [
+            "This is a first-layer cycle-aware candidate universe, not a formal strategy universe.",
+            "Oilfield services are intentionally excluded because their economics are mostly oil-company capex beta rather than dividend low-volatility cash-flow evidence.",
+            "Natural-gas processing may overlap with gas / water operators and must be split later by PIT business-exposure tags.",
+            "Formal validation is blocked until oil price, gas price, refining spread, pipeline tariff / policy state and PIT business-exposure tags are joined.",
+        ],
+    },
 }
 
 

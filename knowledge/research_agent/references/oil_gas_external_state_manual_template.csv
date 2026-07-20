@@ -1,0 +1,6 @@
+state_date,visible_date,metric,value,unit,source_name,source_url,source_publication_date,pit_usable,review_status,notes
+2021-06-30,,brent_price_state,,,,,,false,needs_review,
+2021-06-30,,domestic_gas_price_state,,,,,,false,needs_review,
+2021-06-30,,refining_spread_state,,,,,,false,needs_review,
+2021-06-30,,pipeline_tariff_policy_state,,,,,,false,needs_review,
+2021-06-30,,inventory_or_demand_state,,,,,,false,needs_review,

@@ -91,6 +91,7 @@ from v5.oil_gas_source_gate_runner import (
     DEFAULT_OUT_DIR as DEFAULT_OIL_GAS_SOURCE_GATE_OUT,
     DEFAULT_PANEL as DEFAULT_OIL_GAS_SOURCE_GATE_PANEL,
     audit_oil_gas_source_gate,
+    import_oil_gas_nbs_price_release,
     merge_oil_gas_state_sources,
     write_oil_gas_official_source_register,
     write_oil_gas_official_state_import_template,
@@ -241,6 +242,12 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     oil_gas_source_merge_parser.add_argument("--panel", type=Path, default=DEFAULT_OIL_GAS_SOURCE_GATE_PANEL)
     oil_gas_source_merge_parser.add_argument("state_csvs", nargs="+", type=Path)
     oil_gas_source_merge_parser.set_defaults(handler=_handle_merge_oil_gas_state_sources)
+
+    oil_gas_nbs_import_parser = subparsers.add_parser("import-oil-gas-nbs-price-release")
+    oil_gas_nbs_import_parser.add_argument("url")
+    oil_gas_nbs_import_parser.add_argument("--out-dir", type=Path, default=DEFAULT_OIL_GAS_SOURCE_GATE_OUT)
+    oil_gas_nbs_import_parser.add_argument("--timeout-seconds", type=float, default=20.0)
+    oil_gas_nbs_import_parser.set_defaults(handler=_handle_import_oil_gas_nbs_price_release)
 
     screen_parser = subparsers.add_parser("screen-dividend-low-vol-fcf-sectors")
     screen_parser.add_argument("--config", type=Path, default=DEFAULT_V56_SCREEN_CONFIG)
@@ -473,6 +480,11 @@ def _handle_audit_oil_gas_source_gate(args: argparse.Namespace) -> int:
 
 def _handle_merge_oil_gas_state_sources(args: argparse.Namespace) -> int:
     print(merge_oil_gas_state_sources(args.out_dir, *args.state_csvs, panel_path=args.panel))
+    return 0
+
+
+def _handle_import_oil_gas_nbs_price_release(args: argparse.Namespace) -> int:
+    print(import_oil_gas_nbs_price_release(args.url, args.out_dir, args.timeout_seconds))
     return 0
 
 

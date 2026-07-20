@@ -1517,6 +1517,50 @@
         "Engineering handoff remains blocked."
       ],
       "next_gate": "research_fill_reviewed_official_source_rows_then_rerun_oil_gas_source_gate"
+    },
+    {
+      "strategy_id": "oil_gas_nbs_price_seed_v58f",
+      "sector": "oil_gas_pipeline_integrated",
+      "current_status": [
+        "official_nbs_seed_import_completed",
+        "source_repair_progress",
+        "source_repair_blocked",
+        "not_engineering_handoff",
+        "returned_to_research_agent"
+      ],
+      "not_status": [
+        "research_pit_validation_ready_with_official_sources",
+        "formal_strategy_candidate",
+        "engineering_handoff",
+        "platform_replication",
+        "paper_trading_ready",
+        "accepted_strategy",
+        "joinquant_code_ready",
+        "v57f_basket_member"
+      ],
+      "experiment_layer": "data_availability_gate",
+      "evidence_paths": [
+        "src/v5/oil_gas_source_gate_runner.py",
+        "src/v5/cli_sector.py",
+        "tests/test_oil_gas_source_gate_runner.py",
+        "数据库/processed/oil_gas_source_gate_v58e/oil_gas_nbs_price_release_20260624.csv",
+        "数据库/processed/oil_gas_source_gate_v58e/oil_gas_nbs_price_release_20260624_manifest.json",
+        "数据库/processed/oil_gas_source_gate_v58e/oil_gas_source_gate_summary.json",
+        "数据库/processed/oil_gas_source_gate_v58e/oil_gas_source_gate_report.md",
+        "数据库/processed/oil_gas_source_gate_v58e/oil_gas_official_state_formal_candidate_manifest.json",
+        "数据库/processed/oil_gas_source_gate_v58e/oil_gas_official_state_formal_candidate.csv",
+        "docs/governance/v58f_oil_gas_nbs_price_seed_pm_decision_v1.md",
+        "agent_loop_packets_v58/v58f_oil_gas_nbs_price_seed_blocker_20260720/blocker_packet.json"
+      ],
+      "blockers": [
+        "NBS seed imports one 2026 release only and does not cover the 2021-2026 validation rebalance dates.",
+        "Crude oil official / reviewed history is still missing.",
+        "Bitumen official / reviewed history is still missing.",
+        "Refining spread proxy still requires reviewed crude plus product-price inputs and a documented formula.",
+        "Inventory / demand and pipeline tariff / policy promotion metrics remain missing.",
+        "No Engineering handoff, JoinQuant code, paper trading or V5.7f basket inclusion is allowed."
+      ],
+      "next_gate": "research_import_reviewed_official_oil_gas_history_then_rerun_source_gate"
     }
   ],
   "sector_test_policy": {
@@ -1524,7 +1568,7 @@
     "agent_operating_protocol": "docs/governance/agent_operating_protocol_v1.md",
     "agent_operating_protocol_config": "config/agent_operating_protocol_v1.json",
     "agent_loop_packet_runner": "src/v5/agent_loop_packet_runner.py",
-    "latest_agent_loop_checkpoint": "agent_loop_packets_v58/v58e_oil_gas_source_gate_blocker_20260720/blocker_packet.json",
+    "latest_agent_loop_checkpoint": "agent_loop_packets_v58/v58f_oil_gas_nbs_price_seed_blocker_20260720/blocker_packet.json",
     "default_agent_loop_timebox_minutes": 30,
     "extended_agent_loop_timebox_minutes": 60,
     "agent_loop_policy": "default_continue_without_asking_inside_approved_objective_checkpoint_at_timebox_stop_after_two_no_new_evidence_loops",
@@ -2035,5 +2079,11 @@
       "status": "completed_initial_layer",
       "reason": "cache-airport-operating-announcement-contents now writes one JSON per art_code, skips cached rows, supports code/month/limit/retry filters, and isolates errors. Cache-only extraction produced 261/261 complete candidate rows after full content caching. Original PDF spot-check and unit normalization remain required before Quant validation."
     }
-  ]
+  ],
+  "references": {
+    "v58f_oil_gas_nbs_price_seed_status": "source_repair_progress_but_still_blocked",
+    "v58f_oil_gas_nbs_price_seed_pm_decision": "docs/governance/v58f_oil_gas_nbs_price_seed_pm_decision_v1.md",
+    "v58f_oil_gas_nbs_price_seed_csv": "数据库/processed/oil_gas_source_gate_v58e/oil_gas_nbs_price_release_20260624.csv",
+    "v58f_oil_gas_official_state_formal_candidate": "数据库/processed/oil_gas_source_gate_v58e/oil_gas_official_state_formal_candidate.csv"
+  }
 }

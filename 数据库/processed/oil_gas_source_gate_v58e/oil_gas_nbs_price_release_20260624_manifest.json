@@ -1,0 +1,22 @@
+{
+  "dataset": "oil_gas_nbs_price_release_import_v58f",
+  "source_url": "https://www.stats.gov.cn/sj/zxfb/202606/t20260623_1963989.html",
+  "title": "2026年6月中旬流通领域重要生产资料市场价格变动情况",
+  "publication_date": "2026-06-24",
+  "state_date": "2026-06-20",
+  "output": "数据库\\processed\\oil_gas_source_gate_v58e\\oil_gas_nbs_price_release_20260624.csv",
+  "row_count": 4,
+  "duplicate_rows_skipped": 4,
+  "metrics": [
+    "domestic_gas_price_state",
+    "gas_liquid_price_state",
+    "refined_product_price_state"
+  ],
+  "status": "nbs_seed_imported",
+  "limitations": [
+    "NBS LPG can repair gas_liquid_price_state rows.",
+    "NBS gasoline and diesel rows are product-price inputs, not a complete refining spread until paired with reviewed crude input.",
+    "This importer reads a user-specified public NBS release URL only; it does not crawl NBS history."
+  ],
+  "created_at_utc": "2026-07-20T10:22:17+00:00"
+}

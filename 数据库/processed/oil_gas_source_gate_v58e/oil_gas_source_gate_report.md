@@ -1,7 +1,7 @@
 # Oil / Gas Source Gate V5.8e
 
 - Status: `source_repair_blocked`
-- Rows: `336`
+- Rows: `4`
 - Trade dates: `18`
 - Core ready: `False`
 - Promotion ready: `False`

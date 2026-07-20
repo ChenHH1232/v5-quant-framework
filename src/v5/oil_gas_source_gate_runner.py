@@ -2,6 +2,9 @@ from __future__ import annotations
 
 import argparse
 import calendar
+import re
+from html.parser import HTMLParser
+from urllib.request import Request, urlopen
 from dataclasses import dataclass
 from datetime import date, datetime, timezone
 from pathlib import Path
@@ -231,6 +234,82 @@ def merge_oil_gas_state_sources(out_dir: Path, *state_csvs: Path, panel_path: Pa
     return out_path
 
 
+def import_oil_gas_nbs_price_release(
+    url: str,
+    out_dir: Path = DEFAULT_OUT_DIR,
+    timeout_seconds: float = 20.0,
+) -> Path:
+    request = Request(url, headers={"User-Agent": "v5-research-source-gate/1.0"})
+    with urlopen(request, timeout=timeout_seconds) as response:
+        html = response.read().decode("utf-8")
+    return import_oil_gas_nbs_price_release_from_html(html, url, out_dir)
+
+
+def import_oil_gas_nbs_price_release_from_html(html: str, source_url: str, out_dir: Path = DEFAULT_OUT_DIR) -> Path:
+    title = _meta_content(html, "ArticleTitle") or "NBS production-material circulation price release"
+    publication = _normal_date((_meta_content(html, "PubDate") or "")[:10])
+    if not publication:
+        raise ValueError("NBS release page is missing PubDate metadata")
+    state_day = _nbs_state_date_from_title(title)
+    table_rows = _extract_table_rows(html)
+    state_rows: list[dict[str, str]] = []
+    seen_keys: set[tuple[str, str]] = set()
+    duplicate_count = 0
+    for product, unit, value in _nbs_oil_gas_products(table_rows):
+        mapped = _map_nbs_product(product)
+        if not mapped:
+            continue
+        metric, sub_industry, notes = mapped
+        key = (metric, sub_industry)
+        if key in seen_keys:
+            duplicate_count += 1
+            continue
+        seen_keys.add(key)
+        state_rows.append(
+            {
+                "visible_date": publication,
+                "state_date": state_day,
+                "state_scope": "official_statistics",
+                "sub_industry": sub_industry,
+                "metric": metric,
+                "value": value,
+                "unit": unit,
+                "source_name": "National Bureau of Statistics production-material circulation price release",
+                "source_url": source_url,
+                "source_publication_date": publication,
+                "pit_usable": "true",
+                "review_status": "nbs_official_reviewed",
+                "notes": notes,
+            }
+        )
+    out_dir.mkdir(parents=True, exist_ok=True)
+    safe_date = publication.replace("-", "")
+    out_path = out_dir / f"oil_gas_nbs_price_release_{safe_date}.csv"
+    write_csv_rows(out_path, STATE_FIELDS, state_rows)
+    write_json_file(
+        out_dir / f"oil_gas_nbs_price_release_{safe_date}_manifest.json",
+        {
+            "dataset": "oil_gas_nbs_price_release_import_v58f",
+            "source_url": source_url,
+            "title": title,
+            "publication_date": publication,
+            "state_date": state_day,
+            "output": str(out_path),
+            "row_count": len(state_rows),
+            "duplicate_rows_skipped": duplicate_count,
+            "metrics": sorted({row["metric"] for row in state_rows}),
+            "status": "nbs_seed_imported" if state_rows else "no_oil_gas_rows_found",
+            "limitations": [
+                "NBS LPG can repair gas_liquid_price_state rows.",
+                "NBS gasoline and diesel rows are product-price inputs, not a complete refining spread until paired with reviewed crude input.",
+                "This importer reads a user-specified public NBS release URL only; it does not crawl NBS history.",
+            ],
+            "created_at_utc": _now_utc(),
+        },
+    )
+    return out_path
+
+
 def audit_oil_gas_source_gate(
     state_csv: Path,
     panel_path: Path = DEFAULT_PANEL,
@@ -361,6 +440,120 @@ def _month_end_date(year: int, month: int) -> str:
     return date(year, month, calendar.monthrange(year, month)[1]).isoformat()
 
 
+def _meta_content(html: str, name: str) -> str:
+    pattern = rf'<meta\s+name="{re.escape(name)}"\s+content="([^"]*)"'
+    match = re.search(pattern, html, flags=re.IGNORECASE)
+    return match.group(1).strip() if match else ""
+
+
+def _normal_date(value: str) -> str:
+    value = value.strip().replace("/", "-")
+    if not value:
+        return ""
+    return value[:10]
+
+
+def _nbs_state_date_from_title(title: str) -> str:
+    match = re.search(r"(\d{4})\u5e74(\d{1,2})\u6708(\u4e0a\u65ec|\u4e2d\u65ec|\u4e0b\u65ec)", title)
+    if not match:
+        raise ValueError(f"cannot infer NBS state date from title: {title}")
+    year = int(match.group(1))
+    month = int(match.group(2))
+    period = match.group(3)
+    if period == "\u4e0a\u65ec":
+        day = 10
+    elif period == "\u4e2d\u65ec":
+        day = 20
+    else:
+        day = calendar.monthrange(year, month)[1]
+    return date(year, month, day).isoformat()
+
+
+class _TableParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.rows: list[list[str]] = []
+        self._in_td = False
+        self._current_cell: list[str] = []
+        self._current_row: list[str] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag.lower() == "tr":
+            self._current_row = []
+        if tag.lower() in {"td", "th"}:
+            self._in_td = True
+            self._current_cell = []
+
+    def handle_data(self, data: str) -> None:
+        if self._in_td:
+            self._current_cell.append(data)
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag.lower() in {"td", "th"} and self._in_td:
+            self._current_row.append(_clean_cell("".join(self._current_cell)))
+            self._current_cell = []
+            self._in_td = False
+        if tag.lower() == "tr" and self._current_row:
+            self.rows.append(self._current_row)
+
+
+def _extract_table_rows(html: str) -> list[list[str]]:
+    parser = _TableParser()
+    parser.feed(html)
+    return [row for row in parser.rows if any(cell for cell in row)]
+
+
+def _clean_cell(value: str) -> str:
+    return re.sub(r"\s+", " ", value.replace("\u2002", " ")).strip()
+
+
+def _nbs_oil_gas_products(rows: list[list[str]]) -> list[tuple[str, str, str]]:
+    result = []
+    for row in rows:
+        if len(row) < 3:
+            continue
+        product = row[0]
+        value = _number_text(row[2])
+        if not value:
+            continue
+        if _map_nbs_product(product):
+            result.append((product, row[1], value))
+    return result
+
+
+def _map_nbs_product(product: str) -> tuple[str, str, str] | None:
+    if "\u6db2\u5316\u77f3\u6cb9\u6c14" in product or "LPG" in product:
+        return (
+            "gas_liquid_price_state",
+            "natural_gas_lpg",
+            "NBS LPG production-material price. Used as reviewed gas/liquid state input.",
+        )
+    if "\u6db2\u5316\u5929\u7136\u6c14" in product or "LNG" in product:
+        return (
+            "domestic_gas_price_state",
+            "natural_gas_lng",
+            "NBS LNG production-material price. Supplemental domestic gas state input.",
+        )
+    if "\u6c7d\u6cb9" in product:
+        return (
+            "refined_product_price_state",
+            "gasoline_95",
+            "NBS gasoline price input. Not a full refining spread until paired with reviewed crude input.",
+        )
+    if "\u67f4\u6cb9" in product:
+        return (
+            "refined_product_price_state",
+            "diesel_0",
+            "NBS diesel price input. Not a full refining spread until paired with reviewed crude input.",
+        )
+    return None
+
+
+def _number_text(value: str) -> str:
+    match = re.search(r"-?\d+(?:\.\d+)?", value.replace(",", ""))
+    return match.group(0) if match else ""
+
+
 def _now_utc() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
@@ -415,6 +608,10 @@ def main(argv: list[str] | None = None) -> int:
     merge_parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
     merge_parser.add_argument("--panel", type=Path, default=DEFAULT_PANEL)
     merge_parser.add_argument("state_csvs", nargs="+", type=Path)
+    nbs_parser = subparsers.add_parser("import-nbs-price-release")
+    nbs_parser.add_argument("url")
+    nbs_parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
+    nbs_parser.add_argument("--timeout-seconds", type=float, default=20.0)
     args = parser.parse_args(argv)
     if args.command == "source-register":
         print(write_oil_gas_official_source_register(args.out_dir))
@@ -427,6 +624,9 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if args.command == "merge":
         print(merge_oil_gas_state_sources(args.out_dir, *args.state_csvs, panel_path=args.panel))
+        return 0
+    if args.command == "import-nbs-price-release":
+        print(import_oil_gas_nbs_price_release(args.url, args.out_dir, args.timeout_seconds))
         return 0
     return 1
 

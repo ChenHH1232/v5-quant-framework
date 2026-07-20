@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "packet_type": "blocker_packet",
+  "protocol_id": "agent_operating_protocol_v1",
+  "objective": "v58f_oil_gas_nbs_price_seed_import",
+  "agent": "Project Manager Agent",
+  "experiment_layer": "data_availability_gate",
+  "elapsed_timebox_minutes": 30,
+  "artifacts_created": [
+    "src/v5/oil_gas_source_gate_runner.py",
+    "tests/test_oil_gas_source_gate_runner.py",
+    "数据库/processed/oil_gas_source_gate_v58e/oil_gas_nbs_price_release_20260624.csv",
+    "数据库/processed/oil_gas_source_gate_v58e/oil_gas_nbs_price_release_20260624_manifest.json",
+    "数据库/processed/oil_gas_source_gate_v58e/oil_gas_source_gate_summary.json"
+  ],
+  "evidence_found": [
+    "NBS public production-material release importer works for a user-specified official URL.",
+    "Imported 2026-06-24 release with 4 PIT-usable reviewed rows: LNG, LPG, gasoline and diesel.",
+    "Duplicate NBS table rows are skipped by metric/sub-industry key."
+  ],
+  "blockers": [
+    "Core source gate remains blocked: crude oil price history is missing.",
+    "Core source gate remains blocked: bitumen price history is missing.",
+    "Refining spread proxy remains incomplete because gasoline/diesel rows need reviewed crude input and a documented formula.",
+    "A single 2026 NBS seed row does not cover 2021-2026 rebalance dates.",
+    "No Engineering handoff, JoinQuant code, or V5.7f basket inclusion is allowed."
+  ],
+  "decision": "return_to_research",
+  "next_owner": "Research Agent",
+  "stop_rule_status": "not_triggered",
+  "user_decision_required": false,
+  "user_decision_reason": "",
+  "allowed_next_action": "Research Agent imports manually reviewed official/licensed crude, bitumen, LPG/LNG/product-price history and reruns oil-gas source gate.",
+  "restart_condition": "Core official/reviewed source coverage reaches at least 80 percent of V5.8d rebalance dates.",
+  "skill_status_change": "none",
+  "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
+  "created_at_utc": "2026-07-20T10:24:04+00:00"
+}

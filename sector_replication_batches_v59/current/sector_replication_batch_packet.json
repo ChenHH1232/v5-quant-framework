@@ -1,0 +1,194 @@
+{
+  "schema_version": 1,
+  "strategy_family": "dividend_low_volatility_operating_cash_flow_enhanced_etf",
+  "experiment_layer": "pm_decision_gate",
+  "status": "batch_sector_replication_routed_not_model_acceptance",
+  "created_at_utc": "2026-07-21T05:07:16+00:00",
+  "inputs": {
+    "screen_config": "config\\dividend_low_vol_fcf_sector_candidates_v56.json",
+    "roadmap_config": "config\\dividend_low_vol_cashflow_sector_coverage_v58.json",
+    "status_registry": "docs\\governance\\status_registry.json"
+  },
+  "outputs": {
+    "screening_summary": "sector_replication_batches_v59\\current\\screening\\sector_screening_summary.json",
+    "screening_results": "sector_replication_batches_v59\\current\\screening\\sector_screening_results.csv",
+    "screening_report": "sector_replication_batches_v59\\current\\screening\\sector_screening_pm_report.md",
+    "roadmap_summary": "sector_replication_batches_v59\\current\\roadmap\\sector_replication_roadmap_summary.json",
+    "roadmap_csv": "sector_replication_batches_v59\\current\\roadmap\\sector_replication_roadmap.csv",
+    "roadmap_report": "sector_replication_batches_v59\\current\\roadmap\\sector_replication_roadmap_pm_report.md",
+    "agent_queue_dir": "sector_replication_batches_v59\\current\\roadmap\\agent_queues"
+  },
+  "sector_count": 13,
+  "lane_counts": {
+    "basket_core_shadow_pool": 4,
+    "manual_research_before_formal": 3,
+    "observation_only": 3,
+    "blocked_data_repair": 3
+  },
+  "next_execution_order": [
+    {
+      "priority_rank": "10",
+      "sector_id": "bank",
+      "display_name": "Bank",
+      "pm_lane": "basket_core_shadow_pool",
+      "next_agent": "Engineering Agent",
+      "timebox_minutes": "30",
+      "required_packet": "checkpoint_packet",
+      "allowed_next_action": "Refresh PIT panels, low-vol factors, dividends, daily logs and platform-attribution inputs while keeping frozen strategy logic unchanged.",
+      "graduation_gate": "paper_trading_record_or_platform_attribution_packet_completed",
+      "stop_condition": "stop if frozen logic change is required or platform exports remain unavailable"
+    },
+    {
+      "priority_rank": "11",
+      "sector_id": "utilities_electricity",
+      "display_name": "Utilities / Electricity",
+      "pm_lane": "basket_core_shadow_pool",
+      "next_agent": "Engineering Agent",
+      "timebox_minutes": "30",
+      "required_packet": "checkpoint_packet",
+      "allowed_next_action": "Refresh PIT panels, low-vol factors, dividends, daily logs and platform-attribution inputs while keeping frozen strategy logic unchanged.",
+      "graduation_gate": "paper_trading_record_or_platform_attribution_packet_completed",
+      "stop_condition": "stop if frozen logic change is required or platform exports remain unavailable"
+    },
+    {
+      "priority_rank": "12",
+      "sector_id": "highway_infrastructure",
+      "display_name": "Highway Infrastructure",
+      "pm_lane": "basket_core_shadow_pool",
+      "next_agent": "Engineering Agent",
+      "timebox_minutes": "30",
+      "required_packet": "checkpoint_packet",
+      "allowed_next_action": "Refresh PIT panels, low-vol factors, dividends, daily logs and platform-attribution inputs while keeping frozen strategy logic unchanged.",
+      "graduation_gate": "paper_trading_record_or_platform_attribution_packet_completed",
+      "stop_condition": "stop if frozen logic change is required or platform exports remain unavailable"
+    },
+    {
+      "priority_rank": "13",
+      "sector_id": "port_rail_infrastructure",
+      "display_name": "Port / Rail Infrastructure",
+      "pm_lane": "basket_core_shadow_pool",
+      "next_agent": "Engineering Agent",
+      "timebox_minutes": "30",
+      "required_packet": "checkpoint_packet",
+      "allowed_next_action": "Refresh PIT panels, low-vol factors, dividends, daily logs and platform-attribution inputs while keeping frozen strategy logic unchanged.",
+      "graduation_gate": "paper_trading_record_or_platform_attribution_packet_completed",
+      "stop_condition": "stop if frozen logic change is required or platform exports remain unavailable"
+    },
+    {
+      "priority_rank": "20",
+      "sector_id": "gas_water_operators",
+      "display_name": "Gas / Water Operators",
+      "pm_lane": "manual_research_before_formal",
+      "next_agent": "Research Agent",
+      "timebox_minutes": "60",
+      "required_packet": "checkpoint_packet_or_blocker_packet",
+      "allowed_next_action": "Build industry knowledge, business-purity evidence, PIT field map, FCF/capex-quality gate and source register before Quant validation.",
+      "graduation_gate": "industry_knowledge_and_data_availability_gate_passed",
+      "stop_condition": "stop after 2 loops without new evidence or if the next stage gate needs PM approval"
+    },
+    {
+      "priority_rank": "30",
+      "sector_id": "telecom_operators",
+      "display_name": "Telecom Operators",
+      "pm_lane": "observation_only",
+      "next_agent": "Project Manager Agent",
+      "timebox_minutes": "30",
+      "required_packet": "checkpoint_packet",
+      "allowed_next_action": "Keep as observation sleeve, specialist sleeve, or paper-only tracker until PM approves a special sample policy.",
+      "graduation_gate": "PM_approves_specialist_or_small_sample_policy",
+      "stop_condition": "stop if sample policy or specialist data is not approved"
+    },
+    {
+      "priority_rank": "31",
+      "sector_id": "airport_transport_operators",
+      "display_name": "Airport / Transport Operators",
+      "pm_lane": "blocked_data_repair",
+      "next_agent": "Research Agent",
+      "timebox_minutes": "60",
+      "required_packet": "blocker_packet",
+      "allowed_next_action": "Repair missing PIT data, external state data, business-exposure evidence or original-report review.",
+      "graduation_gate": "hard_data_gate_repaired_before_modeling",
+      "stop_condition": "stop after 2 loops without new source evidence; archive blocker packet"
+    },
+    {
+      "priority_rank": "40",
+      "sector_id": "insurance",
+      "display_name": "Insurance",
+      "pm_lane": "observation_only",
+      "next_agent": "Project Manager Agent",
+      "timebox_minutes": "30",
+      "required_packet": "checkpoint_packet",
+      "allowed_next_action": "Keep as observation sleeve, specialist sleeve, or paper-only tracker until PM approves a special sample policy.",
+      "graduation_gate": "PM_approves_specialist_or_small_sample_policy",
+      "stop_condition": "stop if sample policy or specialist data is not approved"
+    },
+    {
+      "priority_rank": "50",
+      "sector_id": "oil_gas_pipeline_integrated",
+      "display_name": "Oil / Gas Pipeline and Integrated Energy",
+      "pm_lane": "observation_only",
+      "next_agent": "Project Manager Agent",
+      "timebox_minutes": "30",
+      "required_packet": "checkpoint_packet",
+      "allowed_next_action": "Keep as observation sleeve, specialist sleeve, or paper-only tracker until PM approves a special sample policy.",
+      "graduation_gate": "PM_approves_specialist_or_small_sample_policy",
+      "stop_condition": "stop if sample policy or specialist data is not approved"
+    },
+    {
+      "priority_rank": "60",
+      "sector_id": "consumer_staples_cashflow",
+      "display_name": "Consumer Staples Cash-Flow Leaders",
+      "pm_lane": "manual_research_before_formal",
+      "next_agent": "Research Agent",
+      "timebox_minutes": "60",
+      "required_packet": "checkpoint_packet_or_blocker_packet",
+      "allowed_next_action": "Build industry knowledge, business-purity evidence, PIT field map, FCF/capex-quality gate and source register before Quant validation.",
+      "graduation_gate": "industry_knowledge_and_data_availability_gate_passed",
+      "stop_condition": "stop after 2 loops without new evidence or if the next stage gate needs PM approval"
+    },
+    {
+      "priority_rank": "70",
+      "sector_id": "pharma_medical_services",
+      "display_name": "Pharma / Medical Services",
+      "pm_lane": "manual_research_before_formal",
+      "next_agent": "Research Agent",
+      "timebox_minutes": "60",
+      "required_packet": "checkpoint_packet_or_blocker_packet",
+      "allowed_next_action": "Build industry knowledge, business-purity evidence, PIT field map, FCF/capex-quality gate and source register before Quant validation.",
+      "graduation_gate": "industry_knowledge_and_data_availability_gate_passed",
+      "stop_condition": "stop after 2 loops without new evidence or if the next stage gate needs PM approval"
+    },
+    {
+      "priority_rank": "90",
+      "sector_id": "environmental_project_operators",
+      "display_name": "Environmental / Project Operators",
+      "pm_lane": "blocked_data_repair",
+      "next_agent": "Research Agent",
+      "timebox_minutes": "60",
+      "required_packet": "blocker_packet",
+      "allowed_next_action": "Repair missing PIT data, external state data, business-exposure evidence or original-report review.",
+      "graduation_gate": "hard_data_gate_repaired_before_modeling",
+      "stop_condition": "stop after 2 loops without new source evidence; archive blocker packet"
+    },
+    {
+      "priority_rank": "91",
+      "sector_id": "coal",
+      "display_name": "Coal",
+      "pm_lane": "blocked_data_repair",
+      "next_agent": "Research Agent",
+      "timebox_minutes": "60",
+      "required_packet": "blocker_packet",
+      "allowed_next_action": "Repair missing PIT data, external state data, business-exposure evidence or original-report review.",
+      "graduation_gate": "cycle_data_gate_passed_before_modeling",
+      "stop_condition": "stop after 2 loops without new source evidence; archive blocker packet"
+    }
+  ],
+  "pm_rules": [
+    "Batch traversal is allowed; strategy acceptance is not.",
+    "Research Agent must pass industry knowledge and data availability gates before Quant validation.",
+    "Quant Validation Agent must run baseline, IC/RankIC, rolling, ablation and robustness before Engineering handoff.",
+    "Engineering Agent only handles frozen candidates and must output local daily simulation, dividends, trades, cash, holdings and rebalance_order_health.",
+    "No sector may be promoted because historical return looks good.",
+    "Two consecutive loops without new evidence produce a blocker or failure-return packet."
+  ]
+}

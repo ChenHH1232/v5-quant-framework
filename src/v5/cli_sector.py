@@ -14,6 +14,10 @@ from v5.sector_replication_roadmap_runner import (
     DEFAULT_OUT_DIR as DEFAULT_V58_REPLICATION_ROADMAP_OUT,
     build_sector_replication_roadmap,
 )
+from v5.sector_replication_batch_runner import (
+    DEFAULT_OUT_DIR as DEFAULT_SECTOR_REPLICATION_BATCH_OUT,
+    run_sector_replication_batch,
+)
 from v5.basket_constructor_runner import (
     DEFAULT_CONFIG as DEFAULT_V56_BASKET_CONFIG,
     DEFAULT_OUT_DIR as DEFAULT_V56_BASKET_OUT,
@@ -395,6 +399,13 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     roadmap_parser.add_argument("--out", type=Path, default=DEFAULT_V58_REPLICATION_ROADMAP_OUT)
     roadmap_parser.set_defaults(handler=_handle_build_sector_replication_roadmap)
 
+    batch_parser = subparsers.add_parser("run-sector-replication-batch")
+    batch_parser.add_argument("--screen-config", type=Path, default=DEFAULT_V56_SCREEN_CONFIG)
+    batch_parser.add_argument("--roadmap-config", type=Path, default=DEFAULT_V58_REPLICATION_ROADMAP_CONFIG)
+    batch_parser.add_argument("--status-registry", type=Path, default=DEFAULT_V56_STATUS_REGISTRY)
+    batch_parser.add_argument("--out", type=Path, default=DEFAULT_SECTOR_REPLICATION_BATCH_OUT)
+    batch_parser.set_defaults(handler=_handle_run_sector_replication_batch)
+
     low_vol_parser = subparsers.add_parser("add-low-volatility-factors")
     low_vol_parser.add_argument("panel", type=Path)
     low_vol_parser.add_argument("price_csv", type=Path)
@@ -758,6 +769,18 @@ def _handle_screen_dividend_low_vol_fcf_sectors(args: argparse.Namespace) -> int
 
 def _handle_build_sector_replication_roadmap(args: argparse.Namespace) -> int:
     print(build_sector_replication_roadmap(config_path=args.config, out_dir=args.out))
+    return 0
+
+
+def _handle_run_sector_replication_batch(args: argparse.Namespace) -> int:
+    print(
+        run_sector_replication_batch(
+            screen_config=args.screen_config,
+            roadmap_config=args.roadmap_config,
+            status_registry=args.status_registry,
+            out_dir=args.out,
+        )
+    )
     return 0
 
 

@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "project": "v56_dividend_low_vol_fcf_enhanced_basket",
+  "experiment_layer": "data_availability_gate",
+  "created_at_utc": "2026-07-21T05:07:16+00:00",
+  "sector_count": 8,
+  "decision_counts": {
+    "ready_for_basket_shadow_pool": 4,
+    "basket_observation_only": 2,
+    "needs_manual_research_before_formal": 1,
+    "blocked_by_cycle_data_gate": 1
+  },
+  "global_missing_modules": [
+    "low_volatility_factor_runner",
+    "cross_sector_basket_constructor",
+    "sector_weight_cap_policy",
+    "single_stock_weight_cap_policy",
+    "basket_level_forward_paper_trading_log"
+  ],
+  "csv_path": "sector_replication_batches_v59\\current\\screening\\sector_screening_results.csv",
+  "report_path": "sector_replication_batches_v59\\current\\screening\\sector_screening_pm_report.md",
+  "pm_rule": "Batch screening is allowed; formal candidacy and acceptance remain blocked until all gates pass."
+}

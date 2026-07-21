@@ -1,0 +1,1 @@
+priority_rank,sector_id,display_name,sector_type,pm_lane,next_agent,loop_type,timebox_minutes,required_packet,required_inputs,allowed_next_action,forbidden_action,graduation_gate,stop_condition,screening_decision,data_gate,pit_universe_gate,business_purity_gate,dividend_gate,fcf_gate,low_vol_gate,external_state_burden,sample_size_risk,notes

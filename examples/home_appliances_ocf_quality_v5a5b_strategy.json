@@ -1,0 +1,113 @@
+{
+  "meta": {
+    "strategy_id": "home_appliances_ocf_quality_v5a5b",
+    "name": "Home Appliances OCF Quality V5a.5b",
+    "objective": "Research-loop revision after V5a.5 ablation: test OCF yield plus cash-conversion and capex quality, while treating low volatility and dividend as diagnostics rather than positive scoring drivers."
+  },
+  "universe": {
+    "name": "A-share home-appliance companies",
+    "construction": "JoinQuant/DataJQ Shenwan home-appliance subindustries with PIT membership.",
+    "point_in_time": true,
+    "minimum_rebalance_coverage_ratio": 0.8
+  },
+  "data": {
+    "vendor": "JoinQuant/DataJQ PIT financial fields, industry membership and real daily prices",
+    "price_frequency": "quarterly_signal_panel",
+    "financial_as_of_policy": "vendor_get_fundamentals_date_proxy",
+    "price_adjustment": {
+      "research_panel": "pre_adjusted_close_to_close_return",
+      "low_volatility": "fq_none_daily_close_strictly_before_trade_date"
+    },
+    "window": {
+      "research_start": "2021-05-01",
+      "research_end": "2026-05-31"
+    }
+  },
+  "signals": {
+    "factors": [
+      {
+        "name": "operating_cash_flow_yield",
+        "source": "JoinQuant/DataJQ cash_flow.net_operate_cash_flow divided by valuation.market_cap",
+        "role": "primary_cash_generation",
+        "direction": "higher_is_better",
+        "definition": "Operating cash flow yield; higher values indicate stronger operating cash generation relative to market value.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      },
+      {
+        "name": "operating_cash_flow_to_net_profit",
+        "source": "JoinQuant/DataJQ cash flow and income statement fields",
+        "role": "cash_conversion_quality",
+        "direction": "higher_is_better",
+        "definition": "Operating cash flow relative to net profit; higher values indicate better earnings-to-cash conversion.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      },
+      {
+        "name": "capex_burden",
+        "source": "JoinQuant/DataJQ cash_flow.fix_intan_other_asset_acqui_cash divided by operating cash flow",
+        "role": "capex_quality_guard",
+        "direction": "lower_is_better",
+        "definition": "Capital expenditure burden relative to operating cash flow; lower values leave more distributable cash.",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      }
+    ],
+    "scoring": {
+      "method": "weighted_composite",
+      "normalization_scope": "rebalance_cross_section",
+      "weights": {
+        "operating_cash_flow_yield": 0.5,
+        "operating_cash_flow_to_net_profit": 0.3,
+        "capex_burden": 0.2
+      },
+      "min_factor_count": 3,
+      "value_trap_guard": "Property/export/inventory state gates remain required before Engineering; low-volatility is evaluated as a diagnostic baseline, not a scoring factor in this revision."
+    }
+  },
+  "schedule": {"signal_frequency": "quarterly", "rebalance_frequency": "quarterly"},
+  "portfolio": {"selection_count": 10, "weighting": "equal_weight_research_candidate", "max_position_weight": 0.12},
+  "risk": {
+    "defensive_asset": "cash",
+    "defensive_rule": {"enabled": false, "reason": "Research PIT validation only."},
+    "individual_stop_loss_take_profit": {"enabled": false, "reason": "Fixed exits are not part of the research hypothesis."}
+  },
+  "validation": {
+    "method": "rolling",
+    "train_years": 3,
+    "test_years": 1,
+    "review_years": 1,
+    "weak_years": ["2021", "2022", "2024", "2026"],
+    "baselines": [
+      {"name": "equal_weight_home_appliances", "mode": "equal_all"},
+      {"name": "high_ocf_top10", "mode": "single_factor", "factor": "operating_cash_flow_yield", "direction": "higher_is_better", "selection_count": 10},
+      {"name": "low_vol_top10_diagnostic", "mode": "single_factor", "factor": "low_vol_score", "direction": "higher_is_better", "selection_count": 10},
+      {"name": "high_dividend_top10_diagnostic", "mode": "single_factor", "factor": "dividend_yield", "direction": "higher_is_better", "selection_count": 10},
+      {"name": "v5a5b_ocf_quality_top10", "mode": "composite", "selection_count": 10}
+    ],
+    "common_sample_fields": ["operating_cash_flow_yield", "operating_cash_flow_to_net_profit", "capex_burden"],
+    "robustness": {
+      "selection_counts": [8, 10, 12],
+      "weight_scale_factors": ["operating_cash_flow_yield", "operating_cash_flow_to_net_profit"],
+      "weight_scales": [0.8, 1.0, 1.2]
+    }
+  },
+  "execution": {
+    "status": "not_started",
+    "next_gate": "quant_validation",
+    "commission_bps": 3,
+    "slippage_bps": 5,
+    "suspension_policy": "skip_untradeable",
+    "limit_policy": "skip_limit_blocked"
+  },
+  "outputs": {
+    "save_holdings": true,
+    "save_rebalance_signals": true,
+    "report": "markdown",
+    "required_reports": ["formal_validation_packet", "pm_initial_model_decision"]
+  }
+}
+

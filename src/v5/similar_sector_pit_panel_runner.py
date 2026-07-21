@@ -95,6 +95,83 @@ SECTOR_CONFIGS: dict[str, dict[str, Any]] = {
             "Formal validation is blocked until oil price, gas price, refining spread, pipeline tariff / policy state and PIT business-exposure tags are joined.",
         ],
     },
+    "building_materials_cement": {
+        "description": "A-share cement manufacturing companies. Glass and other building-material names are excluded from the first cycle-aware cash-flow universe.",
+        "explicit_codes": {},
+        "industry_codes": {
+            "801711": "sw_cement_manufacturing",
+        },
+        "benchmark_policy": "equal_weight_cement_manufacturing_pool_until_pure_index_confirmed",
+        "limitations": [
+            "This is a first-layer cement universe, not a formal strategy universe.",
+            "Formal validation is blocked until cement price, output, demand, energy-cost and capex-policy states are joined.",
+            "Glass and other building-material companies are intentionally excluded from this first cement-specific panel.",
+        ],
+    },
+    "food_beverage": {
+        "description": "A-share food and beverage companies. Liquor, dairy, condiments and packaged food must be separated before formal validation.",
+        "explicit_codes": {},
+        "industry_codes": {
+            "801125": "sw_liquor",
+            "801126": "sw_non_liquor_alcohol",
+            "801127": "sw_beverage_dairy",
+            "801124": "sw_food_processing",
+            "801128": "sw_snack_food",
+            "801129": "sw_condiments",
+        },
+        "benchmark_policy": "equal_weight_food_beverage_pool_with_subsector_split",
+        "limitations": [
+            "Subsector concentration can dominate broad food/beverage IC results.",
+            "Formal validation requires working-capital, inventory, channel and reinvestment-quality gates.",
+        ],
+    },
+    "home_appliances": {
+        "description": "A-share home-appliance companies. White goods, kitchen appliances, small appliances and appliance components are tagged separately.",
+        "explicit_codes": {},
+        "industry_codes": {
+            "801111": "sw_white_goods",
+            "801112": "sw_audio_visual_equipment",
+            "801113": "sw_small_appliances",
+            "801114": "sw_kitchen_bath_appliances",
+            "801115": "sw_lighting_equipment",
+            "801116": "sw_appliance_components",
+            "801117": "sw_other_appliances",
+        },
+        "benchmark_policy": "equal_weight_home_appliances_pool_with_subsector_split",
+        "limitations": [
+            "Formal validation requires property-cycle, export-cycle, inventory and raw-material-cost state checks.",
+            "Component suppliers and brand operators should be audited separately before Engineering handoff.",
+        ],
+    },
+    "consumer_staples_cashflow": {
+        "description": "A-share broad consumer-staples cash-flow universe using JoinQuant primary-consumption industry as a first-layer parent pool.",
+        "explicit_codes": {},
+        "industry_codes": {
+            "HY005": "jq_primary_consumption",
+        },
+        "benchmark_policy": "equal_weight_primary_consumption_pool_until_quality_subset_confirmed",
+        "limitations": [
+            "This broad parent pool can mix food, beverage, agriculture and consumer-product names.",
+            "Formal validation requires a business-quality screen and working-capital/capex gate before broad IC conclusions.",
+        ],
+    },
+    "pharma_medical_services": {
+        "description": "A-share pharma and medical-services candidates. Chemical drugs, biological products, devices, services, TCM and distribution are tagged separately.",
+        "explicit_codes": {},
+        "industry_codes": {
+            "801151": "sw_chemical_pharma",
+            "801152": "sw_biologics",
+            "801153": "sw_medical_devices",
+            "801154": "sw_pharma_distribution",
+            "801155": "sw_traditional_chinese_medicine",
+            "801156": "sw_medical_services",
+        },
+        "benchmark_policy": "equal_weight_pharma_medical_pool_with_subsector_split",
+        "limitations": [
+            "Formal validation requires policy, procurement, R&D and subsector gates.",
+            "Raw FCF is diagnostic only until R&D and capex treatment is reviewed.",
+        ],
+    },
 }
 
 

@@ -1900,6 +1900,137 @@
         "Forward / paper trading result evidence is absent."
       ],
       "next_gate": "wait_for_next_clean_forward_rebalance_signal"
+    },
+    {
+      "strategy_id": "v5a.4_research_queue_execution_status",
+      "sector": "multi_sector_queue",
+      "current_status": [
+        "research_queue_executed",
+        "not_quant_validation",
+        "not_engineering_handoff"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "platform_replication",
+        "accepted_strategy"
+      ],
+      "experiment_layer": "research_gate_execution",
+      "evidence_paths": [
+        "docs/governance/v5a.4_research_queue_execution_pm_decision.md",
+        "sector_replication_batches_v5a4/research_queue_execution/research_gate_execution.csv"
+      ],
+      "blockers": [
+        "New sectors require PIT data gates and sector-specific state variables before Quant validation."
+      ],
+      "next_gate": "v5a.5_data_gate_build_for_selected_consumer_candidates"
+    },
+    {
+      "strategy_id": "home_appliances_ocf_quality_v5a5b",
+      "sector": "home_appliances",
+      "current_status": [
+        "research_signal_candidate",
+        "research_pit_validation_completed",
+        "pit_leakage_audit_passed",
+        "not_engineering_handoff"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "platform_replication",
+        "paper_trading",
+        "accepted_strategy"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "docs/governance/v5a.5_consumer_home_appliance_quant_initial_pm_decision.md",
+        "validation_formal_v5a5b_consumer_research_loop/home_appliances_ocf_quality_v5a5b/formal_validation_summary.json",
+        "validation_formal_v5a5b_consumer_research_loop/home_appliances_ocf_quality_v5a5b/formal_validation_report.md"
+      ],
+      "blockers": [
+        "Capex burden is not confirmed as a positive scoring factor.",
+        "Property/export/inventory state and cash dividend events are missing for Engineering daily simulation.",
+        "Needs sector-specific value-trap and capex-policy review before handoff."
+      ],
+      "next_gate": "research_build_v5a.5c_home_appliances_state_and_dividend_data_gate"
+    },
+    {
+      "strategy_id": "food_beverage_low_vol_diagnostic_v5a5b",
+      "sector": "food_beverage",
+      "current_status": [
+        "defensive_diagnostic_signal_only",
+        "research_pit_validation_completed",
+        "pit_leakage_audit_passed",
+        "not_engineering_handoff"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "platform_replication",
+        "paper_trading",
+        "accepted_strategy"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "docs/governance/v5a.5_consumer_home_appliance_quant_initial_pm_decision.md",
+        "validation_formal_v5a5b_consumer_research_loop/food_beverage_low_vol_diagnostic_v5a5b/formal_validation_summary.json",
+        "validation_formal_v5a5b_consumer_research_loop/food_beverage_low_vol_diagnostic_v5a5b/formal_validation_report.md"
+      ],
+      "blockers": [
+        "OCF/dividend composite rejected.",
+        "Low-volatility is only a defensive diagnostic, not a deployable sleeve.",
+        "Needs liquor/non-liquor split plus channel inventory and working-capital state."
+      ],
+      "next_gate": "research_subsector_split_before_any_new_quant_attempt"
+    },
+    {
+      "strategy_id": "consumer_staples_ocf_low_vol_v5a5",
+      "sector": "consumer_staples_cashflow",
+      "current_status": [
+        "broad_parent_pool_rejected_current_composite",
+        "research_pit_validation_completed",
+        "not_engineering_handoff"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "platform_replication",
+        "paper_trading",
+        "accepted_strategy"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "docs/governance/v5a.5_consumer_home_appliance_quant_initial_pm_decision.md",
+        "validation_formal_v5a5_consumer_initial/consumer_staples_ocf_low_vol_v5a5/formal_validation_summary.json",
+        "validation_formal_v5a5_consumer_initial/consumer_staples_ocf_low_vol_v5a5/formal_validation_report.md"
+      ],
+      "blockers": [
+        "Parent pool is too mixed for current sleeve construction.",
+        "Dropping dividend improved initial result, so current dividend composite is not accepted.",
+        "Must be routed by subsector before another formal attempt."
+      ],
+      "next_gate": "pm_route_to_subsector_specific_research_queues"
+    },
+    {
+      "strategy_id": "v5a.5_second_pass_sector_data_gate_status",
+      "sector": "multi_sector_data_gate",
+      "current_status": [
+        "pit_panels_collected",
+        "real_daily_prices_collected",
+        "low_vol_factors_collected",
+        "not_engineering_handoff"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "platform_replication",
+        "accepted_strategy"
+      ],
+      "experiment_layer": "data_availability_gate",
+      "evidence_paths": [
+        "docs/governance/v5a.5_consumer_home_appliance_quant_initial_pm_decision.md"
+      ],
+      "blockers": [
+        "Local database outputs are generated artifacts and are intentionally not Git-tracked.",
+        "Cash dividend event files were not supplied in this layer.",
+        "Cement and pharma still require specialist state data before formal model attempts."
+      ],
+      "next_gate": "research_prioritize_home_appliances_v5a.5c_or_subsector_repair"
     }
   ],
   "sector_test_policy": {
@@ -2445,6 +2576,16 @@
       "item": "v5a.3_theory_gated_preliminary_sector_validation",
       "status": "completed_initial_prevalidation_not_strategy_acceptance",
       "reason": "All 33 broad-sector candidates were routed through the V5a.2 theory gate. Outputs classify core refresh, research-before-Quant, specialist observation, low-priority observation, data-blocked and excluded lanes before formal validation."
+    },
+    {
+      "item": "v5a.5_home_appliances_capex_policy_review",
+      "status": "open",
+      "reason": "Home appliances OCF-quality signal is promising, but capex_burden ablation suggests capex should be reviewed as a risk/diagnostic variable instead of accepted as a positive scoring factor."
+    },
+    {
+      "item": "v5a.5_consumer_subsector_router",
+      "status": "open",
+      "reason": "Broad consumer staples parent pool is too mixed; future consumer validation should route food, beverage, appliances and staples separately."
     }
   ],
   "references": {
@@ -2550,6 +2691,14 @@
     "v5a.3_theory_gated_pm_decision": "docs/governance/v5a.3_theory_gated_preliminary_validation_pm_decision.md",
     "v5a.3_replication_batch_after_theory_gate_packet": "sector_replication_batches_v5a3/replication_batch_after_theory_gate/sector_replication_batch_packet.json",
     "v5a.3_replication_batch_after_theory_gate_report": "sector_replication_batches_v5a3/replication_batch_after_theory_gate/sector_replication_batch_pm_report.md",
-    "v5a.3_next_gate": "research_agent_batch_repair_for_research_gate_before_quant_initial_validation_sectors"
+    "v5a.3_next_gate": "research_agent_batch_repair_for_research_gate_before_quant_initial_validation_sectors",
+    "v5a.4_research_queue_status": "research_queue_executed_not_quant_validation",
+    "v5a.4_research_queue_pm_decision": "docs/governance/v5a.4_research_queue_execution_pm_decision.md",
+    "v5a.4_research_queue_csv": "sector_replication_batches_v5a4/research_queue_execution/research_gate_execution.csv",
+    "v5a.5_pm_decision": "docs/governance/v5a.5_consumer_home_appliance_quant_initial_pm_decision.md",
+    "v5a.5_home_appliances_v5a5b_summary": "validation_formal_v5a5b_consumer_research_loop/home_appliances_ocf_quality_v5a5b/formal_validation_summary.json",
+    "v5a.5_food_beverage_v5a5b_summary": "validation_formal_v5a5b_consumer_research_loop/food_beverage_low_vol_diagnostic_v5a5b/formal_validation_summary.json",
+    "v5a.5_consumer_staples_initial_summary": "validation_formal_v5a5_consumer_initial/consumer_staples_ocf_low_vol_v5a5/formal_validation_summary.json",
+    "v5a.5_next_gate": "research_build_home_appliances_state_dividend_gate_before_engineering"
   }
 }

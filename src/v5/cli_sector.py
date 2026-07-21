@@ -84,6 +84,16 @@ from v5.home_appliances_export_exposure_runner import (
     DEFAULT_PANEL as DEFAULT_HOME_APPLIANCES_EXPORT_EXPOSURE_PANEL,
     collect_home_appliances_export_exposure,
 )
+from v5.consumer_working_capital_state_runner import (
+    DEFAULT_OUT_ROOT as DEFAULT_CONSUMER_WORKING_CAPITAL_OUT,
+    DEFAULT_PANELS as DEFAULT_CONSUMER_WORKING_CAPITAL_PANELS,
+    enrich_consumer_working_capital_state,
+)
+from v5.consumer_subsector_validation_runner import (
+    DEFAULT_OUT_ROOT as DEFAULT_CONSUMER_SUBSECTOR_VALIDATION_OUT,
+    DEFAULT_PANELS as DEFAULT_CONSUMER_SUBSECTOR_VALIDATION_PANELS,
+    run_consumer_subsector_validation,
+)
 from v5.similar_sector_pit_panel_runner import DEFAULT_OUT_ROOT, SECTOR_CONFIGS, collect_similar_sector_pit_panel
 from v5.gas_water_operating_evidence_runner import (
     DEFAULT_OUT_DIR as DEFAULT_GAS_WATER_EVIDENCE_OUT,
@@ -486,6 +496,19 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     home_appliances_export_parser.add_argument("--sleep-seconds", type=float, default=0.08)
     home_appliances_export_parser.add_argument("--no-resume", action="store_true")
     home_appliances_export_parser.set_defaults(handler=_handle_collect_home_appliances_export_exposure)
+
+    consumer_wc_parser = subparsers.add_parser("enrich-consumer-working-capital-state")
+    consumer_wc_parser.add_argument("sector", choices=sorted(DEFAULT_CONSUMER_WORKING_CAPITAL_PANELS))
+    consumer_wc_parser.add_argument("--panel", type=Path)
+    consumer_wc_parser.add_argument("--out-root", type=Path, default=DEFAULT_CONSUMER_WORKING_CAPITAL_OUT)
+    consumer_wc_parser.set_defaults(handler=_handle_enrich_consumer_working_capital_state)
+
+    consumer_subsector_parser = subparsers.add_parser("validate-consumer-subsectors")
+    consumer_subsector_parser.add_argument("sector", choices=sorted(DEFAULT_CONSUMER_SUBSECTOR_VALIDATION_PANELS))
+    consumer_subsector_parser.add_argument("--panel", type=Path)
+    consumer_subsector_parser.add_argument("--out-root", type=Path, default=DEFAULT_CONSUMER_SUBSECTOR_VALIDATION_OUT)
+    consumer_subsector_parser.add_argument("--min-codes-per-date", type=int, default=8)
+    consumer_subsector_parser.set_defaults(handler=_handle_validate_consumer_subsectors)
 
     basket_parser = subparsers.add_parser("construct-dividend-low-vol-fcf-basket")
     basket_parser.add_argument("--config", type=Path, default=DEFAULT_V56_BASKET_CONFIG)
@@ -929,6 +952,16 @@ def _handle_collect_home_appliances_export_exposure(args: argparse.Namespace) ->
             resume_existing=not args.no_resume,
         )
     )
+    return 0
+
+
+def _handle_enrich_consumer_working_capital_state(args: argparse.Namespace) -> int:
+    print(enrich_consumer_working_capital_state(args.sector, args.panel, args.out_root))
+    return 0
+
+
+def _handle_validate_consumer_subsectors(args: argparse.Namespace) -> int:
+    print(run_consumer_subsector_validation(args.sector, args.panel, args.out_root, min_codes_per_date=args.min_codes_per_date))
     return 0
 
 

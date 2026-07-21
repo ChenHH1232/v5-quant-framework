@@ -2115,6 +2115,56 @@
         "Engineering local daily simulation is blocked until reviewed state policy or documented no-state policy is accepted."
       ],
       "next_gate": "resolve_home_appliances_external_macro_state_policy_before_engineering"
+    },
+    {
+      "strategy_id": "v5a.6_consumer_subsector_working_capital_queue",
+      "sector": "consumer_multi_subsector",
+      "current_status": [
+        "research_pit_validation_completed",
+        "working_capital_state_repaired",
+        "subsector_routing_completed",
+        "not_engineering_handoff"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "platform_replication",
+        "paper_trading",
+        "accepted_strategy"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "docs/governance/v5a.6_consumer_subsector_working_capital_pm_decision.md",
+        "src/v5/consumer_working_capital_state_runner.py",
+        "src/v5/consumer_subsector_validation_runner.py",
+        "validation_formal_v5a6_consumer_subsector/food_beverage/consumer_subsector_validation_summary.json",
+        "validation_formal_v5a6_consumer_subsector/consumer_staples_cashflow/consumer_subsector_validation_summary.json",
+        "validation_formal_v5a6_consumer_subsector/pharma_medical_services/consumer_subsector_validation_summary.json"
+      ],
+      "key_evidence": {
+        "food_beverage_rows": 2290,
+        "consumer_staples_rows": 5132,
+        "pharma_medical_rows": 8704,
+        "candidate_subsectors": [
+          "food_beverage:sw_condiments",
+          "food_beverage:sw_snack_food",
+          "consumer_staples_cashflow:jq_primary_consumption",
+          "pharma_medical_services:sw_biologics"
+        ],
+        "rejected_or_unstable_subsectors": [
+          "food_beverage:sw_liquor",
+          "food_beverage:sw_food_processing",
+          "food_beverage:sw_beverage_dairy",
+          "pharma_medical_services:sw_medical_devices",
+          "pharma_medical_services:sw_medical_services",
+          "pharma_medical_services:sw_pharma_distribution"
+        ]
+      },
+      "blockers": [
+        "Candidate consumer subsectors still need state review: channel inventory, receivables pressure, gross margin, brand/product concentration, capex policy and valuation-state guard.",
+        "Consumer staples parent pool is too mixed; it needs a strict business-quality subset before any basket sleeve handoff.",
+        "Pharma candidates require R&D, procurement and policy-state gates before they can be treated as ETF-sleeve candidates."
+      ],
+      "next_gate": "research_state_review_for_condiments_snack_food_consumer_quality_subset_and_biologics"
     }
   ],
   "sector_test_policy": {
@@ -2799,6 +2849,11 @@
     "v5a.5d_home_appliances_pm_decision": "docs/governance/v5a.5d_home_appliances_true_state_repair_pm_decision.md",
     "v5a.5d_home_appliances_formal_summary": "validation_formal_v5a5d_home_appliances_true_state/home_appliances_ocf_quality_v5a5c/formal_validation_summary.json",
     "v5a.5d_home_appliances_state_diagnostic": "validation_state_v5a5d_home_appliances/home_appliances_ocf_quality_v5a5d/state_diagnostic_summary.json",
-    "v5a.5d_home_appliances_next_gate": "resolve_external_macro_state_policy_before_engineering"
+    "v5a.5d_home_appliances_next_gate": "resolve_external_macro_state_policy_before_engineering",
+    "v5a.6_consumer_subsector_pm_decision": "docs/governance/v5a.6_consumer_subsector_working_capital_pm_decision.md",
+    "v5a.6_food_beverage_subsector_summary": "validation_formal_v5a6_consumer_subsector/food_beverage/consumer_subsector_validation_summary.json",
+    "v5a.6_consumer_staples_subsector_summary": "validation_formal_v5a6_consumer_subsector/consumer_staples_cashflow/consumer_subsector_validation_summary.json",
+    "v5a.6_pharma_subsector_summary": "validation_formal_v5a6_consumer_subsector/pharma_medical_services/consumer_subsector_validation_summary.json",
+    "v5a.6_next_gate": "research_state_review_for_candidate_subsectors_before_engineering"
   }
 }

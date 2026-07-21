@@ -1,0 +1,373 @@
+{
+  "schema_version": 1,
+  "strategy_id": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57g_gas_water_observation",
+  "experiment_layer": "research_pit_validation",
+  "status": "formal_validation_completed_not_acceptance",
+  "config": "config\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57g_gas_water_observation.json",
+  "signals_csv": "validation_formal_v57g_gas_water_observation_basket_constructor\\basket_rebalance_signals.csv",
+  "daily_returns_csv": "local_daily_backtests_v57g_gas_water_observation_etf\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57g_gas_water_observation\\daily_returns.csv",
+  "combined_panel": "validation_formal_v57g_gas_water_observation_basket\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57g_gas_water_observation\\combined_basket_panel_for_validation.csv",
+  "panel_row_count": 4089,
+  "signal_count": 19,
+  "holding_signal_count": 532,
+  "rolling_validation": [
+    {
+      "year": "2021",
+      "status": "completed",
+      "days": 61,
+      "strategy_return": "-0.01285624",
+      "benchmark_return": "-0.007352880772",
+      "excess_return": "-0.005503359228",
+      "positive_day_ratio": "0.5901639344",
+      "max_drawdown": "0.09309874"
+    },
+    {
+      "year": "2022",
+      "status": "completed",
+      "days": 242,
+      "strategy_return": "0.04430026382",
+      "benchmark_return": "-0.02597688174",
+      "excess_return": "0.07027714557",
+      "positive_day_ratio": "0.5578512397",
+      "max_drawdown": "0.1151697302"
+    },
+    {
+      "year": "2023",
+      "status": "completed",
+      "days": 242,
+      "strategy_return": "0.1302530288",
+      "benchmark_return": "0.04813746362",
+      "excess_return": "0.08211556523",
+      "positive_day_ratio": "0.5578512397",
+      "max_drawdown": "0.09561441115"
+    },
+    {
+      "year": "2024",
+      "status": "completed",
+      "days": 242,
+      "strategy_return": "0.2161141341",
+      "benchmark_return": "0.1807552827",
+      "excess_return": "0.03535885142",
+      "positive_day_ratio": "0.520661157",
+      "max_drawdown": "0.1214919466"
+    },
+    {
+      "year": "2025",
+      "status": "completed",
+      "days": 243,
+      "strategy_return": "0.1609444044",
+      "benchmark_return": "0.1329596889",
+      "excess_return": "0.02798471547",
+      "positive_day_ratio": "0.5637860082",
+      "max_drawdown": "0.06778738156"
+    },
+    {
+      "year": "2026",
+      "status": "completed",
+      "days": 95,
+      "strategy_return": "0.03383952429",
+      "benchmark_return": "0.128638142",
+      "excess_return": "-0.09479861767",
+      "positive_day_ratio": "0.5263157895",
+      "max_drawdown": "0.07451387256"
+    }
+  ],
+  "baseline_tests": [
+    {
+      "case": "basket_current",
+      "status": "completed",
+      "return": "0.7006712185",
+      "max_drawdown": "0.1214919466",
+      "daily_win_rate": "0.5502222222"
+    },
+    {
+      "case": "same_pool_equal_weight_total_return_proxy",
+      "status": "completed",
+      "return": "0.5300706122",
+      "max_drawdown": "0.1785359619",
+      "daily_win_rate": "0.5573333333"
+    },
+    {
+      "case": "basket_excess_vs_same_pool",
+      "status": "completed",
+      "return": "0.1706006063",
+      "max_drawdown": "0.1412455249",
+      "daily_win_rate": "0.4924444444"
+    }
+  ],
+  "factor_ic_rankic": [
+    {
+      "factor": "score",
+      "scope": "full_candidate_panel_after_required_fields",
+      "date_count": 19,
+      "observations": 4047,
+      "mean_ic": "0.08544241362",
+      "mean_rankic": "0.1195912349",
+      "positive_ic_ratio": "0.6842105263",
+      "status": "completed"
+    },
+    {
+      "factor": "operating_cash_flow_yield",
+      "scope": "full_candidate_panel_after_required_fields",
+      "date_count": 19,
+      "observations": 3308,
+      "mean_ic": "0.07829561849",
+      "mean_rankic": "0.07037496388",
+      "positive_ic_ratio": "0.6842105263",
+      "status": "completed"
+    },
+    {
+      "factor": "dividend_yield_decimal",
+      "scope": "full_candidate_panel_after_required_fields",
+      "date_count": 19,
+      "observations": 4047,
+      "mean_ic": "-0.05657641813",
+      "mean_rankic": "0.02566752531",
+      "positive_ic_ratio": "0.2105263158",
+      "status": "completed"
+    },
+    {
+      "factor": "volatility_120d",
+      "scope": "full_candidate_panel_after_required_fields",
+      "date_count": 19,
+      "observations": 4047,
+      "mean_ic": "0.1095287951",
+      "mean_rankic": "0.1514711577",
+      "positive_ic_ratio": "0.6315789474",
+      "status": "completed"
+    },
+    {
+      "factor": "max_drawdown_120d",
+      "scope": "full_candidate_panel_after_required_fields",
+      "date_count": 19,
+      "observations": 4047,
+      "mean_ic": "0.07176068896",
+      "mean_rankic": "0.1181303652",
+      "positive_ic_ratio": "0.6842105263",
+      "status": "completed"
+    },
+    {
+      "factor": "capex_burden",
+      "scope": "full_candidate_panel_after_required_fields",
+      "date_count": 19,
+      "observations": 3308,
+      "mean_ic": "-0.01254218253",
+      "mean_rankic": "0.03964238621",
+      "positive_ic_ratio": "0.5789473684",
+      "status": "completed"
+    },
+    {
+      "factor": "low_price_to_book",
+      "scope": "full_candidate_panel_after_required_fields",
+      "date_count": 19,
+      "observations": 4047,
+      "mean_ic": "0.01288184569",
+      "mean_rankic": "0.1415660406",
+      "positive_ic_ratio": "0.5789473684",
+      "status": "completed"
+    },
+    {
+      "factor": "non_performing_loan_ratio",
+      "scope": "full_candidate_panel_after_required_fields",
+      "date_count": 18,
+      "observations": 739,
+      "mean_ic": "0.00448391802",
+      "mean_rankic": "-0.02466301995",
+      "positive_ic_ratio": "0.6111111111",
+      "status": "completed"
+    },
+    {
+      "factor": "provision_coverage_ratio",
+      "scope": "full_candidate_panel_after_required_fields",
+      "date_count": 18,
+      "observations": 739,
+      "mean_ic": "-0.02003268268",
+      "mean_rankic": "-0.009059103896",
+      "positive_ic_ratio": "0.5",
+      "status": "completed"
+    },
+    {
+      "factor": "core_tier_1_capital_adequacy_ratio",
+      "scope": "full_candidate_panel_after_required_fields",
+      "date_count": 18,
+      "observations": 739,
+      "mean_ic": "0.06135444648",
+      "mean_rankic": "0.07221141399",
+      "positive_ic_ratio": "0.6111111111",
+      "status": "completed"
+    }
+  ],
+  "ablation_proxy": [
+    {
+      "case": "single_factor_signal_operating_cash_flow_yield",
+      "status": "completed",
+      "mean_rankic": "0.07037496388",
+      "rankic_gap_vs_composite": "0.04921627102",
+      "detail": "Proxy ablation at basket level. Full re-run ablation should be added before live deployment."
+    },
+    {
+      "case": "single_factor_signal_dividend_yield_decimal",
+      "status": "completed",
+      "mean_rankic": "0.02566752531",
+      "rankic_gap_vs_composite": "0.09392370959",
+      "detail": "Proxy ablation at basket level. Full re-run ablation should be added before live deployment."
+    },
+    {
+      "case": "single_factor_signal_volatility_120d",
+      "status": "completed",
+      "mean_rankic": "0.1514711577",
+      "rankic_gap_vs_composite": "-0.0318799228",
+      "detail": "Proxy ablation at basket level. Full re-run ablation should be added before live deployment."
+    },
+    {
+      "case": "single_factor_signal_max_drawdown_120d",
+      "status": "completed",
+      "mean_rankic": "0.1181303652",
+      "rankic_gap_vs_composite": "0.0014608697",
+      "detail": "Proxy ablation at basket level. Full re-run ablation should be added before live deployment."
+    },
+    {
+      "case": "single_factor_signal_capex_burden",
+      "status": "completed",
+      "mean_rankic": "0.03964238621",
+      "rankic_gap_vs_composite": "0.07994884869",
+      "detail": "Proxy ablation at basket level. Full re-run ablation should be added before live deployment."
+    },
+    {
+      "case": "single_factor_signal_low_price_to_book",
+      "status": "completed",
+      "mean_rankic": "0.1415660406",
+      "rankic_gap_vs_composite": "-0.0219748057",
+      "detail": "Proxy ablation at basket level. Full re-run ablation should be added before live deployment."
+    },
+    {
+      "case": "single_factor_signal_non_performing_loan_ratio",
+      "status": "completed",
+      "mean_rankic": "-0.02466301995",
+      "rankic_gap_vs_composite": "0.1442542548",
+      "detail": "Proxy ablation at basket level. Full re-run ablation should be added before live deployment."
+    },
+    {
+      "case": "single_factor_signal_provision_coverage_ratio",
+      "status": "completed",
+      "mean_rankic": "-0.009059103896",
+      "rankic_gap_vs_composite": "0.1286503388",
+      "detail": "Proxy ablation at basket level. Full re-run ablation should be added before live deployment."
+    },
+    {
+      "case": "single_factor_signal_core_tier_1_capital_adequacy_ratio",
+      "status": "completed",
+      "mean_rankic": "0.07221141399",
+      "rankic_gap_vs_composite": "0.04737982091",
+      "detail": "Proxy ablation at basket level. Full re-run ablation should be added before live deployment."
+    }
+  ],
+  "robustness_checks": [
+    {
+      "check": "rolling_252d_subwindows",
+      "status": "pass",
+      "window_count": 14,
+      "positive_window_ratio": "1",
+      "median_window_return": "0.1484897786",
+      "worst_window": "2021-10-08..2022-10-20:0.030366989",
+      "best_window": "2025-02-25..2026-03-10:0.2579008228",
+      "detail": "Quarterly-spaced 252 trading day windows test date-range sensitivity."
+    },
+    {
+      "check": "sector_weight_cap_realized",
+      "status": "pass",
+      "max_sector_weight": "0.25",
+      "detail": "Realized signal weight should respect sector cap."
+    },
+    {
+      "check": "selected_count_stability",
+      "status": "pass",
+      "observed_selected_counts": "28",
+      "detail": "Very low selected counts can make basket results fragile."
+    }
+  ],
+  "sector_exposure": [
+    {
+      "sector_id": "bank",
+      "holding_count": 120,
+      "avg_weight_per_rebalance": "0.2255639097",
+      "avg_names_per_rebalance": "6.315789474"
+    },
+    {
+      "sector_id": "gas_water_operators",
+      "holding_count": 133,
+      "avg_weight_per_rebalance": "0.25",
+      "avg_names_per_rebalance": "7"
+    },
+    {
+      "sector_id": "highway_infrastructure",
+      "holding_count": 54,
+      "avg_weight_per_rebalance": "0.1015037594",
+      "avg_names_per_rebalance": "2.842105263"
+    },
+    {
+      "sector_id": "port_rail_infrastructure",
+      "holding_count": 92,
+      "avg_weight_per_rebalance": "0.1729323308",
+      "avg_names_per_rebalance": "4.842105263"
+    },
+    {
+      "sector_id": "utilities_electricity",
+      "holding_count": 133,
+      "avg_weight_per_rebalance": "0.25",
+      "avg_names_per_rebalance": "7"
+    }
+  ],
+  "weak_year_analysis": [
+    {
+      "year": "2021",
+      "strategy_return": "-0.01285624",
+      "benchmark_return": "-0.007352880772",
+      "excess_return": "-0.005503359228",
+      "max_drawdown": "0.09309874",
+      "diagnosis_required": "yes"
+    },
+    {
+      "year": "2026",
+      "strategy_return": "0.03383952429",
+      "benchmark_return": "0.128638142",
+      "excess_return": "-0.09479861767",
+      "max_drawdown": "0.07451387256",
+      "diagnosis_required": "yes"
+    },
+    {
+      "year": "2022",
+      "strategy_return": "0.04430026382",
+      "benchmark_return": "-0.02597688174",
+      "excess_return": "0.07027714557",
+      "max_drawdown": "0.1151697302",
+      "diagnosis_required": "no"
+    },
+    {
+      "year": "2023",
+      "strategy_return": "0.1302530288",
+      "benchmark_return": "0.04813746362",
+      "excess_return": "0.08211556523",
+      "max_drawdown": "0.09561441115",
+      "diagnosis_required": "no"
+    },
+    {
+      "year": "2025",
+      "strategy_return": "0.1609444044",
+      "benchmark_return": "0.1329596889",
+      "excess_return": "0.02798471547",
+      "max_drawdown": "0.06778738156",
+      "diagnosis_required": "no"
+    },
+    {
+      "year": "2024",
+      "strategy_return": "0.2161141341",
+      "benchmark_return": "0.1807552827",
+      "excess_return": "0.03535885142",
+      "max_drawdown": "0.1214919466",
+      "diagnosis_required": "no"
+    }
+  ],
+  "governance": "Basket formal validation is evidence for PM review only. The 2021-2026 window remains platform-confirmation context and is not accepted-strategy proof.",
+  "created_at_utc": "2026-07-21T04:52:50+00:00"
+}

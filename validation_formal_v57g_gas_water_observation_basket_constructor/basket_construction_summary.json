@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "project": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57g_gas_water_observation",
+  "experiment_layer": "research_pit_validation",
+  "created_at_utc": "2026-07-21T04:52:16+00:00",
+  "signal_count": 19,
+  "holding_count": 532,
+  "sector_holding_counts": {
+    "utilities_electricity": 133,
+    "gas_water_operators": 133,
+    "port_rail_infrastructure": 92,
+    "bank": 120,
+    "highway_infrastructure": 54
+  },
+  "signals_path": "validation_formal_v57g_gas_water_observation_basket_constructor\\basket_rebalance_signals.csv",
+  "report_path": "validation_formal_v57g_gas_water_observation_basket_constructor\\basket_construction_report.md",
+  "pm_rule": "This is a basket-construction shadow signal file. It is not a backtest, platform replication or accepted strategy."
+}

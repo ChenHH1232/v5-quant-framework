@@ -1,0 +1,17 @@
+{
+  "strategy_id": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57g_gas_water_observation",
+  "status": "needs_review",
+  "spec": "config\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57g_gas_water_observation.json",
+  "panel": "validation_formal_v57g_gas_water_observation_basket\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57g_gas_water_observation\\combined_basket_panel_for_validation.csv",
+  "daily_returns_csv": "local_daily_backtests_v57g_gas_water_observation_etf\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57g_gas_water_observation\\daily_returns.csv",
+  "rebalance_signals_csv": "validation_formal_v57g_gas_water_observation_basket_constructor\\basket_rebalance_signals.csv",
+  "check_count": 14,
+  "blocker_count": 0,
+  "needs_review_count": 1,
+  "pass_count": 13,
+  "random_seed": 20260716,
+  "random_windows": 100,
+  "min_window_days": 252,
+  "governance": "This is an Engineering Agent anti-overfitting audit. It does not accept a strategy. It blocks or flags risks before PM can promote a candidate.",
+  "created_at_utc": "2026-07-21T04:57:07+00:00"
+}

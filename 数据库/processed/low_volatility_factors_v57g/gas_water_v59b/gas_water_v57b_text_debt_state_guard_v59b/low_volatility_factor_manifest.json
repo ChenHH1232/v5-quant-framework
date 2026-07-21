@@ -1,0 +1,20 @@
+{
+  "dataset": "low_volatility_factors_v56",
+  "strategy_id": "gas_water_v57b_text_debt_state_guard_v59b",
+  "panel_csv": "数据库\\processed\\gas_water_2021_07_pit_repair_v59b\\panel_with_true_operating_state_repaired_2021_07.csv",
+  "price_csv": "数据库\\processed\\gas_water_v57b_joinquant_real_daily_prices.csv",
+  "benchmark_csv": null,
+  "panel_with_low_vol": "数据库\\processed\\low_volatility_factors_v57g\\gas_water_v59b\\gas_water_v57b_text_debt_state_guard_v59b\\panel_with_low_vol.csv",
+  "factor_csv": "数据库\\processed\\low_volatility_factors_v57g\\gas_water_v59b\\gas_water_v57b_text_debt_state_guard_v59b\\low_volatility_factors.csv",
+  "row_count": 750,
+  "enriched_count": 718,
+  "windows": [
+    60,
+    120,
+    252
+  ],
+  "min_observations": 40,
+  "pit_policy": "For each trade_date, only daily closes strictly before trade_date are used. The trade_date close and all future prices are excluded.",
+  "beta_policy": "Beta is computed only when a benchmark close-return series is supplied and aligned with stock returns.",
+  "created_at_utc": "2026-07-21T04:51:09+00:00"
+}

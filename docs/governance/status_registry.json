@@ -1316,6 +1316,47 @@
       "next_gate": "wait_until_2026_10_refresh_window_then_execute_queue"
     },
     {
+      "strategy_id": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57g_gas_water_observation",
+      "sector": "cross_sector_dividend_low_vol_cashflow_enhanced_etf_gas_water_observation",
+      "current_status": [
+        "observation_basket_completed",
+        "research_pit_validation_completed",
+        "engineering_local_daily_simulation_completed",
+        "rebalance_order_health_passed",
+        "overfit_audit_no_blockers_needs_review",
+        "not_mainline_replacement",
+        "not_platform_replication"
+      ],
+      "not_status": [
+        "formal_etf_candidate_replacement",
+        "accepted_strategy",
+        "platform_replication_passed",
+        "live_trading_approved",
+        "v57f_replacement"
+      ],
+      "experiment_layer": "research_pit_validation_and_engineering_smoke_test",
+      "evidence_paths": [
+        "config/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57g_gas_water_observation.json",
+        "docs/governance/v57g_gas_water_observation_basket_pm_decision_v1.md",
+        "数据库/processed/low_volatility_factors_v57g/gas_water_v59b/gas_water_v57b_text_debt_state_guard_v59b/panel_with_low_vol.csv",
+        "validation_formal_v57g_gas_water_observation_basket_constructor/basket_construction_summary.json",
+        "validation_formal_v57g_gas_water_observation_basket_constructor/basket_rebalance_signals.csv",
+        "local_daily_backtests_v57g_gas_water_observation_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57g_gas_water_observation/summary.json",
+        "local_daily_backtests_v57g_gas_water_observation_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57g_gas_water_observation/rebalance_order_health.csv",
+        "validation_formal_v57g_gas_water_observation_basket/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57g_gas_water_observation/basket_formal_validation_summary.json",
+        "overfit_audits_v57g_gas_water_observation_basket/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57g_gas_water_observation/overfit_audit_summary.json",
+        "va_v57g/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57g_gas_water_observation/basket_ablation_summary.json",
+        "pm_gate_packets_v57g_gas_water_observation/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57g_gas_water_observation/basket_pm_gate_summary.json"
+      ],
+      "blockers": [
+        "V57g underperforms V57f in local basket simulation, so it is not a V57f replacement.",
+        "2021-2026 remains platform-confirmation context, not clean out-of-sample acceptance evidence.",
+        "Ablation has blocked edge cases caused by basket config/tool compatibility and should be repaired before promotion.",
+        "Platform replication is deferred by user and has not been run."
+      ],
+      "next_gate": "keep_as_observation_sleeve_wait_for_clean_forward_signal"
+    },
+    {
       "strategy_id": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay",
       "sector": "cross_sector_dividend_low_vol_cashflow_enhanced_etf_telecom_overlay",
       "current_status": [
@@ -2043,6 +2084,14 @@
     "v57f_etf_formal_validation_result": "validation_formal_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/basket_formal_validation_summary.json",
     "v57f_etf_overfit_audit_result": "validation_overfit_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/overfit_audit_summary.json",
     "v57f_etf_status": "formal_etf_candidate_pending_platform_exports_paper_tracking_started_not_accepted",
+    "v57g_gas_water_observation_status": "observation_basket_completed_not_v57f_replacement",
+    "v57g_gas_water_observation_config": "config/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57g_gas_water_observation.json",
+    "v57g_gas_water_observation_pm_decision": "docs/governance/v57g_gas_water_observation_basket_pm_decision_v1.md",
+    "v57g_gas_water_observation_local_daily": "local_daily_backtests_v57g_gas_water_observation_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57g_gas_water_observation/summary.json",
+    "v57g_gas_water_observation_formal_validation": "validation_formal_v57g_gas_water_observation_basket/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57g_gas_water_observation/basket_formal_validation_summary.json",
+    "v57g_gas_water_observation_overfit_audit": "overfit_audits_v57g_gas_water_observation_basket/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57g_gas_water_observation/overfit_audit_summary.json",
+    "v57g_gas_water_observation_pm_gate": "pm_gate_packets_v57g_gas_water_observation/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57g_gas_water_observation/basket_pm_gate_summary.json",
+    "v57g_gas_water_observation_decision": "gas_water_remains_observation_sleeve_v57f_remains_main_enhanced_etf_candidate",
     "v57f_included_sleeves": [
       "bank",
       "utilities_electricity",

@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "strategy_id": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57g_gas_water_observation",
+  "status": "formal_candidate_needs_pm_review",
+  "experiment_layer": "pm_decision_gate",
+  "blocker_count": 0,
+  "needs_review_count": 5,
+  "pass_count": 6,
+  "checks": [
+    {
+      "check": "formal_validation",
+      "severity": "pass",
+      "detail": "Formal validation completed with 19 signals."
+    },
+    {
+      "check": "weak_year_analysis",
+      "severity": "needs_review",
+      "detail": "Weak years still need monitoring/diagnosis: 2021, 2026."
+    },
+    {
+      "check": "local_daily_simulation",
+      "severity": "pass",
+      "detail": "Local daily simulation produced 709 trades."
+    },
+    {
+      "check": "rebalance_order_health",
+      "severity": "pass",
+      "detail": "All 19 rebalance signals have executable order/holding evidence; first order=2021-10-08, first position=2021-10-08."
+    },
+    {
+      "check": "dividend_accounting",
+      "severity": "pass",
+      "detail": "Cash dividend accounting applied 130 events."
+    },
+    {
+      "check": "drawdown_control",
+      "severity": "pass",
+      "detail": "Max drawdown is 12.15%."
+    },
+    {
+      "check": "overfit_audit",
+      "severity": "pass",
+      "detail": "Overfit audit has no blockers."
+    },
+    {
+      "check": "overfit_review_items",
+      "severity": "needs_review",
+      "detail": "Overfit audit has 1 review items."
+    },
+    {
+      "check": "ablation",
+      "severity": "needs_review",
+      "detail": "Ablation has blocked cases: drop_div_yield_decimal, drop_low_vol_score, value_cashflow_no_low_vol."
+    },
+    {
+      "check": "platform_replication",
+      "severity": "needs_review",
+      "detail": "Platform replication packet is missing."
+    },
+    {
+      "check": "paper_trading",
+      "severity": "needs_review",
+      "detail": "Paper trading signal summary is missing."
+    }
+  ],
+  "metrics_snapshot": {
+    "local_strategy_return": 0.7006712184799968,
+    "local_benchmark_return": 0.5300706121547445,
+    "local_excess_return": 0.1706006063252523,
+    "local_max_drawdown": 0.12149194663011453,
+    "local_trade_count": 709,
+    "local_dividend_count": 130,
+    "formal_signal_count": 19,
+    "formal_panel_row_count": 4089,
+    "platform_status": null
+  },
+  "input_paths": {
+    "formal_summary": "validation_formal_v57g_gas_water_observation_basket\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57g_gas_water_observation\\basket_formal_validation_summary.json",
+    "daily_summary": "local_daily_backtests_v57g_gas_water_observation_etf\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57g_gas_water_observation\\summary.json",
+    "overfit_summary": "overfit_audits_v57g_gas_water_observation_basket\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57g_gas_water_observation\\overfit_audit_summary.json",
+    "ablation_summary": "va_v57g\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57g_gas_water_observation\\basket_ablation_summary.json",
+    "platform_packet": null,
+    "paper_signal_summary": null
+  },
+  "pm_rules": [
+    "Historical performance alone is never sufficient evidence for accepting a strategy.",
+    "2021-2026 remains platform-confirmation context, not clean out-of-sample acceptance.",
+    "A frozen candidate may enter platform replication or paper trading, but not live trading approval.",
+    "Platform replication requires JoinQuant daily, transaction and position attribution."
+  ],
+  "created_at_utc": "2026-07-21T04:57:28+00:00"
+}

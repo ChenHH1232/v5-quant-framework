@@ -2308,10 +2308,7 @@
       "experiment_layer": "research_data_availability_gate",
       "evidence_paths": [
         "docs/governance/v5a.10_pharma_specialist_data_gate_pm_decision.md",
-        "knowledge/research_agent/strategy_cases/pharma_v5a10_specialist_data_gate_result.md",
-        "???/processed/pharma_specialist_data_gate_v5a10/pharma_specialist_data_gate_summary.json",
-        "???/processed/pharma_specialist_data_gate_v5a10/pharma_specialist_field_coverage.csv",
-        "???/processed/pharma_specialist_data_gate_v5a10/pharma_specialist_subsector_coverage.csv"
+        "knowledge/research_agent/strategy_cases/pharma_v5a10_specialist_data_gate_result.md"
       ],
       "blockers": [
         "PIT R&D expense intensity is missing.",
@@ -2504,6 +2501,32 @@
         "Rolling validation is unstable; sector-specific state evidence is missing."
       ],
       "next_gate": "watchlist_only_unless_new_business_quality_evidence"
+    },
+    {
+      "strategy_id": "v5a_broad_sector_traversal_master_closeout",
+      "sector": "cross_sector_dividend_low_vol_cashflow_enhanced_etf",
+      "current_status": [
+        "broad_sector_traversal_completed",
+        "initial_research_queue_cleared",
+        "low_priority_batch_screen_completed",
+        "no_new_engineering_handoff"
+      ],
+      "not_status": [
+        "accepted_strategy",
+        "new_platform_replication_candidate"
+      ],
+      "experiment_layer": "pm_governance_routing",
+      "evidence_paths": [
+        "docs/governance/v5a_broad_sector_traversal_closeout_pm_decision.md",
+        "docs/governance/v5a_broad_sector_coverage_master_table.csv",
+        "docs/governance/v5a_broad_sector_coverage_master_summary.json",
+        "docs/governance/v5a.10_pharma_specialist_data_gate_pm_decision.md",
+        "docs/governance/v5a.11_low_priority_sector_initial_validation_pm_decision.md"
+      ],
+      "blockers": [
+        "No newly screened V5a.10/V5a.11 sector is Engineering-ready. Continue only with frozen/core sleeve refresh or documented research repair loops."
+      ],
+      "next_gate": "return_to_v57f_mainline_forward_queue_or_core_sleeve_refresh_without_tuning"
     }
   ],
   "sector_test_policy": {

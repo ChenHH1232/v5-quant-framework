@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-07-21",
+  "project": "V5 broad sector traversal for dividend low-volatility OCF/FCF enhanced ETF",
+  "source_prevalidation": "sector_replication_batches_v5a3\\theory_gated_prevalidation_current\\theory_gated_sector_prevalidation.csv",
+  "sector_count": 33,
+  "bucket_counts": {
+    "core_or_observation_refresh_no_tuning": 6,
+    "research_repair_only": 8,
+    "archived_or_rejected": 6,
+    "blocked_by_cycle_data_gate": 3,
+    "blocked_by_data_gate": 2,
+    "excluded_from_current_mandate": 7,
+    "blocked_by_specialist_data_gate": 1
+  },
+  "master_table": "docs\\governance\\v5a_broad_sector_coverage_master_table.csv",
+  "governance": "This is PM routing, not strategy acceptance. Engineering may only refresh existing/frozen sleeves without tuning."
+}

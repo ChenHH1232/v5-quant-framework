@@ -132,6 +132,7 @@ def _prevalidate_sector(candidate: dict[str, Any], status_registry: dict[str, An
 
 
 def _strategy_statuses(candidate: dict[str, Any], status_registry: dict[str, Any]) -> list[str]:
+    sector_id = str(candidate.get("sector_id") or "")
     strategies = {
         str(item.get("strategy_id")): item
         for item in status_registry.get("strategies", [])
@@ -143,6 +144,9 @@ def _strategy_statuses(candidate: dict[str, Any], status_registry: dict[str, Any
         if not item:
             continue
         statuses.update(str(status) for status in item.get("current_status", []))
+    for item in strategies.values():
+        if str(item.get("sector") or "") == sector_id:
+            statuses.update(str(status) for status in item.get("current_status", []))
     return sorted(statuses)
 
 
@@ -221,6 +225,30 @@ def _decision(candidate: dict[str, Any], strategy_statuses: list[str]) -> tuple[
     sector_type = str(candidate.get("sector_type") or "")
     sample_size_risk = str(candidate.get("sample_size_risk") or "")
 
+    if any(status in strategy_statuses for status in {"strategy_candidate_failed", "archived_not_formal_candidate"}):
+        return (
+            "archived_after_failed_initial_validation",
+            "Project Manager Agent",
+            "keep archived unless new source data or a new research hypothesis is approved",
+            "do not reroute failed sector into ordinary research queue",
+        )
+    if any(
+        status in strategy_statuses
+        for status in {
+            "platform_replication_passed",
+            "paper_trading_started",
+            "formal_strategy_candidate",
+            "engineering_smoke_test_passed",
+            "engineering_local_daily_simulation_passed",
+            "local_daily_smoke_test_completed",
+        }
+    ):
+        return (
+            "passed_prevalidation_shadow_basket_refresh",
+            "Engineering Agent",
+            "refresh PIT panel, dividends, low-vol factors and paper-trading inputs without tuning",
+            "do not change frozen strategy logic",
+        )
     if data_gate == "excluded_by_business_model":
         return (
             "excluded_before_initial_validation",
@@ -269,13 +297,6 @@ def _decision(candidate: dict[str, Any], strategy_statuses: list[str]) -> tuple[
             "Research Agent",
             "complete knowledge, source, business-purity and capex-quality gates",
             "do not run formal validation until source gates pass",
-        )
-    if "platform_replication_passed" in strategy_statuses or "paper_trading_started" in strategy_statuses:
-        return (
-            "passed_prevalidation_shadow_basket_refresh",
-            "Engineering Agent",
-            "refresh PIT panel, dividends, low-vol factors and paper-trading inputs without tuning",
-            "do not change frozen strategy logic",
         )
     if data_gate == "passed":
         return (

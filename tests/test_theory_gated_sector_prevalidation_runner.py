@@ -122,3 +122,64 @@ def test_theory_gated_sector_prevalidation_routes_core_research_blocked_and_excl
     assert "sector_specific_value_and_balance_sheet_quality" in csv_text
     assert "cash_flow_quality_and_defensive_demand" in csv_text
 
+
+def test_theory_gated_sector_prevalidation_uses_registry_sector_status_without_strategy_id(tmp_path: Path) -> None:
+    source_config = tmp_path / "source_sectors.json"
+    config = tmp_path / "v5a3.json"
+    registry = tmp_path / "status_registry.json"
+
+    source_config.write_text(
+        json.dumps(
+            {
+                "candidate_sectors": [
+                    {
+                        "sector_id": "building_materials_cement",
+                        "display_name": "Building Materials / Cement",
+                        "sector_type": "cyclical_cash_flow",
+                        "strategy_ids": [],
+                        "data_gate": "needs_manual_research",
+                        "pit_universe_gate": "can_build",
+                        "business_purity_gate": "needs_cement_glass_split",
+                        "dividend_gate": "mixed",
+                        "fcf_gate": "capex_and_real_estate_cycle_sensitive",
+                        "low_vol_gate": "can_build_from_daily_prices",
+                        "external_state_burden": "high",
+                        "sample_size_risk": "medium",
+                        "notes": "cycle",
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    config.write_text(
+        json.dumps(
+            {
+                "project": "test_v5a3",
+                "experiment_layer": "research_pit_prevalidation",
+                "source_sector_config": str(source_config),
+                "candidate_sectors": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+    registry.write_text(
+        json.dumps(
+            {
+                "strategies": [
+                    {
+                        "strategy_id": "cement_v5a9",
+                        "sector": "building_materials_cement",
+                        "current_status": ["workflow_replication_passed", "strategy_candidate_failed"],
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = run_theory_gated_sector_prevalidation(config, registry, tmp_path / "out")
+    rows = result.csv_path.read_text(encoding="utf-8")
+
+    assert result.decision_counts["archived_after_failed_initial_validation"] == 1
+    assert "do not reroute failed sector" in rows

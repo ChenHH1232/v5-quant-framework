@@ -60,6 +60,20 @@ from v5.basket_joinquant_export_runner import (
     export_basket_frozen_signals_to_joinquant,
 )
 from v5.low_volatility_factor_runner import DEFAULT_OUT_DIR as DEFAULT_LOW_VOL_OUT_DIR, add_low_volatility_factors
+from v5.home_appliances_state_gate_runner import (
+    DEFAULT_DIVIDENDS as DEFAULT_HOME_APPLIANCES_STATE_DIVIDENDS,
+    DEFAULT_OUT_DIR as DEFAULT_HOME_APPLIANCES_STATE_OUT,
+    DEFAULT_PANEL as DEFAULT_HOME_APPLIANCES_STATE_PANEL,
+    build_home_appliances_state_gate,
+    collect_home_appliances_external_proxy_state,
+)
+from v5.home_appliances_state_diagnostic_runner import (
+    DEFAULT_OUT_DIR as DEFAULT_HOME_APPLIANCES_STATE_DIAGNOSTIC_OUT,
+    DEFAULT_PANEL as DEFAULT_HOME_APPLIANCES_STATE_DIAGNOSTIC_PANEL,
+    DEFAULT_SPEC as DEFAULT_HOME_APPLIANCES_STATE_DIAGNOSTIC_SPEC,
+    DEFAULT_STRATEGY_ID as DEFAULT_HOME_APPLIANCES_STATE_DIAGNOSTIC_ID,
+    run_home_appliances_state_diagnostic,
+)
 from v5.similar_sector_pit_panel_runner import DEFAULT_OUT_ROOT, SECTOR_CONFIGS, collect_similar_sector_pit_panel
 from v5.gas_water_operating_evidence_runner import (
     DEFAULT_OUT_DIR as DEFAULT_GAS_WATER_EVIDENCE_OUT,
@@ -426,6 +440,28 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     low_vol_parser.add_argument("--out", type=Path, default=DEFAULT_LOW_VOL_OUT_DIR)
     low_vol_parser.add_argument("--min-observations", type=int, default=40)
     low_vol_parser.set_defaults(handler=_handle_add_low_volatility_factors)
+
+    home_appliances_state_parser = subparsers.add_parser("build-home-appliances-state-gate")
+    home_appliances_state_parser.add_argument("--panel", type=Path, default=DEFAULT_HOME_APPLIANCES_STATE_PANEL)
+    home_appliances_state_parser.add_argument("--dividend-cash-csv", type=Path, default=DEFAULT_HOME_APPLIANCES_STATE_DIVIDENDS)
+    home_appliances_state_parser.add_argument("--external-state-csv", type=Path)
+    home_appliances_state_parser.add_argument("--out-dir", type=Path, default=DEFAULT_HOME_APPLIANCES_STATE_OUT)
+    home_appliances_state_parser.add_argument("--strategy-id", default="home_appliances_ocf_quality_v5a5c")
+    home_appliances_state_parser.set_defaults(handler=_handle_build_home_appliances_state_gate)
+
+    home_appliances_proxy_parser = subparsers.add_parser("collect-home-appliances-external-proxy-state")
+    home_appliances_proxy_parser.add_argument("--panel", type=Path, default=DEFAULT_HOME_APPLIANCES_STATE_PANEL)
+    home_appliances_proxy_parser.add_argument("--out-dir", type=Path, default=DEFAULT_HOME_APPLIANCES_STATE_OUT)
+    home_appliances_proxy_parser.set_defaults(handler=_handle_collect_home_appliances_external_proxy_state)
+
+    home_appliances_state_diag_parser = subparsers.add_parser("diagnose-home-appliances-state")
+    home_appliances_state_diag_parser.add_argument("--spec", type=Path, default=DEFAULT_HOME_APPLIANCES_STATE_DIAGNOSTIC_SPEC)
+    home_appliances_state_diag_parser.add_argument("--panel", type=Path, default=DEFAULT_HOME_APPLIANCES_STATE_DIAGNOSTIC_PANEL)
+    home_appliances_state_diag_parser.add_argument("--out-dir", type=Path, default=DEFAULT_HOME_APPLIANCES_STATE_DIAGNOSTIC_OUT)
+    home_appliances_state_diag_parser.add_argument("--strategy-id", default=DEFAULT_HOME_APPLIANCES_STATE_DIAGNOSTIC_ID)
+    home_appliances_state_diag_parser.add_argument("--selection-count", type=int)
+    home_appliances_state_diag_parser.add_argument("--min-history", type=int, default=4)
+    home_appliances_state_diag_parser.set_defaults(handler=_handle_diagnose_home_appliances_state)
 
     basket_parser = subparsers.add_parser("construct-dividend-low-vol-fcf-basket")
     basket_parser.add_argument("--config", type=Path, default=DEFAULT_V56_BASKET_CONFIG)
@@ -816,6 +852,38 @@ def _handle_add_low_volatility_factors(args: argparse.Namespace) -> int:
             benchmark_csv=args.benchmark_csv,
             strategy_id=args.strategy_id,
             min_observations=args.min_observations,
+        )
+    )
+    return 0
+
+
+def _handle_build_home_appliances_state_gate(args: argparse.Namespace) -> int:
+    print(
+        build_home_appliances_state_gate(
+            args.panel,
+            args.dividend_cash_csv,
+            args.external_state_csv,
+            args.out_dir,
+            strategy_id=args.strategy_id,
+        )
+    )
+    return 0
+
+
+def _handle_collect_home_appliances_external_proxy_state(args: argparse.Namespace) -> int:
+    print(collect_home_appliances_external_proxy_state(args.panel, args.out_dir))
+    return 0
+
+
+def _handle_diagnose_home_appliances_state(args: argparse.Namespace) -> int:
+    print(
+        run_home_appliances_state_diagnostic(
+            args.spec,
+            args.panel,
+            args.out_dir,
+            strategy_id=args.strategy_id,
+            selection_count=args.selection_count,
+            min_history=args.min_history,
         )
     )
     return 0

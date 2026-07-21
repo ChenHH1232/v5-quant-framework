@@ -2031,6 +2031,38 @@
         "Cement and pharma still require specialist state data before formal model attempts."
       ],
       "next_gate": "research_prioritize_home_appliances_v5a.5c_or_subsector_repair"
+    },
+    {
+      "strategy_id": "home_appliances_ocf_quality_v5a5c",
+      "sector": "home_appliances",
+      "current_status": [
+        "research_signal_candidate",
+        "research_pit_validation_completed",
+        "pit_leakage_audit_passed",
+        "official_proxy_state_repaired_needs_review",
+        "cash_dividend_events_collected",
+        "not_engineering_handoff"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "platform_replication",
+        "paper_trading",
+        "accepted_strategy"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "docs/governance/v5a.5c_home_appliances_state_gate_pm_decision.md",
+        "examples/home_appliances_ocf_quality_v5a5c_strategy.json",
+        "src/v5/home_appliances_state_gate_runner.py",
+        "src/v5/home_appliances_state_diagnostic_runner.py"
+      ],
+      "blockers": [
+        "True appliance inventory / channel pressure data is not yet reviewed.",
+        "True appliance export exposure or appliance export-demand PIT proxy is not yet reviewed.",
+        "Property completion / sales state is currently proxy-only.",
+        "Capex policy remains diagnostic and must not be treated as a positive scoring factor."
+      ],
+      "next_gate": "v5a.5d_home_appliances_true_state_repair_or_no_state_policy"
     }
   ],
   "sector_test_policy": {
@@ -2586,6 +2618,11 @@
       "item": "v5a.5_consumer_subsector_router",
       "status": "open",
       "reason": "Broad consumer staples parent pool is too mixed; future consumer validation should route food, beverage, appliances and staples separately."
+    },
+    {
+      "item": "v5a.5d_home_appliances_true_state_repair",
+      "status": "open",
+      "reason": "V5a.5c has promising OCF-quality evidence, but Engineering handoff remains blocked until true appliance inventory/export/property state is reviewed or a no-state policy is documented."
     }
   ],
   "references": {
@@ -2699,6 +2736,12 @@
     "v5a.5_home_appliances_v5a5b_summary": "validation_formal_v5a5b_consumer_research_loop/home_appliances_ocf_quality_v5a5b/formal_validation_summary.json",
     "v5a.5_food_beverage_v5a5b_summary": "validation_formal_v5a5b_consumer_research_loop/food_beverage_low_vol_diagnostic_v5a5b/formal_validation_summary.json",
     "v5a.5_consumer_staples_initial_summary": "validation_formal_v5a5_consumer_initial/consumer_staples_ocf_low_vol_v5a5/formal_validation_summary.json",
-    "v5a.5_next_gate": "research_build_home_appliances_state_dividend_gate_before_engineering"
+    "v5a.5_next_gate": "research_build_home_appliances_state_dividend_gate_before_engineering",
+    "v5a.5c_home_appliances_status": "research_signal_candidate_proxy_state_repaired_not_engineering_handoff",
+    "v5a.5c_home_appliances_pm_decision": "docs/governance/v5a.5c_home_appliances_state_gate_pm_decision.md",
+    "v5a.5c_home_appliances_spec": "examples/home_appliances_ocf_quality_v5a5c_strategy.json",
+    "v5a.5c_home_appliances_state_gate_runner": "src/v5/home_appliances_state_gate_runner.py",
+    "v5a.5c_home_appliances_state_diagnostic_runner": "src/v5/home_appliances_state_diagnostic_runner.py",
+    "v5a.5c_home_appliances_next_gate": "true_state_repair_or_no_state_policy_before_engineering"
   }
 }

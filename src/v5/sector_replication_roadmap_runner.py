@@ -147,6 +147,10 @@ def _infer_screening_decision(candidate: dict[str, Any]) -> str:
         return "blocked_by_data_gate"
     if data_gate == "strategy_candidate_failed":
         return "archived_strategy_candidate_failed"
+    if data_gate == "excluded_by_business_model":
+        return "excluded_by_business_model"
+    if data_gate == "low_priority_watchlist":
+        return "low_priority_watchlist"
     if data_gate == "platform_replication_pending_exports":
         return "platform_replication_pending_before_basket"
     if data_gate in {"needs_manual_research", "specialist_data_partial"}:
@@ -171,6 +175,10 @@ def _lane_from_decision(decision: str) -> str:
         return "observation_only"
     if decision == "platform_replication_pending_before_basket":
         return "observation_only"
+    if decision == "low_priority_watchlist":
+        return "observation_only"
+    if decision == "excluded_by_business_model":
+        return "blocked_data_repair"
     if decision == "archived_strategy_candidate_failed":
         return "blocked_data_repair"
     if decision.startswith("blocked"):
@@ -214,12 +222,16 @@ def _required_inputs(candidate: dict[str, Any], lane: str) -> list[str]:
     if lane == "basket_core_shadow_pool":
         return common + ["fresh low-vol factors", "frozen sleeve signals", "daily attribution inputs"]
     if lane == "observation_only":
+        if candidate.get("data_gate") == "low_priority_watchlist":
+            return ["coarse data availability note", "reason to revisit", "PM-approved priority upgrade"]
         if sector_id == "insurance":
             return ["multi-year PIT EV/NBV or P/EV", "solvency disclosures", "interest-rate state", "equity-market state"]
         if sector_id == "telecom_operators":
             return common + ["capex cycle review", "operator purity evidence", "small-sample sleeve policy"]
         return common + ["small-sample or specialist sleeve policy"]
     if lane == "blocked_data_repair":
+        if candidate.get("data_gate") == "excluded_by_business_model":
+            return ["PM-approved new strategy family", "fresh industry thesis", "data availability note"]
         if "cyclical" in sector_type:
             return ["commodity price state", "output/inventory state", "spread/profit state", "PIT business exposure"]
         return ["business-purity split", "receivables/project cash-flow review", "original-report evidence"]
@@ -236,7 +248,11 @@ def _graduation_gate(candidate: dict[str, Any], lane: str) -> str:
     if lane == "batch_initial_validation":
         return "baseline_ic_rankic_rolling_ablation_robustness_passed"
     if lane == "observation_only":
+        if candidate.get("data_gate") == "low_priority_watchlist":
+            return "PM_priority_upgrade_before_research_or_validation"
         return "PM_approves_specialist_or_small_sample_policy"
+    if str(candidate.get("data_gate")) == "excluded_by_business_model":
+        return "new_strategy_family_required_before_modeling"
     if str(candidate.get("sector_type")) == "cyclical":
         return "cycle_data_gate_passed_before_modeling"
     return "hard_data_gate_repaired_before_modeling"

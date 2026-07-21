@@ -82,6 +82,40 @@ def test_dividend_low_vol_fcf_batch_screening_classifies_candidates(tmp_path: Pa
                 "sample_size_risk": "medium",
                 "notes": "pending note",
             },
+            {
+                "sector_id": "low_priority",
+                "display_name": "Low Priority",
+                "sector_type": "mixed_quality",
+                "basket_role": "watchlist",
+                "strategy_ids": [],
+                "knowledge_artifacts": [],
+                "data_gate": "low_priority_watchlist",
+                "pit_universe_gate": "can_build",
+                "business_purity_gate": "needs_review",
+                "dividend_gate": "mixed",
+                "fcf_gate": "needs_review",
+                "low_vol_gate": "can_build",
+                "external_state_burden": "medium",
+                "sample_size_risk": "medium",
+                "notes": "low priority note",
+            },
+            {
+                "sector_id": "excluded",
+                "display_name": "Excluded",
+                "sector_type": "growth_intangible",
+                "basket_role": "excluded",
+                "strategy_ids": [],
+                "knowledge_artifacts": [],
+                "data_gate": "excluded_by_business_model",
+                "pit_universe_gate": "can_build",
+                "business_purity_gate": "needs_review",
+                "dividend_gate": "weak",
+                "fcf_gate": "not_comparable",
+                "low_vol_gate": "can_build",
+                "external_state_burden": "medium",
+                "sample_size_risk": "medium",
+                "notes": "excluded note",
+            },
         ],
     }
     registry = {
@@ -107,7 +141,7 @@ def test_dividend_low_vol_fcf_batch_screening_classifies_candidates(tmp_path: Pa
 
     result = run_dividend_low_vol_fcf_batch_screening(config_path, registry_path, tmp_path / "out")
 
-    assert result.sector_count == 4
+    assert result.sector_count == 6
     assert result.core_candidate_count == 1
     assert result.blocked_count == 1
     report = result.report_path.read_text(encoding="utf-8")
@@ -115,3 +149,5 @@ def test_dividend_low_vol_fcf_batch_screening_classifies_candidates(tmp_path: Pa
     assert "blocked_by_cycle_data_gate" in report
     assert "archived_strategy_candidate_failed" in report
     assert "platform_replication_pending_before_basket" in report
+    assert "low_priority_watchlist" in report
+    assert "excluded_by_business_model" in report

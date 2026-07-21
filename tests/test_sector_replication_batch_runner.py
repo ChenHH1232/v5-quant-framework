@@ -68,6 +68,23 @@ def test_run_sector_replication_batch_routes_all_lanes(tmp_path: Path) -> None:
                         "sample_size_risk": "medium",
                         "notes": "blocked",
                     },
+                    {
+                        "sector_id": "software",
+                        "display_name": "Software",
+                        "sector_type": "growth_intangible",
+                        "basket_role": "excluded",
+                        "strategy_ids": [],
+                        "knowledge_artifacts": [],
+                        "data_gate": "excluded_by_business_model",
+                        "pit_universe_gate": "can_build",
+                        "business_purity_gate": "needs_review",
+                        "dividend_gate": "weak",
+                        "fcf_gate": "not_comparable",
+                        "low_vol_gate": "can_build",
+                        "external_state_burden": "medium",
+                        "sample_size_risk": "medium",
+                        "notes": "excluded",
+                    },
                 ],
             }
         ),
@@ -136,11 +153,13 @@ def test_run_sector_replication_batch_routes_all_lanes(tmp_path: Path) -> None:
         out_dir=tmp_path / "batch",
     )
 
-    assert result.sector_count == 3
+    assert result.sector_count == 4
     assert result.lane_counts["basket_core_shadow_pool"] == 1
     assert result.lane_counts["manual_research_before_formal"] == 1
-    assert result.lane_counts["blocked_data_repair"] == 1
+    assert result.lane_counts["blocked_data_repair"] == 2
     packet = json.loads(result.packet_path.read_text(encoding="utf-8"))
     assert packet["status"] == "batch_sector_replication_routed_not_model_acceptance"
-    assert len(packet["next_execution_order"]) == 3
+    assert len(packet["next_execution_order"]) == 4
+    effective_config = json.loads((tmp_path / "batch" / "effective_sector_replication_roadmap_config.json").read_text(encoding="utf-8"))
+    assert effective_config["source_sector_config"] == str(sector_config)
     assert "Agent" in result.report_path.read_text(encoding="utf-8")

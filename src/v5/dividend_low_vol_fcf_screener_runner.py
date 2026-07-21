@@ -137,6 +137,10 @@ def _decide(candidate: dict[str, Any], registry_statuses: list[str]) -> tuple[st
         return "blocked_by_data_gate", "repair data before any modeling"
     if data_gate == "strategy_candidate_failed":
         return "archived_strategy_candidate_failed", "archive until Research Agent supplies new ex-ante domain data"
+    if data_gate == "excluded_by_business_model":
+        return "excluded_by_business_model", "exclude from this dividend low-volatility OCF/FCF path unless PM opens a new strategy family"
+    if data_gate == "low_priority_watchlist":
+        return "low_priority_watchlist", "keep in broad watchlist; do not spend Quant/Engineering time before higher-priority lanes are exhausted"
     if data_gate == "platform_replication_pending_exports":
         return "platform_replication_pending_before_basket", "wait for platform exports and attribution; do not add to basket yet"
     if data_gate in {"needs_manual_research", "specialist_data_partial"}:

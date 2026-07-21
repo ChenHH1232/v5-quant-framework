@@ -45,6 +45,7 @@ def run_sector_replication_batch(
     effective_roadmap_config = _write_effective_roadmap_config(
         roadmap_config,
         out_dir / "effective_sector_replication_roadmap_config.json",
+        screen_config,
         screening.csv_path,
         screening.json_path,
     )
@@ -71,10 +72,12 @@ def run_sector_replication_batch(
 def _write_effective_roadmap_config(
     source_path: Path,
     output_path: Path,
+    source_sector_config: Path,
     screening_results: Path,
     screening_summary: Path,
 ) -> Path:
     config = _read_json(source_path)
+    config["source_sector_config"] = str(source_sector_config)
     config["source_screening_results"] = str(screening_results)
     config["source_screening_summary"] = str(screening_summary)
     config["batch_controller_note"] = (

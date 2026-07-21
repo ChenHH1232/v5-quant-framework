@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "project": "v5a.1_broad_sector_coarse_screening_for_dividend_low_vol_ocf_fcf",
+  "experiment_layer": "data_availability_gate",
+  "created_at_utc": "2026-07-21T05:15:54+00:00",
+  "sector_count": 33,
+  "decision_counts": {
+    "ready_for_basket_shadow_pool": 4,
+    "needs_manual_research_before_formal": 6,
+    "basket_observation_only": 2,
+    "low_priority_watchlist": 7,
+    "platform_replication_pending_before_basket": 1,
+    "blocked_by_cycle_data_gate": 4,
+    "blocked_by_data_gate": 2,
+    "excluded_by_business_model": 7
+  },
+  "global_missing_modules": [
+    "automatic_industry_constituent_refresh",
+    "uniform_pit_financial_panel_for_all_sectors",
+    "uniform_real_daily_price_and_dividend_collection",
+    "sector_specific_business_purity_templates",
+    "sector_specific_fcf_capex_quality_templates",
+    "batch_formal_validation_runner_for_approved_panels"
+  ],
+  "csv_path": "sector_replication_batches_v5a1\\broad_coarse_current\\screening\\sector_screening_results.csv",
+  "report_path": "sector_replication_batches_v5a1\\broad_coarse_current\\screening\\sector_screening_pm_report.md",
+  "pm_rule": "Batch screening is allowed; formal candidacy and acceptance remain blocked until all gates pass."
+}

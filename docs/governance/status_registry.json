@@ -2123,7 +2123,9 @@
         "research_pit_validation_completed",
         "working_capital_state_repaired",
         "subsector_routing_completed",
-        "not_engineering_handoff"
+        "not_engineering_handoff",
+        "research_knowledge_state_review_added",
+        "fxbaogao_search_completed_with_noise_warning"
       ],
       "not_status": [
         "formal_strategy_candidate",
@@ -2138,7 +2140,13 @@
         "src/v5/consumer_subsector_validation_runner.py",
         "validation_formal_v5a6_consumer_subsector/food_beverage/consumer_subsector_validation_summary.json",
         "validation_formal_v5a6_consumer_subsector/consumer_staples_cashflow/consumer_subsector_validation_summary.json",
-        "validation_formal_v5a6_consumer_subsector/pharma_medical_services/consumer_subsector_validation_summary.json"
+        "validation_formal_v5a6_consumer_subsector/pharma_medical_services/consumer_subsector_validation_summary.json",
+        "knowledge/research_agent/factor_theory/consumer_subsector_state_review_framework_v5a6.md",
+        "knowledge/research_agent/references/v5a6_consumer_subsector_state_source_register.csv",
+        "research_reports/fxbaogao_v5a6_consumer_subsector_state_review/condiments_channel_inventory_cashflow/collection_manifest.json",
+        "research_reports/fxbaogao_v5a6_consumer_subsector_state_review/snack_food_channel_inventory_cashflow/collection_manifest.json",
+        "research_reports/fxbaogao_v5a6_consumer_subsector_state_review/consumer_staples_fcf_dividend_quality/collection_manifest.json",
+        "research_reports/fxbaogao_v5a6_consumer_subsector_state_review/biologics_rnd_policy_cashflow/collection_manifest.json"
       ],
       "key_evidence": {
         "food_beverage_rows": 2290,
@@ -2162,7 +2170,8 @@
       "blockers": [
         "Candidate consumer subsectors still need state review: channel inventory, receivables pressure, gross margin, brand/product concentration, capex policy and valuation-state guard.",
         "Consumer staples parent pool is too mixed; it needs a strict business-quality subset before any basket sleeve handoff.",
-        "Pharma candidates require R&D, procurement and policy-state gates before they can be treated as ETF-sleeve candidates."
+        "Pharma candidates require R&D, procurement and policy-state gates before they can be treated as ETF-sleeve candidates.",
+        "fxbaogao keyword search was noisy for consumer subsector state review; PDF-level manual review is required before formal evidence use."
       ],
       "next_gate": "research_state_review_for_condiments_snack_food_consumer_quality_subset_and_biologics"
     }
@@ -2854,6 +2863,8 @@
     "v5a.6_food_beverage_subsector_summary": "validation_formal_v5a6_consumer_subsector/food_beverage/consumer_subsector_validation_summary.json",
     "v5a.6_consumer_staples_subsector_summary": "validation_formal_v5a6_consumer_subsector/consumer_staples_cashflow/consumer_subsector_validation_summary.json",
     "v5a.6_pharma_subsector_summary": "validation_formal_v5a6_consumer_subsector/pharma_medical_services/consumer_subsector_validation_summary.json",
-    "v5a.6_next_gate": "research_state_review_for_candidate_subsectors_before_engineering"
+    "v5a.6_next_gate": "research_state_review_for_candidate_subsectors_before_engineering",
+    "v5a.6_consumer_state_review_framework": "knowledge/research_agent/factor_theory/consumer_subsector_state_review_framework_v5a6.md",
+    "v5a.6_consumer_state_source_register": "knowledge/research_agent/references/v5a6_consumer_subsector_state_source_register.csv"
   }
 }

@@ -2212,6 +2212,46 @@
         "Condiments needs specialist state design before Quant rerun and Engineering handoff."
       ],
       "next_gate": "v5a.8_condiments_specialist_state_model_research_design"
+    },
+    {
+      "strategy_id": "condiments_high_ocf_wc_guard_v5a8c",
+      "sector": "food_beverage_condiments",
+      "current_status": [
+        "research_signal_only",
+        "specialist_watchlist",
+        "small_sample_concentration_blocked",
+        "not_engineering_handoff"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "platform_replication",
+        "paper_trading",
+        "accepted_strategy"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "docs/governance/v5a.8_condiments_specialist_state_model_pm_decision.md",
+        "validation_formal_v5a8_condiments_specialist_state_model/formal/condiments_high_ocf_wc_guard_v5a8c/formal_validation_summary.json",
+        "validation_formal_v5a8_condiments_specialist_state_model/specs/condiments_high_ocf_wc_guard_v5a8c.json",
+        "validation_formal_v5a8_condiments_specialist_state_model/panels/condiments_working_capital_guard.csv"
+      ],
+      "key_evidence": {
+        "guarded_equal_weight_return": 0.3851275123,
+        "high_ocf_guarded_return": 0.7830688626,
+        "mean_ic": 0.076880336,
+        "mean_rankic": 0.1357142857,
+        "rolling_2024_return": 0.0794305663,
+        "rolling_2025_return": -0.0147566063,
+        "rolling_2026_return": 0.2152711677,
+        "panel_rows_after_guard": 99,
+        "rebalance_dates": 18
+      },
+      "blockers": [
+        "Working-capital guard leaves a very narrow universe; median guarded universe size is about 5.5 names per date.",
+        "Selection count 4 is too concentrated for the current ETF-sleeve mandate.",
+        "Gross margin failed as a positive scoring factor and should stay diagnostic only."
+      ],
+      "next_gate": "pm_decide_whether_small_sample_specialist_sleeves_are_allowed"
     }
   ],
   "sector_test_policy": {
@@ -2906,6 +2946,9 @@
     "v5a.6_consumer_state_source_register": "knowledge/research_agent/references/v5a6_consumer_subsector_state_source_register.csv",
     "v5a.7_consumer_state_guard_pm_decision": "docs/governance/v5a.7_consumer_state_guard_diagnostic_pm_decision.md",
     "v5a.7_consumer_state_guard_summary": "validation_formal_v5a7_consumer_state_guard/state_guard_summary.json",
-    "v5a.7_next_gate": "v5a.8_condiments_specialist_state_model_research_design"
+    "v5a.7_next_gate": "v5a.8_condiments_specialist_state_model_research_design",
+    "v5a.8_condiments_pm_decision": "docs/governance/v5a.8_condiments_specialist_state_model_pm_decision.md",
+    "v5a.8_condiments_v5a8c_summary": "validation_formal_v5a8_condiments_specialist_state_model/formal/condiments_high_ocf_wc_guard_v5a8c/formal_validation_summary.json",
+    "v5a.8_next_gate": "pm_decide_small_sample_specialist_sleeve_policy_or_archive_watchlist"
   }
 }

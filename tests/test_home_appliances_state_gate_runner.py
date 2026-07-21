@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 from v5.home_appliances_state_diagnostic_runner import run_home_appliances_state_diagnostic
+from v5.home_appliances_export_exposure_runner import _segment_evidence
 from v5.home_appliances_state_gate_runner import build_home_appliances_state_gate
 
 
@@ -131,3 +132,19 @@ def test_home_appliances_state_diagnostic_outputs_bucket_summary(tmp_path: Path)
 
     assert result.status == "state_diagnostic_completed_not_engineering_handoff"
     assert "external_china_exports_yoy" in result.bucket_csv.read_text(encoding="utf-8")
+
+
+def test_home_appliances_export_exposure_parses_area_segments() -> None:
+    evidence = _segment_evidence(
+        "000001.XSHE",
+        "20211231",
+        [
+            {"bz_code": "D", "bz_item": "国外", "bz_sales": 40},
+            {"bz_code": "D", "bz_item": "中国大陆", "bz_sales": 60},
+            {"bz_code": "P", "bz_item": "冰箱", "bz_sales": 10},
+        ],
+    )
+
+    assert evidence is not None
+    assert evidence["visible_date"] == "2022-04-30"
+    assert evidence["overseas_revenue_share"] == "0.4"

@@ -59,13 +59,26 @@ ENRICHED_FIELDS = [
     "sector_asset_liability_ratio_median",
     "sector_low_vol_score_median",
     "sector_dividend_yield_median",
+    "sector_inventory_to_revenue_median",
+    "sector_receivables_to_revenue_median",
+    "sector_working_capital_pressure_to_revenue_median",
+    "sector_current_ratio_median",
+    "sector_overseas_revenue_share_median",
     "sector_negative_ocf_yield_ratio",
     "sector_high_capex_burden_ratio",
+    "sector_high_export_exposure_ratio",
+    "sector_high_inventory_pressure_ratio",
+    "sector_high_receivables_pressure_ratio",
+    "sector_high_working_capital_pressure_ratio",
     "subindustry_ocf_yield_median",
     "subindustry_ocf_to_net_profit_median",
     "subindustry_cash_collection_quality_median",
     "subindustry_capex_burden_median",
     "subindustry_low_vol_score_median",
+    "subindustry_inventory_to_revenue_median",
+    "subindustry_receivables_to_revenue_median",
+    "subindustry_working_capital_pressure_to_revenue_median",
+    "subindustry_overseas_revenue_share_median",
     "code_net_cash_per_share_trailing_365d",
     "code_dividend_event_count_trailing_365d",
     "home_appliances_capex_policy_flag",
@@ -94,6 +107,21 @@ FINANCIAL_METRICS = [
     ("asset_liability_ratio_median", "asset_liability_ratio", "ratio", "Balance-sheet leverage pressure proxy."),
     ("low_vol_score_median", "low_vol_score", "score", "Low-volatility score is diagnostic, not a V5a.5c scoring factor."),
     ("dividend_yield_median", "dividend_yield", "percent", "Dividend yield is diagnostic until real dividend support is audited."),
+    ("inventory_to_revenue_median", "inventory_to_revenue", "ratio", "Higher inventory to revenue can indicate demand or channel pressure."),
+    ("receivables_to_revenue_median", "receivables_to_revenue", "ratio", "Higher receivables to revenue can indicate cash-collection pressure."),
+    (
+        "working_capital_pressure_to_revenue_median",
+        "working_capital_pressure_to_revenue",
+        "ratio",
+        "Inventory plus receivables plus contract assets minus contract liabilities relative to revenue.",
+    ),
+    ("current_ratio_median", "current_ratio", "ratio", "Liquidity support proxy."),
+    (
+        "overseas_revenue_share_median",
+        "overseas_revenue_share",
+        "ratio",
+        "Higher overseas revenue share indicates export-cycle sensitivity.",
+    ),
 ]
 
 EXTERNAL_METRICS = [
@@ -365,8 +393,16 @@ def _financial_state_rows(trade_date: str, scope: str, sub_industry: str, rows: 
 def _ratio_state_rows(trade_date: str, visible_date: str, scope: str, sub_industry: str, rows: list[dict[str, str]]) -> list[dict[str, Any]]:
     ocf_values = [to_float(row.get("operating_cash_flow_yield")) for row in rows]
     capex_values = [to_float(row.get("capex_burden")) for row in rows]
+    inventory_values = [to_float(row.get("inventory_to_revenue")) for row in rows]
+    receivables_values = [to_float(row.get("receivables_to_revenue")) for row in rows]
+    working_values = [to_float(row.get("working_capital_pressure_to_revenue")) for row in rows]
+    export_values = [to_float(row.get("overseas_revenue_share")) for row in rows]
     ocf_valid = [value for value in ocf_values if value is not None]
     capex_valid = [value for value in capex_values if value is not None]
+    inventory_valid = [value for value in inventory_values if value is not None]
+    receivables_valid = [value for value in receivables_values if value is not None]
+    working_valid = [value for value in working_values if value is not None]
+    export_valid = [value for value in export_values if value is not None]
     return [
         {
             "trade_date": trade_date,
@@ -394,6 +430,58 @@ def _ratio_state_rows(trade_date: str, visible_date: str, scope: str, sub_indust
             "review_status": "derived_from_pit_panel" if capex_valid else "missing",
             "notes": "Uses capex_burden > 1.0 as a conservative pressure flag; sector policy still needs review.",
         },
+        {
+            "trade_date": trade_date,
+            "visible_date": visible_date,
+            "scope": scope,
+            "sub_industry": sub_industry,
+            "metric": "high_export_exposure_ratio",
+            "value": fmt_float(_share(export_valid, lambda value: value > 0.3)),
+            "unit": "ratio",
+            "source_name": "panel.overseas_revenue_share",
+            "pit_usable": "true" if visible_date <= trade_date and export_valid else "false",
+            "review_status": "derived_from_pit_segment_panel" if export_valid else "missing",
+            "notes": "Uses overseas_revenue_share > 0.3 as a first-pass export-cycle exposure flag.",
+        },
+        {
+            "trade_date": trade_date,
+            "visible_date": visible_date,
+            "scope": scope,
+            "sub_industry": sub_industry,
+            "metric": "high_inventory_pressure_ratio",
+            "value": fmt_float(_share(inventory_valid, lambda value: value > 0.5)),
+            "unit": "ratio",
+            "source_name": "panel.inventory_to_revenue",
+            "pit_usable": "true" if visible_date <= trade_date and inventory_valid else "false",
+            "review_status": "derived_from_pit_panel" if inventory_valid else "missing",
+            "notes": "Uses inventory_to_revenue > 0.5 as a first-pass appliance inventory pressure flag.",
+        },
+        {
+            "trade_date": trade_date,
+            "visible_date": visible_date,
+            "scope": scope,
+            "sub_industry": sub_industry,
+            "metric": "high_receivables_pressure_ratio",
+            "value": fmt_float(_share(receivables_valid, lambda value: value > 0.5)),
+            "unit": "ratio",
+            "source_name": "panel.receivables_to_revenue",
+            "pit_usable": "true" if visible_date <= trade_date and receivables_valid else "false",
+            "review_status": "derived_from_pit_panel" if receivables_valid else "missing",
+            "notes": "Uses receivables_to_revenue > 0.5 as a first-pass collection pressure flag.",
+        },
+        {
+            "trade_date": trade_date,
+            "visible_date": visible_date,
+            "scope": scope,
+            "sub_industry": sub_industry,
+            "metric": "high_working_capital_pressure_ratio",
+            "value": fmt_float(_share(working_valid, lambda value: value > 1.0)),
+            "unit": "ratio",
+            "source_name": "panel.working_capital_pressure_to_revenue",
+            "pit_usable": "true" if visible_date <= trade_date and working_valid else "false",
+            "review_status": "derived_from_pit_panel" if working_valid else "missing",
+            "notes": "Uses working_capital_pressure_to_revenue > 1.0 as a conservative balance-sheet pressure flag.",
+        },
     ]
 
 
@@ -420,13 +508,26 @@ def _enriched_state_fields(
         "sector_asset_liability_ratio_median": sector.get("asset_liability_ratio_median", ""),
         "sector_low_vol_score_median": sector.get("low_vol_score_median", ""),
         "sector_dividend_yield_median": sector.get("dividend_yield_median", ""),
+        "sector_inventory_to_revenue_median": sector.get("inventory_to_revenue_median", ""),
+        "sector_receivables_to_revenue_median": sector.get("receivables_to_revenue_median", ""),
+        "sector_working_capital_pressure_to_revenue_median": sector.get("working_capital_pressure_to_revenue_median", ""),
+        "sector_current_ratio_median": sector.get("current_ratio_median", ""),
+        "sector_overseas_revenue_share_median": sector.get("overseas_revenue_share_median", ""),
         "sector_negative_ocf_yield_ratio": sector.get("negative_ocf_yield_ratio", ""),
         "sector_high_capex_burden_ratio": sector.get("high_capex_burden_ratio", ""),
+        "sector_high_export_exposure_ratio": sector.get("high_export_exposure_ratio", ""),
+        "sector_high_inventory_pressure_ratio": sector.get("high_inventory_pressure_ratio", ""),
+        "sector_high_receivables_pressure_ratio": sector.get("high_receivables_pressure_ratio", ""),
+        "sector_high_working_capital_pressure_ratio": sector.get("high_working_capital_pressure_ratio", ""),
         "subindustry_ocf_yield_median": sub.get("ocf_yield_median", ""),
         "subindustry_ocf_to_net_profit_median": sub.get("ocf_to_net_profit_median", ""),
         "subindustry_cash_collection_quality_median": sub.get("cash_collection_quality_median", ""),
         "subindustry_capex_burden_median": sub.get("capex_burden_median", ""),
         "subindustry_low_vol_score_median": sub.get("low_vol_score_median", ""),
+        "subindustry_inventory_to_revenue_median": sub.get("inventory_to_revenue_median", ""),
+        "subindustry_receivables_to_revenue_median": sub.get("receivables_to_revenue_median", ""),
+        "subindustry_working_capital_pressure_to_revenue_median": sub.get("working_capital_pressure_to_revenue_median", ""),
+        "subindustry_overseas_revenue_share_median": sub.get("overseas_revenue_share_median", ""),
         "code_net_cash_per_share_trailing_365d": fmt_float(net_cash),
         "code_dividend_event_count_trailing_365d": str(len(dividends)),
         "home_appliances_capex_policy_flag": capex_flag,
@@ -522,9 +623,29 @@ def _validate_state_gate(
             f"enriched rows={len(enriched_rows)}",
         ),
         _check(
+            "true_inventory_receivable_working_capital_state",
+            "pass" if _field_coverage(enriched_rows, "inventory_to_revenue") >= 0.8
+            and _field_coverage(enriched_rows, "receivables_to_revenue") >= 0.8
+            and _field_coverage(enriched_rows, "working_capital_pressure_to_revenue") >= 0.8
+            else "needs_review",
+            (
+                "coverage inventory_to_revenue="
+                f"{fmt_float(_field_coverage(enriched_rows, 'inventory_to_revenue'))}; "
+                "receivables_to_revenue="
+                f"{fmt_float(_field_coverage(enriched_rows, 'receivables_to_revenue'))}; "
+                "working_capital_pressure_to_revenue="
+                f"{fmt_float(_field_coverage(enriched_rows, 'working_capital_pressure_to_revenue'))}"
+            ),
+        ),
+        _check(
+            "true_export_exposure_state",
+            "pass" if _field_coverage(enriched_rows, "overseas_revenue_share") >= 0.8 else "needs_review",
+            f"coverage overseas_revenue_share={fmt_float(_field_coverage(enriched_rows, 'overseas_revenue_share'))}",
+        ),
+        _check(
             "official_proxy_external_state",
             "needs_review" if external_rows else "blocker",
-            f"proxy rows={len(external_rows)}; template rows={len(external_template_rows)}; true company/industry appliance state still requires reviewed PIT import",
+            f"proxy rows={len(external_rows)}; template rows={len(external_template_rows)}; property/export demand and raw-material state still require reviewed PIT import or a documented no-state policy",
         ),
     ]
     if any(item["status"] == "blocker" for item in checks):
@@ -538,6 +659,12 @@ def _validate_state_gate(
 
 def _check(name: str, status: str, detail: str) -> dict[str, str]:
     return {"check": name, "status": status, "detail": detail}
+
+
+def _field_coverage(rows: list[dict[str, str]], field: str) -> float:
+    if not rows:
+        return 0.0
+    return sum(1 for row in rows if row.get(field) not in ("", None)) / len(rows)
 
 
 def _collect_ak_series(

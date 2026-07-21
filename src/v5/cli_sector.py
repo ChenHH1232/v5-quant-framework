@@ -74,6 +74,16 @@ from v5.home_appliances_state_diagnostic_runner import (
     DEFAULT_STRATEGY_ID as DEFAULT_HOME_APPLIANCES_STATE_DIAGNOSTIC_ID,
     run_home_appliances_state_diagnostic,
 )
+from v5.home_appliances_true_state_runner import (
+    DEFAULT_OUT_DIR as DEFAULT_HOME_APPLIANCES_TRUE_STATE_OUT,
+    DEFAULT_PANEL as DEFAULT_HOME_APPLIANCES_TRUE_STATE_PANEL,
+    enrich_home_appliances_true_state,
+)
+from v5.home_appliances_export_exposure_runner import (
+    DEFAULT_OUT_DIR as DEFAULT_HOME_APPLIANCES_EXPORT_EXPOSURE_OUT,
+    DEFAULT_PANEL as DEFAULT_HOME_APPLIANCES_EXPORT_EXPOSURE_PANEL,
+    collect_home_appliances_export_exposure,
+)
 from v5.similar_sector_pit_panel_runner import DEFAULT_OUT_ROOT, SECTOR_CONFIGS, collect_similar_sector_pit_panel
 from v5.gas_water_operating_evidence_runner import (
     DEFAULT_OUT_DIR as DEFAULT_GAS_WATER_EVIDENCE_OUT,
@@ -462,6 +472,20 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     home_appliances_state_diag_parser.add_argument("--selection-count", type=int)
     home_appliances_state_diag_parser.add_argument("--min-history", type=int, default=4)
     home_appliances_state_diag_parser.set_defaults(handler=_handle_diagnose_home_appliances_state)
+
+    home_appliances_true_state_parser = subparsers.add_parser("enrich-home-appliances-true-state")
+    home_appliances_true_state_parser.add_argument("--panel", type=Path, default=DEFAULT_HOME_APPLIANCES_TRUE_STATE_PANEL)
+    home_appliances_true_state_parser.add_argument("--out-dir", type=Path, default=DEFAULT_HOME_APPLIANCES_TRUE_STATE_OUT)
+    home_appliances_true_state_parser.set_defaults(handler=_handle_enrich_home_appliances_true_state)
+
+    home_appliances_export_parser = subparsers.add_parser("collect-home-appliances-export-exposure")
+    home_appliances_export_parser.add_argument("--panel", type=Path, default=DEFAULT_HOME_APPLIANCES_EXPORT_EXPOSURE_PANEL)
+    home_appliances_export_parser.add_argument("--out-dir", type=Path, default=DEFAULT_HOME_APPLIANCES_EXPORT_EXPOSURE_OUT)
+    home_appliances_export_parser.add_argument("--start-year", type=int, default=2020)
+    home_appliances_export_parser.add_argument("--end-year", type=int, default=2025)
+    home_appliances_export_parser.add_argument("--sleep-seconds", type=float, default=0.08)
+    home_appliances_export_parser.add_argument("--no-resume", action="store_true")
+    home_appliances_export_parser.set_defaults(handler=_handle_collect_home_appliances_export_exposure)
 
     basket_parser = subparsers.add_parser("construct-dividend-low-vol-fcf-basket")
     basket_parser.add_argument("--config", type=Path, default=DEFAULT_V56_BASKET_CONFIG)
@@ -884,6 +908,25 @@ def _handle_diagnose_home_appliances_state(args: argparse.Namespace) -> int:
             strategy_id=args.strategy_id,
             selection_count=args.selection_count,
             min_history=args.min_history,
+        )
+    )
+    return 0
+
+
+def _handle_enrich_home_appliances_true_state(args: argparse.Namespace) -> int:
+    print(enrich_home_appliances_true_state(args.panel, args.out_dir))
+    return 0
+
+
+def _handle_collect_home_appliances_export_exposure(args: argparse.Namespace) -> int:
+    print(
+        collect_home_appliances_export_exposure(
+            args.panel,
+            args.out_dir,
+            start_year=args.start_year,
+            end_year=args.end_year,
+            sleep_seconds=args.sleep_seconds,
+            resume_existing=not args.no_resume,
         )
     )
     return 0

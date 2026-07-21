@@ -2063,6 +2063,58 @@
         "Capex policy remains diagnostic and must not be treated as a positive scoring factor."
       ],
       "next_gate": "v5a.5d_home_appliances_true_state_repair_or_no_state_policy"
+    },
+    {
+      "strategy_id": "home_appliances_ocf_quality_v5a5d",
+      "sector": "home_appliances",
+      "current_status": [
+        "research_signal_candidate",
+        "research_pit_validation_completed",
+        "pit_leakage_audit_passed",
+        "true_inventory_receivable_working_capital_state_repaired",
+        "true_export_exposure_state_repaired",
+        "cash_dividend_events_collected",
+        "external_macro_state_proxy_needs_review",
+        "not_engineering_handoff"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "platform_replication",
+        "paper_trading",
+        "accepted_strategy"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "docs/governance/v5a.5d_home_appliances_true_state_repair_pm_decision.md",
+        "validation_formal_v5a5d_home_appliances_true_state/home_appliances_ocf_quality_v5a5c/formal_validation_summary.json",
+        "validation_state_v5a5d_home_appliances/home_appliances_ocf_quality_v5a5d/state_diagnostic_summary.json",
+        "src/v5/home_appliances_true_state_runner.py",
+        "src/v5/home_appliances_export_exposure_runner.py",
+        "src/v5/home_appliances_state_gate_runner.py",
+        "src/v5/home_appliances_state_diagnostic_runner.py"
+      ],
+      "key_evidence": {
+        "panel_rows": 1687,
+        "rebalance_dates": 20,
+        "inventory_receivables_working_capital_coverage": 1.0,
+        "export_exposure_coverage": 1.0,
+        "export_segment_evidence_rows": 1094,
+        "cash_dividend_events": 440,
+        "equal_weight_home_appliances_return": 0.4962080575,
+        "high_ocf_top10_return": 0.8643017961,
+        "ocf_to_net_profit_top10_return": 1.0503333668,
+        "ocf_quality_top10_return": 1.2808671754,
+        "rolling_2023_return": 0.2522566756,
+        "rolling_2024_return": 0.3526684111,
+        "rolling_2025_return": 0.1017523016,
+        "rolling_2026_return": -0.0182598692
+      },
+      "blockers": [
+        "Property-demand and raw-material-cost state remain official/public proxy only, not reviewed true industry state.",
+        "Tushare export exposure uses conservative visible dates instead of exact original announcement timestamps.",
+        "Engineering local daily simulation is blocked until reviewed state policy or documented no-state policy is accepted."
+      ],
+      "next_gate": "resolve_home_appliances_external_macro_state_policy_before_engineering"
     }
   ],
   "sector_test_policy": {
@@ -2742,6 +2794,11 @@
     "v5a.5c_home_appliances_spec": "examples/home_appliances_ocf_quality_v5a5c_strategy.json",
     "v5a.5c_home_appliances_state_gate_runner": "src/v5/home_appliances_state_gate_runner.py",
     "v5a.5c_home_appliances_state_diagnostic_runner": "src/v5/home_appliances_state_diagnostic_runner.py",
-    "v5a.5c_home_appliances_next_gate": "true_state_repair_or_no_state_policy_before_engineering"
+    "v5a.5c_home_appliances_next_gate": "true_state_repair_or_no_state_policy_before_engineering",
+    "v5a.5d_home_appliances_status": "research_signal_candidate_true_state_repaired_not_engineering_handoff",
+    "v5a.5d_home_appliances_pm_decision": "docs/governance/v5a.5d_home_appliances_true_state_repair_pm_decision.md",
+    "v5a.5d_home_appliances_formal_summary": "validation_formal_v5a5d_home_appliances_true_state/home_appliances_ocf_quality_v5a5c/formal_validation_summary.json",
+    "v5a.5d_home_appliances_state_diagnostic": "validation_state_v5a5d_home_appliances/home_appliances_ocf_quality_v5a5d/state_diagnostic_summary.json",
+    "v5a.5d_home_appliances_next_gate": "resolve_external_macro_state_policy_before_engineering"
   }
 }

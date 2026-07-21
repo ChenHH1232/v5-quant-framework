@@ -27,8 +27,17 @@ STATE_METRICS = [
     "external_mineral_goods_yoy",
     "external_energy_goods_yoy",
     "sector_capex_burden_median",
+    "sector_inventory_to_revenue_median",
+    "sector_receivables_to_revenue_median",
+    "sector_working_capital_pressure_to_revenue_median",
+    "sector_current_ratio_median",
+    "sector_overseas_revenue_share_median",
     "sector_negative_ocf_yield_ratio",
     "sector_high_capex_burden_ratio",
+    "sector_high_export_exposure_ratio",
+    "sector_high_inventory_pressure_ratio",
+    "sector_high_receivables_pressure_ratio",
+    "sector_high_working_capital_pressure_ratio",
 ]
 
 
@@ -222,4 +231,3 @@ def _write_report(path: Path, summary: dict[str, Any]) -> None:
             f"| `{row['metric']}` | `{row['bucket']}` | {row['periods']} | {row['selected_cum_return']} | {row['mean_excess_return']} | {row['positive_ratio']} |"
         )
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-

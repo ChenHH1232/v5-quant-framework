@@ -1,0 +1,40 @@
+{
+  "strategy_id": "gas_water_value_serviceability_v57b",
+  "packet": "v59_gas_water_2026_failure_ex_ante_state_review",
+  "status": "completed_not_engineering_handoff",
+  "formal_2026": [
+    {
+      "year": 2026,
+      "periods": 2,
+      "selected_cum_return": -0.0960492088248137,
+      "selected_mean_return": -0.04643325196685,
+      "selected_positive_ratio": 0.5,
+      "all_universe_mean_return": -0.0342256794842948,
+      "low_pb_mean_return": -0.0274888323892,
+      "relative_to_all_universe_mean": -0.0122075724825551,
+      "relative_to_low_pb_mean": -0.0189444195776499,
+      "selected_codes_by_date": "2026-01-05:600803.XSHG;002267.XSHE;605368.XSHG;600008.XSHG;600461.XSHG;601199.XSHG;001299.XSHE;600681.XSHG;601158.XSHG;002700.XSHE | 2026-04-01:600803.XSHG;002267.XSHE;001299.XSHE;605368.XSHG;603080.XSHG;600008.XSHG;600461.XSHG;600681.XSHG;601199.XSHG;002700.XSHE",
+      "factor_mean_notes": "low_price_to_book_safe:selected_mean=1.745855,all_mean=3.2830881578947366 ; dividend_yield:selected_mean=4.91508,all_mean=2.1493128205128205 ; interest_coverage_safe:selected_mean=96.46261977616666,all_mean=62.52074100200769 ; debt_pressure_safe:selected_mean=0.438063875095,all_mean=0.5205220177571794 ; capex_burden_safe:selected_mean=0.5449993976075,all_mean=154.19729787186543",
+      "interpretation": "2026: underperformed_all_universe,underperformed_low_pb"
+    }
+  ],
+  "local_2026": {
+    "period_summary_path": "gas_water_2026_period_summary.csv",
+    "yearly_local_strategy_return": -0.0063105923662408,
+    "yearly_local_benchmark_return": 0.0194179298285748
+  },
+  "pm_decision": {
+    "engineering_handoff": "defer",
+    "reason": "2026 formal failure is unresolved by validated ex-ante state variables. Execution health passed, so the gap is research/state-variable evidence rather than order failure.",
+    "next_gate": "research_agent_build_structured_pit_external_state_panel_then_quant_revalidate"
+  },
+  "outputs": [
+    "gas_water_2026_period_summary.csv",
+    "gas_water_2026_selected_factor_detail.csv",
+    "gas_water_2026_selected_stock_path_returns.csv",
+    "gas_water_2026_monthly_returns.csv",
+    "gas_water_2026_worst_daily_returns.csv",
+    "gas_water_2026_ex_ante_state_review.csv",
+    "gas_water_2026_rebalance_order_health.csv"
+  ]
+}

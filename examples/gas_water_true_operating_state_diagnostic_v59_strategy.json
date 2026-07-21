@@ -1,0 +1,201 @@
+{
+  "meta": {
+    "strategy_id": "gas_water_true_operating_state_diagnostic_v59",
+    "name": "Gas / Water True Operating State Diagnostic V5.9",
+    "objective": "Diagnose whether PIT-visible annual and semiannual report operating-state disclosures help explain gas/water operator returns and 2026 weakness."
+  },
+  "universe": {
+    "name": "A-share gas and water utility operators with CNINFO report evidence",
+    "construction": "Use the existing gas/water PIT panel, enriched with latest visible CNINFO annual/semiannual report keyword evidence.",
+    "point_in_time": true,
+    "minimum_rebalance_coverage_ratio": 0.8
+  },
+  "data": {
+    "vendor": "JoinQuant/DataJQ PIT financial panel + CNINFO original report PDFs via AkShare discovery",
+    "price_frequency": "quarterly_signal_panel",
+    "financial_as_of_policy": "announcement_date",
+    "price_adjustment": {
+      "research_panel": "pre_adjusted_close_to_close_return",
+      "status": "research_pit_validation_input"
+    },
+    "window": {
+      "research_start": "2021-05-01",
+      "research_end": "2026-05-31"
+    },
+    "source_warning": "Keyword-density fields are diagnostic text evidence, not reviewed numeric operating metrics."
+  },
+  "signals": {
+    "factors": [
+      {
+        "name": "true_gas_pass_through_density_per_10k",
+        "source": "CNINFO annual/semiannual report keyword evidence",
+        "role": "gas_price_pass_through_discussion",
+        "direction": "higher_is_better",
+        "definition": "Density of gas pass-through/procurement/sales-price terms in the latest visible report.",
+        "as_of": "original_report_announcement_date",
+        "disclosure_lag_days": 0,
+        "missing_policy": "use_zero_absence_in_latest_report"
+      },
+      {
+        "name": "true_water_tariff_density_per_10k",
+        "source": "CNINFO annual/semiannual report keyword evidence",
+        "role": "water_tariff_adjustment_discussion",
+        "direction": "higher_is_better",
+        "definition": "Density of water-tariff or sewage-treatment fee adjustment terms in the latest visible report.",
+        "as_of": "original_report_announcement_date",
+        "disclosure_lag_days": 0,
+        "missing_policy": "use_zero_absence_in_latest_report"
+      },
+      {
+        "name": "true_connection_install_density_per_10k",
+        "source": "CNINFO annual/semiannual report keyword evidence",
+        "role": "connection_install_reliance_pressure",
+        "direction": "lower_is_better",
+        "definition": "Density of connection / installation / engineering-installation terms; lower is preferred as a diagnostic pressure proxy.",
+        "as_of": "original_report_announcement_date",
+        "disclosure_lag_days": 0,
+        "missing_policy": "use_zero_absence_in_latest_report"
+      },
+      {
+        "name": "true_receivables_collection_density_per_10k",
+        "source": "CNINFO annual/semiannual report keyword evidence",
+        "role": "collection_and_local_fiscal_payment_pressure",
+        "direction": "lower_is_better",
+        "definition": "Density of receivable, aging, collection and government payment terms; lower is preferred as a diagnostic pressure proxy.",
+        "as_of": "original_report_announcement_date",
+        "disclosure_lag_days": 0,
+        "missing_policy": "use_zero_absence_in_latest_report"
+      },
+      {
+        "name": "true_financing_debt_density_per_10k",
+        "source": "CNINFO annual/semiannual report keyword evidence",
+        "role": "financing_debt_pressure",
+        "direction": "lower_is_better",
+        "definition": "Density of bond, financing, credit line, guarantee, interest-rate and financial-expense terms; lower is preferred as a diagnostic pressure proxy.",
+        "as_of": "original_report_announcement_date",
+        "disclosure_lag_days": 0,
+        "missing_policy": "use_zero_absence_in_latest_report"
+      }
+    ],
+    "scoring": {
+      "method": "weighted_composite",
+      "normalization_scope": "rebalance_cross_section",
+      "weights": {
+        "true_gas_pass_through_density_per_10k": 0.15,
+        "true_water_tariff_density_per_10k": 0.15,
+        "true_connection_install_density_per_10k": 0.2,
+        "true_receivables_collection_density_per_10k": 0.25,
+        "true_financing_debt_density_per_10k": 0.25
+      },
+      "min_factor_count": 5
+    }
+  },
+  "schedule": {
+    "signal_frequency": "quarterly",
+    "rebalance_frequency": "quarterly",
+    "rebalance_rule": "first tradable day of quarter after PIT visibility check"
+  },
+  "portfolio": {
+    "selection_count": 10,
+    "weighting": "equal_weight_research_diagnostic",
+    "max_position_weight": 0.12,
+    "cash_policy": "hold residual cash when fewer than ten names pass filters"
+  },
+  "risk": {
+    "defensive_asset": "cash",
+    "defensive_rule": {
+      "enabled": false,
+      "reason": "Research PIT diagnostic only."
+    }
+  },
+  "validation": {
+    "method": "rolling",
+    "train_years": 3,
+    "test_years": 1,
+    "weak_years": [
+      "2022",
+      "2024",
+      "2026"
+    ],
+    "baselines": [
+      {
+        "name": "equal_weight_gas_water",
+        "mode": "equal_all"
+      },
+      {
+        "name": "low_text_receivables_pressure_top10",
+        "mode": "single_factor",
+        "factor": "true_receivables_collection_density_per_10k",
+        "direction": "lower_is_better",
+        "selection_count": 10
+      },
+      {
+        "name": "low_text_financing_debt_pressure_top10",
+        "mode": "single_factor",
+        "factor": "true_financing_debt_density_per_10k",
+        "direction": "lower_is_better",
+        "selection_count": 10
+      },
+      {
+        "name": "low_text_connection_install_pressure_top10",
+        "mode": "single_factor",
+        "factor": "true_connection_install_density_per_10k",
+        "direction": "lower_is_better",
+        "selection_count": 10
+      }
+    ],
+    "common_sample_fields": [
+      "true_gas_pass_through_density_per_10k",
+      "true_water_tariff_density_per_10k",
+      "true_connection_install_density_per_10k",
+      "true_receivables_collection_density_per_10k",
+      "true_financing_debt_density_per_10k"
+    ],
+    "common_sample_interactions": [
+      {
+        "name": "common_true_operating_text_state",
+        "factors": [
+          "true_gas_pass_through_density_per_10k",
+          "true_water_tariff_density_per_10k",
+          "true_connection_install_density_per_10k",
+          "true_receivables_collection_density_per_10k",
+          "true_financing_debt_density_per_10k"
+        ]
+      }
+    ],
+    "robustness": {
+      "selection_counts": [
+        8,
+        10,
+        12
+      ],
+      "weight_scale_factors": [
+        "true_receivables_collection_density_per_10k",
+        "true_financing_debt_density_per_10k"
+      ],
+      "weight_scales": [
+        0.8,
+        1.0,
+        1.2
+      ]
+    },
+    "acceptance_rule": "This diagnostic can return to Research or open manual numeric extraction. It cannot promote a strategy without reviewed values and platform replication."
+  },
+  "execution": {
+    "status": "not_started",
+    "next_gate": "quant_diagnostic_validation",
+    "commission_bps": 3,
+    "slippage_bps": 5,
+    "suspension_policy": "skip_untradeable",
+    "limit_policy": "skip_limit_blocked"
+  },
+  "outputs": {
+    "save_holdings": true,
+    "save_rebalance_signals": true,
+    "report": "markdown",
+    "required_reports": [
+      "formal_validation_packet",
+      "pm_diagnostic_decision"
+    ]
+  }
+}

@@ -61,6 +61,50 @@ from v5.gas_water_financial_evidence_runner import (
     DEFAULT_OUT_DIR as DEFAULT_GAS_WATER_FINANCIAL_OUT,
     enrich_gas_water_financial_evidence,
 )
+from v5.gas_water_2021_pit_coverage_repair_runner import (
+    DEFAULT_CURRENT_PANEL as DEFAULT_GAS_WATER_2021_REPAIR_CURRENT_PANEL,
+    DEFAULT_OUT_DIR as DEFAULT_GAS_WATER_2021_REPAIR_OUT,
+    DEFAULT_SEGMENT_EVIDENCE as DEFAULT_GAS_WATER_2021_REPAIR_SEGMENT_EVIDENCE,
+    DEFAULT_SOURCE_PANEL as DEFAULT_GAS_WATER_2021_REPAIR_SOURCE_PANEL,
+    DEFAULT_TRUE_EVIDENCE as DEFAULT_GAS_WATER_2021_REPAIR_TRUE_EVIDENCE,
+    repair_gas_water_2021_07_pit_coverage,
+)
+from v5.gas_water_external_state_runner import (
+    DEFAULT_BENCHMARK as DEFAULT_GAS_WATER_STATE_BENCHMARK,
+    DEFAULT_ENRICHED_OUT_DIR as DEFAULT_GAS_WATER_STATE_ENRICHED_OUT,
+    DEFAULT_OUT_DIR as DEFAULT_GAS_WATER_STATE_OUT,
+    DEFAULT_PANEL as DEFAULT_GAS_WATER_STATE_PANEL,
+    DEFAULT_VALIDATION_OUT_DIR as DEFAULT_GAS_WATER_STATE_VALIDATION_OUT,
+    build_gas_water_external_state_panel,
+    build_gas_water_state_enriched_panel,
+    run_gas_water_state_bucket_validation,
+    validate_gas_water_external_state,
+)
+from v5.gas_water_true_operating_state_runner import (
+    DEFAULT_DISCLOSURE_CSV as DEFAULT_GAS_WATER_TRUE_STATE_DISCLOSURE,
+    DEFAULT_OUT_DIR as DEFAULT_GAS_WATER_TRUE_STATE_OUT,
+    DEFAULT_PANEL_OUT_DIR as DEFAULT_GAS_WATER_TRUE_STATE_PANEL_OUT,
+    DEFAULT_PANEL_CSV as DEFAULT_GAS_WATER_TRUE_STATE_PANEL,
+    build_gas_water_true_operating_state_panel,
+    collect_gas_water_true_operating_state_evidence,
+)
+from v5.gas_water_state_guard_validation_runner import (
+    DEFAULT_OUT_DIR as DEFAULT_GAS_WATER_STATE_GUARD_OUT,
+    DEFAULT_PANEL as DEFAULT_GAS_WATER_STATE_GUARD_PANEL,
+    DEFAULT_SPEC as DEFAULT_GAS_WATER_STATE_GUARD_SPEC,
+    DEFAULT_STRATEGY_ID as DEFAULT_GAS_WATER_STATE_GUARD_ID,
+    run_gas_water_state_guard_validation,
+)
+from v5.gas_water_state_guard_daily_backtest_runner import (
+    DEFAULT_BENCHMARK_CSV as DEFAULT_GAS_WATER_STATE_GUARD_DAILY_BENCHMARK,
+    DEFAULT_BENCHMARK_ID as DEFAULT_GAS_WATER_STATE_GUARD_DAILY_BENCHMARK_ID,
+    DEFAULT_DIVIDEND_CASH_CSV as DEFAULT_GAS_WATER_STATE_GUARD_DAILY_DIVIDENDS,
+    DEFAULT_EXECUTION_PRICE_CSV as DEFAULT_GAS_WATER_STATE_GUARD_DAILY_PRICES,
+    DEFAULT_OUT_DIR as DEFAULT_GAS_WATER_STATE_GUARD_DAILY_OUT,
+    DEFAULT_PANEL as DEFAULT_GAS_WATER_STATE_GUARD_DAILY_PANEL,
+    DEFAULT_SPEC as DEFAULT_GAS_WATER_STATE_GUARD_DAILY_SPEC,
+    run_gas_water_state_guard_daily_backtest,
+)
 from v5.airport_transport_operating_evidence_runner import (
     DEFAULT_OUT_DIR as DEFAULT_AIRPORT_OPERATING_EVIDENCE_OUT,
     build_airport_business_purity_panel,
@@ -133,6 +177,87 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     gas_water_financial_parser.add_argument("panel", type=Path)
     gas_water_financial_parser.add_argument("--out-dir", type=Path, default=DEFAULT_GAS_WATER_FINANCIAL_OUT)
     gas_water_financial_parser.set_defaults(handler=_handle_enrich_gas_water_financial_evidence)
+
+    gas_water_2021_repair_parser = subparsers.add_parser("repair-gas-water-2021-07-pit-coverage")
+    gas_water_2021_repair_parser.add_argument("--source-panel", type=Path, default=DEFAULT_GAS_WATER_2021_REPAIR_SOURCE_PANEL)
+    gas_water_2021_repair_parser.add_argument("--current-panel", type=Path, default=DEFAULT_GAS_WATER_2021_REPAIR_CURRENT_PANEL)
+    gas_water_2021_repair_parser.add_argument("--true-evidence-csv", type=Path, default=DEFAULT_GAS_WATER_2021_REPAIR_TRUE_EVIDENCE)
+    gas_water_2021_repair_parser.add_argument("--segment-evidence-csv", type=Path, default=DEFAULT_GAS_WATER_2021_REPAIR_SEGMENT_EVIDENCE)
+    gas_water_2021_repair_parser.add_argument("--out-dir", type=Path, default=DEFAULT_GAS_WATER_2021_REPAIR_OUT)
+    gas_water_2021_repair_parser.set_defaults(handler=_handle_repair_gas_water_2021_07_pit_coverage)
+
+    gas_water_state_parser = subparsers.add_parser("build-gas-water-external-state")
+    gas_water_state_parser.add_argument("--panel", type=Path, default=DEFAULT_GAS_WATER_STATE_PANEL)
+    gas_water_state_parser.add_argument("--benchmark-csv", type=Path, default=DEFAULT_GAS_WATER_STATE_BENCHMARK)
+    gas_water_state_parser.add_argument("--out-dir", type=Path, default=DEFAULT_GAS_WATER_STATE_OUT)
+    gas_water_state_parser.add_argument("--include-official-proxies", action="store_true")
+    gas_water_state_parser.set_defaults(handler=_handle_build_gas_water_external_state)
+
+    gas_water_state_validate_parser = subparsers.add_parser("validate-gas-water-external-state")
+    gas_water_state_validate_parser.add_argument("csv_path", type=Path)
+    gas_water_state_validate_parser.set_defaults(handler=_handle_validate_gas_water_external_state)
+
+    gas_water_state_panel_parser = subparsers.add_parser("build-gas-water-state-enriched-panel")
+    gas_water_state_panel_parser.add_argument("--panel", type=Path, default=DEFAULT_GAS_WATER_STATE_PANEL)
+    gas_water_state_panel_parser.add_argument("--state-csv", type=Path, default=DEFAULT_GAS_WATER_STATE_OUT / "gas_water_external_state.csv")
+    gas_water_state_panel_parser.add_argument("--out-dir", type=Path, default=DEFAULT_GAS_WATER_STATE_ENRICHED_OUT)
+    gas_water_state_panel_parser.add_argument("--strategy-id", default="gas_water_value_serviceability_state_diagnostic_v59")
+    gas_water_state_panel_parser.set_defaults(handler=_handle_build_gas_water_state_enriched_panel)
+
+    gas_water_state_bucket_parser = subparsers.add_parser("validate-gas-water-state-bucket")
+    gas_water_state_bucket_parser.add_argument("--panel", type=Path, default=DEFAULT_GAS_WATER_STATE_ENRICHED_OUT / "panel_with_external_state.csv")
+    gas_water_state_bucket_parser.add_argument("--out", type=Path, default=DEFAULT_GAS_WATER_STATE_VALIDATION_OUT)
+    gas_water_state_bucket_parser.add_argument("--strategy-id", default="gas_water_value_serviceability_state_diagnostic_v59")
+    gas_water_state_bucket_parser.add_argument("--state-metric", default="sector_receivables_to_revenue_median")
+    gas_water_state_bucket_parser.add_argument("--selection-count", type=int, default=10)
+    gas_water_state_bucket_parser.add_argument("--min-history", type=int, default=4)
+    gas_water_state_bucket_parser.set_defaults(handler=_handle_validate_gas_water_state_bucket)
+
+    gas_water_true_state_parser = subparsers.add_parser("collect-gas-water-true-operating-state")
+    gas_water_true_state_parser.add_argument("--disclosure-csv", type=Path, default=DEFAULT_GAS_WATER_TRUE_STATE_DISCLOSURE)
+    gas_water_true_state_parser.add_argument("--panel-csv", type=Path, default=DEFAULT_GAS_WATER_TRUE_STATE_PANEL)
+    gas_water_true_state_parser.add_argument("--out-dir", type=Path, default=DEFAULT_GAS_WATER_TRUE_STATE_OUT)
+    gas_water_true_state_parser.add_argument("--sample-size", type=int)
+    gas_water_true_state_parser.add_argument("--seed", type=int, default=59)
+    gas_water_true_state_parser.add_argument("--start-period")
+    gas_water_true_state_parser.add_argument("--end-period")
+    gas_water_true_state_parser.add_argument("--no-pdf-text", action="store_true")
+    gas_water_true_state_parser.add_argument("--cache-pdf", action="store_true")
+    gas_water_true_state_parser.add_argument("--max-pages", type=int, default=120)
+    gas_water_true_state_parser.add_argument("--request-timeout-seconds", type=float, default=30.0)
+    gas_water_true_state_parser.add_argument("--sleep-seconds", type=float, default=0.2)
+    gas_water_true_state_parser.set_defaults(handler=_handle_collect_gas_water_true_operating_state)
+
+    gas_water_true_state_panel_parser = subparsers.add_parser("build-gas-water-true-operating-state-panel")
+    gas_water_true_state_panel_parser.add_argument("panel_csv", type=Path)
+    gas_water_true_state_panel_parser.add_argument("evidence_csv", type=Path)
+    gas_water_true_state_panel_parser.add_argument("--out-dir", type=Path, default=DEFAULT_GAS_WATER_TRUE_STATE_PANEL_OUT)
+    gas_water_true_state_panel_parser.set_defaults(handler=_handle_build_gas_water_true_operating_state_panel)
+
+    gas_water_state_guard_parser = subparsers.add_parser("validate-gas-water-state-guard")
+    gas_water_state_guard_parser.add_argument("--panel", type=Path, default=DEFAULT_GAS_WATER_STATE_GUARD_PANEL)
+    gas_water_state_guard_parser.add_argument("--base-spec", type=Path, default=DEFAULT_GAS_WATER_STATE_GUARD_SPEC)
+    gas_water_state_guard_parser.add_argument("--out-dir", type=Path, default=DEFAULT_GAS_WATER_STATE_GUARD_OUT)
+    gas_water_state_guard_parser.add_argument("--strategy-id", default=DEFAULT_GAS_WATER_STATE_GUARD_ID)
+    gas_water_state_guard_parser.add_argument("--guard-field", default="true_financing_debt_density_per_10k")
+    gas_water_state_guard_parser.add_argument("--guard-quantile", type=float, default=0.75)
+    gas_water_state_guard_parser.add_argument("--min-history", type=int, default=8)
+    gas_water_state_guard_parser.set_defaults(handler=_handle_validate_gas_water_state_guard)
+
+    gas_water_state_guard_daily_parser = subparsers.add_parser("daily-backtest-gas-water-state-guard")
+    gas_water_state_guard_daily_parser.add_argument("--spec", type=Path, default=DEFAULT_GAS_WATER_STATE_GUARD_DAILY_SPEC)
+    gas_water_state_guard_daily_parser.add_argument("--panel", type=Path, default=DEFAULT_GAS_WATER_STATE_GUARD_DAILY_PANEL)
+    gas_water_state_guard_daily_parser.add_argument("--execution-price-csv", type=Path, default=DEFAULT_GAS_WATER_STATE_GUARD_DAILY_PRICES)
+    gas_water_state_guard_daily_parser.add_argument("--benchmark-csv", type=Path, default=DEFAULT_GAS_WATER_STATE_GUARD_DAILY_BENCHMARK)
+    gas_water_state_guard_daily_parser.add_argument("--benchmark-id", default=DEFAULT_GAS_WATER_STATE_GUARD_DAILY_BENCHMARK_ID)
+    gas_water_state_guard_daily_parser.add_argument("--dividend-cash-csv", type=Path, default=DEFAULT_GAS_WATER_STATE_GUARD_DAILY_DIVIDENDS)
+    gas_water_state_guard_daily_parser.add_argument("--out", type=Path, default=DEFAULT_GAS_WATER_STATE_GUARD_DAILY_OUT)
+    gas_water_state_guard_daily_parser.add_argument("--start-date", default="2021-05-01")
+    gas_water_state_guard_daily_parser.add_argument("--end-date", default="2026-05-31")
+    gas_water_state_guard_daily_parser.add_argument("--initial-cash", type=float, default=2_000_000.0)
+    gas_water_state_guard_daily_parser.add_argument("--target-exposure", type=float, default=0.995)
+    gas_water_state_guard_daily_parser.add_argument("--lot-size", type=int, default=100)
+    gas_water_state_guard_daily_parser.set_defaults(handler=_handle_daily_backtest_gas_water_state_guard)
 
     airport_disclosure_parser = subparsers.add_parser("collect-airport-report-disclosure-dates")
     airport_disclosure_parser.add_argument("panel", type=Path)
@@ -372,6 +497,108 @@ def _handle_build_gas_water_business_purity_panel(args: argparse.Namespace) -> i
 
 def _handle_enrich_gas_water_financial_evidence(args: argparse.Namespace) -> int:
     print(enrich_gas_water_financial_evidence(args.panel, out_dir=args.out_dir))
+    return 0
+
+
+def _handle_repair_gas_water_2021_07_pit_coverage(args: argparse.Namespace) -> int:
+    print(
+        repair_gas_water_2021_07_pit_coverage(
+            source_panel=args.source_panel,
+            current_panel=args.current_panel,
+            true_evidence_csv=args.true_evidence_csv,
+            segment_evidence_csv=args.segment_evidence_csv,
+            out_dir=args.out_dir,
+        )
+    )
+    return 0
+
+
+def _handle_build_gas_water_external_state(args: argparse.Namespace) -> int:
+    print(build_gas_water_external_state_panel(args.panel, args.benchmark_csv, args.out_dir, args.include_official_proxies))
+    return 0
+
+
+def _handle_validate_gas_water_external_state(args: argparse.Namespace) -> int:
+    print(validate_gas_water_external_state(args.csv_path))
+    return 0
+
+
+def _handle_build_gas_water_state_enriched_panel(args: argparse.Namespace) -> int:
+    print(build_gas_water_state_enriched_panel(args.panel, args.state_csv, args.out_dir, args.strategy_id))
+    return 0
+
+
+def _handle_validate_gas_water_state_bucket(args: argparse.Namespace) -> int:
+    print(
+        run_gas_water_state_bucket_validation(
+            args.panel,
+            args.out,
+            args.strategy_id,
+            args.state_metric,
+            args.selection_count,
+            args.min_history,
+        )
+    )
+    return 0
+
+
+def _handle_collect_gas_water_true_operating_state(args: argparse.Namespace) -> int:
+    print(
+        collect_gas_water_true_operating_state_evidence(
+            disclosure_csv=args.disclosure_csv,
+            panel_csv=args.panel_csv,
+            out_dir=args.out_dir,
+            sample_size=args.sample_size,
+            seed=args.seed,
+            start_period=args.start_period,
+            end_period=args.end_period,
+            include_pdf_text=not args.no_pdf_text,
+            cache_pdf=args.cache_pdf,
+            max_pages=args.max_pages,
+            request_timeout_seconds=args.request_timeout_seconds,
+            sleep_seconds=args.sleep_seconds,
+        )
+    )
+    return 0
+
+
+def _handle_build_gas_water_true_operating_state_panel(args: argparse.Namespace) -> int:
+    print(build_gas_water_true_operating_state_panel(args.panel_csv, args.evidence_csv, args.out_dir))
+    return 0
+
+
+def _handle_validate_gas_water_state_guard(args: argparse.Namespace) -> int:
+    print(
+        run_gas_water_state_guard_validation(
+            panel_csv=args.panel,
+            base_spec=args.base_spec,
+            out_dir=args.out_dir,
+            strategy_id=args.strategy_id,
+            guard_field=args.guard_field,
+            guard_quantile=args.guard_quantile,
+            min_history=args.min_history,
+        )
+    )
+    return 0
+
+
+def _handle_daily_backtest_gas_water_state_guard(args: argparse.Namespace) -> int:
+    print(
+        run_gas_water_state_guard_daily_backtest(
+            spec_path=args.spec,
+            panel_csv=args.panel,
+            execution_price_csv=args.execution_price_csv,
+            benchmark_csv=args.benchmark_csv,
+            out_dir=args.out,
+            dividend_cash_csv=args.dividend_cash_csv,
+            benchmark_id=args.benchmark_id,
+            start_date=args.start_date,
+            end_date=args.end_date,
+            initial_cash=args.initial_cash,
+            target_exposure=args.target_exposure,
+            lot_size=args.lot_size,
+        )
+    )
     return 0
 
 

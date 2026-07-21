@@ -2252,6 +2252,43 @@
         "Gross margin failed as a positive scoring factor and should stay diagnostic only."
       ],
       "next_gate": "pm_decide_whether_small_sample_specialist_sleeves_are_allowed"
+    },
+    {
+      "strategy_id": "cement_cycle_aware_ocf_low_vol_v5a9",
+      "sector": "building_materials_cement",
+      "current_status": [
+        "workflow_replication_passed",
+        "research_pit_validation_completed",
+        "strategy_candidate_failed",
+        "not_engineering_handoff",
+        "blocked_until_official_cement_cycle_state_and_business_exposure_repair"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "engineering_smoke_test",
+        "platform_replication",
+        "paper_trading_ready",
+        "accepted_strategy",
+        "basket_inclusion_approved"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "examples/cement_cycle_aware_ocf_low_vol_v5a9_strategy.json",
+        "docs/governance/v5a.9_cement_cycle_state_validation_pm_decision.md",
+        "knowledge/research_agent/factor_theory/building_materials_cement_cashflow_cycle_framework_v5a4.md",
+        "knowledge/research_agent/references/v5a9_cement_cycle_state_source_register.csv",
+        "validation_formal_v5a9_cement_cycle_state/cement_cycle_aware_ocf_low_vol_v5a9/formal_validation_summary.json",
+        "validation_state_v5a9_cement/cement_cycle_aware_ocf_low_vol_v5a9/cement_state_bucket_validation_summary.json",
+        "research_reports/fxbaogao_v5a9_cement_state/"
+      ],
+      "blockers": [
+        "OCF + low-vol composite underperformed equal-weight cement universe in formal validation.",
+        "operating_cash_flow_yield showed negative IC and RankIC in the 2021-2026 reference window.",
+        "External state inputs are public proxies, not reviewed cement spot price / output / capacity utilization / regional exposure history.",
+        "Cash dividend file is empty for the current local Engineering data gate.",
+        "No Engineering handoff, JoinQuant replication, paper trading or basket inclusion is allowed."
+      ],
+      "next_gate": "archive_until_official_cement_cycle_state_and_business_exposure_repair"
     }
   ],
   "sector_test_policy": {
@@ -2949,6 +2986,14 @@
     "v5a.7_next_gate": "v5a.8_condiments_specialist_state_model_research_design",
     "v5a.8_condiments_pm_decision": "docs/governance/v5a.8_condiments_specialist_state_model_pm_decision.md",
     "v5a.8_condiments_v5a8c_summary": "validation_formal_v5a8_condiments_specialist_state_model/formal/condiments_high_ocf_wc_guard_v5a8c/formal_validation_summary.json",
-    "v5a.8_next_gate": "pm_decide_small_sample_specialist_sleeve_policy_or_archive_watchlist"
+    "v5a.8_next_gate": "pm_decide_small_sample_specialist_sleeve_policy_or_archive_watchlist",
+    "v5a.9_cement_status": "workflow_replication_passed_strategy_candidate_failed",
+    "v5a.9_cement_pm_decision": "docs/governance/v5a.9_cement_cycle_state_validation_pm_decision.md",
+    "v5a.9_cement_spec": "examples/cement_cycle_aware_ocf_low_vol_v5a9_strategy.json",
+    "v5a.9_cement_source_register": "knowledge/research_agent/references/v5a9_cement_cycle_state_source_register.csv",
+    "v5a.9_cement_state_panel": "see docs/governance/v5a.9_cement_cycle_state_validation_pm_decision.md",
+    "v5a.9_cement_formal_summary": "validation_formal_v5a9_cement_cycle_state/cement_cycle_aware_ocf_low_vol_v5a9/formal_validation_summary.json",
+    "v5a.9_cement_state_bucket_summary": "validation_state_v5a9_cement/cement_cycle_aware_ocf_low_vol_v5a9/cement_state_bucket_validation_summary.json",
+    "v5a.9_next_gate": "continue_broad_queue_without_cement_promotion"
   }
 }

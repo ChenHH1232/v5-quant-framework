@@ -94,6 +94,15 @@ from v5.consumer_subsector_validation_runner import (
     DEFAULT_PANELS as DEFAULT_CONSUMER_SUBSECTOR_VALIDATION_PANELS,
     run_consumer_subsector_validation,
 )
+from v5.cement_external_state_runner import (
+    DEFAULT_ENRICHED_OUT_DIR as DEFAULT_CEMENT_STATE_ENRICHED_OUT,
+    DEFAULT_OUT_DIR as DEFAULT_CEMENT_STATE_OUT,
+    DEFAULT_PANEL as DEFAULT_CEMENT_STATE_PANEL,
+    DEFAULT_STATE_VALIDATION_OUT as DEFAULT_CEMENT_STATE_VALIDATION_OUT,
+    build_cement_state_enriched_panel,
+    collect_cement_external_state,
+    run_cement_state_bucket_validation,
+)
 from v5.similar_sector_pit_panel_runner import DEFAULT_OUT_ROOT, SECTOR_CONFIGS, collect_similar_sector_pit_panel
 from v5.gas_water_operating_evidence_runner import (
     DEFAULT_OUT_DIR as DEFAULT_GAS_WATER_EVIDENCE_OUT,
@@ -509,6 +518,24 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     consumer_subsector_parser.add_argument("--out-root", type=Path, default=DEFAULT_CONSUMER_SUBSECTOR_VALIDATION_OUT)
     consumer_subsector_parser.add_argument("--min-codes-per-date", type=int, default=8)
     consumer_subsector_parser.set_defaults(handler=_handle_validate_consumer_subsectors)
+
+    cement_state_parser = subparsers.add_parser("collect-cement-external-state")
+    cement_state_parser.add_argument("--panel", type=Path, default=DEFAULT_CEMENT_STATE_PANEL)
+    cement_state_parser.add_argument("--out-dir", type=Path, default=DEFAULT_CEMENT_STATE_OUT)
+    cement_state_parser.set_defaults(handler=_handle_collect_cement_external_state)
+
+    cement_state_panel_parser = subparsers.add_parser("build-cement-state-enriched-panel")
+    cement_state_panel_parser.add_argument("--panel", type=Path, default=DEFAULT_CEMENT_STATE_PANEL)
+    cement_state_panel_parser.add_argument("--state-csv", type=Path, default=DEFAULT_CEMENT_STATE_OUT / "cement_external_state.csv")
+    cement_state_panel_parser.add_argument("--out-dir", type=Path, default=DEFAULT_CEMENT_STATE_ENRICHED_OUT)
+    cement_state_panel_parser.set_defaults(handler=_handle_build_cement_state_enriched_panel)
+
+    cement_state_validation_parser = subparsers.add_parser("validate-cement-state-buckets")
+    cement_state_validation_parser.add_argument("--panel", type=Path, default=DEFAULT_CEMENT_STATE_ENRICHED_OUT / "panel_with_cement_state.csv")
+    cement_state_validation_parser.add_argument("--spec", type=Path, required=True)
+    cement_state_validation_parser.add_argument("--out-dir", type=Path, default=DEFAULT_CEMENT_STATE_VALIDATION_OUT)
+    cement_state_validation_parser.add_argument("--strategy-id", default="cement_cycle_aware_ocf_low_vol_v5a9")
+    cement_state_validation_parser.set_defaults(handler=_handle_validate_cement_state_buckets)
 
     basket_parser = subparsers.add_parser("construct-dividend-low-vol-fcf-basket")
     basket_parser.add_argument("--config", type=Path, default=DEFAULT_V56_BASKET_CONFIG)
@@ -962,6 +989,21 @@ def _handle_enrich_consumer_working_capital_state(args: argparse.Namespace) -> i
 
 def _handle_validate_consumer_subsectors(args: argparse.Namespace) -> int:
     print(run_consumer_subsector_validation(args.sector, args.panel, args.out_root, min_codes_per_date=args.min_codes_per_date))
+    return 0
+
+
+def _handle_collect_cement_external_state(args: argparse.Namespace) -> int:
+    print(collect_cement_external_state(args.panel, args.out_dir))
+    return 0
+
+
+def _handle_build_cement_state_enriched_panel(args: argparse.Namespace) -> int:
+    print(build_cement_state_enriched_panel(args.panel, args.state_csv, args.out_dir))
+    return 0
+
+
+def _handle_validate_cement_state_buckets(args: argparse.Namespace) -> int:
+    print(run_cement_state_bucket_validation(args.panel, args.spec, args.out_dir, args.strategy_id))
     return 0
 
 

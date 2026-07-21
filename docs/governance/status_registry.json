@@ -2440,6 +2440,11 @@
       "item": "v5a.2_theory_and_etf_holdings_knowledge_base",
       "status": "completed_initial_knowledge_pass",
       "reason": "Research Agent now has a cross-sector theory layer for value, momentum, mean reversion, quality, low volatility and ETF/index holdings priors before broad dividend low-volatility OCF/FCF industry traversal."
+    },
+    {
+      "item": "v5a.3_theory_gated_preliminary_sector_validation",
+      "status": "completed_initial_prevalidation_not_strategy_acceptance",
+      "reason": "All 33 broad-sector candidates were routed through the V5a.2 theory gate. Outputs classify core refresh, research-before-Quant, specialist observation, low-priority observation, data-blocked and excluded lanes before formal validation."
     }
   ],
   "references": {
@@ -2534,6 +2539,17 @@
     "v5a.2_etf_holdings_lessons": "knowledge/research_agent/factor_theory/v5a.2_dividend_low_vol_fcf_etf_holdings_lessons.md",
     "v5a.2_theory_source_register": "knowledge/research_agent/references/v5a.2_theory_source_register.csv",
     "v5a.2_etf_holdings_source_register": "knowledge/research_agent/references/v5a.2_etf_holdings_source_register.csv",
-    "v5a.2_pm_decision": "docs/governance/v5a.2_theory_knowledge_pm_decision.md"
+    "v5a.2_pm_decision": "docs/governance/v5a.2_theory_knowledge_pm_decision.md",
+    "v5a.3_theory_gated_prevalidation_status": "completed_initial_prevalidation_not_strategy_acceptance",
+    "v5a.3_theory_gated_prevalidation_workflow": "docs/governance/v5a.3_theory_gated_preliminary_validation_workflow.md",
+    "v5a.3_theory_gated_prevalidation_config": "config/v5a.3_theory_gated_sector_prevalidation.json",
+    "v5a.3_theory_gated_prevalidation_runner": "src/v5/theory_gated_sector_prevalidation_runner.py",
+    "v5a.3_theory_gated_prevalidation_csv": "sector_replication_batches_v5a3/theory_gated_prevalidation_current/theory_gated_sector_prevalidation.csv",
+    "v5a.3_theory_gated_prevalidation_summary": "sector_replication_batches_v5a3/theory_gated_prevalidation_current/theory_gated_sector_prevalidation_summary.json",
+    "v5a.3_theory_gated_prevalidation_report": "sector_replication_batches_v5a3/theory_gated_prevalidation_current/theory_gated_sector_prevalidation_pm_report.md",
+    "v5a.3_theory_gated_pm_decision": "docs/governance/v5a.3_theory_gated_preliminary_validation_pm_decision.md",
+    "v5a.3_replication_batch_after_theory_gate_packet": "sector_replication_batches_v5a3/replication_batch_after_theory_gate/sector_replication_batch_packet.json",
+    "v5a.3_replication_batch_after_theory_gate_report": "sector_replication_batches_v5a3/replication_batch_after_theory_gate/sector_replication_batch_pm_report.md",
+    "v5a.3_next_gate": "research_agent_batch_repair_for_research_gate_before_quant_initial_validation_sectors"
   }
 }

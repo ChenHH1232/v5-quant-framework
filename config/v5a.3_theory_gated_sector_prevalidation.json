@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "project": "v5a.3_theory_gated_preliminary_sector_validation",
+  "created_at": "2026-07-21",
+  "experiment_layer": "research_pit_prevalidation",
+  "purpose": "Apply V5a.2 value, momentum, mean-reversion, dividend low-volatility and OCF/FCF theory gates to all broad-sector candidates before formal Quant validation.",
+  "source_sector_config": "config/v5a.1_broad_sector_coarse_screening.json",
+  "status_registry": "docs/governance/status_registry.json",
+  "theory_inputs": [
+    "knowledge/research_agent/factor_theory/v5a.2_value_momentum_mean_reversion_framework.md",
+    "knowledge/research_agent/factor_theory/v5a.2_dividend_low_vol_fcf_etf_holdings_lessons.md",
+    "knowledge/research_agent/references/v5a.2_theory_source_register.csv",
+    "knowledge/research_agent/references/v5a.2_etf_holdings_source_register.csv"
+  ],
+  "factor_policy": {
+    "cross_sector_core": [
+      "operating_cash_flow_yield",
+      "low_volatility",
+      "dividend_sustainability"
+    ],
+    "conditional_enhancements": [
+      "sector_approved_free_cash_flow_yield",
+      "capex_quality",
+      "sector_operating_state"
+    ],
+    "support_only": [
+      "low_pb_or_other_value_metric",
+      "momentum",
+      "mean_reversion"
+    ],
+    "forbidden_shortcut": [
+      "historical_return_selected_factor",
+      "raw_high_dividend_without_cashflow_coverage",
+      "raw_fcf_without_capex_quality_gate"
+    ]
+  },
+  "candidate_sectors": []
+}
+

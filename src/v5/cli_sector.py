@@ -18,6 +18,12 @@ from v5.sector_replication_batch_runner import (
     DEFAULT_OUT_DIR as DEFAULT_SECTOR_REPLICATION_BATCH_OUT,
     run_sector_replication_batch,
 )
+from v5.theory_gated_sector_prevalidation_runner import (
+    DEFAULT_CONFIG as DEFAULT_THEORY_GATED_PREVALIDATION_CONFIG,
+    DEFAULT_OUT_DIR as DEFAULT_THEORY_GATED_PREVALIDATION_OUT,
+    DEFAULT_STATUS_REGISTRY as DEFAULT_THEORY_GATED_PREVALIDATION_STATUS,
+    run_theory_gated_sector_prevalidation,
+)
 from v5.basket_constructor_runner import (
     DEFAULT_CONFIG as DEFAULT_V56_BASKET_CONFIG,
     DEFAULT_OUT_DIR as DEFAULT_V56_BASKET_OUT,
@@ -406,6 +412,12 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     batch_parser.add_argument("--out", type=Path, default=DEFAULT_SECTOR_REPLICATION_BATCH_OUT)
     batch_parser.set_defaults(handler=_handle_run_sector_replication_batch)
 
+    theory_prevalidation_parser = subparsers.add_parser("theory-gated-sector-prevalidation")
+    theory_prevalidation_parser.add_argument("--config", type=Path, default=DEFAULT_THEORY_GATED_PREVALIDATION_CONFIG)
+    theory_prevalidation_parser.add_argument("--status-registry", type=Path, default=DEFAULT_THEORY_GATED_PREVALIDATION_STATUS)
+    theory_prevalidation_parser.add_argument("--out", type=Path, default=DEFAULT_THEORY_GATED_PREVALIDATION_OUT)
+    theory_prevalidation_parser.set_defaults(handler=_handle_theory_gated_sector_prevalidation)
+
     low_vol_parser = subparsers.add_parser("add-low-volatility-factors")
     low_vol_parser.add_argument("panel", type=Path)
     low_vol_parser.add_argument("price_csv", type=Path)
@@ -778,6 +790,17 @@ def _handle_run_sector_replication_batch(args: argparse.Namespace) -> int:
             screen_config=args.screen_config,
             roadmap_config=args.roadmap_config,
             status_registry=args.status_registry,
+            out_dir=args.out,
+        )
+    )
+    return 0
+
+
+def _handle_theory_gated_sector_prevalidation(args: argparse.Namespace) -> int:
+    print(
+        run_theory_gated_sector_prevalidation(
+            config_path=args.config,
+            status_registry_path=args.status_registry,
             out_dir=args.out,
         )
     )

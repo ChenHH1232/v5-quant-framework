@@ -2174,6 +2174,44 @@
         "fxbaogao keyword search was noisy for consumer subsector state review; PDF-level manual review is required before formal evidence use."
       ],
       "next_gate": "research_state_review_for_condiments_snack_food_consumer_quality_subset_and_biologics"
+    },
+    {
+      "strategy_id": "v5a.7_consumer_state_guard_diagnostic",
+      "sector": "consumer_multi_subsector",
+      "current_status": [
+        "research_state_diagnostic_completed",
+        "generic_working_capital_guard_rejected",
+        "condiments_routed_to_specialist_research",
+        "not_engineering_handoff"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "platform_replication",
+        "paper_trading",
+        "accepted_strategy"
+      ],
+      "experiment_layer": "research_state_diagnostic",
+      "evidence_paths": [
+        "docs/governance/v5a.7_consumer_state_guard_diagnostic_pm_decision.md",
+        "validation_formal_v5a7_consumer_state_guard/state_guard_summary.json",
+        "validation_formal_v5a7_consumer_state_guard/food_beverage/formal/food_beverage_sw_condiments_ocf_quality_v5a6/formal_validation_summary.json",
+        "validation_formal_v5a7_consumer_state_guard/food_beverage/formal/food_beverage_sw_snack_food_ocf_quality_v5a6/formal_validation_summary.json",
+        "validation_formal_v5a7_consumer_state_guard/consumer_staples_cashflow/formal/consumer_staples_cashflow_jq_primary_consumption_ocf_quality_v5a6/formal_validation_summary.json",
+        "validation_formal_v5a7_consumer_state_guard/pharma_medical_services/formal/pharma_medical_services_sw_biologics_ocf_quality_v5a6/formal_validation_summary.json"
+      ],
+      "key_evidence": {
+        "condiments_guarded_ocf_quality_return": 0.6312988271,
+        "condiments_guard_coverage": 0.396,
+        "snack_food_guarded_ocf_quality_return": -0.2444799071,
+        "consumer_staples_guarded_ocf_quality_return": 0.0518808986,
+        "biologics_guard_coverage": 0.030334728
+      },
+      "blockers": [
+        "Condiments still has two weak rolling windows under the crude working-capital guard.",
+        "Snack food, broad consumer staples and biologics should not use the generic consumer working-capital guard.",
+        "Condiments needs specialist state design before Quant rerun and Engineering handoff."
+      ],
+      "next_gate": "v5a.8_condiments_specialist_state_model_research_design"
     }
   ],
   "sector_test_policy": {
@@ -2865,6 +2903,9 @@
     "v5a.6_pharma_subsector_summary": "validation_formal_v5a6_consumer_subsector/pharma_medical_services/consumer_subsector_validation_summary.json",
     "v5a.6_next_gate": "research_state_review_for_candidate_subsectors_before_engineering",
     "v5a.6_consumer_state_review_framework": "knowledge/research_agent/factor_theory/consumer_subsector_state_review_framework_v5a6.md",
-    "v5a.6_consumer_state_source_register": "knowledge/research_agent/references/v5a6_consumer_subsector_state_source_register.csv"
+    "v5a.6_consumer_state_source_register": "knowledge/research_agent/references/v5a6_consumer_subsector_state_source_register.csv",
+    "v5a.7_consumer_state_guard_pm_decision": "docs/governance/v5a.7_consumer_state_guard_diagnostic_pm_decision.md",
+    "v5a.7_consumer_state_guard_summary": "validation_formal_v5a7_consumer_state_guard/state_guard_summary.json",
+    "v5a.7_next_gate": "v5a.8_condiments_specialist_state_model_research_design"
   }
 }

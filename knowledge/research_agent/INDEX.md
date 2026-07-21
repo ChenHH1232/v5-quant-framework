@@ -67,6 +67,7 @@
 - [Transport infrastructure cash-flow dividend refresh](factor_theory/transport_infrastructure_cashflow_dividend_refresh_v57.md) - report-backed refresh supporting V5.4/V5.5 transport infrastructure workflow.
 - [Oil / gas cash-flow dividend framework](factor_theory/oil_gas_cashflow_framework.md) - V5.8a cycle-aware framework; OCF first, FCF conditional, external oil/gas/spread states required before Quant.
 - [Building materials / cement cash-flow cycle framework](factor_theory/building_materials_cement_cashflow_cycle_framework_v5a4.md) - cement is a cycle-aware cash-flow candidate; OCF/FCF require price, demand, capacity and energy-cost state gates.
+- [Pharma / medical services cash-flow framework](factor_theory/pharma_cashflow_framework.md) - pharma is a specialist lane; R&D, procurement and policy-state gates must pass before Quant validation.
 - [V5a.2 value, momentum and mean-reversion framework](factor_theory/v5a.2_value_momentum_mean_reversion_framework.md) - cross-sector theory layer for the enhanced dividend low-volatility and OCF/FCF ETF roadmap.
 - [V5a.2 dividend low-volatility and FCF ETF lessons](factor_theory/v5a.2_dividend_low_vol_fcf_etf_holdings_lessons.md) - ETF/index methodology and holdings lessons for Research Agent sector priors.
 
@@ -99,6 +100,7 @@
 - [Insurance V5.3e solvency guard and state diagnostic result](strategy_cases/insurance_v53e_solvency_guard_state_diagnostic_result.md) - solvency guard failed to improve low PB; state diagnostics are explanatory but not enough for timing.
 - [Insurance V5.3 research-quant loop closeout](strategy_cases/insurance_v53_research_quant_loop_closeout.md) - insurance has a low-PB research signal but is blocked from deployment until multi-year PIT EV/NBV/P/EV data is repaired.
 - [Insurance V5.3f P/EV and NBV data repair diagnostic](strategy_cases/insurance_v53f_pev_nbv_data_repair_diagnostic.md) - fxbaogao knowledge and 2024-2025 EV/NBV partial repair completed; P/EV diagnostic is blocked by insufficient PIT history.
+- [Pharma V5a.10 specialist data gate result](strategy_cases/pharma_v5a10_specialist_data_gate_result.md) - core cash-flow panel passed but R&D, procurement and policy-state fields are missing, so pharma is blocked before new formal validation.
 - [V5.6c OCF value + volatility guard basket research reset](strategy_cases/v56c_ocf_value_vol_guard_basket_research_reset.md) - low PB / FCF basket narrative rejected; OCF primary signal with volatility guard becomes current basket research mainline.
 - [V5.7 sector coverage screening result](strategy_cases/v57_sector_coverage_screening_result.md) - first batch coverage map for dividend low-vol OCF basket with sector-approved FCF enhancement.
 - [Gas / water V5.7b initial model result](strategy_cases/gas_water_v57b_initial_model_result.md) - Research-Quant loop rejected OCF mainline and found a preliminary regulated-asset value + serviceability model.

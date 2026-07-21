@@ -1,6 +1,6 @@
 # V5a.3 Theory-Gated Sector Prevalidation PM Report
 
-Created at UTC: `2026-07-21T11:53:48+00:00`
+Created at UTC: `2026-07-21T12:01:07+00:00`
 
 ## Decision
 
@@ -13,10 +13,10 @@ All configured sectors were routed through the V5a.2 theory gate. This is not st
 | `archived_after_failed_initial_validation` | 2 |
 | `blocked_by_cycle_data_gate_before_initial_validation` | 3 |
 | `blocked_by_data_gate_before_initial_validation` | 2 |
+| `blocked_by_specialist_data_gate_before_initial_validation` | 1 |
 | `excluded_before_initial_validation` | 7 |
 | `low_priority_observation_before_initial_validation` | 7 |
 | `passed_prevalidation_shadow_basket_refresh` | 6 |
-| `research_gate_before_quant_initial_validation` | 1 |
 | `research_loop_after_initial_validation` | 5 |
 
 ## Full Sector Table
@@ -44,7 +44,7 @@ All configured sectors were routed through the V5a.2 theory gate. This is not st
 | Food / Beverage | `cash_flow_quality_and_defensive_demand` | `operating_cash_flow_yield>low_volatility>dividend_sustainability>sector_approved_free_cash_flow_yield` | `research_loop_after_initial_validation` | `Research Agent` |
 | Home Appliances | `cash_flow_quality_and_defensive_demand` | `operating_cash_flow_yield>low_volatility>dividend_sustainability>sector_approved_free_cash_flow_yield` | `research_loop_after_initial_validation` | `Research Agent` |
 | Textile / Apparel | `cash_flow_quality_and_defensive_demand` | `operating_cash_flow_yield>low_volatility>dividend_sustainability>sector_approved_free_cash_flow_yield` | `low_priority_observation_before_initial_validation` | `Project Manager Agent` |
-| Pharma / Medical Services | `ocf_low_vol_dividend_sustainability` | `operating_cash_flow_yield>low_volatility>dividend_sustainability` | `research_gate_before_quant_initial_validation` | `Research Agent` |
+| Pharma / Medical Services | `ocf_low_vol_dividend_sustainability` | `operating_cash_flow_yield>low_volatility>dividend_sustainability` | `blocked_by_specialist_data_gate_before_initial_validation` | `Research Agent` |
 | Agriculture / Forestry / Fishery | `outside_current_dividend_low_vol_cashflow_mandate` | `not_in_current_mandate` | `excluded_before_initial_validation` | `Project Manager Agent` |
 | Logistics / Express Delivery | `ocf_low_vol_dividend_sustainability` | `operating_cash_flow_yield>low_volatility>dividend_sustainability` | `low_priority_observation_before_initial_validation` | `Project Manager Agent` |
 | Shipping | `cycle_aware_ocf_value_with_external_state` | `operating_cash_flow_yield>external_cycle_state>low_volatility>dividend_sustainability` | `blocked_by_cycle_data_gate_before_initial_validation` | `Research Agent` |

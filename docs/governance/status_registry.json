@@ -2289,6 +2289,37 @@
         "No Engineering handoff, JoinQuant replication, paper trading or basket inclusion is allowed."
       ],
       "next_gate": "archive_until_official_cement_cycle_state_and_business_exposure_repair"
+    },
+    {
+      "strategy_id": "pharma_specialist_data_gate_v5a10",
+      "sector": "pharma_medical_services",
+      "current_status": [
+        "research_data_gate_completed",
+        "pharma_specialist_data_gate_blocked",
+        "not_quant_ready",
+        "not_engineering_handoff"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "platform_replication_passed",
+        "paper_trading_started",
+        "accepted_strategy"
+      ],
+      "experiment_layer": "research_data_availability_gate",
+      "evidence_paths": [
+        "docs/governance/v5a.10_pharma_specialist_data_gate_pm_decision.md",
+        "knowledge/research_agent/strategy_cases/pharma_v5a10_specialist_data_gate_result.md",
+        "???/processed/pharma_specialist_data_gate_v5a10/pharma_specialist_data_gate_summary.json",
+        "???/processed/pharma_specialist_data_gate_v5a10/pharma_specialist_field_coverage.csv",
+        "???/processed/pharma_specialist_data_gate_v5a10/pharma_specialist_subsector_coverage.csv"
+      ],
+      "blockers": [
+        "PIT R&D expense intensity is missing.",
+        "Capitalized R&D ratio is missing.",
+        "Procurement pressure and policy/reimbursement state fields are missing.",
+        "Real cash-dividend events are not repaired for Engineering."
+      ],
+      "next_gate": "research_repair_pharma_rd_policy_procurement_state_before_quant"
     }
   ],
   "sector_test_policy": {

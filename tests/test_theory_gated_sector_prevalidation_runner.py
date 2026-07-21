@@ -245,3 +245,65 @@ def test_theory_gated_sector_prevalidation_routes_completed_research_back_to_rep
 
     assert result.decision_counts["research_loop_after_initial_validation"] == 1
     assert "do not rerun ordinary initial validation" in rows
+
+
+def test_theory_gated_sector_prevalidation_routes_pharma_specialist_gate_blocker(tmp_path: Path) -> None:
+    source_config = tmp_path / "source_sectors.json"
+    config = tmp_path / "v5a3.json"
+    registry = tmp_path / "status_registry.json"
+
+    source_config.write_text(
+        json.dumps(
+            {
+                "candidate_sectors": [
+                    {
+                        "sector_id": "pharma_medical_services",
+                        "display_name": "Pharma / Medical Services",
+                        "sector_type": "policy_and_pipeline_sensitive",
+                        "strategy_ids": [],
+                        "data_gate": "needs_manual_research",
+                        "pit_universe_gate": "needs_subsector_split",
+                        "business_purity_gate": "needs_review",
+                        "dividend_gate": "mixed",
+                        "fcf_gate": "needs_r_and_d_and_policy_review",
+                        "low_vol_gate": "can_build_from_daily_prices",
+                        "external_state_burden": "high",
+                        "sample_size_risk": "medium",
+                        "notes": "specialist",
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    config.write_text(
+        json.dumps(
+            {
+                "project": "test_v5a3",
+                "experiment_layer": "research_pit_prevalidation",
+                "source_sector_config": str(source_config),
+                "candidate_sectors": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+    registry.write_text(
+        json.dumps(
+            {
+                "strategies": [
+                    {
+                        "strategy_id": "pharma_v5a10",
+                        "sector": "pharma_medical_services",
+                        "current_status": ["pharma_specialist_data_gate_blocked"],
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = run_theory_gated_sector_prevalidation(config, registry, tmp_path / "out")
+    rows = result.csv_path.read_text(encoding="utf-8")
+
+    assert result.decision_counts["blocked_by_specialist_data_gate_before_initial_validation"] == 1
+    assert "do not run generic pharma" in rows

@@ -256,6 +256,13 @@ def _decision(candidate: dict[str, Any], strategy_statuses: list[str]) -> tuple[
             "repair the documented source, state or business-purity blocker before any new Quant attempt",
             "do not rerun ordinary initial validation or hand off to Engineering",
         )
+    if "pharma_specialist_data_gate_blocked" in strategy_statuses:
+        return (
+            "blocked_by_specialist_data_gate_before_initial_validation",
+            "Research Agent",
+            "repair PIT R&D, procurement or policy-state fields only",
+            "do not run generic pharma OCF/low-vol formal validation",
+        )
     if data_gate == "excluded_by_business_model":
         return (
             "excluded_before_initial_validation",

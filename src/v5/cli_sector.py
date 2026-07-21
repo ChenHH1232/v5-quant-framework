@@ -94,6 +94,14 @@ from v5.consumer_subsector_validation_runner import (
     DEFAULT_PANELS as DEFAULT_CONSUMER_SUBSECTOR_VALIDATION_PANELS,
     run_consumer_subsector_validation,
 )
+from v5.pharma_specialist_data_gate_runner import (
+    DEFAULT_CASH_DIVIDENDS as DEFAULT_PHARMA_DATA_GATE_DIVIDENDS,
+    DEFAULT_DAILY_PRICES as DEFAULT_PHARMA_DATA_GATE_DAILY_PRICES,
+    DEFAULT_OUT_DIR as DEFAULT_PHARMA_DATA_GATE_OUT,
+    DEFAULT_PANEL as DEFAULT_PHARMA_DATA_GATE_PANEL,
+    DEFAULT_REPORT_CANDIDATES as DEFAULT_PHARMA_DATA_GATE_REPORTS,
+    run_pharma_specialist_data_gate,
+)
 from v5.cement_external_state_runner import (
     DEFAULT_ENRICHED_OUT_DIR as DEFAULT_CEMENT_STATE_ENRICHED_OUT,
     DEFAULT_OUT_DIR as DEFAULT_CEMENT_STATE_OUT,
@@ -518,6 +526,17 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     consumer_subsector_parser.add_argument("--out-root", type=Path, default=DEFAULT_CONSUMER_SUBSECTOR_VALIDATION_OUT)
     consumer_subsector_parser.add_argument("--min-codes-per-date", type=int, default=8)
     consumer_subsector_parser.set_defaults(handler=_handle_validate_consumer_subsectors)
+
+    pharma_gate_parser = subparsers.add_parser("audit-pharma-specialist-data-gate")
+    pharma_gate_parser.add_argument("--panel", type=Path, default=DEFAULT_PHARMA_DATA_GATE_PANEL)
+    pharma_gate_parser.add_argument("--daily-prices", type=Path, default=DEFAULT_PHARMA_DATA_GATE_DAILY_PRICES)
+    pharma_gate_parser.add_argument("--cash-dividends", type=Path, default=DEFAULT_PHARMA_DATA_GATE_DIVIDENDS)
+    pharma_gate_parser.add_argument("--report-candidates", type=Path, default=DEFAULT_PHARMA_DATA_GATE_REPORTS)
+    pharma_gate_parser.add_argument("--out-dir", type=Path, default=DEFAULT_PHARMA_DATA_GATE_OUT)
+    pharma_gate_parser.add_argument("--min-core-coverage", type=float, default=0.8)
+    pharma_gate_parser.add_argument("--min-specialist-coverage", type=float, default=0.8)
+    pharma_gate_parser.add_argument("--min-median-names", type=int, default=8)
+    pharma_gate_parser.set_defaults(handler=_handle_audit_pharma_specialist_data_gate)
 
     cement_state_parser = subparsers.add_parser("collect-cement-external-state")
     cement_state_parser.add_argument("--panel", type=Path, default=DEFAULT_CEMENT_STATE_PANEL)
@@ -989,6 +1008,22 @@ def _handle_enrich_consumer_working_capital_state(args: argparse.Namespace) -> i
 
 def _handle_validate_consumer_subsectors(args: argparse.Namespace) -> int:
     print(run_consumer_subsector_validation(args.sector, args.panel, args.out_root, min_codes_per_date=args.min_codes_per_date))
+    return 0
+
+
+def _handle_audit_pharma_specialist_data_gate(args: argparse.Namespace) -> int:
+    print(
+        run_pharma_specialist_data_gate(
+            args.panel,
+            args.daily_prices,
+            args.cash_dividends,
+            args.report_candidates,
+            args.out_dir,
+            min_core_coverage=args.min_core_coverage,
+            min_specialist_coverage=args.min_specialist_coverage,
+            min_median_names=args.min_median_names,
+        )
+    )
     return 0
 
 

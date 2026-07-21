@@ -183,3 +183,65 @@ def test_theory_gated_sector_prevalidation_uses_registry_sector_status_without_s
 
     assert result.decision_counts["archived_after_failed_initial_validation"] == 1
     assert "do not reroute failed sector" in rows
+
+
+def test_theory_gated_sector_prevalidation_routes_completed_research_back_to_repair_loop(tmp_path: Path) -> None:
+    source_config = tmp_path / "source_sectors.json"
+    config = tmp_path / "v5a3.json"
+    registry = tmp_path / "status_registry.json"
+
+    source_config.write_text(
+        json.dumps(
+            {
+                "candidate_sectors": [
+                    {
+                        "sector_id": "home_appliances",
+                        "display_name": "Home Appliances",
+                        "sector_type": "consumer_cash_flow_quality",
+                        "strategy_ids": [],
+                        "data_gate": "needs_manual_research",
+                        "pit_universe_gate": "can_build",
+                        "business_purity_gate": "needs_review",
+                        "dividend_gate": "likely_pass",
+                        "fcf_gate": "potentially_usable_after_inventory_cycle_review",
+                        "low_vol_gate": "can_build_from_daily_prices",
+                        "external_state_burden": "medium",
+                        "sample_size_risk": "medium",
+                        "notes": "consumer",
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    config.write_text(
+        json.dumps(
+            {
+                "project": "test_v5a3",
+                "experiment_layer": "research_pit_prevalidation",
+                "source_sector_config": str(source_config),
+                "candidate_sectors": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+    registry.write_text(
+        json.dumps(
+            {
+                "strategies": [
+                    {
+                        "strategy_id": "home_appliances_v5a5d",
+                        "sector": "home_appliances",
+                        "current_status": ["research_pit_validation_completed", "not_engineering_handoff"],
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = run_theory_gated_sector_prevalidation(config, registry, tmp_path / "out")
+    rows = result.csv_path.read_text(encoding="utf-8")
+
+    assert result.decision_counts["research_loop_after_initial_validation"] == 1
+    assert "do not rerun ordinary initial validation" in rows

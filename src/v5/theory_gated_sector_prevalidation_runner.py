@@ -249,6 +249,13 @@ def _decision(candidate: dict[str, Any], strategy_statuses: list[str]) -> tuple[
             "refresh PIT panel, dividends, low-vol factors and paper-trading inputs without tuning",
             "do not change frozen strategy logic",
         )
+    if "research_pit_validation_completed" in strategy_statuses and "not_engineering_handoff" in strategy_statuses:
+        return (
+            "research_loop_after_initial_validation",
+            "Research Agent",
+            "repair the documented source, state or business-purity blocker before any new Quant attempt",
+            "do not rerun ordinary initial validation or hand off to Engineering",
+        )
     if data_gate == "excluded_by_business_model":
         return (
             "excluded_before_initial_validation",

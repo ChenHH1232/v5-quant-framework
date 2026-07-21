@@ -42,6 +42,8 @@
 - [Gas / water V5.7 external state source register](references/gas_water_v57_external_state_source_register.csv) - gas procurement, pass-through, water-tariff, receivables and financing-risk report sources; research-only until PIT state fields are built.
 - [Oil / gas V5.8a source collection plan](references/oil_gas_source_collection_plan.md) - MECE source plan for business exposure, OCF quality, FCF/capex, dividend sustainability and commodity/spread states.
 - [Oil / gas V5.8a Fxbaogao source register](references/oil_gas_v58_source_register.md) - first-pass report search outputs for oil/gas cash-flow dividend research; research-only until PIT state data exists.
+- [V5a.2 theory source register](references/v5a.2_theory_source_register.csv) - academic, research-report and manual-reading sources for value, momentum, mean reversion, quality and low-volatility theory.
+- [V5a.2 ETF / index holdings source register](references/v5a.2_etf_holdings_source_register.csv) - official ETF/index methodology and holdings-snapshot sources for dividend low-volatility and FCF "copy homework".
 
 ## Factor Theory
 
@@ -63,6 +65,8 @@
 - [Telecom operator observation framework](factor_theory/telecom_operator_cashflow_dividend_observation_framework_v57.md) - small-sample observation sleeve; capex-cycle-aware FCF and basket-level validation required.
 - [Transport infrastructure cash-flow dividend refresh](factor_theory/transport_infrastructure_cashflow_dividend_refresh_v57.md) - report-backed refresh supporting V5.4/V5.5 transport infrastructure workflow.
 - [Oil / gas cash-flow dividend framework](factor_theory/oil_gas_cashflow_framework.md) - V5.8a cycle-aware framework; OCF first, FCF conditional, external oil/gas/spread states required before Quant.
+- [V5a.2 value, momentum and mean-reversion framework](factor_theory/v5a.2_value_momentum_mean_reversion_framework.md) - cross-sector theory layer for the enhanced dividend low-volatility and OCF/FCF ETF roadmap.
+- [V5a.2 dividend low-volatility and FCF ETF lessons](factor_theory/v5a.2_dividend_low_vol_fcf_etf_holdings_lessons.md) - ETF/index methodology and holdings lessons for Research Agent sector priors.
 
 ## Strategy Cases
 

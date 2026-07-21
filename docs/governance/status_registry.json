@@ -2435,6 +2435,11 @@
       "item": "v59_enhanced_etf_expansion_batch_screening",
       "status": "completed_initial_gate",
       "reason": "Enhanced ETF expansion candidates were rerouted through research knowledge and data availability gates. Gas/Water is the only batch-initial-validation queue item; Airport is archived as strategy-candidate failed; Oil/Gas waits for platform exports; Consumer, Pharma and Environmental knowledge seeds were added."
+    },
+    {
+      "item": "v5a.2_theory_and_etf_holdings_knowledge_base",
+      "status": "completed_initial_knowledge_pass",
+      "reason": "Research Agent now has a cross-sector theory layer for value, momentum, mean reversion, quality, low volatility and ETF/index holdings priors before broad dividend low-volatility OCF/FCF industry traversal."
     }
   ],
   "references": {
@@ -2522,6 +2527,13 @@
     "v59b_gas_water_forward_paper_trading_log": "docs/governance/v59b_gas_water_forward_paper_trading_log.md",
     "v59b_gas_water_repaired_panel": "数据库/processed/gas_water_2021_07_pit_repair_v59b/panel_with_true_operating_state_repaired_2021_07.csv",
     "v59b_gas_water_repaired_local_daily_summary": "local_daily_backtests_v59b_gas_water_state_guard_repaired_2021_07/gas_water_v57b_text_debt_state_guard_v59b/summary.json",
-    "v59b_gas_water_next_gate": "wait_for_next_clean_forward_rebalance_signal"
+    "v59b_gas_water_next_gate": "wait_for_next_clean_forward_rebalance_signal",
+    "v5a.2_theory_knowledge_status": "completed_initial_knowledge_pass_not_strategy_validation",
+    "v5a.2_theory_workflow": "docs/governance/v5a.2_theory_and_etf_holdings_knowledge_workflow.md",
+    "v5a.2_theory_framework": "knowledge/research_agent/factor_theory/v5a.2_value_momentum_mean_reversion_framework.md",
+    "v5a.2_etf_holdings_lessons": "knowledge/research_agent/factor_theory/v5a.2_dividend_low_vol_fcf_etf_holdings_lessons.md",
+    "v5a.2_theory_source_register": "knowledge/research_agent/references/v5a.2_theory_source_register.csv",
+    "v5a.2_etf_holdings_source_register": "knowledge/research_agent/references/v5a.2_etf_holdings_source_register.csv",
+    "v5a.2_pm_decision": "docs/governance/v5a.2_theory_knowledge_pm_decision.md"
   }
 }

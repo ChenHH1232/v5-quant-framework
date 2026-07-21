@@ -25,6 +25,7 @@ snapshots/
 universes/
 validation_formal/
 validation_formal_*/
+va_*/**/cases/
 
 数据库/raw/
 数据库/processed/

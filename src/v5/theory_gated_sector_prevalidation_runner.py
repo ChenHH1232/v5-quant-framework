@@ -225,7 +225,10 @@ def _decision(candidate: dict[str, Any], strategy_statuses: list[str]) -> tuple[
     sector_type = str(candidate.get("sector_type") or "")
     sample_size_risk = str(candidate.get("sample_size_risk") or "")
 
-    if any(status in strategy_statuses for status in {"strategy_candidate_failed", "archived_not_formal_candidate"}):
+    if any(
+        status in strategy_statuses
+        for status in {"strategy_candidate_failed", "archived_not_formal_candidate", "initial_composite_rejected"}
+    ):
         return (
             "archived_after_failed_initial_validation",
             "Project Manager Agent",

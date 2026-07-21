@@ -172,6 +172,123 @@ SECTOR_CONFIGS: dict[str, dict[str, Any]] = {
             "Raw FCF is diagnostic only until R&D and capex treatment is reviewed.",
         ],
     },
+    "securities_brokerage": {
+        "description": "A-share securities companies. This is a market-beta financial specialist watchlist, not a stable cash-flow sleeve.",
+        "explicit_codes": {},
+        "industry_codes": {
+            "HY07107": "jq_securities_company",
+            "801193": "sw_securities",
+        },
+        "benchmark_policy": "equal_weight_securities_company_pool",
+        "limitations": [
+            "Brokerage earnings are capital-market-cycle sensitive; FCF is not a primary factor.",
+            "Formal validation requires turnover, equity-market state and balance-sheet specialist gates.",
+        ],
+    },
+    "chemical_materials": {
+        "description": "A-share basic chemicals watchlist. The sector is heterogeneous and cycle-sensitive.",
+        "explicit_codes": {},
+        "industry_codes": {
+            "801032": "sw_chemical_fiber",
+            "801033": "sw_chemical_raw_materials",
+            "801034": "sw_chemical_products",
+            "HY02113": "jq_other_chemical_raw_materials",
+            "HY02121": "jq_other_chemical_products",
+        },
+        "benchmark_policy": "equal_weight_basic_chemicals_pool_until_subsector_split",
+        "limitations": [
+            "Formal validation is blocked until product exposure, price/margin state and capex cycle are split.",
+            "This first panel is useful only for data availability and coarse OCF diagnostics.",
+        ],
+    },
+    "textile_apparel": {
+        "description": "A-share textile and apparel watchlist. Brand operators and OEM/manufacturing names must be separated.",
+        "explicit_codes": {},
+        "industry_codes": {
+            "801131": "sw_textile_manufacturing",
+            "801132": "sw_apparel_home_textile",
+            "HY04119": "jq_textile",
+            "HY04120": "jq_apparel",
+            "HY04122": "jq_home_textile",
+        },
+        "benchmark_policy": "equal_weight_textile_apparel_pool_until_brand_oem_split",
+        "limitations": [
+            "Working-capital, inventory and brand/OEM split are required before formal candidacy.",
+            "Export and consumption-cycle state may dominate generic cash-flow factors.",
+        ],
+    },
+    "logistics_express": {
+        "description": "A-share logistics and express-delivery watchlist. Competitive price-war and capex cycles are expected.",
+        "explicit_codes": {},
+        "industry_codes": {
+            "801178": "sw_logistics",
+            "HY03151": "jq_express_delivery",
+            "HY03152": "jq_integrated_logistics",
+        },
+        "benchmark_policy": "equal_weight_logistics_express_pool_until_subsector_split",
+        "limitations": [
+            "Express, warehouse and integrated logistics should be split before formal validation.",
+            "Price competition and fuel/labor cost state are required before promotion.",
+        ],
+    },
+    "retail_commerce": {
+        "description": "A-share retail and commerce watchlist. Formats such as general retail, specialty retail, tourism retail and e-commerce are separated.",
+        "explicit_codes": {},
+        "industry_codes": {
+            "801203": "sw_general_retail",
+            "801204": "sw_specialty_retail",
+            "801206": "sw_internet_ecommerce",
+            "801207": "sw_tourism_retail",
+            "HY04133": "jq_specialty_retail",
+            "HY04134": "jq_tourism_retail",
+            "HY04135": "jq_online_retail",
+        },
+        "benchmark_policy": "equal_weight_retail_commerce_pool_until_format_split",
+        "limitations": [
+            "Retail formats have different inventory, rent, traffic and platform risks.",
+            "Formal validation requires format split and working-capital quality gates.",
+        ],
+    },
+    "auto_and_parts": {
+        "description": "A-share auto services and auto-parts watchlist. OEMs, parts, services and dealers are cycle-sensitive and must be separated.",
+        "explicit_codes": {},
+        "industry_codes": {
+            "801092": "sw_auto_services",
+            "801093": "sw_auto_parts",
+            "HY04101": "jq_auto_system_parts",
+            "HY04102": "jq_auto_interior_exterior",
+            "HY04103": "jq_auto_electronics",
+            "HY04105": "jq_other_auto_parts",
+            "HY04108": "jq_auto_dealers",
+            "HY04109": "jq_auto_services",
+        },
+        "benchmark_policy": "equal_weight_auto_parts_services_pool_until_oem_parts_split",
+        "limitations": [
+            "Formal validation requires OEM/parts/services/dealer split and sales/inventory cycle state.",
+            "This is not a first-wave stable dividend sleeve.",
+        ],
+    },
+    "machinery_equipment": {
+        "description": "A-share machinery and equipment watchlist. Order-cycle and capex beta are expected.",
+        "explicit_codes": {},
+        "industry_codes": {
+            "801072": "sw_general_machinery",
+            "801074": "sw_special_equipment",
+            "801077": "sw_construction_machinery",
+            "801078": "sw_automation_equipment",
+            "HY03121": "jq_processing_machinery",
+            "HY03122": "jq_power_machinery",
+            "HY03123": "jq_fluid_machinery",
+            "HY03127": "jq_other_general_machinery",
+            "HY03128": "jq_construction_machinery",
+            "HY03135": "jq_other_special_machinery",
+        },
+        "benchmark_policy": "equal_weight_machinery_equipment_pool_until_order_cycle_split",
+        "limitations": [
+            "Order backlog, downstream capex and export/manufacturing cycle state are required before formal validation.",
+            "Generic OCF/FCF can confuse underinvestment with quality in machinery cycles.",
+        ],
+    },
 }
 
 
@@ -340,13 +457,16 @@ def collect_similar_sector_pit_panel(
     out_dir = out_root / sector
     out_dir.mkdir(parents=True, exist_ok=True)
     panel_path = out_dir / "panel.csv"
+    daily_price_path = out_dir / "daily_prices.csv"
     manifest_path = out_dir / "collection_manifest.json"
     _write_csv(panel_path, PANEL_FIELDS, rows)
+    _write_csv(daily_price_path, ["date", "code", "close", "price_adjustment", "source"], _daily_price_rows(price_by_code))
     manifest = {
         "dataset": f"{sector}_initial_pit_panel_v55",
         "sector": sector,
         "description": config["description"],
         "panel": str(panel_path),
+        "daily_prices": str(daily_price_path),
         "start_date": start_date,
         "end_date": end_date,
         "listing_age_days": listing_age_days,
@@ -467,6 +587,22 @@ def _fetch_close_series(jq: Any, code: str, start_date: str, end_date: str, fq: 
         if value is not None:
             result[str(index)[:10]] = value
     return result
+
+
+def _daily_price_rows(price_by_code: dict[str, dict[str, float]]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for code, series in sorted(price_by_code.items()):
+        for day, close in sorted(series.items()):
+            rows.append(
+                {
+                    "date": day,
+                    "code": code,
+                    "close": _fmt_float(close),
+                    "price_adjustment": "pre_adjusted_price",
+                    "source": "jqdatasdk.get_price(fq=pre,frequency=daily,fields=close)",
+                }
+            )
+    return rows
 
 
 def _load_authenticated_jqdata(username_env: str, password_env: str):

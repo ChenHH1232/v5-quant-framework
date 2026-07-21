@@ -1,6 +1,6 @@
 # V5a.3 Theory-Gated Sector Prevalidation PM Report
 
-Created at UTC: `2026-07-21T12:01:07+00:00`
+Created at UTC: `2026-07-21T12:24:29+00:00`
 
 ## Decision
 
@@ -10,14 +10,13 @@ All configured sectors were routed through the V5a.2 theory gate. This is not st
 
 | Decision | Count |
 | --- | ---: |
-| `archived_after_failed_initial_validation` | 2 |
+| `archived_after_failed_initial_validation` | 6 |
 | `blocked_by_cycle_data_gate_before_initial_validation` | 3 |
 | `blocked_by_data_gate_before_initial_validation` | 2 |
 | `blocked_by_specialist_data_gate_before_initial_validation` | 1 |
 | `excluded_before_initial_validation` | 7 |
-| `low_priority_observation_before_initial_validation` | 7 |
 | `passed_prevalidation_shadow_basket_refresh` | 6 |
-| `research_loop_after_initial_validation` | 5 |
+| `research_loop_after_initial_validation` | 8 |
 
 ## Full Sector Table
 
@@ -30,12 +29,12 @@ All configured sectors were routed through the V5a.2 theory gate. This is not st
 | Gas / Water Operators | `ocf_low_vol_dividend_sustainability` | `operating_cash_flow_yield>low_volatility>dividend_sustainability` | `passed_prevalidation_shadow_basket_refresh` | `Engineering Agent` |
 | Telecom Operators | `ocf_low_vol_dividend_sustainability` | `operating_cash_flow_yield>low_volatility>dividend_sustainability` | `research_loop_after_initial_validation` | `Research Agent` |
 | Insurance | `sector_specific_value_and_balance_sheet_quality` | `sector_specific_value>dividend_sustainability>low_volatility` | `passed_prevalidation_shadow_basket_refresh` | `Engineering Agent` |
-| Securities / Brokerage | `sector_specific_value_and_balance_sheet_quality` | `sector_specific_value>dividend_sustainability>low_volatility` | `low_priority_observation_before_initial_validation` | `Project Manager Agent` |
+| Securities / Brokerage | `sector_specific_value_and_balance_sheet_quality` | `sector_specific_value>dividend_sustainability>low_volatility` | `research_loop_after_initial_validation` | `Research Agent` |
 | Oil / Gas Pipeline and Integrated Energy | `cycle_aware_ocf_value_with_external_state` | `operating_cash_flow_yield>external_cycle_state>low_volatility>dividend_sustainability` | `research_loop_after_initial_validation` | `Research Agent` |
 | Coal | `cycle_aware_ocf_value_with_external_state` | `operating_cash_flow_yield>external_cycle_state>low_volatility>dividend_sustainability` | `archived_after_failed_initial_validation` | `Project Manager Agent` |
 | Steel | `cycle_aware_ocf_value_with_external_state` | `operating_cash_flow_yield>external_cycle_state>low_volatility>dividend_sustainability` | `blocked_by_cycle_data_gate_before_initial_validation` | `Research Agent` |
 | Nonferrous Metals | `cycle_aware_ocf_value_with_external_state` | `operating_cash_flow_yield>external_cycle_state>low_volatility>dividend_sustainability` | `blocked_by_cycle_data_gate_before_initial_validation` | `Research Agent` |
-| Basic Chemicals | `cycle_aware_ocf_value_with_external_state` | `operating_cash_flow_yield>external_cycle_state>low_volatility>dividend_sustainability` | `low_priority_observation_before_initial_validation` | `Project Manager Agent` |
+| Basic Chemicals | `cycle_aware_ocf_value_with_external_state` | `operating_cash_flow_yield>external_cycle_state>low_volatility>dividend_sustainability` | `archived_after_failed_initial_validation` | `Project Manager Agent` |
 | Building Materials / Cement | `cycle_aware_ocf_value_with_external_state` | `operating_cash_flow_yield>external_cycle_state>low_volatility>dividend_sustainability` | `archived_after_failed_initial_validation` | `Project Manager Agent` |
 | Construction Engineering | `cash_conversion_and_receivables_trap_detection` | `operating_cash_flow_yield>low_volatility>dividend_sustainability` | `blocked_by_data_gate_before_initial_validation` | `Research Agent` |
 | Environmental / Project Operators | `cash_conversion_and_receivables_trap_detection` | `operating_cash_flow_yield>low_volatility>dividend_sustainability` | `blocked_by_data_gate_before_initial_validation` | `Research Agent` |
@@ -43,17 +42,17 @@ All configured sectors were routed through the V5a.2 theory gate. This is not st
 | Consumer Staples Cash-Flow Leaders | `cash_flow_quality_and_defensive_demand` | `operating_cash_flow_yield>low_volatility>dividend_sustainability>sector_approved_free_cash_flow_yield` | `research_loop_after_initial_validation` | `Research Agent` |
 | Food / Beverage | `cash_flow_quality_and_defensive_demand` | `operating_cash_flow_yield>low_volatility>dividend_sustainability>sector_approved_free_cash_flow_yield` | `research_loop_after_initial_validation` | `Research Agent` |
 | Home Appliances | `cash_flow_quality_and_defensive_demand` | `operating_cash_flow_yield>low_volatility>dividend_sustainability>sector_approved_free_cash_flow_yield` | `research_loop_after_initial_validation` | `Research Agent` |
-| Textile / Apparel | `cash_flow_quality_and_defensive_demand` | `operating_cash_flow_yield>low_volatility>dividend_sustainability>sector_approved_free_cash_flow_yield` | `low_priority_observation_before_initial_validation` | `Project Manager Agent` |
+| Textile / Apparel | `cash_flow_quality_and_defensive_demand` | `operating_cash_flow_yield>low_volatility>dividend_sustainability>sector_approved_free_cash_flow_yield` | `research_loop_after_initial_validation` | `Research Agent` |
 | Pharma / Medical Services | `ocf_low_vol_dividend_sustainability` | `operating_cash_flow_yield>low_volatility>dividend_sustainability` | `blocked_by_specialist_data_gate_before_initial_validation` | `Research Agent` |
 | Agriculture / Forestry / Fishery | `outside_current_dividend_low_vol_cashflow_mandate` | `not_in_current_mandate` | `excluded_before_initial_validation` | `Project Manager Agent` |
-| Logistics / Express Delivery | `ocf_low_vol_dividend_sustainability` | `operating_cash_flow_yield>low_volatility>dividend_sustainability` | `low_priority_observation_before_initial_validation` | `Project Manager Agent` |
+| Logistics / Express Delivery | `ocf_low_vol_dividend_sustainability` | `operating_cash_flow_yield>low_volatility>dividend_sustainability` | `research_loop_after_initial_validation` | `Research Agent` |
 | Shipping | `cycle_aware_ocf_value_with_external_state` | `operating_cash_flow_yield>external_cycle_state>low_volatility>dividend_sustainability` | `blocked_by_cycle_data_gate_before_initial_validation` | `Research Agent` |
-| Retail / Commerce | `cash_flow_quality_and_defensive_demand` | `operating_cash_flow_yield>low_volatility>dividend_sustainability>sector_approved_free_cash_flow_yield` | `low_priority_observation_before_initial_validation` | `Project Manager Agent` |
+| Retail / Commerce | `cash_flow_quality_and_defensive_demand` | `operating_cash_flow_yield>low_volatility>dividend_sustainability>sector_approved_free_cash_flow_yield` | `archived_after_failed_initial_validation` | `Project Manager Agent` |
 | Media / Entertainment | `outside_current_dividend_low_vol_cashflow_mandate` | `not_in_current_mandate` | `excluded_before_initial_validation` | `Project Manager Agent` |
 | Computer / Software | `outside_current_dividend_low_vol_cashflow_mandate` | `not_in_current_mandate` | `excluded_before_initial_validation` | `Project Manager Agent` |
 | Electronics / Semiconductor | `outside_current_dividend_low_vol_cashflow_mandate` | `not_in_current_mandate` | `excluded_before_initial_validation` | `Project Manager Agent` |
-| Auto and Parts | `ocf_low_vol_dividend_sustainability` | `operating_cash_flow_yield>low_volatility>dividend_sustainability` | `low_priority_observation_before_initial_validation` | `Project Manager Agent` |
-| Machinery / Equipment | `ocf_low_vol_dividend_sustainability` | `operating_cash_flow_yield>low_volatility>dividend_sustainability` | `low_priority_observation_before_initial_validation` | `Project Manager Agent` |
+| Auto and Parts | `ocf_low_vol_dividend_sustainability` | `operating_cash_flow_yield>low_volatility>dividend_sustainability` | `archived_after_failed_initial_validation` | `Project Manager Agent` |
+| Machinery / Equipment | `ocf_low_vol_dividend_sustainability` | `operating_cash_flow_yield>low_volatility>dividend_sustainability` | `archived_after_failed_initial_validation` | `Project Manager Agent` |
 | Power Equipment / New Energy | `outside_current_dividend_low_vol_cashflow_mandate` | `not_in_current_mandate` | `excluded_before_initial_validation` | `Project Manager Agent` |
 | Military / Defense | `outside_current_dividend_low_vol_cashflow_mandate` | `not_in_current_mandate` | `excluded_before_initial_validation` | `Project Manager Agent` |
 

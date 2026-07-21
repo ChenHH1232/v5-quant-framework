@@ -102,6 +102,12 @@ from v5.pharma_specialist_data_gate_runner import (
     DEFAULT_REPORT_CANDIDATES as DEFAULT_PHARMA_DATA_GATE_REPORTS,
     run_pharma_specialist_data_gate,
 )
+from v5.low_priority_sector_initial_validation_runner import (
+    DEFAULT_OUT_ROOT as DEFAULT_LOW_PRIORITY_INITIAL_OUT,
+    DEFAULT_PANEL_ROOT as DEFAULT_LOW_PRIORITY_INITIAL_PANEL_ROOT,
+    DEFAULT_SECTORS as DEFAULT_LOW_PRIORITY_INITIAL_SECTORS,
+    run_low_priority_sector_initial_validation,
+)
 from v5.cement_external_state_runner import (
     DEFAULT_ENRICHED_OUT_DIR as DEFAULT_CEMENT_STATE_ENRICHED_OUT,
     DEFAULT_OUT_DIR as DEFAULT_CEMENT_STATE_OUT,
@@ -537,6 +543,14 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     pharma_gate_parser.add_argument("--min-specialist-coverage", type=float, default=0.8)
     pharma_gate_parser.add_argument("--min-median-names", type=int, default=8)
     pharma_gate_parser.set_defaults(handler=_handle_audit_pharma_specialist_data_gate)
+
+    low_priority_initial_parser = subparsers.add_parser("validate-low-priority-sector-initial")
+    low_priority_initial_parser.add_argument("--panel-root", type=Path, default=DEFAULT_LOW_PRIORITY_INITIAL_PANEL_ROOT)
+    low_priority_initial_parser.add_argument("--out-root", type=Path, default=DEFAULT_LOW_PRIORITY_INITIAL_OUT)
+    low_priority_initial_parser.add_argument("--sectors", nargs="+", default=DEFAULT_LOW_PRIORITY_INITIAL_SECTORS)
+    low_priority_initial_parser.add_argument("--min-dates", type=int, default=12)
+    low_priority_initial_parser.add_argument("--min-median-names", type=int, default=12)
+    low_priority_initial_parser.set_defaults(handler=_handle_validate_low_priority_sector_initial)
 
     cement_state_parser = subparsers.add_parser("collect-cement-external-state")
     cement_state_parser.add_argument("--panel", type=Path, default=DEFAULT_CEMENT_STATE_PANEL)
@@ -1021,6 +1035,19 @@ def _handle_audit_pharma_specialist_data_gate(args: argparse.Namespace) -> int:
             args.out_dir,
             min_core_coverage=args.min_core_coverage,
             min_specialist_coverage=args.min_specialist_coverage,
+            min_median_names=args.min_median_names,
+        )
+    )
+    return 0
+
+
+def _handle_validate_low_priority_sector_initial(args: argparse.Namespace) -> int:
+    print(
+        run_low_priority_sector_initial_validation(
+            args.panel_root,
+            args.out_root,
+            list(args.sectors),
+            min_dates=args.min_dates,
             min_median_names=args.min_median_names,
         )
     )

@@ -2320,6 +2320,190 @@
         "Real cash-dividend events are not repaired for Engineering."
       ],
       "next_gate": "research_repair_pharma_rd_policy_procurement_state_before_quant"
+    },
+    {
+      "strategy_id": "v5a11_securities_brokerage_specialist_screen",
+      "sector": "securities_brokerage",
+      "current_status": [
+        "research_pit_validation_completed",
+        "research_signal_only_specialist_state_gate_required",
+        "not_engineering_handoff",
+        "not_basket_mainline"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "platform_replication_passed",
+        "paper_trading_started",
+        "accepted_strategy"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "docs/governance/v5a.11_low_priority_sector_initial_validation_pm_decision.md",
+        "knowledge/research_agent/strategy_cases/v5a11_low_priority_sector_initial_validation_result.md",
+        "validation_formal_v5a11_low_priority_initial/low_priority_sector_initial_validation_summary.json",
+        "validation_formal_v5a11_low_priority_lowvol/low_priority_sector_initial_validation_summary.json"
+      ],
+      "blockers": [
+        "Financial-market turnover/risk-appetite state is missing.",
+        "This is not a stable cash-flow sleeve."
+      ],
+      "next_gate": "specialist_research_market_cycle_state_gate_only"
+    },
+    {
+      "strategy_id": "v5a11_chemical_materials_initial_screen",
+      "sector": "chemical_materials",
+      "current_status": [
+        "research_pit_validation_completed",
+        "initial_composite_rejected",
+        "not_engineering_handoff"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "platform_replication_passed",
+        "paper_trading_started",
+        "accepted_strategy"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "docs/governance/v5a.11_low_priority_sector_initial_validation_pm_decision.md",
+        "knowledge/research_agent/strategy_cases/v5a11_low_priority_sector_initial_validation_result.md",
+        "validation_formal_v5a11_low_priority_initial/low_priority_sector_initial_validation_summary.json",
+        "validation_formal_v5a11_low_priority_lowvol/low_priority_sector_initial_validation_summary.json"
+      ],
+      "blockers": [
+        "Composite is not superior to same-pool benchmark after the relevant V5a.11 checks."
+      ],
+      "next_gate": "archived_unless_new_sector_specific_hypothesis"
+    },
+    {
+      "strategy_id": "v5a11_retail_commerce_initial_screen",
+      "sector": "retail_commerce",
+      "current_status": [
+        "research_pit_validation_completed",
+        "initial_composite_rejected",
+        "not_engineering_handoff"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "platform_replication_passed",
+        "paper_trading_started",
+        "accepted_strategy"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "docs/governance/v5a.11_low_priority_sector_initial_validation_pm_decision.md",
+        "knowledge/research_agent/strategy_cases/v5a11_low_priority_sector_initial_validation_result.md",
+        "validation_formal_v5a11_low_priority_initial/low_priority_sector_initial_validation_summary.json",
+        "validation_formal_v5a11_low_priority_lowvol/low_priority_sector_initial_validation_summary.json"
+      ],
+      "blockers": [
+        "Composite is not superior to same-pool benchmark after the relevant V5a.11 checks."
+      ],
+      "next_gate": "archived_unless_new_sector_specific_hypothesis"
+    },
+    {
+      "strategy_id": "v5a11_auto_and_parts_initial_screen",
+      "sector": "auto_and_parts",
+      "current_status": [
+        "research_pit_validation_completed",
+        "initial_composite_rejected",
+        "not_engineering_handoff"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "platform_replication_passed",
+        "paper_trading_started",
+        "accepted_strategy"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "docs/governance/v5a.11_low_priority_sector_initial_validation_pm_decision.md",
+        "knowledge/research_agent/strategy_cases/v5a11_low_priority_sector_initial_validation_result.md",
+        "validation_formal_v5a11_low_priority_initial/low_priority_sector_initial_validation_summary.json",
+        "validation_formal_v5a11_low_priority_lowvol/low_priority_sector_initial_validation_summary.json"
+      ],
+      "blockers": [
+        "Composite is not superior to same-pool benchmark after the relevant V5a.11 checks."
+      ],
+      "next_gate": "archived_unless_new_sector_specific_hypothesis"
+    },
+    {
+      "strategy_id": "v5a11_machinery_equipment_initial_screen",
+      "sector": "machinery_equipment",
+      "current_status": [
+        "research_pit_validation_completed",
+        "initial_composite_rejected",
+        "not_engineering_handoff"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "platform_replication_passed",
+        "paper_trading_started",
+        "accepted_strategy"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "docs/governance/v5a.11_low_priority_sector_initial_validation_pm_decision.md",
+        "knowledge/research_agent/strategy_cases/v5a11_low_priority_sector_initial_validation_result.md",
+        "validation_formal_v5a11_low_priority_initial/low_priority_sector_initial_validation_summary.json",
+        "validation_formal_v5a11_low_priority_lowvol/low_priority_sector_initial_validation_summary.json"
+      ],
+      "blockers": [
+        "Composite is not superior to same-pool benchmark after the relevant V5a.11 checks."
+      ],
+      "next_gate": "archived_unless_new_sector_specific_hypothesis"
+    },
+    {
+      "strategy_id": "v5a11_textile_apparel_unstable_screen",
+      "sector": "textile_apparel",
+      "current_status": [
+        "research_pit_validation_completed",
+        "research_signal_only_unstable_rolling",
+        "not_engineering_handoff"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "platform_replication_passed",
+        "paper_trading_started",
+        "accepted_strategy"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "docs/governance/v5a.11_low_priority_sector_initial_validation_pm_decision.md",
+        "knowledge/research_agent/strategy_cases/v5a11_low_priority_sector_initial_validation_result.md",
+        "validation_formal_v5a11_low_priority_initial/low_priority_sector_initial_validation_summary.json",
+        "validation_formal_v5a11_low_priority_lowvol/low_priority_sector_initial_validation_summary.json"
+      ],
+      "blockers": [
+        "Rolling validation is unstable; sector-specific state evidence is missing."
+      ],
+      "next_gate": "watchlist_only_unless_new_business_quality_evidence"
+    },
+    {
+      "strategy_id": "v5a11_logistics_express_unstable_screen",
+      "sector": "logistics_express",
+      "current_status": [
+        "research_pit_validation_completed",
+        "research_signal_only_unstable_rolling",
+        "not_engineering_handoff"
+      ],
+      "not_status": [
+        "formal_strategy_candidate",
+        "platform_replication_passed",
+        "paper_trading_started",
+        "accepted_strategy"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "docs/governance/v5a.11_low_priority_sector_initial_validation_pm_decision.md",
+        "knowledge/research_agent/strategy_cases/v5a11_low_priority_sector_initial_validation_result.md",
+        "validation_formal_v5a11_low_priority_initial/low_priority_sector_initial_validation_summary.json",
+        "validation_formal_v5a11_low_priority_lowvol/low_priority_sector_initial_validation_summary.json"
+      ],
+      "blockers": [
+        "Rolling validation is unstable; sector-specific state evidence is missing."
+      ],
+      "next_gate": "watchlist_only_unless_new_business_quality_evidence"
     }
   ],
   "sector_test_policy": {

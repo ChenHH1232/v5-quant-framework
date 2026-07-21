@@ -22,3 +22,10 @@ def test_oil_gas_pipeline_integrated_sector_config_is_registered() -> None:
     assert config["industry_codes"]["HY01103"] == "integrated_oil_gas"
     assert config["industry_codes"]["HY01106"] == "oil_gas_distribution_other"
     assert "Oilfield services are intentionally excluded" in " ".join(config["limitations"])
+
+
+def test_low_priority_observation_sector_configs_are_registered() -> None:
+    assert SECTOR_CONFIGS["securities_brokerage"]["industry_codes"]["HY07107"] == "jq_securities_company"
+    assert "801093" in SECTOR_CONFIGS["auto_and_parts"]["industry_codes"]
+    assert "801077" in SECTOR_CONFIGS["machinery_equipment"]["industry_codes"]
+    assert "HY03151" in SECTOR_CONFIGS["logistics_express"]["industry_codes"]

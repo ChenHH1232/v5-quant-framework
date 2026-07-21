@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project": "v5a.3_theory_gated_preliminary_sector_validation",
   "experiment_layer": "research_pit_prevalidation",
-  "created_at_utc": "2026-07-21T12:01:07+00:00",
+  "created_at_utc": "2026-07-21T12:24:29+00:00",
   "status": "theory_gated_prevalidation_completed_not_strategy_acceptance",
   "theory_inputs": [
     "knowledge/research_agent/factor_theory/v5a.2_value_momentum_mean_reversion_framework.md",
@@ -15,9 +15,8 @@
   "sector_count": 33,
   "decision_counts": {
     "passed_prevalidation_shadow_basket_refresh": 6,
-    "research_loop_after_initial_validation": 5,
-    "low_priority_observation_before_initial_validation": 7,
-    "archived_after_failed_initial_validation": 2,
+    "research_loop_after_initial_validation": 8,
+    "archived_after_failed_initial_validation": 6,
     "blocked_by_cycle_data_gate_before_initial_validation": 3,
     "blocked_by_data_gate_before_initial_validation": 2,
     "excluded_before_initial_validation": 7,

@@ -1,0 +1,2 @@
+queue_rank,sector_id,owner,task,input_artifacts,output_artifacts,gate,blocked_actions
+1,gas_water_operators,Engineering Agent,Keep gas/water as an observation sleeve; refresh paper-trading inputs and wait for the next clean forward signal. Do not add it to frozen V57f.,sleeve_promotion_queue.csv; status_registry.json; sleeve_registry.csv,paper_trading_signal_log_or_local_daily_health_refresh,paper_tracking_only_no_core_inclusion,do_not_modify_V57f; do_not_tune_returns; do_not_claim_platform_replication; do_not_start_joinquant_test

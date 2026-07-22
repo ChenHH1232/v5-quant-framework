@@ -16,6 +16,12 @@ from v5.enhanced_etf_production_line_runner import (
     DEFAULT_STATUS_REGISTRY as DEFAULT_ENHANCED_ETF_LINE_STATUS_REGISTRY,
     build_enhanced_etf_production_line,
 )
+from v5.sleeve_promotion_queue_runner import (
+    DEFAULT_OUT_DIR as DEFAULT_SLEEVE_PROMOTION_OUT,
+    DEFAULT_SLEEVE_REGISTRY as DEFAULT_SLEEVE_PROMOTION_REGISTRY,
+    DEFAULT_STATUS_REGISTRY as DEFAULT_SLEEVE_PROMOTION_STATUS,
+    build_sleeve_promotion_queue,
+)
 from v5.sector_replication_roadmap_runner import (
     DEFAULT_CONFIG as DEFAULT_V58_REPLICATION_ROADMAP_CONFIG,
     DEFAULT_OUT_DIR as DEFAULT_V58_REPLICATION_ROADMAP_OUT,
@@ -632,6 +638,13 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     enhanced_etf_line_parser.add_argument("--next-clean-rebalance-date", default="2026-10-08")
     enhanced_etf_line_parser.set_defaults(handler=_handle_build_enhanced_etf_production_line)
 
+    sleeve_promotion_parser = subparsers.add_parser("build-sleeve-promotion-queue")
+    sleeve_promotion_parser.add_argument("--sleeve-registry", type=Path, default=DEFAULT_SLEEVE_PROMOTION_REGISTRY)
+    sleeve_promotion_parser.add_argument("--status-registry", type=Path, default=DEFAULT_SLEEVE_PROMOTION_STATUS)
+    sleeve_promotion_parser.add_argument("--out", type=Path, default=DEFAULT_SLEEVE_PROMOTION_OUT)
+    sleeve_promotion_parser.add_argument("--candidate", action="append", dest="candidates")
+    sleeve_promotion_parser.set_defaults(handler=_handle_build_sleeve_promotion_queue)
+
 
 def _handle_collect_similar_sector_pit_panel(args: argparse.Namespace) -> int:
     print(
@@ -1153,6 +1166,18 @@ def _handle_build_enhanced_etf_production_line(args: argparse.Namespace) -> int:
             out_dir=args.out,
             strategy_id=args.strategy_id,
             next_clean_rebalance_date=args.next_clean_rebalance_date,
+        )
+    )
+    return 0
+
+
+def _handle_build_sleeve_promotion_queue(args: argparse.Namespace) -> int:
+    print(
+        build_sleeve_promotion_queue(
+            sleeve_registry=args.sleeve_registry,
+            status_registry=args.status_registry,
+            out_dir=args.out,
+            candidate_ids=args.candidates,
         )
     )
     return 0

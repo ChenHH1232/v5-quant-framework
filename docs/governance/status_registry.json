@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-21",
+  "updated_at": "2026-07-22",
   "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
   "strategies": [
     {
@@ -3259,6 +3259,15 @@
     "v5a.9_cement_state_panel": "see docs/governance/v5a.9_cement_cycle_state_validation_pm_decision.md",
     "v5a.9_cement_formal_summary": "validation_formal_v5a9_cement_cycle_state/cement_cycle_aware_ocf_low_vol_v5a9/formal_validation_summary.json",
     "v5a.9_cement_state_bucket_summary": "validation_state_v5a9_cement/cement_cycle_aware_ocf_low_vol_v5a9/cement_state_bucket_validation_summary.json",
-    "v5a.9_next_gate": "continue_broad_queue_without_cement_promotion"
+    "v5a.9_next_gate": "continue_broad_queue_without_cement_promotion",
+    "v5_sleeve_promotion_queue_status": "completed_ranked_queue_rank1_gas_water_observation_paper_tracking",
+    "v5_sleeve_promotion_queue_workflow": "docs/governance/v5_sleeve_promotion_queue_workflow.md",
+    "v5_sleeve_promotion_queue_runner": "src/v5/sleeve_promotion_queue_runner.py",
+    "v5_sleeve_promotion_queue_csv": "enhanced_etf_production_lines_v5/current/sleeve_promotion_queue.csv",
+    "v5_sleeve_promotion_summary": "enhanced_etf_production_lines_v5/current/sleeve_promotion_summary.json",
+    "v5_sleeve_promotion_report": "enhanced_etf_production_lines_v5/current/sleeve_promotion_report.md",
+    "v5_sleeve_promotion_selected_agent_queue": "enhanced_etf_production_lines_v5/current/promotion_agent_queues/selected_candidate_agent_queue.csv",
+    "v5_sleeve_promotion_selected_candidate": "gas_water_operators",
+    "v5_sleeve_promotion_selected_gate": "paper_tracking_only_no_core_inclusion"
   }
 }

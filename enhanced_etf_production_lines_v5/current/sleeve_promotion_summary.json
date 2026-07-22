@@ -1,0 +1,31 @@
+{
+  "generated_at": "2026-07-22T06:44:15.832313+00:00",
+  "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
+  "objective": "Rank expansion sleeve candidates by minimum completion cost and dividend/low-vol/OCF fit, not by returns.",
+  "inputs": {
+    "sleeve_registry": "enhanced_etf_production_lines_v5\\current\\sleeve_registry.csv",
+    "status_registry": "docs\\governance\\status_registry.json"
+  },
+  "outputs": {
+    "queue_csv": "enhanced_etf_production_lines_v5\\current\\sleeve_promotion_queue.csv",
+    "report_path": "enhanced_etf_production_lines_v5\\current\\sleeve_promotion_report.md",
+    "selected_agent_queue_csv": "enhanced_etf_production_lines_v5\\current\\promotion_agent_queues\\selected_candidate_agent_queue.csv"
+  },
+  "candidate_count": 7,
+  "selected_candidate": {
+    "sector_id": "gas_water_operators",
+    "display_name": "Gas / Water Operators",
+    "rank": "1",
+    "promotion_score": "89.0",
+    "owner": "Engineering Agent",
+    "action": "Keep gas/water as an observation sleeve; refresh paper-trading inputs and wait for the next clean forward signal. Do not add it to frozen V57f.",
+    "gate": "paper_tracking_only_no_core_inclusion"
+  },
+  "hard_rules": [
+    "Only the first-ranked candidate enters the next agent queue.",
+    "No observation sleeve may be silently added to frozen V57f.",
+    "No return tuning is allowed in this queue.",
+    "Engineering receives only frozen local-simulation or paper-refresh tasks.",
+    "Platform replication still requires user-supplied JoinQuant daily, transaction, position and log exports."
+  ]
+}

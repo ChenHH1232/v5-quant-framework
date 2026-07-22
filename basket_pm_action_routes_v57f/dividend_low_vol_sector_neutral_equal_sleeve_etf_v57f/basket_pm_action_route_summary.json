@@ -2,17 +2,17 @@
   "schema_version": 1,
   "strategy_id": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f",
   "experiment_layer": "pm_decision_gate",
-  "as_of_date": "2026-07-21",
+  "as_of_date": "2026-07-22",
   "dashboard_summary": "basket_governance_dashboards_v57f\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\basket_governance_dashboard_summary.json",
   "dashboard_status": "needs_pm_review",
-  "route_status": "needs_pm_review",
-  "pm_decision": "stop_and_review_missing_or_ambiguous_status",
+  "route_status": "no_action_until_external_event",
+  "pm_decision": "hold_frozen_candidate",
   "should_continue_agent_loop": false,
   "user_decision_required": false,
   "user_decision_reason": "",
   "next_owner": "Project Manager Agent",
-  "allowed_next_action": "inspect_governance_dashboard_and_source_summaries",
-  "next_trigger": "ambiguous dashboard status resolved",
+  "allowed_next_action": "wait_for_future_refresh_window_or_user_supplied_platform_exports",
+  "next_trigger": "2026-10-08 refresh window or JoinQuant exports supplied by user",
   "blocked_actions": [
     "accepted_strategy",
     "live_trading_approved",
@@ -66,5 +66,5 @@
     }
   ],
   "pm_rule": "The PM router may only route existing evidence; it must not refresh data, run JoinQuant, tune parameters, or generate a signal.",
-  "created_at_utc": "2026-07-21T12:42:18+00:00"
+  "created_at_utc": "2026-07-22T04:48:25+00:00"
 }

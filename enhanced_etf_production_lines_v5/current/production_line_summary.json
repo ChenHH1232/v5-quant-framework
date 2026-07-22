@@ -3,7 +3,7 @@
   "project": "v5_enhanced_etf_production_line",
   "strategy_id": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f",
   "experiment_layer": "pm_decision_gate",
-  "created_at_utc": "2026-07-22T02:08:23+00:00",
+  "created_at_utc": "2026-07-22T04:49:08+00:00",
   "status": "engineering_local_refresh_ready_not_platform_replication",
   "engineering_ready": true,
   "active_sleeves": [
@@ -151,7 +151,7 @@
     "action_route_summary": {
       "path": "basket_pm_action_routes_v57f\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\basket_pm_action_route_summary.json",
       "exists": true,
-      "status": null,
+      "status": "no_action_until_external_event",
       "blocker_count": null,
       "needs_review_count": null
     }

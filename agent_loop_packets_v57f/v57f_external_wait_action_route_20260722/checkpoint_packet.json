@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "packet_type": "checkpoint_packet",
+  "protocol_id": "agent_operating_protocol_v1",
+  "objective": "Resolve V57f external-wait action routing",
+  "agent": "Project Manager Agent",
+  "experiment_layer": "pm_decision_gate",
+  "elapsed_timebox_minutes": 30,
+  "artifacts_created": [
+    "docs/governance/v57f_pm_action_router_external_wait_fix.md",
+    "basket_pm_action_routes_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/basket_pm_action_route_summary.json",
+    "enhanced_etf_production_lines_v5/current/production_line_summary.json"
+  ],
+  "evidence_found": [
+    "V57f action route now resolves missing platform exports plus pending future paper window as no_action_until_external_event. The production line summary reads that route status directly."
+  ],
+  "blockers": [],
+  "decision": "continue_same_loop",
+  "next_owner": "Project Manager Agent",
+  "stop_rule_status": "external_wait_state_resolved_no_user_decision_required",
+  "user_decision_required": false,
+  "user_decision_reason": "",
+  "allowed_next_action": "Hold frozen V57f until 2026-10-08 clean refresh window or user-supplied JoinQuant exports; no tuning or sleeve changes.",
+  "restart_condition": "",
+  "skill_status_change": "none",
+  "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
+  "created_at_utc": "2026-07-22T04:50:04+00:00"
+}

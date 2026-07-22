@@ -36,6 +36,33 @@ def test_pm_action_router_stops_until_future_window_when_v57f_is_waiting(tmp_pat
     assert summary["allowed_next_action"] == "wait_for_future_refresh_window_or_user_supplied_platform_exports"
 
 
+def test_pm_action_router_treats_missing_platform_exports_as_external_wait_when_paper_window_is_pending(tmp_path: Path) -> None:
+    dashboard = _write_dashboard(
+        tmp_path / "dashboard.json",
+        {
+            "strategy_id": "v57f",
+            "status": "needs_pm_review",
+            "source_statuses": {
+                "platform_export_intake": "missing",
+                "forward_paper_gate": "pending_clean_future_rebalance",
+                "paper_input_preflight": "pending_future_data_window",
+                "paper_refresh_queue": "queued_for_future_refresh_window",
+                "paper_refresh_status": "waiting_for_future_refresh_window",
+            },
+            "key_dates": {"next_rebalance_date": "2026-10-08"},
+            "blocked_actions": ["platform_replication_passed_without_exports"],
+        },
+    )
+
+    result = route_basket_pm_action(governance_dashboard_summary=dashboard, out_dir=tmp_path / "out")
+
+    summary = json.loads(result.summary_path.read_text(encoding="utf-8"))
+    assert result.route_status == "no_action_until_external_event"
+    assert result.should_continue_agent_loop is False
+    assert result.user_decision_required is False
+    assert summary["pm_decision"] == "hold_frozen_candidate"
+
+
 def test_pm_action_router_routes_ready_exports_to_engineering_attribution(tmp_path: Path) -> None:
     dashboard = _write_dashboard(
         tmp_path / "dashboard.json",

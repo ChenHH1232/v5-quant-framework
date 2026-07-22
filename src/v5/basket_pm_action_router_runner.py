@@ -126,6 +126,18 @@ def _route(dashboard: dict[str, Any]) -> dict[str, Any]:
             "next_trigger": f"{next_rebalance} refresh window or JoinQuant exports supplied by user",
         }
 
+    if _is_external_wait_state(status, source_statuses):
+        return {
+            "route_status": "no_action_until_external_event",
+            "pm_decision": "hold_frozen_candidate",
+            "should_continue_agent_loop": False,
+            "user_decision_required": False,
+            "user_decision_reason": "",
+            "next_owner": "Project Manager Agent",
+            "allowed_next_action": "wait_for_future_refresh_window_or_user_supplied_platform_exports",
+            "next_trigger": f"{next_rebalance} refresh window or JoinQuant exports supplied by user",
+        }
+
     if status == "ready_for_pm_clean_paper_signal_gate":
         return {
             "route_status": "pm_gate_review_required",
@@ -148,6 +160,22 @@ def _route(dashboard: dict[str, Any]) -> dict[str, Any]:
         "allowed_next_action": "inspect_governance_dashboard_and_source_summaries",
         "next_trigger": "ambiguous dashboard status resolved",
     }
+
+
+def _is_external_wait_state(status: str, source_statuses: dict[str, Any]) -> bool:
+    platform_status = str(source_statuses.get("platform_export_intake") or "")
+    forward_status = str(source_statuses.get("forward_paper_gate") or "")
+    refresh_status = str(source_statuses.get("paper_refresh_status") or "")
+    preflight_status = str(source_statuses.get("paper_input_preflight") or "")
+    queue_status = str(source_statuses.get("paper_refresh_queue") or "")
+    return (
+        status == "needs_pm_review"
+        and platform_status in {"missing", "platform_test_deferred_by_user_waiting_for_exports"}
+        and forward_status == "pending_clean_future_rebalance"
+        and refresh_status == "waiting_for_future_refresh_window"
+        and preflight_status == "pending_future_data_window"
+        and queue_status == "queued_for_future_refresh_window"
+    )
 
 
 def _read_json(path: Path) -> dict[str, Any]:

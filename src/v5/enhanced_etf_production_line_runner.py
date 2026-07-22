@@ -281,7 +281,7 @@ def _collect_evidence(project: str) -> dict[str, Any]:
                 payload = _read_json(path)
             except (OSError, json.JSONDecodeError):
                 payload = {}
-            evidence[key]["status"] = payload.get("status")
+            evidence[key]["status"] = payload.get("status") or payload.get("route_status") or payload.get("pm_decision")
             evidence[key]["blocker_count"] = payload.get("blocker_count")
             evidence[key]["needs_review_count"] = payload.get("needs_review_count")
             if key == "daily_summary":
@@ -490,4 +490,3 @@ def _count_values(rows: list[dict[str, str]], field: str) -> dict[str, int]:
 
 def _now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
-

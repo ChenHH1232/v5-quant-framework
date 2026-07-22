@@ -1,13 +1,13 @@
 # Basket PM Action Route: dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f
 
 - Dashboard status: `needs_pm_review`
-- Route status: `needs_pm_review`
-- PM decision: `stop_and_review_missing_or_ambiguous_status`
+- Route status: `no_action_until_external_event`
+- PM decision: `hold_frozen_candidate`
 - Continue agent loop: `False`
 - User decision required: `False`
 - Next owner: `Project Manager Agent`
-- Allowed next action: `inspect_governance_dashboard_and_source_summaries`
-- Next trigger: `ambiguous dashboard status resolved`
+- Allowed next action: `wait_for_future_refresh_window_or_user_supplied_platform_exports`
+- Next trigger: `2026-10-08 refresh window or JoinQuant exports supplied by user`
 
 ## Key Dates
 

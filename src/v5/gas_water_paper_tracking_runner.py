@@ -1,0 +1,360 @@
+from __future__ import annotations
+
+import json
+from dataclasses import dataclass
+from datetime import date, datetime, timezone
+from pathlib import Path
+from typing import Any
+
+from v5.agent_loop_packet_runner import create_agent_loop_packet
+from v5.io_utils import read_csv_rows, read_csv_rows_if_exists, write_csv_rows, write_json_file
+
+
+DEFAULT_STRATEGY_ID = "gas_water_v57b_text_debt_state_guard_v59b"
+DEFAULT_LOCAL_DAILY_DIR = (
+    Path("local_daily_backtests_v59b_gas_water_state_guard_repaired_2021_07")
+    / DEFAULT_STRATEGY_ID
+)
+DEFAULT_PANEL = Path("数据库") / "processed" / "gas_water_2021_07_pit_repair_v59b" / "panel_with_true_operating_state_repaired_2021_07.csv"
+DEFAULT_PRICE_CSV = Path("数据库") / "processed" / "gas_water_v57b_joinquant_real_daily_prices.csv"
+DEFAULT_DIVIDEND_CSV = Path("数据库") / "processed" / "gas_water_v57b_joinquant_cash_dividends.csv"
+DEFAULT_BENCHMARK_CSV = Path("数据库") / "processed" / "gas_water_v57b_same_pool_equal_weight_benchmark.csv"
+DEFAULT_PROMOTION_QUEUE = Path("enhanced_etf_production_lines_v5") / "current" / "sleeve_promotion_queue.csv"
+DEFAULT_SELECTED_AGENT_QUEUE = (
+    Path("enhanced_etf_production_lines_v5")
+    / "current"
+    / "promotion_agent_queues"
+    / "selected_candidate_agent_queue.csv"
+)
+DEFAULT_OUT_DIR = Path("paper_trading_signals") / "gas_water_v59b_promotion_queue"
+DEFAULT_PACKET_DIR = Path("agent_loop_packets_v59") / "gas_water_paper_tracking"
+
+FLOW_FIELDS = [
+    "stage",
+    "owner",
+    "input",
+    "action",
+    "output",
+    "gate",
+    "status",
+]
+
+HEALTH_FIELDS = [
+    "check",
+    "status",
+    "detail",
+]
+
+
+@dataclass(frozen=True)
+class GasWaterPaperTrackingResult:
+    output_dir: Path
+    flow_table_csv: Path
+    health_check_csv: Path
+    summary_json: Path
+    report_path: Path
+    agent_packet_json: Path
+    status: str
+    next_gate: str
+
+
+def build_gas_water_paper_tracking_packet(
+    *,
+    strategy_id: str = DEFAULT_STRATEGY_ID,
+    local_daily_dir: Path = DEFAULT_LOCAL_DAILY_DIR,
+    panel_csv: Path = DEFAULT_PANEL,
+    price_csv: Path = DEFAULT_PRICE_CSV,
+    dividend_csv: Path = DEFAULT_DIVIDEND_CSV,
+    benchmark_csv: Path = DEFAULT_BENCHMARK_CSV,
+    promotion_queue_csv: Path = DEFAULT_PROMOTION_QUEUE,
+    selected_agent_queue_csv: Path = DEFAULT_SELECTED_AGENT_QUEUE,
+    out_dir: Path = DEFAULT_OUT_DIR,
+    agent_packet_dir: Path = DEFAULT_PACKET_DIR,
+    as_of_date: str = "2026-07-22",
+    next_clean_rebalance_date: str = "2026-10-08",
+) -> GasWaterPaperTrackingResult:
+    summary_path = local_daily_dir / "summary.json"
+    order_health_path = local_daily_dir / "rebalance_order_health.csv"
+    guard_decisions_path = local_daily_dir / "guard_decisions.csv"
+    rebalance_signals_path = local_daily_dir / "rebalance_signals.csv"
+    local_summary = _read_json(summary_path)
+    order_health_rows = read_csv_rows(order_health_path)
+    guard_rows = read_csv_rows(guard_decisions_path)
+    signal_rows = read_csv_rows(rebalance_signals_path)
+    promotion_rows = read_csv_rows_if_exists(promotion_queue_csv)
+    selected_rows = read_csv_rows_if_exists(selected_agent_queue_csv)
+
+    data_health = _build_data_health(
+        panel_csv=panel_csv,
+        price_csv=price_csv,
+        dividend_csv=dividend_csv,
+        benchmark_csv=benchmark_csv,
+        next_clean_rebalance_date=next_clean_rebalance_date,
+    )
+    order_summary = local_summary.get("rebalance_order_health", {})
+    health_rows = _build_health_rows(
+        local_summary=local_summary,
+        order_summary=order_summary,
+        data_health=data_health,
+        promotion_rows=promotion_rows,
+        selected_rows=selected_rows,
+        next_clean_rebalance_date=next_clean_rebalance_date,
+        as_of_date=as_of_date,
+    )
+    flow_rows = _build_flow_rows(
+        strategy_id=strategy_id,
+        next_clean_rebalance_date=next_clean_rebalance_date,
+        as_of_date=as_of_date,
+        health_rows=health_rows,
+    )
+    status, next_gate = _status_and_gate(health_rows, as_of_date, next_clean_rebalance_date)
+
+    out = out_dir / strategy_id
+    out.mkdir(parents=True, exist_ok=True)
+    flow_table_csv = out / "gas_water_paper_tracking_flow_table.csv"
+    health_check_csv = out / "gas_water_paper_tracking_health_check.csv"
+    summary_json = out / "gas_water_paper_tracking_summary.json"
+    report_path = out / "gas_water_paper_tracking_report.md"
+    write_csv_rows(flow_table_csv, FLOW_FIELDS, flow_rows)
+    write_csv_rows(health_check_csv, HEALTH_FIELDS, health_rows)
+
+    payload = {
+        "schema_version": 1,
+        "strategy_id": strategy_id,
+        "experiment_layer": "paper_trading_preparation",
+        "status": status,
+        "as_of_date": as_of_date,
+        "next_clean_rebalance_date": next_clean_rebalance_date,
+        "target_date_is_future": date.fromisoformat(next_clean_rebalance_date) > date.fromisoformat(as_of_date),
+        "selected_from_promotion_queue": _selected_candidate(promotion_rows),
+        "selected_agent_queue": selected_rows[:1],
+        "local_daily_dir": str(local_daily_dir),
+        "inputs": {
+            "panel_csv": str(panel_csv),
+            "price_csv": str(price_csv),
+            "dividend_csv": str(dividend_csv),
+            "benchmark_csv": str(benchmark_csv),
+            "promotion_queue_csv": str(promotion_queue_csv),
+            "selected_agent_queue_csv": str(selected_agent_queue_csv),
+        },
+        "data_health": data_health,
+        "local_daily_summary": {
+            "status": local_summary.get("status"),
+            "signal_count": local_summary.get("signal_count"),
+            "daily_count": local_summary.get("daily_count"),
+            "state_guard_blocked_count": local_summary.get("state_guard", {}).get("blocked_count"),
+            "state_guard_blocked_dates": local_summary.get("state_guard", {}).get("blocked_dates"),
+            "rebalance_order_health": order_summary,
+        },
+        "latest_artifact_dates": {
+            "last_signal_date": _latest_date(signal_rows, "trade_date"),
+            "last_guard_decision_date": _latest_date(guard_rows, "trade_date"),
+            "last_order_health_date": _latest_date(order_health_rows, "trade_date"),
+        },
+        "outputs": {
+            "flow_table_csv": str(flow_table_csv),
+            "health_check_csv": str(health_check_csv),
+            "report_path": str(report_path),
+        },
+        "next_gate": next_gate,
+        "pm_rules": [
+            "Gas/water remains an observation sleeve and cannot be silently added to frozen V57f.",
+            "No factor, weight, guard threshold, selection count, timing or sector-cap tuning is allowed.",
+            "No JoinQuant platform test is started by this packet.",
+            "A clean forward paper signal can only be recorded on or before the future rebalance date.",
+            "Guard-driven cash blocks are valid only when order health marks them intentional and non-error.",
+        ],
+        "created_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
+    }
+    write_json_file(summary_json, payload)
+    report_path.write_text(_report(payload, flow_rows, health_rows), encoding="utf-8")
+
+    packet = create_agent_loop_packet(
+        packet_type="checkpoint_packet",
+        objective="gas_water_observation_sleeve_paper_tracking_refresh",
+        agent="Engineering Agent",
+        experiment_layer="paper_trading_preparation",
+        decision="continue_next_timebox",
+        next_owner="Engineering Agent",
+        out_dir=agent_packet_dir,
+        timebox_minutes=60,
+        artifacts=[str(flow_table_csv), str(health_check_csv), str(summary_json), str(report_path)],
+        evidence=[
+            f"Selected candidate: {_selected_candidate(promotion_rows)}",
+            f"Order health needs_review={order_summary.get('needs_review')} unexpected_issues={order_summary.get('unexpected_rebalance_issue_count')}",
+            f"Next clean rebalance date {next_clean_rebalance_date} is future relative to {as_of_date}",
+        ],
+        blockers=[
+            "No blocker for paper-tracking preparation.",
+            "Clean forward signal cannot be generated until the future rebalance window.",
+        ],
+        allowed_next_action="wait_until_clean_forward_window_then_refresh_inputs_without_tuning",
+        restart_condition=f"run again near {next_clean_rebalance_date} with refreshed PIT panel, prices and dividends",
+        loop_id=f"gas_water_paper_tracking_{as_of_date.replace('-', '')}",
+    )
+    payload["agent_packet"] = {"packet_path": str(packet.packet_path), "report_path": str(packet.report_path)}
+    write_json_file(summary_json, payload)
+    return GasWaterPaperTrackingResult(
+        output_dir=out,
+        flow_table_csv=flow_table_csv,
+        health_check_csv=health_check_csv,
+        summary_json=summary_json,
+        report_path=report_path,
+        agent_packet_json=packet.packet_path,
+        status=status,
+        next_gate=next_gate,
+    )
+
+
+def _build_data_health(
+    *,
+    panel_csv: Path,
+    price_csv: Path,
+    dividend_csv: Path,
+    benchmark_csv: Path,
+    next_clean_rebalance_date: str,
+) -> dict[str, Any]:
+    panel_rows = read_csv_rows_if_exists(panel_csv)
+    price_rows = read_csv_rows_if_exists(price_csv)
+    dividend_rows = read_csv_rows_if_exists(dividend_csv)
+    benchmark_rows = read_csv_rows_if_exists(benchmark_csv)
+    return {
+        "panel_exists": panel_csv.exists(),
+        "price_exists": price_csv.exists(),
+        "dividend_exists": dividend_csv.exists(),
+        "benchmark_exists": benchmark_csv.exists(),
+        "panel_row_count": len(panel_rows),
+        "price_row_count": len(price_rows),
+        "dividend_row_count": len(dividend_rows),
+        "benchmark_row_count": len(benchmark_rows),
+        "latest_panel_trade_date": _latest_date(panel_rows, "trade_date"),
+        "latest_price_date": _latest_date(price_rows, "date"),
+        "latest_dividend_pay_date": _latest_date(dividend_rows, "pay_date"),
+        "latest_benchmark_date": _latest_date(benchmark_rows, "date"),
+        "target_panel_rows": sum(1 for row in panel_rows if _row_date(row, "trade_date") == next_clean_rebalance_date),
+    }
+
+
+def _build_health_rows(
+    *,
+    local_summary: dict[str, Any],
+    order_summary: dict[str, Any],
+    data_health: dict[str, Any],
+    promotion_rows: list[dict[str, str]],
+    selected_rows: list[dict[str, str]],
+    next_clean_rebalance_date: str,
+    as_of_date: str,
+) -> list[dict[str, str]]:
+    return [
+        _health("promotion_queue_selected", _selected_candidate(promotion_rows) == "gas_water_operators", _selected_candidate(promotion_rows)),
+        _health("selected_agent_queue_exists", bool(selected_rows), f"rows={len(selected_rows)}"),
+        _health("local_daily_summary_passed", "passed" in str(local_summary.get("status") or ""), str(local_summary.get("status") or "")),
+        _health("rebalance_order_health_passed", not bool(order_summary.get("needs_review")) and int(order_summary.get("unexpected_rebalance_issue_count") or 0) == 0, json.dumps(order_summary, ensure_ascii=False)),
+        _health("panel_file_exists", bool(data_health["panel_exists"]), f"latest={data_health['latest_panel_trade_date']} rows={data_health['panel_row_count']}"),
+        _health("price_file_exists", bool(data_health["price_exists"]), f"latest={data_health['latest_price_date']} rows={data_health['price_row_count']}"),
+        _health("dividend_file_exists", bool(data_health["dividend_exists"]), f"latest={data_health['latest_dividend_pay_date']} rows={data_health['dividend_row_count']}"),
+        _health("benchmark_file_exists", bool(data_health["benchmark_exists"]), f"latest={data_health['latest_benchmark_date']} rows={data_health['benchmark_row_count']}"),
+        _health("future_window_not_due", date.fromisoformat(next_clean_rebalance_date) > date.fromisoformat(as_of_date), f"as_of={as_of_date} target={next_clean_rebalance_date}"),
+        _health("target_panel_rows_pending_is_expected", int(data_health["target_panel_rows"] or 0) == 0, f"target_rows={data_health['target_panel_rows']}"),
+    ]
+
+
+def _build_flow_rows(
+    *,
+    strategy_id: str,
+    next_clean_rebalance_date: str,
+    as_of_date: str,
+    health_rows: list[dict[str, str]],
+) -> list[dict[str, str]]:
+    health_status = "passed" if all(row["status"] == "passed" for row in health_rows[:8]) else "needs_review"
+    return [
+        _flow("1", "Project Manager Agent", "sleeve_promotion_queue.csv", "Confirm rank-1 candidate and blocked actions", "selected_candidate_agent_queue.csv", "rank1_only", "completed"),
+        _flow("2", "Engineering Agent", strategy_id, "Load frozen gas/water local daily artifacts", "local evidence snapshot", "no_strategy_change", "completed"),
+        _flow("3", "Engineering Agent", "rebalance_order_health.csv", "Check every rebalance signal ordered, held cash intentionally, or produced no unexpected issue", "health_check.csv", "unexpected_issue_count_zero", health_status),
+        _flow("4", "Engineering Agent", "PIT panel / prices / dividends / benchmark", "Check source files exist and capture latest dates", "data freshness snapshot", "files_exist", health_status),
+        _flow("5", "Project Manager Agent", f"as_of={as_of_date}", "Do not generate a late paper signal before the clean future date arrives", "future-window gate", "target_date_future", "waiting"),
+        _flow("6", "Engineering Agent", next_clean_rebalance_date, "Near the target window, refresh PIT panel, prices and dividends, then rerun this packet", "clean paper input packet", "no_tuning", "pending_future_window"),
+        _flow("7", "Project Manager Agent", "clean paper input packet", "Append future signal to paper log only if generated on time", "paper trading log entry", "forward_evidence_only", "pending_future_window"),
+    ]
+
+
+def _status_and_gate(health_rows: list[dict[str, str]], as_of_date: str, next_clean_rebalance_date: str) -> tuple[str, str]:
+    failed_non_future = [row for row in health_rows[:8] if row["status"] != "passed"]
+    if failed_non_future:
+        return "needs_review_before_paper_tracking", "repair_failed_health_checks"
+    if date.fromisoformat(next_clean_rebalance_date) > date.fromisoformat(as_of_date):
+        return "paper_tracking_ready_waiting_for_future_window", "wait_until_clean_forward_window"
+    return "ready_for_clean_paper_signal_generation", "generate_clean_paper_signal_without_tuning"
+
+
+def _selected_candidate(rows: list[dict[str, str]]) -> str:
+    ranked = sorted(rows, key=lambda row: int(row.get("rank") or 9999))
+    return str(ranked[0].get("sector_id") or "") if ranked else ""
+
+
+def _health(check: str, ok: bool, detail: str) -> dict[str, str]:
+    return {"check": check, "status": "passed" if ok else "needs_review", "detail": detail}
+
+
+def _flow(stage: str, owner: str, input_path: str, action: str, output: str, gate: str, status: str) -> dict[str, str]:
+    return {
+        "stage": stage,
+        "owner": owner,
+        "input": input_path,
+        "action": action,
+        "output": output,
+        "gate": gate,
+        "status": status,
+    }
+
+
+def _read_json(path: Path) -> dict[str, Any]:
+    payload = json.loads(path.read_text(encoding="utf-8-sig"))
+    if not isinstance(payload, dict):
+        raise ValueError(f"{path} must contain a JSON object")
+    return payload
+
+
+def _latest_date(rows: list[dict[str, str]], field: str) -> str:
+    dates = sorted({_row_date(row, field) for row in rows if _row_date(row, field)})
+    return dates[-1] if dates else ""
+
+
+def _row_date(row: dict[str, str], field: str) -> str:
+    return str(row.get(field) or "")[:10]
+
+
+def _report(summary: dict[str, Any], flow_rows: list[dict[str, str]], health_rows: list[dict[str, str]]) -> str:
+    lines = [
+        f"# Gas/Water Paper Tracking Packet: {summary['strategy_id']}",
+        "",
+        f"- Status: `{summary['status']}`",
+        f"- As of date: `{summary['as_of_date']}`",
+        f"- Next clean rebalance date: `{summary['next_clean_rebalance_date']}`",
+        f"- Next gate: `{summary['next_gate']}`",
+        f"- Selected from promotion queue: `{summary['selected_from_promotion_queue']}`",
+        "",
+        "## Detailed Flow Table",
+        "",
+        "| Stage | Owner | Input | Action | Output | Gate | Status |",
+        "| ---: | --- | --- | --- | --- | --- | --- |",
+    ]
+    for row in flow_rows:
+        lines.append(
+            f"| {row['stage']} | {row['owner']} | `{row['input']}` | {row['action']} | `{row['output']}` | `{row['gate']}` | `{row['status']}` |"
+        )
+    lines.extend(
+        [
+            "",
+            "## Health Checks",
+            "",
+            "| Check | Status | Detail |",
+            "| --- | --- | --- |",
+        ]
+    )
+    for row in health_rows:
+        lines.append(f"| `{row['check']}` | `{row['status']}` | {row['detail']} |")
+    lines.extend(["", "## PM Rules", ""])
+    for item in summary["pm_rules"]:
+        lines.append(f"- {item}")
+    return "\n".join(lines) + "\n"

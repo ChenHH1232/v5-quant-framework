@@ -1,0 +1,8 @@
+stage,owner,input,action,output,gate,status
+1,Project Manager Agent,sleeve_promotion_queue.csv,Confirm rank-1 candidate and blocked actions,selected_candidate_agent_queue.csv,rank1_only,completed
+2,Engineering Agent,gas_water_v57b_text_debt_state_guard_v59b,Load frozen gas/water local daily artifacts,local evidence snapshot,no_strategy_change,completed
+3,Engineering Agent,rebalance_order_health.csv,"Check every rebalance signal ordered, held cash intentionally, or produced no unexpected issue",health_check.csv,unexpected_issue_count_zero,passed
+4,Engineering Agent,PIT panel / prices / dividends / benchmark,Check source files exist and capture latest dates,data freshness snapshot,files_exist,passed
+5,Project Manager Agent,as_of=2026-07-22,Do not generate a late paper signal before the clean future date arrives,future-window gate,target_date_future,waiting
+6,Engineering Agent,2026-10-08,"Near the target window, refresh PIT panel, prices and dividends, then rerun this packet",clean paper input packet,no_tuning,pending_future_window
+7,Project Manager Agent,clean paper input packet,Append future signal to paper log only if generated on time,paper trading log entry,forward_evidence_only,pending_future_window

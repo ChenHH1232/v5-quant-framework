@@ -3268,6 +3268,14 @@
     "v5_sleeve_promotion_report": "enhanced_etf_production_lines_v5/current/sleeve_promotion_report.md",
     "v5_sleeve_promotion_selected_agent_queue": "enhanced_etf_production_lines_v5/current/promotion_agent_queues/selected_candidate_agent_queue.csv",
     "v5_sleeve_promotion_selected_candidate": "gas_water_operators",
-    "v5_sleeve_promotion_selected_gate": "paper_tracking_only_no_core_inclusion"
+    "v5_sleeve_promotion_selected_gate": "paper_tracking_only_no_core_inclusion",
+    "v59b_gas_water_paper_tracking_status": "paper_tracking_ready_waiting_for_future_window",
+    "v59b_gas_water_paper_tracking_runner": "src/v5/gas_water_paper_tracking_runner.py",
+    "v59b_gas_water_paper_tracking_flow_table": "paper_trading_signals/gas_water_v59b_promotion_queue/gas_water_v57b_text_debt_state_guard_v59b/gas_water_paper_tracking_flow_table.csv",
+    "v59b_gas_water_paper_tracking_health_check": "paper_trading_signals/gas_water_v59b_promotion_queue/gas_water_v57b_text_debt_state_guard_v59b/gas_water_paper_tracking_health_check.csv",
+    "v59b_gas_water_paper_tracking_summary": "paper_trading_signals/gas_water_v59b_promotion_queue/gas_water_v57b_text_debt_state_guard_v59b/gas_water_paper_tracking_summary.json",
+    "v59b_gas_water_paper_tracking_report": "paper_trading_signals/gas_water_v59b_promotion_queue/gas_water_v57b_text_debt_state_guard_v59b/gas_water_paper_tracking_report.md",
+    "v59b_gas_water_paper_tracking_agent_packet": "agent_loop_packets_v59/gas_water_paper_tracking/gas_water_paper_tracking_20260722/checkpoint_packet.json",
+    "v59b_gas_water_paper_tracking_next_gate": "wait_until_clean_forward_window"
   }
 }

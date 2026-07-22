@@ -185,6 +185,18 @@ from v5.gas_water_state_guard_daily_backtest_runner import (
     DEFAULT_SPEC as DEFAULT_GAS_WATER_STATE_GUARD_DAILY_SPEC,
     run_gas_water_state_guard_daily_backtest,
 )
+from v5.gas_water_paper_tracking_runner import (
+    DEFAULT_BENCHMARK_CSV as DEFAULT_GAS_WATER_PAPER_BENCHMARK,
+    DEFAULT_DIVIDEND_CSV as DEFAULT_GAS_WATER_PAPER_DIVIDENDS,
+    DEFAULT_LOCAL_DAILY_DIR as DEFAULT_GAS_WATER_PAPER_LOCAL_DAILY,
+    DEFAULT_OUT_DIR as DEFAULT_GAS_WATER_PAPER_OUT,
+    DEFAULT_PANEL as DEFAULT_GAS_WATER_PAPER_PANEL,
+    DEFAULT_PRICE_CSV as DEFAULT_GAS_WATER_PAPER_PRICES,
+    DEFAULT_PROMOTION_QUEUE as DEFAULT_GAS_WATER_PAPER_PROMOTION_QUEUE,
+    DEFAULT_SELECTED_AGENT_QUEUE as DEFAULT_GAS_WATER_PAPER_SELECTED_QUEUE,
+    DEFAULT_STRATEGY_ID as DEFAULT_GAS_WATER_PAPER_STRATEGY_ID,
+    build_gas_water_paper_tracking_packet,
+)
 from v5.airport_transport_operating_evidence_runner import (
     DEFAULT_OUT_DIR as DEFAULT_AIRPORT_OPERATING_EVIDENCE_OUT,
     build_airport_business_purity_panel,
@@ -338,6 +350,20 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     gas_water_state_guard_daily_parser.add_argument("--target-exposure", type=float, default=0.995)
     gas_water_state_guard_daily_parser.add_argument("--lot-size", type=int, default=100)
     gas_water_state_guard_daily_parser.set_defaults(handler=_handle_daily_backtest_gas_water_state_guard)
+
+    gas_water_paper_parser = subparsers.add_parser("build-gas-water-paper-tracking-packet")
+    gas_water_paper_parser.add_argument("--strategy-id", default=DEFAULT_GAS_WATER_PAPER_STRATEGY_ID)
+    gas_water_paper_parser.add_argument("--local-daily-dir", type=Path, default=DEFAULT_GAS_WATER_PAPER_LOCAL_DAILY)
+    gas_water_paper_parser.add_argument("--panel", type=Path, default=DEFAULT_GAS_WATER_PAPER_PANEL)
+    gas_water_paper_parser.add_argument("--price-csv", type=Path, default=DEFAULT_GAS_WATER_PAPER_PRICES)
+    gas_water_paper_parser.add_argument("--dividend-csv", type=Path, default=DEFAULT_GAS_WATER_PAPER_DIVIDENDS)
+    gas_water_paper_parser.add_argument("--benchmark-csv", type=Path, default=DEFAULT_GAS_WATER_PAPER_BENCHMARK)
+    gas_water_paper_parser.add_argument("--promotion-queue-csv", type=Path, default=DEFAULT_GAS_WATER_PAPER_PROMOTION_QUEUE)
+    gas_water_paper_parser.add_argument("--selected-agent-queue-csv", type=Path, default=DEFAULT_GAS_WATER_PAPER_SELECTED_QUEUE)
+    gas_water_paper_parser.add_argument("--out", type=Path, default=DEFAULT_GAS_WATER_PAPER_OUT)
+    gas_water_paper_parser.add_argument("--as-of-date", default="2026-07-22")
+    gas_water_paper_parser.add_argument("--next-clean-rebalance-date", default="2026-10-08")
+    gas_water_paper_parser.set_defaults(handler=_handle_build_gas_water_paper_tracking_packet)
 
     airport_disclosure_parser = subparsers.add_parser("collect-airport-report-disclosure-dates")
     airport_disclosure_parser.add_argument("panel", type=Path)
@@ -792,6 +818,25 @@ def _handle_daily_backtest_gas_water_state_guard(args: argparse.Namespace) -> in
             initial_cash=args.initial_cash,
             target_exposure=args.target_exposure,
             lot_size=args.lot_size,
+        )
+    )
+    return 0
+
+
+def _handle_build_gas_water_paper_tracking_packet(args: argparse.Namespace) -> int:
+    print(
+        build_gas_water_paper_tracking_packet(
+            strategy_id=args.strategy_id,
+            local_daily_dir=args.local_daily_dir,
+            panel_csv=args.panel,
+            price_csv=args.price_csv,
+            dividend_csv=args.dividend_csv,
+            benchmark_csv=args.benchmark_csv,
+            promotion_queue_csv=args.promotion_queue_csv,
+            selected_agent_queue_csv=args.selected_agent_queue_csv,
+            out_dir=args.out,
+            as_of_date=args.as_of_date,
+            next_clean_rebalance_date=args.next_clean_rebalance_date,
         )
     )
     return 0

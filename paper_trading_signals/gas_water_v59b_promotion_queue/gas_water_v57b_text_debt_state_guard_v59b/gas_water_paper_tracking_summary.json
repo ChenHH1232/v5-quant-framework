@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "strategy_id": "gas_water_v57b_text_debt_state_guard_v59b",
+  "experiment_layer": "paper_trading_preparation",
+  "status": "paper_tracking_ready_waiting_for_future_window",
+  "as_of_date": "2026-07-22",
+  "next_clean_rebalance_date": "2026-10-08",
+  "target_date_is_future": true,
+  "selected_from_promotion_queue": "gas_water_operators",
+  "selected_agent_queue": [
+    {
+      "queue_rank": "1",
+      "sector_id": "gas_water_operators",
+      "owner": "Engineering Agent",
+      "task": "Keep gas/water as an observation sleeve; refresh paper-trading inputs and wait for the next clean forward signal. Do not add it to frozen V57f.",
+      "input_artifacts": "sleeve_promotion_queue.csv; status_registry.json; sleeve_registry.csv",
+      "output_artifacts": "paper_trading_signal_log_or_local_daily_health_refresh",
+      "gate": "paper_tracking_only_no_core_inclusion",
+      "blocked_actions": "do_not_modify_V57f; do_not_tune_returns; do_not_claim_platform_replication; do_not_start_joinquant_test"
+    }
+  ],
+  "local_daily_dir": "local_daily_backtests_v59b_gas_water_state_guard_repaired_2021_07\\gas_water_v57b_text_debt_state_guard_v59b",
+  "inputs": {
+    "panel_csv": "数据库\\processed\\gas_water_2021_07_pit_repair_v59b\\panel_with_true_operating_state_repaired_2021_07.csv",
+    "price_csv": "数据库\\processed\\gas_water_v57b_joinquant_real_daily_prices.csv",
+    "dividend_csv": "数据库\\processed\\gas_water_v57b_joinquant_cash_dividends.csv",
+    "benchmark_csv": "数据库\\processed\\gas_water_v57b_same_pool_equal_weight_benchmark.csv",
+    "promotion_queue_csv": "enhanced_etf_production_lines_v5\\current\\sleeve_promotion_queue.csv",
+    "selected_agent_queue_csv": "enhanced_etf_production_lines_v5\\current\\promotion_agent_queues\\selected_candidate_agent_queue.csv"
+  },
+  "data_health": {
+    "panel_exists": true,
+    "price_exists": true,
+    "dividend_exists": true,
+    "benchmark_exists": true,
+    "panel_row_count": 750,
+    "price_row_count": 49120,
+    "dividend_row_count": 185,
+    "benchmark_row_count": 1228,
+    "latest_panel_trade_date": "2026-04-01",
+    "latest_price_date": "2026-05-29",
+    "latest_dividend_pay_date": "2026-05-29",
+    "latest_benchmark_date": "2026-05-29",
+    "target_panel_rows": 0
+  },
+  "local_daily_summary": {
+    "status": "engineering_local_daily_simulation_passed_ready_for_platform_preparation",
+    "signal_count": 20,
+    "daily_count": 1228,
+    "state_guard_blocked_count": 7,
+    "state_guard_blocked_dates": [
+      "2023-07-03",
+      "2024-04-01",
+      "2024-10-08",
+      "2025-01-02",
+      "2025-10-09",
+      "2026-01-05",
+      "2026-04-01"
+    ],
+    "rebalance_order_health": {
+      "rebalance_signal_count": 20,
+      "normal_rebalance_count": 13,
+      "no_order_rebalance_count": 3,
+      "no_order_no_position_count": 0,
+      "blocked_or_unfilled_rebalance_count": 0,
+      "missing_daily_rebalance_count": 0,
+      "leading_no_order_no_position_count": 0,
+      "first_executed_order_date": "2021-07-01",
+      "first_position_date": "2021-07-01",
+      "needs_review": false,
+      "pm_rule": "Guard-blocked empty selections are intentional cash defense. Non-guard missing orders, blocked orders, or no-position rebalance dates still require review.",
+      "intentional_guard_cash_block_count": 7,
+      "unexpected_rebalance_issue_count": 0
+    }
+  },
+  "latest_artifact_dates": {
+    "last_signal_date": "2026-04-01",
+    "last_guard_decision_date": "2026-04-01",
+    "last_order_health_date": "2026-04-01"
+  },
+  "outputs": {
+    "flow_table_csv": "paper_trading_signals\\gas_water_v59b_promotion_queue\\gas_water_v57b_text_debt_state_guard_v59b\\gas_water_paper_tracking_flow_table.csv",
+    "health_check_csv": "paper_trading_signals\\gas_water_v59b_promotion_queue\\gas_water_v57b_text_debt_state_guard_v59b\\gas_water_paper_tracking_health_check.csv",
+    "report_path": "paper_trading_signals\\gas_water_v59b_promotion_queue\\gas_water_v57b_text_debt_state_guard_v59b\\gas_water_paper_tracking_report.md"
+  },
+  "next_gate": "wait_until_clean_forward_window",
+  "pm_rules": [
+    "Gas/water remains an observation sleeve and cannot be silently added to frozen V57f.",
+    "No factor, weight, guard threshold, selection count, timing or sector-cap tuning is allowed.",
+    "No JoinQuant platform test is started by this packet.",
+    "A clean forward paper signal can only be recorded on or before the future rebalance date.",
+    "Guard-driven cash blocks are valid only when order health marks them intentional and non-error."
+  ],
+  "created_at_utc": "2026-07-22T07:43:07+00:00",
+  "agent_packet": {
+    "packet_path": "agent_loop_packets_v59\\gas_water_paper_tracking\\gas_water_paper_tracking_20260722\\checkpoint_packet.json",
+    "report_path": "agent_loop_packets_v59\\gas_water_paper_tracking\\gas_water_paper_tracking_20260722\\checkpoint_packet.md"
+  }
+}

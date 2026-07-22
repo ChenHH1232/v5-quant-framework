@@ -88,6 +88,7 @@ Each future paper-trading signal must record:
 | Entry Date | Signal Date | Layer | Candidate Count | Selected Count Before Guard | Selected Count After Guard | Guard State | Data Coverage | Execution Status | Notes | PM Decision |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- | --- | --- |
 | 2026-07-21 | pending next clean future rebalance | paper_trading_preparation |  |  |  | pending | n/a | not started | Paper-trading log opened after repaired local daily simulation passed. 2026-07 is not clean forward evidence because this log opens on 2026-07-21. Expected next clean rebalance is 2026-10-08 subject to trading-calendar confirmation. | monitor only |
+| 2026-07-22 | pending 2026-10-08 clean future rebalance | paper_tracking_preparation |  |  |  | pending future refresh | panel latest 2026-04-01; price/dividend/benchmark latest 2026-05-29 | engineering paper-tracking packet passed | Sleeve Promotion Queue selected `gas_water_operators` as rank 1. Local daily order health passed with 20 rebalance signals, 13 normal orders, 7 intentional guard cash blocks and 0 unexpected rebalance issues. No clean future signal generated because 2026-10-08 is still in the future. | wait until clean forward window; observation sleeve only |
 
 ## PM Review Rule
 

@@ -1,0 +1,11 @@
+check,status,detail
+promotion_queue_selected,passed,gas_water_operators
+selected_agent_queue_exists,passed,rows=1
+local_daily_summary_passed,passed,engineering_local_daily_simulation_passed_ready_for_platform_preparation
+rebalance_order_health_passed,passed,"{""rebalance_signal_count"": 20, ""normal_rebalance_count"": 13, ""no_order_rebalance_count"": 3, ""no_order_no_position_count"": 0, ""blocked_or_unfilled_rebalance_count"": 0, ""missing_daily_rebalance_count"": 0, ""leading_no_order_no_position_count"": 0, ""first_executed_order_date"": ""2021-07-01"", ""first_position_date"": ""2021-07-01"", ""needs_review"": false, ""pm_rule"": ""Guard-blocked empty selections are intentional cash defense. Non-guard missing orders, blocked orders, or no-position rebalance dates still require review."", ""intentional_guard_cash_block_count"": 7, ""unexpected_rebalance_issue_count"": 0}"
+panel_file_exists,passed,latest=2026-04-01 rows=750
+price_file_exists,passed,latest=2026-05-29 rows=49120
+dividend_file_exists,passed,latest=2026-05-29 rows=185
+benchmark_file_exists,passed,latest=2026-05-29 rows=1228
+future_window_not_due,passed,as_of=2026-07-22 target=2026-10-08
+target_panel_rows_pending_is_expected,passed,target_rows=0

@@ -3,7 +3,7 @@
     "queue_rank": "1",
     "sector_id": "gas_water_operators",
     "owner": "Engineering Agent",
-    "task": "Keep gas/water as an observation sleeve; refresh paper-trading inputs and wait for the next clean forward signal. Do not add it to frozen V57f.",
+    "task": "Keep gas_water_operators as an observation sleeve; refresh paper-trading inputs and wait for the next clean forward signal. Do not add it to frozen V57f.",
     "input_artifacts": "sleeve_promotion_queue.csv; status_registry.json; sleeve_registry.csv",
     "output_artifacts": "paper_trading_signal_log_or_local_daily_health_refresh",
     "gate": "paper_tracking_only_no_core_inclusion",

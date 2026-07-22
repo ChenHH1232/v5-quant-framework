@@ -196,7 +196,7 @@ def _gap_checklist(sleeve: dict[str, str], evidence: dict[str, Any]) -> dict[str
     burden = _lower(sleeve.get("external_state_burden"))
     sample = _lower(sleeve.get("sample_size_risk"))
     corpus = evidence["corpus"]
-    return {
+    gaps = {
         "missing_pit_data": not (_yes(sleeve.get("panel_exists")) or evidence["has_pit_panel"]),
         "missing_real_dividends": not (_yes(sleeve.get("dividend_exists")) or evidence["has_dividend"]),
         "missing_low_vol_factors": not evidence["has_low_vol"],
@@ -207,6 +207,9 @@ def _gap_checklist(sleeve: dict[str, str], evidence: dict[str, Any]) -> dict[str
         "platform_exports_missing": evidence["platform_exports_missing"],
         "specialist_data_required": "specialist" in data_gate or "specialist" in corpus or "ev / nbv" in corpus or "arpu" in corpus,
     }
+    if "engineering_local_daily_simulation_passed" in corpus and "rebalance_order_health_passed" in corpus:
+        gaps["specialist_data_required"] = False
+    return gaps
 
 
 def _completion_cost(gaps: dict[str, bool], sleeve: dict[str, str]) -> float:
@@ -261,6 +264,13 @@ def _next_route(
     sector_id = str(sleeve.get("sector_id") or "")
     corpus = evidence["corpus"]
     lane = str(sleeve.get("production_lane") or "")
+    if "engineering_local_daily_simulation_passed" in corpus and "rebalance_order_health_passed" in corpus:
+        return (
+            "Engineering Agent",
+            f"Keep {sector_id} as an observation sleeve; refresh paper-trading inputs and wait for the next clean forward signal. Do not add it to frozen V57f.",
+            "paper_tracking_only_no_core_inclusion",
+            "observation_paper_tracking",
+        )
     if sector_id == "gas_water_operators" and evidence["has_local_daily"] and not gaps["missing_rebalance_order_health"]:
         return (
             "Engineering Agent",
@@ -508,6 +518,8 @@ def _sector_tokens(sector_id: str) -> list[str]:
 
 def _pm_note(sleeve: dict[str, str], evidence: dict[str, Any], gaps: dict[str, bool]) -> str:
     sector_id = str(sleeve.get("sector_id") or "")
+    if "engineering_local_daily_simulation_passed" in evidence["corpus"] and "rebalance_order_health_passed" in evidence["corpus"]:
+        return "Engineering smoke test and order-health gate passed; promote only to observation paper tracking, not to V57f."
     if sector_id == "gas_water_operators" and evidence["has_local_daily"]:
         return "Most complete observation candidate; promote only to clean forward/paper queue, not to V57f."
     if gaps["sample_size_too_small"]:

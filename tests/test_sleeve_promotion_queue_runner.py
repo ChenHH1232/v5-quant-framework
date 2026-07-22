@@ -135,3 +135,75 @@ def test_sleeve_promotion_queue_ranks_by_cost_and_fit_not_returns(tmp_path: Path
     report = result.report_path.read_text(encoding="utf-8")
     assert "Historical performance alone" in report
     assert "Only the first-ranked candidate" in report
+
+
+def test_sleeve_promotion_queue_routes_engineering_passed_sleeve_to_paper_tracking(tmp_path: Path) -> None:
+    sleeve_registry = tmp_path / "sleeve_registry.csv"
+    fieldnames = [
+        "sector_id",
+        "display_name",
+        "production_lane",
+        "data_gate",
+        "external_state_burden",
+        "sample_size_risk",
+        "panel_exists",
+        "dividend_exists",
+    ]
+    with sleeve_registry.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerow(
+            {
+                "sector_id": "home_appliances",
+                "display_name": "Home Appliances",
+                "production_lane": "research_repair_queue",
+                "data_gate": "needs_specialist_review",
+                "external_state_burden": "medium",
+                "sample_size_risk": "medium",
+                "panel_exists": "yes",
+                "dividend_exists": "yes",
+            }
+        )
+
+    status_registry = tmp_path / "status_registry.json"
+    status_registry.write_text(
+        json.dumps(
+            {
+                "strategies": [
+                    {
+                        "strategy_id": "home_appliances_ocf_quality_v5a5e_engineering_handoff",
+                        "sector": "home_appliances",
+                        "current_status": [
+                            "engineering_local_daily_simulation_passed",
+                            "rebalance_order_health_passed",
+                            "observation_candidate_not_v57f_sleeve",
+                        ],
+                        "evidence_paths": [
+                            "local_daily_backtests_home_appliances/summary.json",
+                            "local_daily_backtests_home_appliances/rebalance_order_health.csv",
+                            "data/processed/home_appliances/panel_with_low_vol.csv",
+                            "home_appliances_cash_dividends.csv",
+                        ],
+                        "blockers": [
+                            "PM must separately approve any observation-basket or paper-trading route.",
+                        ],
+                    }
+                ]
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    result = build_sleeve_promotion_queue(
+        sleeve_registry=sleeve_registry,
+        status_registry=status_registry,
+        out_dir=tmp_path / "out",
+        candidate_ids=["home_appliances"],
+    )
+
+    rows = list(csv.DictReader(result.queue_csv.open("r", encoding="utf-8")))
+    assert rows[0]["recommended_next_owner"] == "Engineering Agent"
+    assert rows[0]["promotion_lane"] == "observation_paper_tracking"
+    assert rows[0]["pm_gate"] == "paper_tracking_only_no_core_inclusion"
+    assert rows[0]["specialist_data_required"] == "no"

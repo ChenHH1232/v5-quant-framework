@@ -1,0 +1,12 @@
+check,status,detail
+promotion_queue_rank_exists,passed,rank=2
+promotion_queue_observation_route,passed,paper_tracking_only_no_core_inclusion
+local_daily_engineering_passed,passed,engineering_local_daily_simulation_passed
+signal_coverage_passed,passed,"{""expected_rebalance_count"": 20, ""actual_signal_count"": 20, ""missing_signal_count"": 0, ""extra_signal_count"": 0, ""expected_rebalance_dates"": [""2021-07-01"", ""2021-10-08"", ""2022-01-04"", ""2022-04-01"", ""2022-07-01"", ""2022-10-10"", ""2023-01-03"", ""2023-04-03"", ""2023-07-03"", ""2023-10-09"", ""2024-01-02"", ""2024-04-01"", ""2024-07-01"", ""2024-10-08"", ""2025-01-02"", ""2025-04-01"", ""2025-07-01"", ""2025-10-09"", ""2026-01-05"", ""2026-04-01""], ""actual_signal_dates"": [""2021-07-01"", ""2021-10-08"", ""2022-01-04"", ""2022-04-01"", ""2022-07-01"", ""2022-10-10"", ""2023-01-03"", ""2023-04-03"", ""2023-07-03"", ""2023-10-09"", ""2024-01-02"", ""2024-04-01"", ""2024-07-01"", ""2024-10-08"", ""2025-01-02"", ""2025-04-01"", ""2025-07-01"", ""2025-10-09"", ""2026-01-05"", ""2026-04-01""], ""missing_signal_dates"": [], ""extra_signal_dates"": [], ""status"": ""passed""}"
+rebalance_order_health_passed,passed,"{""rebalance_signal_count"": 20, ""normal_rebalance_count"": 20, ""no_order_rebalance_count"": 0, ""no_order_no_position_count"": 0, ""blocked_or_unfilled_rebalance_count"": 0, ""missing_daily_rebalance_count"": 0, ""leading_no_order_no_position_count"": 0, ""first_executed_order_date"": ""2021-07-01"", ""first_position_date"": ""2021-07-01"", ""needs_review"": false, ""pm_rule"": ""Every rebalance signal must be checked for actual local orders and post-rebalance holdings before comparing with JoinQuant.""}"
+panel_file_exists,passed,latest=2026-04-01 rows=1687
+price_file_exists,passed,latest=2026-05-29 rows=124028
+dividend_file_exists,passed,latest=2026-05-29 rows=440
+benchmark_file_exists,passed,latest=2026-05-29 rows=1228
+future_window_not_due,passed,as_of=2026-07-22 target=2026-10-08
+target_panel_rows_pending_is_expected,passed,target_rows=0

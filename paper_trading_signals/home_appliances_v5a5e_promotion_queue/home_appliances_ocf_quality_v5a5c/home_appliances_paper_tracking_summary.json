@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "strategy_id": "home_appliances_ocf_quality_v5a5c",
+  "experiment_layer": "paper_trading_preparation",
+  "status": "paper_tracking_ready_waiting_for_future_window",
+  "as_of_date": "2026-07-22",
+  "next_clean_rebalance_date": "2026-10-08",
+  "target_date_is_future": true,
+  "promotion_queue_rank": 2,
+  "local_daily_dir": "local_daily_backtests_home_appliances_v5a5e\\home_appliances_ocf_quality_v5a5c",
+  "inputs": {
+    "panel_csv": "数据库\\processed\\home_appliances_state_gate_v5a5d\\panel_with_home_appliances_state_gate.csv",
+    "price_csv": "数据库\\processed\\home_appliances_v5a5_joinquant_real_daily_prices.csv",
+    "dividend_csv": "数据库\\processed\\home_appliances_v5a5_joinquant_cash_dividends.csv",
+    "benchmark_csv": "数据库\\processed\\home_appliances_v5a5_joinquant_real_benchmark_prices.csv",
+    "promotion_queue_csv": "enhanced_etf_production_lines_v5\\current\\sleeve_promotion_queue.csv"
+  },
+  "data_health": {
+    "panel_exists": true,
+    "price_exists": true,
+    "dividend_exists": true,
+    "benchmark_exists": true,
+    "panel_row_count": 1687,
+    "price_row_count": 124028,
+    "dividend_row_count": 440,
+    "benchmark_row_count": 1228,
+    "latest_panel_trade_date": "2026-04-01",
+    "latest_price_date": "2026-05-29",
+    "latest_dividend_pay_date": "2026-05-29",
+    "latest_benchmark_date": "2026-05-29",
+    "target_panel_rows": 0
+  },
+  "local_daily_summary": {
+    "engineering_gate": "engineering_local_daily_simulation_passed",
+    "signal_count": 20,
+    "daily_count": 1228,
+    "rebalance_order_health": {
+      "rebalance_signal_count": 20,
+      "normal_rebalance_count": 20,
+      "no_order_rebalance_count": 0,
+      "no_order_no_position_count": 0,
+      "blocked_or_unfilled_rebalance_count": 0,
+      "missing_daily_rebalance_count": 0,
+      "leading_no_order_no_position_count": 0,
+      "first_executed_order_date": "2021-07-01",
+      "first_position_date": "2021-07-01",
+      "needs_review": false,
+      "pm_rule": "Every rebalance signal must be checked for actual local orders and post-rebalance holdings before comparing with JoinQuant."
+    },
+    "signal_coverage": {
+      "expected_rebalance_count": 20,
+      "actual_signal_count": 20,
+      "missing_signal_count": 0,
+      "extra_signal_count": 0,
+      "expected_rebalance_dates": [
+        "2021-07-01",
+        "2021-10-08",
+        "2022-01-04",
+        "2022-04-01",
+        "2022-07-01",
+        "2022-10-10",
+        "2023-01-03",
+        "2023-04-03",
+        "2023-07-03",
+        "2023-10-09",
+        "2024-01-02",
+        "2024-04-01",
+        "2024-07-01",
+        "2024-10-08",
+        "2025-01-02",
+        "2025-04-01",
+        "2025-07-01",
+        "2025-10-09",
+        "2026-01-05",
+        "2026-04-01"
+      ],
+      "actual_signal_dates": [
+        "2021-07-01",
+        "2021-10-08",
+        "2022-01-04",
+        "2022-04-01",
+        "2022-07-01",
+        "2022-10-10",
+        "2023-01-03",
+        "2023-04-03",
+        "2023-07-03",
+        "2023-10-09",
+        "2024-01-02",
+        "2024-04-01",
+        "2024-07-01",
+        "2024-10-08",
+        "2025-01-02",
+        "2025-04-01",
+        "2025-07-01",
+        "2025-10-09",
+        "2026-01-05",
+        "2026-04-01"
+      ],
+      "missing_signal_dates": [],
+      "extra_signal_dates": [],
+      "status": "passed"
+    }
+  },
+  "latest_artifact_dates": {
+    "last_signal_date": "2026-04-01",
+    "last_order_health_date": "2026-04-01"
+  },
+  "outputs": {
+    "flow_table_csv": "paper_trading_signals\\home_appliances_v5a5e_promotion_queue\\home_appliances_ocf_quality_v5a5c\\home_appliances_paper_tracking_flow_table.csv",
+    "health_check_csv": "paper_trading_signals\\home_appliances_v5a5e_promotion_queue\\home_appliances_ocf_quality_v5a5c\\home_appliances_paper_tracking_health_check.csv",
+    "report_path": "paper_trading_signals\\home_appliances_v5a5e_promotion_queue\\home_appliances_ocf_quality_v5a5c\\home_appliances_paper_tracking_report.md"
+  },
+  "next_gate": "wait_until_clean_forward_window",
+  "pm_rules": [
+    "Home appliances remains an observation sleeve and cannot be silently added to frozen V57f.",
+    "No factor, weight, selection count, timing or sector-cap tuning is allowed.",
+    "No JoinQuant platform test is started by this packet.",
+    "A clean forward paper signal can only be recorded on or before the future rebalance date.",
+    "2021-2026 performance remains Engineering context, not accepted-strategy evidence."
+  ],
+  "created_at_utc": "2026-07-22T11:03:44+00:00",
+  "agent_packet": {
+    "packet_path": "agent_loop_packets_v5a5\\home_appliances_paper_tracking\\home_appliances_paper_tracking_20260722\\checkpoint_packet.json",
+    "report_path": "agent_loop_packets_v5a5\\home_appliances_paper_tracking\\home_appliances_paper_tracking_20260722\\checkpoint_packet.md"
+  }
+}

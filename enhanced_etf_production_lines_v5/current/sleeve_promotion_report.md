@@ -1,6 +1,6 @@
 # V5 Sleeve Promotion Queue
 
-Generated at: 2026-07-22T09:44:39.437026+00:00
+Generated at: 2026-07-22T11:04:38.124276+00:00
 
 ## Purpose
 
@@ -24,7 +24,7 @@ Historical performance alone is never sufficient evidence for accepting a strate
 | Rank | Sector | Lane | Score | Fit | Cost | Risk | Next Owner | Gate |
 | --- | --- | --- | ---: | ---: | ---: | ---: | --- | --- |
 | 1 | gas_water_operators | observation_paper_tracking | 89.0 | 94.0 | 0.0 | 5.0 | Engineering Agent | paper_tracking_only_no_core_inclusion |
-| 2 | home_appliances | observation_paper_tracking | 65.0 | 82.0 | 4.0 | 13.0 | Engineering Agent | paper_tracking_only_no_core_inclusion |
+| 2 | home_appliances | observation_paper_tracking | 60.0 | 82.0 | 9.0 | 13.0 | Engineering Agent | paper_tracking_only_no_core_inclusion |
 | 3 | oil_gas_pipeline_integrated | external_event_wait | 42.0 | 76.0 | 9.0 | 25.0 | Project Manager Agent | wait_for_external_platform_or_forward_event |
 | 4 | insurance | research_repair | 3.0 | 70.0 | 24.0 | 43.0 | Research Agent | research_data_gate_repair |
 | 5 | consumer_staples_cashflow | research_repair | -7.0 | 72.0 | 56.0 | 23.0 | Research Agent | research_data_gate_repair |

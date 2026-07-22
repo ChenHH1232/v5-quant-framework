@@ -2587,6 +2587,37 @@
         "Platform replication and JoinQuant code remain blocked."
       ],
       "next_gate": "pm_review_for_observation_sleeve_or_paper_tracking"
+    },
+    {
+      "strategy_id": "home_appliances_ocf_quality_v5a5f_paper_tracking",
+      "sector": "home_appliances",
+      "current_status": [
+        "paper_tracking_preparation_passed",
+        "paper_tracking_ready_waiting_for_future_window",
+        "observation_candidate_not_v57f_sleeve",
+        "not_platform_replication",
+        "not_accepted_strategy"
+      ],
+      "not_status": [
+        "accepted_strategy",
+        "platform_replication",
+        "v57f_core_sleeve",
+        "joinquant_code_ready"
+      ],
+      "experiment_layer": "paper_trading_preparation",
+      "evidence_paths": [
+        "paper_trading_signals/home_appliances_v5a5e_promotion_queue/home_appliances_ocf_quality_v5a5c/home_appliances_paper_tracking_flow_table.csv",
+        "paper_trading_signals/home_appliances_v5a5e_promotion_queue/home_appliances_ocf_quality_v5a5c/home_appliances_paper_tracking_health_check.csv",
+        "paper_trading_signals/home_appliances_v5a5e_promotion_queue/home_appliances_ocf_quality_v5a5c/home_appliances_paper_tracking_summary.json",
+        "paper_trading_signals/home_appliances_v5a5e_promotion_queue/home_appliances_ocf_quality_v5a5c/home_appliances_paper_tracking_report.md",
+        "agent_loop_packets_v5a5/home_appliances_paper_tracking/home_appliances_paper_tracking_20260722/checkpoint_packet.json"
+      ],
+      "blockers": [
+        "Clean future signal cannot be generated until 2026-10-08 rebalance window.",
+        "Do not add home appliances to frozen V57f without a separate PM stage gate.",
+        "No JoinQuant platform replication has been started."
+      ],
+      "next_gate": "wait_until_clean_forward_window"
     }
   ],
   "sector_test_policy": {
@@ -3317,6 +3348,14 @@
     "v5a.5e_home_appliances_engineering_gate_summary": "home_appliances_engineering_gates_v5a5e/home_appliances_ocf_quality_v5a5c/home_appliances_engineering_gate_summary.json",
     "v5a.5e_home_appliances_daily_summary": "local_daily_backtests_home_appliances_v5a5e/home_appliances_ocf_quality_v5a5c/summary.json",
     "v5a.5e_home_appliances_rebalance_order_health": "local_daily_backtests_home_appliances_v5a5e/home_appliances_ocf_quality_v5a5c/rebalance_order_health.csv",
-    "v5a.5e_home_appliances_next_gate": "pm_review_for_observation_sleeve_or_paper_tracking"
+    "v5a.5e_home_appliances_next_gate": "pm_review_for_observation_sleeve_or_paper_tracking",
+    "v5a.5f_home_appliances_paper_tracking_status": "paper_tracking_ready_waiting_for_future_window",
+    "v5a.5f_home_appliances_paper_tracking_runner": "src/v5/home_appliances_paper_tracking_runner.py",
+    "v5a.5f_home_appliances_paper_tracking_flow_table": "paper_trading_signals/home_appliances_v5a5e_promotion_queue/home_appliances_ocf_quality_v5a5c/home_appliances_paper_tracking_flow_table.csv",
+    "v5a.5f_home_appliances_paper_tracking_health_check": "paper_trading_signals/home_appliances_v5a5e_promotion_queue/home_appliances_ocf_quality_v5a5c/home_appliances_paper_tracking_health_check.csv",
+    "v5a.5f_home_appliances_paper_tracking_summary": "paper_trading_signals/home_appliances_v5a5e_promotion_queue/home_appliances_ocf_quality_v5a5c/home_appliances_paper_tracking_summary.json",
+    "v5a.5f_home_appliances_paper_tracking_report": "paper_trading_signals/home_appliances_v5a5e_promotion_queue/home_appliances_ocf_quality_v5a5c/home_appliances_paper_tracking_report.md",
+    "v5a.5f_home_appliances_paper_tracking_agent_packet": "agent_loop_packets_v5a5/home_appliances_paper_tracking/home_appliances_paper_tracking_20260722/checkpoint_packet.json",
+    "v5a.5f_home_appliances_paper_tracking_next_gate": "wait_until_clean_forward_window"
   }
 }

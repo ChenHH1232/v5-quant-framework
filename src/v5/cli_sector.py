@@ -119,6 +119,17 @@ from v5.home_appliances_daily_backtest_runner import (
     DEFAULT_SPEC as DEFAULT_HOME_APPLIANCES_DAILY_SPEC,
     run_home_appliances_daily_backtest,
 )
+from v5.home_appliances_paper_tracking_runner import (
+    DEFAULT_BENCHMARK_CSV as DEFAULT_HOME_APPLIANCES_PAPER_BENCHMARK,
+    DEFAULT_DIVIDEND_CASH_CSV as DEFAULT_HOME_APPLIANCES_PAPER_DIVIDENDS,
+    DEFAULT_EXECUTION_PRICE_CSV as DEFAULT_HOME_APPLIANCES_PAPER_PRICES,
+    DEFAULT_LOCAL_DAILY_DIR as DEFAULT_HOME_APPLIANCES_PAPER_LOCAL_DAILY,
+    DEFAULT_OUT_DIR as DEFAULT_HOME_APPLIANCES_PAPER_OUT,
+    DEFAULT_PANEL as DEFAULT_HOME_APPLIANCES_PAPER_PANEL,
+    DEFAULT_PROMOTION_QUEUE as DEFAULT_HOME_APPLIANCES_PAPER_PROMOTION_QUEUE,
+    DEFAULT_STRATEGY_ID as DEFAULT_HOME_APPLIANCES_PAPER_STRATEGY_ID,
+    build_home_appliances_paper_tracking_packet,
+)
 from v5.consumer_working_capital_state_runner import (
     DEFAULT_OUT_ROOT as DEFAULT_CONSUMER_WORKING_CAPITAL_OUT,
     DEFAULT_PANELS as DEFAULT_CONSUMER_WORKING_CAPITAL_PANELS,
@@ -608,6 +619,19 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     home_appliances_daily_parser.add_argument("--lot-size", type=int, default=100)
     home_appliances_daily_parser.add_argument("--min-coverage-ratio", type=float, default=0.0)
     home_appliances_daily_parser.set_defaults(handler=_handle_daily_backtest_home_appliances)
+
+    home_appliances_paper_parser = subparsers.add_parser("build-home-appliances-paper-tracking-packet")
+    home_appliances_paper_parser.add_argument("--strategy-id", default=DEFAULT_HOME_APPLIANCES_PAPER_STRATEGY_ID)
+    home_appliances_paper_parser.add_argument("--local-daily-dir", type=Path, default=DEFAULT_HOME_APPLIANCES_PAPER_LOCAL_DAILY)
+    home_appliances_paper_parser.add_argument("--panel", type=Path, default=DEFAULT_HOME_APPLIANCES_PAPER_PANEL)
+    home_appliances_paper_parser.add_argument("--price-csv", type=Path, default=DEFAULT_HOME_APPLIANCES_PAPER_PRICES)
+    home_appliances_paper_parser.add_argument("--dividend-csv", type=Path, default=DEFAULT_HOME_APPLIANCES_PAPER_DIVIDENDS)
+    home_appliances_paper_parser.add_argument("--benchmark-csv", type=Path, default=DEFAULT_HOME_APPLIANCES_PAPER_BENCHMARK)
+    home_appliances_paper_parser.add_argument("--promotion-queue-csv", type=Path, default=DEFAULT_HOME_APPLIANCES_PAPER_PROMOTION_QUEUE)
+    home_appliances_paper_parser.add_argument("--out", type=Path, default=DEFAULT_HOME_APPLIANCES_PAPER_OUT)
+    home_appliances_paper_parser.add_argument("--as-of-date", default="2026-07-22")
+    home_appliances_paper_parser.add_argument("--next-clean-rebalance-date", default="2026-10-08")
+    home_appliances_paper_parser.set_defaults(handler=_handle_build_home_appliances_paper_tracking_packet)
 
     consumer_wc_parser = subparsers.add_parser("enrich-consumer-working-capital-state")
     consumer_wc_parser.add_argument("sector", choices=sorted(DEFAULT_CONSUMER_WORKING_CAPITAL_PANELS))
@@ -1172,6 +1196,24 @@ def _handle_daily_backtest_home_appliances(args: argparse.Namespace) -> int:
             initial_cash=args.initial_cash,
             target_exposure=args.target_exposure,
             lot_size=args.lot_size,
+        )
+    )
+    return 0
+
+
+def _handle_build_home_appliances_paper_tracking_packet(args: argparse.Namespace) -> int:
+    print(
+        build_home_appliances_paper_tracking_packet(
+            strategy_id=args.strategy_id,
+            local_daily_dir=args.local_daily_dir,
+            panel_csv=args.panel,
+            price_csv=args.price_csv,
+            dividend_csv=args.dividend_csv,
+            benchmark_csv=args.benchmark_csv,
+            promotion_queue_csv=args.promotion_queue_csv,
+            out_dir=args.out,
+            as_of_date=args.as_of_date,
+            next_clean_rebalance_date=args.next_clean_rebalance_date,
         )
     )
     return 0

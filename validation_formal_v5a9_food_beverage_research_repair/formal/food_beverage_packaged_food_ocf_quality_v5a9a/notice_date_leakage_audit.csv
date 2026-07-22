@@ -1,0 +1,2 @@
+check,status,checked_rows,missing_notice_date_rows,future_notice_violations,detail
+pit_factor_visible_date_audit,pass,634,0,0,PIT-sensitive factor fields used in formal validation must have visible_date <= trade_date.

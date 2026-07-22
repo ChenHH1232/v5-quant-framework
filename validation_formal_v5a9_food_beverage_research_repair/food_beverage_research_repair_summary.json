@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "dataset": "food_beverage_research_repair_v5a9",
+  "experiment_layer": "research_pit_validation",
+  "status": "food_beverage_engineering_handoff_ready",
+  "next_gate": "engineering_local_daily_simulation_only_no_tuning",
+  "input_panel": "数据库\\processed\\consumer_working_capital_state_v5a6\\food_beverage\\panel_with_working_capital_state.csv",
+  "flow_table_csv": "validation_formal_v5a9_food_beverage_research_repair\\food_beverage_research_repair_flow_table.csv",
+  "result_csv": "validation_formal_v5a9_food_beverage_research_repair\\food_beverage_research_repair_results.csv",
+  "report_path": "validation_formal_v5a9_food_beverage_research_repair\\food_beverage_research_repair_report.md",
+  "candidate_count": 2,
+  "candidate_results": [
+    {
+      "strategy_id": "food_beverage_packaged_food_ocf_quality_v5a9a",
+      "hypothesis": "branded_packaged_food_ocf_quality",
+      "panel_path": "validation_formal_v5a9_food_beverage_research_repair\\panels\\food_beverage_packaged_food_ocf_quality_v5a9a.csv",
+      "summary_path": "validation_formal_v5a9_food_beverage_research_repair\\formal\\food_beverage_packaged_food_ocf_quality_v5a9a\\formal_validation_summary.json",
+      "row_count": 634,
+      "date_count": 18,
+      "security_count": 38,
+      "median_codes_per_date": 35,
+      "selection_count": 8,
+      "equal_weight_return": -0.17201532190673452,
+      "candidate_return": 0.09395689264963503,
+      "negative_rolling_windows": 1,
+      "mean_ic": 0.00010091536550100226,
+      "mean_rankic": 0.029299183033703158,
+      "common_sample_securities": 38,
+      "pm_gate": "engineering_handoff_candidate",
+      "pm_decision": "can_start_engineering_local_daily_only",
+      "blocker": ""
+    },
+    {
+      "strategy_id": "food_beverage_packaged_food_high_ocf_wc_guard_v5a9b",
+      "hypothesis": "branded_packaged_food_high_ocf_with_working_capital_guard",
+      "panel_path": "validation_formal_v5a9_food_beverage_research_repair\\panels\\food_beverage_packaged_food_high_ocf_wc_guard_v5a9b.csv",
+      "summary_path": "validation_formal_v5a9_food_beverage_research_repair\\formal\\food_beverage_packaged_food_high_ocf_wc_guard_v5a9b\\formal_validation_summary.json",
+      "row_count": 346,
+      "date_count": 18,
+      "security_count": 25,
+      "median_codes_per_date": 19,
+      "selection_count": 6,
+      "equal_weight_return": -0.09395068150695496,
+      "candidate_return": -0.06398707700738815,
+      "negative_rolling_windows": 1,
+      "mean_ic": 0.037114431781294276,
+      "mean_rankic": 0.052479022027413474,
+      "common_sample_securities": 25,
+      "pm_gate": "research_repair_blocked",
+      "pm_decision": "return_to_research_or_archive_until_new_business_state_evidence",
+      "blocker": "Candidate cumulative return is not positive; keep as diagnostic rather than Engineering handoff."
+    }
+  ],
+  "pm_rules": [
+    "This is Research/Quant repair only; it cannot accept a strategy.",
+    "Food/beverage may enter Engineering only if a subsector/business-state hypothesis has enough PIT sample width and stable evidence.",
+    "Do not tune factor weights, selection count, timing or subindustry membership based on 2021-2026 returns.",
+    "Do not send small-sample specialist watchlists to Engineering without a separate PM approval gate."
+  ],
+  "created_at_utc": "2026-07-22T11:41:50+00:00",
+  "agent_packet": {
+    "packet_path": "agent_loop_packets_v5a9\\food_beverage_research_repair\\food_beverage_research_repair_v5a9\\checkpoint_packet.json",
+    "report_path": "agent_loop_packets_v5a9\\food_beverage_research_repair\\food_beverage_research_repair_v5a9\\checkpoint_packet.md"
+  }
+}

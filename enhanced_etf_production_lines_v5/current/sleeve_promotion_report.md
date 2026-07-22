@@ -1,6 +1,6 @@
 # V5 Sleeve Promotion Queue
 
-Generated at: 2026-07-22T11:08:25.894295+00:00
+Generated at: 2026-07-22T11:44:30.997830+00:00
 
 ## Purpose
 
@@ -26,8 +26,8 @@ Historical performance alone is never sufficient evidence for accepting a strate
 | 1 | gas_water_operators | observation_paper_tracking | 89.0 | 94.0 | 0.0 | 5.0 | Engineering Agent | paper_tracking_only_no_core_inclusion |
 | 2 | home_appliances | observation_paper_tracking | 60.0 | 82.0 | 9.0 | 13.0 | Engineering Agent | paper_tracking_only_no_core_inclusion |
 | 3 | oil_gas_pipeline_integrated | external_event_wait | 42.0 | 76.0 | 9.0 | 25.0 | Project Manager Agent | wait_for_external_platform_or_forward_event |
-| 4 | food_beverage | research_repair | 5.0 | 68.0 | 24.0 | 39.0 | Research Agent | research_data_gate_repair |
-| 5 | insurance | research_repair | 3.0 | 70.0 | 24.0 | 43.0 | Research Agent | research_data_gate_repair |
+| 4 | insurance | research_repair | 3.0 | 70.0 | 24.0 | 43.0 | Research Agent | research_data_gate_repair |
+| 5 | food_beverage | engineering_smoke_test_candidate | 1.0 | 68.0 | 38.0 | 29.0 | Engineering Agent | local_daily_engineering_gate |
 | 6 | consumer_staples_cashflow | research_repair | -7.0 | 72.0 | 56.0 | 23.0 | Research Agent | research_data_gate_repair |
 | 7 | telecom_operators | external_event_wait | -8.0 | 62.0 | 31.0 | 39.0 | Project Manager Agent | wait_for_external_platform_or_forward_event |
 

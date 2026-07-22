@@ -1,0 +1,2 @@
+case,periods,cum_return,mean_return,positive_ratio,mean_selected_count,common_sample_rows,common_sample_dates,common_sample_securities,required_common_fields,tested_factors,status
+common_candidate_current,18,0.09395689264963503,0.011674497489011804,0.5555555555555556,8,634,18,38,operating_cash_flow_yield;operating_cash_flow_to_net_profit,operating_cash_flow_yield;operating_cash_flow_to_net_profit,completed

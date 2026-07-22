@@ -140,6 +140,11 @@ from v5.consumer_subsector_validation_runner import (
     DEFAULT_PANELS as DEFAULT_CONSUMER_SUBSECTOR_VALIDATION_PANELS,
     run_consumer_subsector_validation,
 )
+from v5.food_beverage_research_repair_runner import (
+    DEFAULT_OUT_DIR as DEFAULT_FOOD_BEVERAGE_REPAIR_OUT,
+    DEFAULT_PANEL as DEFAULT_FOOD_BEVERAGE_REPAIR_PANEL,
+    run_food_beverage_research_repair,
+)
 from v5.pharma_specialist_data_gate_runner import (
     DEFAULT_CASH_DIVIDENDS as DEFAULT_PHARMA_DATA_GATE_DIVIDENDS,
     DEFAULT_DAILY_PRICES as DEFAULT_PHARMA_DATA_GATE_DAILY_PRICES,
@@ -645,6 +650,11 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     consumer_subsector_parser.add_argument("--out-root", type=Path, default=DEFAULT_CONSUMER_SUBSECTOR_VALIDATION_OUT)
     consumer_subsector_parser.add_argument("--min-codes-per-date", type=int, default=8)
     consumer_subsector_parser.set_defaults(handler=_handle_validate_consumer_subsectors)
+
+    food_beverage_repair_parser = subparsers.add_parser("repair-food-beverage-research")
+    food_beverage_repair_parser.add_argument("--panel", type=Path, default=DEFAULT_FOOD_BEVERAGE_REPAIR_PANEL)
+    food_beverage_repair_parser.add_argument("--out", type=Path, default=DEFAULT_FOOD_BEVERAGE_REPAIR_OUT)
+    food_beverage_repair_parser.set_defaults(handler=_handle_repair_food_beverage_research)
 
     pharma_gate_parser = subparsers.add_parser("audit-pharma-specialist-data-gate")
     pharma_gate_parser.add_argument("--panel", type=Path, default=DEFAULT_PHARMA_DATA_GATE_PANEL)
@@ -1226,6 +1236,11 @@ def _handle_enrich_consumer_working_capital_state(args: argparse.Namespace) -> i
 
 def _handle_validate_consumer_subsectors(args: argparse.Namespace) -> int:
     print(run_consumer_subsector_validation(args.sector, args.panel, args.out_root, min_codes_per_date=args.min_codes_per_date))
+    return 0
+
+
+def _handle_repair_food_beverage_research(args: argparse.Namespace) -> int:
+    print(run_food_beverage_research_repair(args.panel, args.out))
     return 0
 
 

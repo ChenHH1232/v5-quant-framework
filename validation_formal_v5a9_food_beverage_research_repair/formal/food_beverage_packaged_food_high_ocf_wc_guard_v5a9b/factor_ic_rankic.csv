@@ -1,0 +1,2 @@
+factor,direction,observations,dates,mean_ic,mean_rankic,positive_ic_ratio,top_minus_bottom_mean_return
+operating_cash_flow_yield,higher_is_better,346,18,0.037114431781294276,0.052479022027413474,0.5555555555555556,0.002044985304353304

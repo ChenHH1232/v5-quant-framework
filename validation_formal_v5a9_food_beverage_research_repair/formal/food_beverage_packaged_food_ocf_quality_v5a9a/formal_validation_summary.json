@@ -1,0 +1,241 @@
+{
+  "strategy_id": "food_beverage_packaged_food_ocf_quality_v5a9a",
+  "experiment_layer": "research_pit_validation",
+  "panel": "validation_formal_v5a9_food_beverage_research_repair\\panels\\food_beverage_packaged_food_ocf_quality_v5a9a.csv",
+  "row_count": 634,
+  "date_count": 18,
+  "status": "formal_validation_completed_not_acceptance",
+  "notice_date_leakage_audit": [
+    {
+      "check": "pit_factor_visible_date_audit",
+      "status": "pass",
+      "checked_rows": 634,
+      "missing_notice_date_rows": 0,
+      "future_notice_violations": 0,
+      "detail": "PIT-sensitive factor fields used in formal validation must have visible_date <= trade_date."
+    }
+  ],
+  "rolling_validation": [
+    {
+      "window": "2024",
+      "status": "completed",
+      "case": "rolling_test_2024",
+      "periods": 4,
+      "cum_return": 0.03823503669718109,
+      "mean_return": 0.02267057932574062,
+      "positive_ratio": 0.5,
+      "mean_selected_count": 8
+    },
+    {
+      "window": "2025",
+      "status": "completed",
+      "case": "rolling_test_2025",
+      "periods": 4,
+      "cum_return": 0.19942688021151933,
+      "mean_return": 0.048367875766375,
+      "positive_ratio": 1.0,
+      "mean_selected_count": 8
+    },
+    {
+      "window": "2026",
+      "status": "completed",
+      "case": "rolling_test_2026",
+      "periods": 2,
+      "cum_return": -0.15331910961916062,
+      "mean_return": -0.079684037859625,
+      "positive_ratio": 0.0,
+      "mean_selected_count": 8
+    }
+  ],
+  "baseline_tests": [
+    {
+      "case": "equal_weight_packaged_food",
+      "periods": 18,
+      "cum_return": -0.17201532190673452,
+      "mean_return": -0.00323075974318293,
+      "positive_ratio": 0.3888888888888889,
+      "mean_selected_count": 35.22222222222222
+    },
+    {
+      "case": "candidate_current",
+      "periods": 18,
+      "cum_return": 0.09395689264963503,
+      "mean_return": 0.011674497489011804,
+      "positive_ratio": 0.5555555555555556,
+      "mean_selected_count": 8
+    }
+  ],
+  "ablation_tests": [
+    {
+      "case": "composite_current",
+      "periods": 18,
+      "cum_return": 0.09395689264963503,
+      "mean_return": 0.011674497489011804,
+      "positive_ratio": 0.5555555555555556,
+      "mean_selected_count": 8
+    },
+    {
+      "case": "drop_operating_cash_flow_yield",
+      "periods": 18,
+      "cum_return": -0.11750954625587107,
+      "mean_return": 0.0009841934226506941,
+      "positive_ratio": 0.4444444444444444,
+      "mean_selected_count": 8
+    },
+    {
+      "case": "drop_operating_cash_flow_to_net_profit",
+      "periods": 18,
+      "cum_return": -0.00971091774929933,
+      "mean_return": 0.0074599913899166675,
+      "positive_ratio": 0.3888888888888889,
+      "mean_selected_count": 8
+    }
+  ],
+  "robustness_tests": [
+    {
+      "case": "selection_count_7",
+      "periods": 18,
+      "cum_return": 0.053577609825845585,
+      "mean_return": 0.009345121184576987,
+      "positive_ratio": 0.5555555555555556,
+      "mean_selected_count": 7
+    },
+    {
+      "case": "selection_count_8",
+      "periods": 18,
+      "cum_return": 0.09395689264963503,
+      "mean_return": 0.011674497489011804,
+      "positive_ratio": 0.5555555555555556,
+      "mean_selected_count": 8
+    },
+    {
+      "case": "selection_count_9",
+      "periods": 18,
+      "cum_return": 0.17798536295392653,
+      "mean_return": 0.01663210160109691,
+      "positive_ratio": 0.5555555555555556,
+      "mean_selected_count": 9
+    },
+    {
+      "case": "weight_scale_0.8",
+      "periods": 18,
+      "cum_return": 0.09395689264963503,
+      "mean_return": 0.011674497489011804,
+      "positive_ratio": 0.5555555555555556,
+      "mean_selected_count": 8
+    },
+    {
+      "case": "weight_scale_1.0",
+      "periods": 18,
+      "cum_return": 0.09395689264963503,
+      "mean_return": 0.011674497489011804,
+      "positive_ratio": 0.5555555555555556,
+      "mean_selected_count": 8
+    },
+    {
+      "case": "weight_scale_1.2",
+      "periods": 18,
+      "cum_return": 0.09395689264963503,
+      "mean_return": 0.011674497489011804,
+      "positive_ratio": 0.5555555555555556,
+      "mean_selected_count": 8
+    }
+  ],
+  "common_sample_interaction_tests": [
+    {
+      "case": "common_candidate_current",
+      "periods": 18,
+      "cum_return": 0.09395689264963503,
+      "mean_return": 0.011674497489011804,
+      "positive_ratio": 0.5555555555555556,
+      "mean_selected_count": 8,
+      "common_sample_rows": 634,
+      "common_sample_dates": 18,
+      "common_sample_securities": 38,
+      "required_common_fields": "operating_cash_flow_yield;operating_cash_flow_to_net_profit",
+      "tested_factors": "operating_cash_flow_yield;operating_cash_flow_to_net_profit",
+      "status": "completed"
+    }
+  ],
+  "factor_ic_rankic": [
+    {
+      "factor": "operating_cash_flow_yield",
+      "direction": "higher_is_better",
+      "observations": 634,
+      "dates": 18,
+      "mean_ic": 0.00010091536550100226,
+      "mean_rankic": 0.029299183033703158,
+      "positive_ic_ratio": 0.5,
+      "top_minus_bottom_mean_return": 0.007925157401165655
+    },
+    {
+      "factor": "operating_cash_flow_to_net_profit",
+      "direction": "higher_is_better",
+      "observations": 634,
+      "dates": 18,
+      "mean_ic": 0.00044643568086163467,
+      "mean_rankic": 0.039000707866806934,
+      "positive_ic_ratio": 0.5,
+      "top_minus_bottom_mean_return": 0.021485536115810014
+    }
+  ],
+  "failure_mode_analysis": [
+    {
+      "year": "2021",
+      "periods": 0,
+      "selected_cum_return": null,
+      "selected_mean_return": null,
+      "selected_positive_ratio": null,
+      "all_universe_mean_return": null,
+      "low_pb_mean_return": null,
+      "relative_to_all_universe_mean": null,
+      "relative_to_low_pb_mean": null,
+      "selected_codes_by_date": "",
+      "factor_mean_notes": "operating_cash_flow_yield:selected_mean=None,all_mean=None ; operating_cash_flow_to_net_profit:selected_mean=None,all_mean=None",
+      "interpretation": "No selected periods."
+    },
+    {
+      "year": "2022",
+      "periods": 4,
+      "selected_cum_return": 0.041368404602697195,
+      "selected_mean_return": 0.019801945451562497,
+      "selected_positive_ratio": 0.5,
+      "all_universe_mean_return": 0.00404801958029501,
+      "low_pb_mean_return": 0.05872910900000001,
+      "relative_to_all_universe_mean": 0.015753925871267487,
+      "relative_to_low_pb_mean": -0.03892716354843751,
+      "selected_codes_by_date": "2022-01-04:000716.XSHE;600873.XSHG;603886.XSHG;603043.XSHG;002557.XSHE;002695.XSHE;002847.XSHE;603777.XSHG | 2022-04-01:000716.XSHE;603777.XSHG;003000.XSHE;002695.XSHE;002557.XSHE;600298.XSHG;002650.XSHE;603696.XSHG | 2022-07-01:002695.XSHE;300783.XSHE;603777.XSHG;003000.XSHE;600873.XSHG;600186.XSHG;603517.XSHG;002956.XSHE | 2022-10-10:002650.XSHE;603777.XSHG;603886.XSHG;002695.XSHE;603043.XSHG;603697.XSHG;603866.XSHG;600872.XSHG",
+      "factor_mean_notes": "operating_cash_flow_yield:selected_mean=0.03578398536196875,all_mean=0.012412513347145715 ; operating_cash_flow_to_net_profit:selected_mean=232.87995980720936,all_mean=53.76537468603609",
+      "interpretation": "2022: outperformed_all_universe,underperformed_low_pb"
+    },
+    {
+      "year": "2024",
+      "periods": 4,
+      "selected_cum_return": 0.03823503669718109,
+      "selected_mean_return": 0.02267057932574062,
+      "selected_positive_ratio": 0.5,
+      "all_universe_mean_return": 0.03158764514475075,
+      "low_pb_mean_return": 0.081617434504375,
+      "relative_to_all_universe_mean": -0.008917065819010129,
+      "relative_to_low_pb_mean": -0.05894685517863438,
+      "selected_codes_by_date": "2024-01-02:603043.XSHG;603886.XSHG;603719.XSHG;002557.XSHE;002956.XSHE;600298.XSHG;603317.XSHG;603866.XSHG | 2024-04-01:603719.XSHG;002956.XSHE;002557.XSHE;300973.XSHE;002820.XSHE;603057.XSHG;000716.XSHE;603696.XSHG | 2024-07-01:002650.XSHE;000716.XSHE;603517.XSHG;002557.XSHE;600186.XSHG;002695.XSHE;300783.XSHE;603697.XSHG | 2024-10-08:300972.XSHE;603886.XSHG;600305.XSHG;603517.XSHG;603057.XSHG;002847.XSHE;002495.XSHE;300973.XSHE",
+      "factor_mean_notes": "operating_cash_flow_yield:selected_mean=0.0338101673828125,all_mean=0.014040821915256338 ; operating_cash_flow_to_net_profit:selected_mean=15.724131263893751,all_mean=4.073274604293106",
+      "interpretation": "2024: underperformed_all_universe,underperformed_low_pb"
+    },
+    {
+      "year": "2026",
+      "periods": 2,
+      "selected_cum_return": -0.15331910961916062,
+      "selected_mean_return": -0.079684037859625,
+      "selected_positive_ratio": 0.0,
+      "all_universe_mean_return": -0.07546718989595608,
+      "low_pb_mean_return": -0.0984009782185,
+      "relative_to_all_universe_mean": -0.004216847963668918,
+      "relative_to_low_pb_mean": 0.018716940358875,
+      "selected_codes_by_date": "2026-01-05:603886.XSHG;600298.XSHG;603043.XSHG;002557.XSHE;003000.XSHE;603697.XSHG;002582.XSHE;001219.XSHE | 2026-04-01:002557.XSHE;003000.XSHE;300973.XSHE;603866.XSHG;603697.XSHG;001219.XSHE;002991.XSHE;002956.XSHE",
+      "factor_mean_notes": "operating_cash_flow_yield:selected_mean=0.040731346105624996,all_mean=0.015602802630747946 ; operating_cash_flow_to_net_profit:selected_mean=3.6201520032500003,all_mean=0.853273802450685",
+      "interpretation": "2026: underperformed_all_universe,outperformed_low_pb,low_positive_period_ratio"
+    }
+  ],
+  "governance": "Do not use 2021-2026 platform-confirmation results for tuning. Single-model acceptance requires rolling validation."
+}

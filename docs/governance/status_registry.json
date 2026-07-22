@@ -2651,6 +2651,42 @@
         "No Engineering local daily simulation is allowed from this evidence packet."
       ],
       "next_gate": "archive_as_research_signal_only_small_sample_specialist_watchlist"
+    },
+    {
+      "strategy_id": "food_beverage_packaged_food_ocf_quality_v5a9a",
+      "sector": "food_beverage",
+      "current_status": [
+        "research_pit_validation_completed",
+        "food_beverage_engineering_handoff_ready",
+        "engineering_local_daily_simulation_can_start",
+        "not_v57f_sleeve",
+        "not_platform_replication",
+        "not_accepted_strategy"
+      ],
+      "not_status": [
+        "accepted_strategy",
+        "platform_replication",
+        "paper_trading_ready",
+        "v57f_core_sleeve",
+        "joinquant_code_ready"
+      ],
+      "experiment_layer": "research_pit_validation",
+      "evidence_paths": [
+        "docs/governance/v5a.9_food_beverage_research_repair_pm_decision.md",
+        "validation_formal_v5a9_food_beverage_research_repair/food_beverage_research_repair_flow_table.csv",
+        "validation_formal_v5a9_food_beverage_research_repair/food_beverage_research_repair_results.csv",
+        "validation_formal_v5a9_food_beverage_research_repair/food_beverage_research_repair_summary.json",
+        "validation_formal_v5a9_food_beverage_research_repair/food_beverage_research_repair_report.md",
+        "validation_formal_v5a9_food_beverage_research_repair/specs/food_beverage_packaged_food_ocf_quality_v5a9a.json",
+        "validation_formal_v5a9_food_beverage_research_repair/panels/food_beverage_packaged_food_ocf_quality_v5a9a.csv",
+        "validation_formal_v5a9_food_beverage_research_repair/formal/food_beverage_packaged_food_ocf_quality_v5a9a/formal_validation_summary.json",
+        "agent_loop_packets_v5a9/food_beverage_research_repair/food_beverage_research_repair_v5a9/checkpoint_packet.json"
+      ],
+      "blockers": [
+        "Engineering has not yet run local daily simulation, dividends, trades, holdings, cash and rebalance_order_health.",
+        "Do not add to V57f or start JoinQuant replication before Engineering local daily gate passes."
+      ],
+      "next_gate": "engineering_local_daily_simulation_only_no_tuning"
     }
   ],
   "sector_test_policy": {
@@ -3392,6 +3428,12 @@
     "v5a.5f_home_appliances_paper_tracking_next_gate": "wait_until_clean_forward_window",
     "v5a.8d_condiments_small_sample_policy": "small_sample_specialist_sleeve_policy_not_approved_by_default",
     "v5a.8d_condiments_closeout": "docs/governance/v5a.8d_condiments_small_sample_policy_pm_closeout.md",
-    "v5a.8d_condiments_next_gate": "archive_as_research_signal_only_small_sample_specialist_watchlist"
+    "v5a.8d_condiments_next_gate": "archive_as_research_signal_only_small_sample_specialist_watchlist",
+    "v5a.9_food_beverage_pm_decision": "docs/governance/v5a.9_food_beverage_research_repair_pm_decision.md",
+    "v5a.9_food_beverage_repair_runner": "src/v5/food_beverage_research_repair_runner.py",
+    "v5a.9_food_beverage_summary": "validation_formal_v5a9_food_beverage_research_repair/food_beverage_research_repair_summary.json",
+    "v5a.9_food_beverage_results": "validation_formal_v5a9_food_beverage_research_repair/food_beverage_research_repair_results.csv",
+    "v5a.9_food_beverage_candidate": "food_beverage_packaged_food_ocf_quality_v5a9a",
+    "v5a.9_food_beverage_next_gate": "engineering_local_daily_simulation_only_no_tuning"
   }
 }

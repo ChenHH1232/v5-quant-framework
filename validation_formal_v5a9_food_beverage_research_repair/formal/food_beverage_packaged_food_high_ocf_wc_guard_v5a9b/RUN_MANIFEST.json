@@ -1,0 +1,55 @@
+{
+  "strategy_id": "food_beverage_packaged_food_high_ocf_wc_guard_v5a9b",
+  "experiment_layer": "research_pit_validation",
+  "created_at_utc": "2026-07-22T11:41:50+00:00",
+  "git": {
+    "commit": "7a987938a916c325473cbfff69ac20ed2a02b9ea",
+    "dirty": true,
+    "dirty_scope": "pre_run",
+    "pre_run": {
+      "commit": "7a987938a916c325473cbfff69ac20ed2a02b9ea",
+      "dirty": true,
+      "status_short": [
+        "M src/v5/cli_sector.py",
+        "?? agent_loop_packets_v5a9/",
+        "?? src/v5/food_beverage_research_repair_runner.py",
+        "?? tests/test_food_beverage_research_repair_runner.py",
+        "?? workspace_contract_audits/"
+      ],
+      "captured_at_utc": "2026-07-22T11:41:50+00:00"
+    },
+    "manifest_created": {
+      "commit": "7a987938a916c325473cbfff69ac20ed2a02b9ea",
+      "dirty": true,
+      "status_short": [
+        "M src/v5/cli_sector.py",
+        "?? agent_loop_packets_v5a9/",
+        "?? src/v5/food_beverage_research_repair_runner.py",
+        "?? tests/test_food_beverage_research_repair_runner.py",
+        "?? workspace_contract_audits/"
+      ],
+      "captured_at_utc": "2026-07-22T11:41:50+00:00"
+    }
+  },
+  "command_profile": {
+    "spec": "validation_formal_v5a9_food_beverage_research_repair\\specs\\food_beverage_packaged_food_high_ocf_wc_guard_v5a9b.json",
+    "panel": "validation_formal_v5a9_food_beverage_research_repair\\panels\\food_beverage_packaged_food_high_ocf_wc_guard_v5a9b.csv",
+    "out": "validation_formal_v5a9_food_beverage_research_repair\\formal"
+  },
+  "outputs": {
+    "formal_validation_summary": "formal_validation_summary.json",
+    "formal_validation_report": "formal_validation_report.md",
+    "notice_date_leakage_audit": "notice_date_leakage_audit.csv",
+    "rolling_validation": "rolling_validation.csv",
+    "baseline_tests": "baseline_tests.csv",
+    "ablation_tests": "ablation_tests.csv",
+    "robustness_tests": "robustness_tests.csv",
+    "common_sample_interaction_tests": "common_sample_interaction_tests.csv",
+    "factor_ic_rankic": "factor_ic_rankic.csv",
+    "failure_mode_analysis": "failure_mode_analysis.csv"
+  },
+  "warnings": [
+    "Formal validation output is evidence, not automatic strategy acceptance."
+  ],
+  "governance_rule": "Project Manager Agent must not mix research validation, platform replication, engineering smoke tests, and paper trading evidence."
+}

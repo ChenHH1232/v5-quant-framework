@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "packet_type": "checkpoint_packet",
+  "protocol_id": "agent_operating_protocol_v1",
+  "objective": "food_beverage_subsector_business_state_repair_until_engineering_gate",
+  "agent": "Project Manager Agent",
+  "experiment_layer": "pm_decision_gate",
+  "elapsed_timebox_minutes": 60,
+  "artifacts_created": [
+    "validation_formal_v5a9_food_beverage_research_repair\\food_beverage_research_repair_flow_table.csv",
+    "validation_formal_v5a9_food_beverage_research_repair\\food_beverage_research_repair_results.csv",
+    "validation_formal_v5a9_food_beverage_research_repair\\food_beverage_research_repair_summary.json",
+    "validation_formal_v5a9_food_beverage_research_repair\\food_beverage_research_repair_report.md"
+  ],
+  "evidence_found": [
+    "food_beverage_packaged_food_ocf_quality_v5a9a: gate=engineering_handoff_candidate decision=can_start_engineering_local_daily_only blocker=",
+    "food_beverage_packaged_food_high_ocf_wc_guard_v5a9b: gate=research_repair_blocked decision=return_to_research_or_archive_until_new_business_state_evidence blocker=Candidate cumulative return is not positive; keep as diagnostic rather than Engineering handoff."
+  ],
+  "blockers": [],
+  "decision": "return_to_engineering",
+  "next_owner": "Engineering Agent",
+  "stop_rule_status": "not_triggered",
+  "user_decision_required": false,
+  "user_decision_reason": "",
+  "allowed_next_action": "engineering_local_daily_simulation_only_no_tuning",
+  "restart_condition": "Restart only with a new Research hypothesis, wider PIT business-quality subset, or PM-approved small-sample specialist sleeve policy.",
+  "skill_status_change": "none",
+  "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
+  "created_at_utc": "2026-07-22T11:41:50+00:00"
+}

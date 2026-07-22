@@ -1,0 +1,135 @@
+{
+  "meta": {
+    "strategy_id": "food_beverage_packaged_food_ocf_quality_v5a9a",
+    "name": "branded_packaged_food_ocf_quality V5a.9",
+    "objective": "Combine asset-light packaged-food subindustries where OCF quality is economically interpretable; keep OCF conversion as support."
+  },
+  "universe": {
+    "name": "food_beverage:packaged_food",
+    "construction": "PIT food/beverage panel filtered to sw_condiments and sw_snack_food; optional fixed working-capital guard.",
+    "point_in_time": true,
+    "minimum_rebalance_coverage_ratio": 0.8
+  },
+  "data": {
+    "vendor": "JoinQuant/DataJQ PIT financial fields, real daily prices, cash-dividend panel and V5a.6 working-capital state runner",
+    "price_frequency": "quarterly_signal_panel",
+    "financial_as_of_policy": "vendor_get_fundamentals_date_proxy",
+    "window": {
+      "research_start": "2021-05-01",
+      "research_end": "2026-05-31"
+    }
+  },
+  "signals": {
+    "factors": [
+      {
+        "name": "operating_cash_flow_yield",
+        "source": "JoinQuant/DataJQ PIT financial fields and V5a.6 working-capital state panel",
+        "role": "primary_cash_generation",
+        "direction": "higher_is_better",
+        "definition": "operating_cash_flow_yield",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      },
+      {
+        "name": "operating_cash_flow_to_net_profit",
+        "source": "JoinQuant/DataJQ PIT financial fields and V5a.6 working-capital state panel",
+        "role": "cash_conversion_quality",
+        "direction": "higher_is_better",
+        "definition": "operating_cash_flow_to_net_profit",
+        "as_of": "trade_date_lagged",
+        "disclosure_lag_days": 1,
+        "missing_policy": "drop_security"
+      }
+    ],
+    "scoring": {
+      "method": "weighted_composite",
+      "normalization_scope": "rebalance_cross_section",
+      "weights": {
+        "operating_cash_flow_yield": 0.7,
+        "operating_cash_flow_to_net_profit": 0.3
+      },
+      "min_factor_count": 2,
+      "value_trap_guard": "No extra scorer guard; any working-capital guard is applied by the input panel."
+    }
+  },
+  "schedule": {
+    "signal_frequency": "quarterly",
+    "rebalance_frequency": "quarterly"
+  },
+  "portfolio": {
+    "selection_count": 8,
+    "weighting": "equal_weight_research_candidate",
+    "max_position_weight": 0.25
+  },
+  "risk": {
+    "defensive_asset": "cash",
+    "defensive_rule": {
+      "enabled": false
+    }
+  },
+  "validation": {
+    "method": "rolling",
+    "train_years": 3,
+    "test_years": 1,
+    "weak_years": [
+      "2021",
+      "2022",
+      "2024",
+      "2026"
+    ],
+    "baselines": [
+      {
+        "name": "equal_weight_packaged_food",
+        "mode": "equal_all"
+      },
+      {
+        "name": "candidate_current",
+        "mode": "composite",
+        "selection_count": 8
+      }
+    ],
+    "common_sample_fields": [
+      "operating_cash_flow_yield",
+      "operating_cash_flow_to_net_profit"
+    ],
+    "common_sample_interactions": [
+      {
+        "name": "common_candidate_current",
+        "factors": [
+          "operating_cash_flow_yield",
+          "operating_cash_flow_to_net_profit"
+        ]
+      }
+    ],
+    "robustness": {
+      "selection_counts": [
+        7,
+        8,
+        9
+      ],
+      "weight_scale_factors": [
+        "operating_cash_flow_yield",
+        "operating_cash_flow_to_net_profit"
+      ],
+      "weight_scales": [
+        0.8,
+        1.0,
+        1.2
+      ]
+    }
+  },
+  "execution": {
+    "status": "not_started",
+    "next_gate": "research_data_gate",
+    "commission_bps": 3,
+    "slippage_bps": 5,
+    "suspension_policy": "skip_untradeable",
+    "limit_policy": "skip_limit_blocked"
+  },
+  "outputs": {
+    "save_holdings": true,
+    "save_rebalance_signals": true,
+    "report": "markdown"
+  }
+}

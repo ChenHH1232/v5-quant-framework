@@ -2618,6 +2618,39 @@
         "No JoinQuant platform replication has been started."
       ],
       "next_gate": "wait_until_clean_forward_window"
+    },
+    {
+      "strategy_id": "condiments_high_ocf_wc_guard_v5a8d_closeout",
+      "sector": "food_beverage_condiments",
+      "current_status": [
+        "research_signal_only_small_sample_specialist_watchlist",
+        "small_sample_specialist_sleeve_policy_not_approved_by_default",
+        "not_engineering_handoff",
+        "not_v57f_sleeve",
+        "not_accepted_strategy"
+      ],
+      "not_status": [
+        "accepted_strategy",
+        "engineering_local_daily_simulation",
+        "platform_replication",
+        "paper_trading_ready",
+        "v57f_core_sleeve",
+        "joinquant_code_ready"
+      ],
+      "experiment_layer": "pm_decision_gate",
+      "evidence_paths": [
+        "docs/governance/v5a.8d_condiments_small_sample_policy_pm_closeout.md",
+        "docs/governance/v5a.8_condiments_specialist_state_model_pm_decision.md",
+        "validation_formal_v5a8_condiments_specialist_state_model/formal/condiments_high_ocf_wc_guard_v5a8c/formal_validation_summary.json",
+        "validation_formal_v5a8_condiments_specialist_state_model/specs/condiments_high_ocf_wc_guard_v5a8c.json",
+        "validation_formal_v5a8_condiments_specialist_state_model/panels/condiments_working_capital_guard.csv"
+      ],
+      "blockers": [
+        "Filtered universe is too concentrated for the current enhanced ETF sleeve mandate.",
+        "Small-sample specialist sleeve policy has not been approved.",
+        "No Engineering local daily simulation is allowed from this evidence packet."
+      ],
+      "next_gate": "archive_as_research_signal_only_small_sample_specialist_watchlist"
     }
   ],
   "sector_test_policy": {
@@ -3356,6 +3389,9 @@
     "v5a.5f_home_appliances_paper_tracking_summary": "paper_trading_signals/home_appliances_v5a5e_promotion_queue/home_appliances_ocf_quality_v5a5c/home_appliances_paper_tracking_summary.json",
     "v5a.5f_home_appliances_paper_tracking_report": "paper_trading_signals/home_appliances_v5a5e_promotion_queue/home_appliances_ocf_quality_v5a5c/home_appliances_paper_tracking_report.md",
     "v5a.5f_home_appliances_paper_tracking_agent_packet": "agent_loop_packets_v5a5/home_appliances_paper_tracking/home_appliances_paper_tracking_20260722/checkpoint_packet.json",
-    "v5a.5f_home_appliances_paper_tracking_next_gate": "wait_until_clean_forward_window"
+    "v5a.5f_home_appliances_paper_tracking_next_gate": "wait_until_clean_forward_window",
+    "v5a.8d_condiments_small_sample_policy": "small_sample_specialist_sleeve_policy_not_approved_by_default",
+    "v5a.8d_condiments_closeout": "docs/governance/v5a.8d_condiments_small_sample_policy_pm_closeout.md",
+    "v5a.8d_condiments_next_gate": "archive_as_research_signal_only_small_sample_specialist_watchlist"
   }
 }

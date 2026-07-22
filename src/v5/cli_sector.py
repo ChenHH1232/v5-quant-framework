@@ -145,6 +145,17 @@ from v5.food_beverage_research_repair_runner import (
     DEFAULT_PANEL as DEFAULT_FOOD_BEVERAGE_REPAIR_PANEL,
     run_food_beverage_research_repair,
 )
+from v5.food_beverage_daily_backtest_runner import (
+    DEFAULT_BENCHMARK_CSV as DEFAULT_FOOD_BEVERAGE_DAILY_BENCHMARK,
+    DEFAULT_BENCHMARK_ID as DEFAULT_FOOD_BEVERAGE_DAILY_BENCHMARK_ID,
+    DEFAULT_DIVIDEND_CASH_CSV as DEFAULT_FOOD_BEVERAGE_DAILY_DIVIDENDS,
+    DEFAULT_EXECUTION_PRICE_CSV as DEFAULT_FOOD_BEVERAGE_DAILY_PRICES,
+    DEFAULT_OUT_DIR as DEFAULT_FOOD_BEVERAGE_DAILY_OUT,
+    DEFAULT_PANEL as DEFAULT_FOOD_BEVERAGE_DAILY_PANEL,
+    DEFAULT_RESEARCH_GATE as DEFAULT_FOOD_BEVERAGE_DAILY_GATE,
+    DEFAULT_SPEC as DEFAULT_FOOD_BEVERAGE_DAILY_SPEC,
+    run_food_beverage_daily_backtest,
+)
 from v5.pharma_specialist_data_gate_runner import (
     DEFAULT_CASH_DIVIDENDS as DEFAULT_PHARMA_DATA_GATE_DIVIDENDS,
     DEFAULT_DAILY_PRICES as DEFAULT_PHARMA_DATA_GATE_DAILY_PRICES,
@@ -655,6 +666,23 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     food_beverage_repair_parser.add_argument("--panel", type=Path, default=DEFAULT_FOOD_BEVERAGE_REPAIR_PANEL)
     food_beverage_repair_parser.add_argument("--out", type=Path, default=DEFAULT_FOOD_BEVERAGE_REPAIR_OUT)
     food_beverage_repair_parser.set_defaults(handler=_handle_repair_food_beverage_research)
+
+    food_beverage_daily_parser = subparsers.add_parser("daily-backtest-food-beverage")
+    food_beverage_daily_parser.add_argument("--spec", type=Path, default=DEFAULT_FOOD_BEVERAGE_DAILY_SPEC)
+    food_beverage_daily_parser.add_argument("--panel", type=Path, default=DEFAULT_FOOD_BEVERAGE_DAILY_PANEL)
+    food_beverage_daily_parser.add_argument("--research-gate-summary", type=Path, default=DEFAULT_FOOD_BEVERAGE_DAILY_GATE)
+    food_beverage_daily_parser.add_argument("--execution-price-csv", type=Path, default=DEFAULT_FOOD_BEVERAGE_DAILY_PRICES)
+    food_beverage_daily_parser.add_argument("--dividend-cash-csv", type=Path, default=DEFAULT_FOOD_BEVERAGE_DAILY_DIVIDENDS)
+    food_beverage_daily_parser.add_argument("--benchmark-csv", type=Path, default=DEFAULT_FOOD_BEVERAGE_DAILY_BENCHMARK)
+    food_beverage_daily_parser.add_argument("--benchmark-id", default=DEFAULT_FOOD_BEVERAGE_DAILY_BENCHMARK_ID)
+    food_beverage_daily_parser.add_argument("--out", type=Path, default=DEFAULT_FOOD_BEVERAGE_DAILY_OUT)
+    food_beverage_daily_parser.add_argument("--start-date", default="2021-05-01")
+    food_beverage_daily_parser.add_argument("--end-date", default="2026-05-31")
+    food_beverage_daily_parser.add_argument("--initial-cash", type=float, default=2_000_000.0)
+    food_beverage_daily_parser.add_argument("--target-exposure", type=float, default=0.995)
+    food_beverage_daily_parser.add_argument("--lot-size", type=int, default=100)
+    food_beverage_daily_parser.add_argument("--min-coverage-ratio", type=float, default=0.0)
+    food_beverage_daily_parser.set_defaults(handler=_handle_daily_backtest_food_beverage)
 
     pharma_gate_parser = subparsers.add_parser("audit-pharma-specialist-data-gate")
     pharma_gate_parser.add_argument("--panel", type=Path, default=DEFAULT_PHARMA_DATA_GATE_PANEL)
@@ -1241,6 +1269,28 @@ def _handle_validate_consumer_subsectors(args: argparse.Namespace) -> int:
 
 def _handle_repair_food_beverage_research(args: argparse.Namespace) -> int:
     print(run_food_beverage_research_repair(args.panel, args.out))
+    return 0
+
+
+def _handle_daily_backtest_food_beverage(args: argparse.Namespace) -> int:
+    print(
+        run_food_beverage_daily_backtest(
+            spec_path=args.spec,
+            panel_csv=args.panel,
+            research_gate_summary=args.research_gate_summary,
+            execution_price_csv=args.execution_price_csv,
+            dividend_cash_csv=args.dividend_cash_csv,
+            benchmark_csv=args.benchmark_csv,
+            out_dir=args.out,
+            benchmark_id=args.benchmark_id,
+            start_date=args.start_date,
+            end_date=args.end_date,
+            initial_cash=args.initial_cash,
+            target_exposure=args.target_exposure,
+            lot_size=args.lot_size,
+            min_coverage_ratio=args.min_coverage_ratio,
+        )
+    )
     return 0
 
 

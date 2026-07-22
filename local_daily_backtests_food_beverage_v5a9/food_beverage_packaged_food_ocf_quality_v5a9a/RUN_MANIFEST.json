@@ -1,0 +1,84 @@
+{
+  "strategy_id": "food_beverage_packaged_food_ocf_quality_v5a9a",
+  "experiment_layer": "engineering_smoke_test",
+  "created_at_utc": "2026-07-22T15:07:03+00:00",
+  "git": {
+    "commit": "05fe8fa38b3aeced48b240860383e095256cfe42",
+    "dirty": true,
+    "dirty_scope": "pre_run",
+    "pre_run": {
+      "commit": "05fe8fa38b3aeced48b240860383e095256cfe42",
+      "dirty": true,
+      "status_short": [
+        "M docs/governance/status_registry.json",
+        " M enhanced_etf_production_lines_v5/current/sleeve_promotion_queue.csv",
+        " M enhanced_etf_production_lines_v5/current/sleeve_promotion_report.md",
+        " M enhanced_etf_production_lines_v5/current/sleeve_promotion_summary.json",
+        " M src/v5/cli_sector.py",
+        " M src/v5/sleeve_promotion_queue_runner.py",
+        " M tests/test_sleeve_promotion_queue_runner.py",
+        "?? docs/governance/v5a.9_food_beverage_local_daily_engineering_pm_decision.md",
+        "?? src/v5/food_beverage_daily_backtest_runner.py",
+        "?? tests/test_food_beverage_daily_backtest_runner.py",
+        "?? workspace_contract_audits/"
+      ],
+      "captured_at_utc": "2026-07-22T15:07:00+00:00"
+    },
+    "manifest_created": {
+      "commit": "05fe8fa38b3aeced48b240860383e095256cfe42",
+      "dirty": true,
+      "status_short": [
+        "M docs/governance/status_registry.json",
+        " M enhanced_etf_production_lines_v5/current/sleeve_promotion_queue.csv",
+        " M enhanced_etf_production_lines_v5/current/sleeve_promotion_report.md",
+        " M enhanced_etf_production_lines_v5/current/sleeve_promotion_summary.json",
+        " M src/v5/cli_sector.py",
+        " M src/v5/sleeve_promotion_queue_runner.py",
+        " M tests/test_sleeve_promotion_queue_runner.py",
+        "?? docs/governance/v5a.9_food_beverage_local_daily_engineering_pm_decision.md",
+        "?? src/v5/food_beverage_daily_backtest_runner.py",
+        "?? tests/test_food_beverage_daily_backtest_runner.py",
+        "?? workspace_contract_audits/"
+      ],
+      "captured_at_utc": "2026-07-22T15:07:03+00:00"
+    }
+  },
+  "command_profile": {
+    "spec": "validation_formal_v5a9_food_beverage_research_repair\\specs\\food_beverage_packaged_food_ocf_quality_v5a9a.json",
+    "panel": "validation_formal_v5a9_food_beverage_research_repair\\panels\\food_beverage_packaged_food_ocf_quality_v5a9a.csv",
+    "v4_raw_dir": ".",
+    "benchmark_csv": "数据库\\processed\\food_beverage_v5a5_joinquant_real_benchmark_prices.csv",
+    "benchmark_id": "000300.XSHG",
+    "execution_price_csv": "数据库\\processed\\food_beverage_v5a5_joinquant_real_daily_prices.csv",
+    "dividend_cash_csv": "数据库\\processed\\food_beverage_v5a5_joinquant_cash_dividends.csv",
+    "eastmoney_quality_csv": null,
+    "eastmoney_min_review_status": "needs_check",
+    "eastmoney_visibility_mode": "notice_date",
+    "signal_dividend_yield_mode": "panel",
+    "start_date": "2021-05-01",
+    "end_date": "2026-05-31",
+    "initial_cash": 2000000.0,
+    "target_exposure": 0.995,
+    "lot_size": 100,
+    "open_commission": 0.0003,
+    "close_commission": 0.0003,
+    "min_commission": 5.0,
+    "defensive_mode": "none",
+    "defensive_ma_days": 252,
+    "defensive_risk_exposure": 0.5
+  },
+  "outputs": {
+    "summary": "summary.json",
+    "daily_returns": "daily_returns.csv",
+    "holdings": "holdings.csv",
+    "trades": "trades.csv",
+    "dividends": "dividends.csv",
+    "rebalance_signals": "rebalance_signals.csv",
+    "rebalance_order_health": "rebalance_order_health.csv",
+    "run_manifest": "RUN_MANIFEST.json"
+  },
+  "warnings": [
+    "engineering_smoke_test can verify plumbing only; do not interpret performance as research evidence."
+  ],
+  "governance_rule": "Project Manager Agent must not mix research validation, platform replication, engineering smoke tests, and paper trading evidence."
+}

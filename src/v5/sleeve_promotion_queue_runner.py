@@ -209,11 +209,17 @@ def _gap_checklist(sleeve: dict[str, str], evidence: dict[str, Any]) -> dict[str
     }
     if "engineering_local_daily_simulation_passed" in corpus and "rebalance_order_health_passed" in corpus:
         gaps["specialist_data_required"] = False
-    if "food_beverage_engineering_handoff_ready" in corpus:
+    if "food_beverage_engineering_handoff_ready" in corpus and "engineering_local_daily_simulation_completed" not in corpus:
         gaps["specialist_data_required"] = False
         gaps["missing_external_state"] = False
         gaps["missing_local_daily_simulation"] = True
         gaps["missing_rebalance_order_health"] = True
+        gaps["platform_exports_missing"] = False
+    if "food_beverage_engineering_handoff_ready" in corpus and "engineering_local_daily_simulation_needs_review" in corpus:
+        gaps["specialist_data_required"] = False
+        gaps["missing_external_state"] = False
+        gaps["missing_local_daily_simulation"] = False
+        gaps["missing_rebalance_order_health"] = False
         gaps["platform_exports_missing"] = False
     return gaps
 
@@ -276,6 +282,13 @@ def _next_route(
             f"Keep {sector_id} as an observation sleeve; refresh paper-trading inputs and wait for the next clean forward signal. Do not add it to frozen V57f.",
             "paper_tracking_only_no_core_inclusion",
             "observation_paper_tracking",
+        )
+    if "food_beverage_engineering_handoff_ready" in corpus and "engineering_local_daily_simulation_needs_review" in corpus:
+        return (
+            "Project Manager Agent",
+            "Review the food/beverage local daily order-health gap. Do not tune or promote; decide whether partial price-limit skips block observation tracking.",
+            "rebalance_order_health_review_gate",
+            "engineering_needs_review",
         )
     if "food_beverage_engineering_handoff_ready" in corpus and gaps["missing_local_daily_simulation"]:
         return (
@@ -533,6 +546,8 @@ def _pm_note(sleeve: dict[str, str], evidence: dict[str, Any], gaps: dict[str, b
     sector_id = str(sleeve.get("sector_id") or "")
     if "engineering_local_daily_simulation_passed" in evidence["corpus"] and "rebalance_order_health_passed" in evidence["corpus"]:
         return "Engineering smoke test and order-health gate passed; promote only to observation paper tracking, not to V57f."
+    if "food_beverage_engineering_handoff_ready" in evidence["corpus"] and "engineering_local_daily_simulation_needs_review" in evidence["corpus"]:
+        return "Local daily simulation ran, but partial price-limit skipped orders require PM order-health review before any observation or platform route."
     if "food_beverage_engineering_handoff_ready" in evidence["corpus"]:
         return "Research repair passed for packaged-food OCF-quality; next step is Engineering local daily simulation only, not V57f inclusion."
     if sector_id == "gas_water_operators" and evidence["has_local_daily"]:

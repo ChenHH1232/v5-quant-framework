@@ -277,3 +277,78 @@ def test_sleeve_promotion_queue_routes_food_beverage_handoff_to_local_daily_engi
     assert rows[0]["promotion_lane"] == "engineering_smoke_test_candidate"
     assert rows[0]["pm_gate"] == "local_daily_engineering_gate"
     assert rows[0]["specialist_data_required"] == "no"
+
+
+def test_sleeve_promotion_queue_routes_food_beverage_engineering_needs_review_to_pm(tmp_path: Path) -> None:
+    sleeve_registry = tmp_path / "sleeve_registry.csv"
+    fieldnames = [
+        "sector_id",
+        "display_name",
+        "production_lane",
+        "data_gate",
+        "external_state_burden",
+        "sample_size_risk",
+        "panel_exists",
+        "dividend_exists",
+    ]
+    with sleeve_registry.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerow(
+            {
+                "sector_id": "food_beverage",
+                "display_name": "Food / Beverage",
+                "production_lane": "research_repair_queue",
+                "data_gate": "needs_manual_research",
+                "external_state_burden": "medium",
+                "sample_size_risk": "medium",
+                "panel_exists": "yes",
+                "dividend_exists": "yes",
+            }
+        )
+
+    status_registry = tmp_path / "status_registry.json"
+    status_registry.write_text(
+        json.dumps(
+            {
+                "strategies": [
+                    {
+                        "strategy_id": "food_beverage_packaged_food_ocf_quality_v5a9a",
+                        "sector": "food_beverage",
+                        "current_status": [
+                            "research_pit_validation_completed",
+                            "food_beverage_engineering_handoff_ready",
+                            "engineering_local_daily_simulation_completed",
+                            "engineering_local_daily_simulation_needs_review",
+                        ],
+                        "evidence_paths": [
+                            "validation_formal_v5a9_food_beverage_research_repair/panels/food_beverage_packaged_food_ocf_quality_v5a9a.csv",
+                            "food_beverage_cash_dividends.csv",
+                            "low_volatility_factors/food_beverage/panel_with_low_vol.csv",
+                            "local_daily_backtests_food_beverage/summary.json",
+                            "local_daily_backtests_food_beverage/rebalance_order_health.csv",
+                        ],
+                        "blockers": [
+                            "Partial price-limit skipped orders require PM review.",
+                        ],
+                    }
+                ]
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    result = build_sleeve_promotion_queue(
+        sleeve_registry=sleeve_registry,
+        status_registry=status_registry,
+        out_dir=tmp_path / "out",
+        candidate_ids=["food_beverage"],
+    )
+
+    rows = list(csv.DictReader(result.queue_csv.open("r", encoding="utf-8")))
+    assert rows[0]["recommended_next_owner"] == "Project Manager Agent"
+    assert rows[0]["promotion_lane"] == "engineering_needs_review"
+    assert rows[0]["pm_gate"] == "rebalance_order_health_review_gate"
+    assert rows[0]["missing_local_daily_simulation"] == "no"
+    assert rows[0]["missing_rebalance_order_health"] == "no"

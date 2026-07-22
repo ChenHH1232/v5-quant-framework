@@ -2658,7 +2658,9 @@
       "current_status": [
         "research_pit_validation_completed",
         "food_beverage_engineering_handoff_ready",
-        "engineering_local_daily_simulation_can_start",
+        "engineering_local_daily_simulation_completed",
+        "engineering_local_daily_simulation_needs_review",
+        "partial_price_limit_skipped_orders_detected",
         "not_v57f_sleeve",
         "not_platform_replication",
         "not_accepted_strategy"
@@ -2670,7 +2672,7 @@
         "v57f_core_sleeve",
         "joinquant_code_ready"
       ],
-      "experiment_layer": "research_pit_validation",
+      "experiment_layer": "engineering_smoke_test",
       "evidence_paths": [
         "docs/governance/v5a.9_food_beverage_research_repair_pm_decision.md",
         "validation_formal_v5a9_food_beverage_research_repair/food_beverage_research_repair_flow_table.csv",
@@ -2680,13 +2682,27 @@
         "validation_formal_v5a9_food_beverage_research_repair/specs/food_beverage_packaged_food_ocf_quality_v5a9a.json",
         "validation_formal_v5a9_food_beverage_research_repair/panels/food_beverage_packaged_food_ocf_quality_v5a9a.csv",
         "validation_formal_v5a9_food_beverage_research_repair/formal/food_beverage_packaged_food_ocf_quality_v5a9a/formal_validation_summary.json",
-        "agent_loop_packets_v5a9/food_beverage_research_repair/food_beverage_research_repair_v5a9/checkpoint_packet.json"
+        "agent_loop_packets_v5a9/food_beverage_research_repair/food_beverage_research_repair_v5a9/checkpoint_packet.json",
+        "docs/governance/v5a.9_food_beverage_local_daily_engineering_pm_decision.md",
+        "src/v5/food_beverage_daily_backtest_runner.py",
+        "local_daily_backtests_food_beverage_v5a9/food_beverage_packaged_food_ocf_quality_v5a9a/summary.json",
+        "local_daily_backtests_food_beverage_v5a9/food_beverage_packaged_food_ocf_quality_v5a9a/daily_returns.csv",
+        "local_daily_backtests_food_beverage_v5a9/food_beverage_packaged_food_ocf_quality_v5a9a/holdings.csv",
+        "local_daily_backtests_food_beverage_v5a9/food_beverage_packaged_food_ocf_quality_v5a9a/trades.csv",
+        "local_daily_backtests_food_beverage_v5a9/food_beverage_packaged_food_ocf_quality_v5a9a/dividends.csv",
+        "local_daily_backtests_food_beverage_v5a9/food_beverage_packaged_food_ocf_quality_v5a9a/rebalance_signals.csv",
+        "local_daily_backtests_food_beverage_v5a9/food_beverage_packaged_food_ocf_quality_v5a9a/rebalance_order_health.csv",
+        "local_daily_backtests_food_beverage_v5a9/food_beverage_packaged_food_ocf_quality_v5a9a/engineering_local_daily_simulation_report.md",
+        "数据库/processed/food_beverage_v5a5_joinquant_real_daily_prices.csv",
+        "数据库/processed/food_beverage_v5a5_joinquant_cash_dividends.csv",
+        "数据库/processed/food_beverage_v5a5_joinquant_real_benchmark_prices.csv"
       ],
       "blockers": [
-        "Engineering has not yet run local daily simulation, dividends, trades, holdings, cash and rebalance_order_health.",
-        "Do not add to V57f or start JoinQuant replication before Engineering local daily gate passes."
+        "Local daily simulation completed, but PM cannot promote because 2024-10-08 had partial skipped buy orders caused by price-limit constraints.",
+        "PIT candidate panel has no rebalance rows before 2022-01-04, so 2021 exposure is unavailable without Research data-window repair.",
+        "Do not add to V57f or start JoinQuant replication before PM resolves the partial skipped-order policy."
       ],
-      "next_gate": "engineering_local_daily_simulation_only_no_tuning"
+      "next_gate": "repair_signal_coverage_or_rebalance_order_health_before_any_promotion"
     }
   ],
   "sector_test_policy": {

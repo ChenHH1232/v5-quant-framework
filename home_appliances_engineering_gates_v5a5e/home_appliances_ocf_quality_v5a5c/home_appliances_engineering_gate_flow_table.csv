@@ -1,0 +1,7 @@
+stage,owner,input,action,output,gate,status
+1,Project Manager Agent,sleeve_promotion_queue.csv,"Confirm home_appliances is rank-2 repair candidate, not V57f sleeve",PM scoped task,no_core_inclusion,completed
+2,Research Agent,V5a.5d PM decision + state diagnostics,Decide whether external state is hard gate or diagnostic only,no-state policy,no_return_tuning,completed
+3,Quant Validation Agent,home_appliances_ocf_quality_v5a5c,"Review formal validation, PIT leakage, rolling, IC/RankIC, ablation and robustness evidence",validation evidence contract,research_pit_validation,completed
+4,Project Manager Agent,panel / real prices / dividends / benchmark,Check engineering input files exist,engineering data contract,files_exist,completed
+5,Project Manager Agent,policy + validation + data checks,Open or block Engineering handoff,engineering queue,local_daily_only,completed
+6,Engineering Agent,engineering queue,"Run local daily simulation with real dividends, trades, cash, holdings and rebalance_order_health",local daily packet,no_tuning,pending

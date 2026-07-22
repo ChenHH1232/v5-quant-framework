@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "packet_type": "checkpoint_packet",
+  "protocol_id": "agent_operating_protocol_v1",
+  "objective": "home_appliances_no_state_policy_engineering_gate",
+  "agent": "Project Manager Agent",
+  "experiment_layer": "pm_decision_gate",
+  "elapsed_timebox_minutes": 60,
+  "artifacts_created": [
+    "home_appliances_engineering_gates_v5a5e\\home_appliances_ocf_quality_v5a5c\\home_appliances_engineering_gate_flow_table.csv",
+    "home_appliances_engineering_gates_v5a5e\\home_appliances_ocf_quality_v5a5c\\home_appliances_engineering_gate_health_check.csv",
+    "home_appliances_engineering_gates_v5a5e\\home_appliances_ocf_quality_v5a5c\\home_appliances_engineering_queue.csv",
+    "home_appliances_engineering_gates_v5a5e\\home_appliances_ocf_quality_v5a5c\\home_appliances_engineering_gate_summary.json",
+    "home_appliances_engineering_gates_v5a5e\\home_appliances_ocf_quality_v5a5c\\home_appliances_engineering_gate_report.md"
+  ],
+  "evidence_found": [
+    "Formal status: formal_validation_completed_not_acceptance",
+    "State diagnostic status: state_diagnostic_completed_not_engineering_handoff",
+    "State policy: no_state_scoring_or_guard_policy_accepted_for_engineering_smoke_test",
+    "Engineering gate status: engineering_handoff_ready_local_daily_only"
+  ],
+  "blockers": [],
+  "decision": "return_to_engineering",
+  "next_owner": "Engineering Agent",
+  "stop_rule_status": "not_triggered",
+  "user_decision_required": false,
+  "user_decision_reason": "",
+  "allowed_next_action": "engineering_run_local_daily_simulation_with_order_health",
+  "restart_condition": "rerun after Engineering local daily simulation or after Research repairs failed checks",
+  "skill_status_change": "none",
+  "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
+  "created_at_utc": "2026-07-22T09:30:57+00:00"
+}

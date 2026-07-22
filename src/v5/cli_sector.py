@@ -97,6 +97,28 @@ from v5.home_appliances_export_exposure_runner import (
     DEFAULT_PANEL as DEFAULT_HOME_APPLIANCES_EXPORT_EXPOSURE_PANEL,
     collect_home_appliances_export_exposure,
 )
+from v5.home_appliances_engineering_gate_runner import (
+    DEFAULT_BENCHMARK_CSV as DEFAULT_HOME_APPLIANCES_ENGINEERING_GATE_BENCHMARK,
+    DEFAULT_DIVIDEND_CSV as DEFAULT_HOME_APPLIANCES_ENGINEERING_GATE_DIVIDENDS,
+    DEFAULT_FORMAL_SUMMARY as DEFAULT_HOME_APPLIANCES_ENGINEERING_GATE_FORMAL,
+    DEFAULT_OUT_DIR as DEFAULT_HOME_APPLIANCES_ENGINEERING_GATE_OUT,
+    DEFAULT_PANEL as DEFAULT_HOME_APPLIANCES_ENGINEERING_GATE_PANEL,
+    DEFAULT_PRICE_CSV as DEFAULT_HOME_APPLIANCES_ENGINEERING_GATE_PRICES,
+    DEFAULT_STATE_DIAGNOSTIC as DEFAULT_HOME_APPLIANCES_ENGINEERING_GATE_STATE,
+    DEFAULT_STRATEGY_ID as DEFAULT_HOME_APPLIANCES_ENGINEERING_GATE_ID,
+    build_home_appliances_engineering_gate,
+)
+from v5.home_appliances_daily_backtest_runner import (
+    DEFAULT_BENCHMARK_CSV as DEFAULT_HOME_APPLIANCES_DAILY_BENCHMARK,
+    DEFAULT_BENCHMARK_ID as DEFAULT_HOME_APPLIANCES_DAILY_BENCHMARK_ID,
+    DEFAULT_DIVIDEND_CASH_CSV as DEFAULT_HOME_APPLIANCES_DAILY_DIVIDENDS,
+    DEFAULT_ENGINEERING_GATE as DEFAULT_HOME_APPLIANCES_DAILY_GATE,
+    DEFAULT_EXECUTION_PRICE_CSV as DEFAULT_HOME_APPLIANCES_DAILY_PRICES,
+    DEFAULT_OUT_DIR as DEFAULT_HOME_APPLIANCES_DAILY_OUT,
+    DEFAULT_PANEL as DEFAULT_HOME_APPLIANCES_DAILY_PANEL,
+    DEFAULT_SPEC as DEFAULT_HOME_APPLIANCES_DAILY_SPEC,
+    run_home_appliances_daily_backtest,
+)
 from v5.consumer_working_capital_state_runner import (
     DEFAULT_OUT_ROOT as DEFAULT_CONSUMER_WORKING_CAPITAL_OUT,
     DEFAULT_PANELS as DEFAULT_CONSUMER_WORKING_CAPITAL_PANELS,
@@ -559,6 +581,34 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     home_appliances_export_parser.add_argument("--no-resume", action="store_true")
     home_appliances_export_parser.set_defaults(handler=_handle_collect_home_appliances_export_exposure)
 
+    home_appliances_engineering_gate_parser = subparsers.add_parser("build-home-appliances-engineering-gate")
+    home_appliances_engineering_gate_parser.add_argument("--strategy-id", default=DEFAULT_HOME_APPLIANCES_ENGINEERING_GATE_ID)
+    home_appliances_engineering_gate_parser.add_argument("--formal-summary", type=Path, default=DEFAULT_HOME_APPLIANCES_ENGINEERING_GATE_FORMAL)
+    home_appliances_engineering_gate_parser.add_argument("--state-diagnostic", type=Path, default=DEFAULT_HOME_APPLIANCES_ENGINEERING_GATE_STATE)
+    home_appliances_engineering_gate_parser.add_argument("--panel", type=Path, default=DEFAULT_HOME_APPLIANCES_ENGINEERING_GATE_PANEL)
+    home_appliances_engineering_gate_parser.add_argument("--price-csv", type=Path, default=DEFAULT_HOME_APPLIANCES_ENGINEERING_GATE_PRICES)
+    home_appliances_engineering_gate_parser.add_argument("--dividend-csv", type=Path, default=DEFAULT_HOME_APPLIANCES_ENGINEERING_GATE_DIVIDENDS)
+    home_appliances_engineering_gate_parser.add_argument("--benchmark-csv", type=Path, default=DEFAULT_HOME_APPLIANCES_ENGINEERING_GATE_BENCHMARK)
+    home_appliances_engineering_gate_parser.add_argument("--out", type=Path, default=DEFAULT_HOME_APPLIANCES_ENGINEERING_GATE_OUT)
+    home_appliances_engineering_gate_parser.set_defaults(handler=_handle_build_home_appliances_engineering_gate)
+
+    home_appliances_daily_parser = subparsers.add_parser("daily-backtest-home-appliances")
+    home_appliances_daily_parser.add_argument("--spec", type=Path, default=DEFAULT_HOME_APPLIANCES_DAILY_SPEC)
+    home_appliances_daily_parser.add_argument("--panel", type=Path, default=DEFAULT_HOME_APPLIANCES_DAILY_PANEL)
+    home_appliances_daily_parser.add_argument("--execution-price-csv", type=Path, default=DEFAULT_HOME_APPLIANCES_DAILY_PRICES)
+    home_appliances_daily_parser.add_argument("--dividend-cash-csv", type=Path, default=DEFAULT_HOME_APPLIANCES_DAILY_DIVIDENDS)
+    home_appliances_daily_parser.add_argument("--benchmark-csv", type=Path, default=DEFAULT_HOME_APPLIANCES_DAILY_BENCHMARK)
+    home_appliances_daily_parser.add_argument("--benchmark-id", default=DEFAULT_HOME_APPLIANCES_DAILY_BENCHMARK_ID)
+    home_appliances_daily_parser.add_argument("--engineering-gate-summary", type=Path, default=DEFAULT_HOME_APPLIANCES_DAILY_GATE)
+    home_appliances_daily_parser.add_argument("--out", type=Path, default=DEFAULT_HOME_APPLIANCES_DAILY_OUT)
+    home_appliances_daily_parser.add_argument("--start-date", default="2021-05-01")
+    home_appliances_daily_parser.add_argument("--end-date", default="2026-05-31")
+    home_appliances_daily_parser.add_argument("--initial-cash", type=float, default=2_000_000.0)
+    home_appliances_daily_parser.add_argument("--target-exposure", type=float, default=0.995)
+    home_appliances_daily_parser.add_argument("--lot-size", type=int, default=100)
+    home_appliances_daily_parser.add_argument("--min-coverage-ratio", type=float, default=0.0)
+    home_appliances_daily_parser.set_defaults(handler=_handle_daily_backtest_home_appliances)
+
     consumer_wc_parser = subparsers.add_parser("enrich-consumer-working-capital-state")
     consumer_wc_parser.add_argument("sector", choices=sorted(DEFAULT_CONSUMER_WORKING_CAPITAL_PANELS))
     consumer_wc_parser.add_argument("--panel", type=Path)
@@ -818,6 +868,7 @@ def _handle_daily_backtest_gas_water_state_guard(args: argparse.Namespace) -> in
             initial_cash=args.initial_cash,
             target_exposure=args.target_exposure,
             lot_size=args.lot_size,
+            min_coverage_ratio=args.min_coverage_ratio,
         )
     )
     return 0
@@ -1084,6 +1135,43 @@ def _handle_collect_home_appliances_export_exposure(args: argparse.Namespace) ->
             end_year=args.end_year,
             sleep_seconds=args.sleep_seconds,
             resume_existing=not args.no_resume,
+        )
+    )
+    return 0
+
+
+def _handle_build_home_appliances_engineering_gate(args: argparse.Namespace) -> int:
+    print(
+        build_home_appliances_engineering_gate(
+            strategy_id=args.strategy_id,
+            formal_summary=args.formal_summary,
+            state_diagnostic=args.state_diagnostic,
+            panel_csv=args.panel,
+            price_csv=args.price_csv,
+            dividend_csv=args.dividend_csv,
+            benchmark_csv=args.benchmark_csv,
+            out_dir=args.out,
+        )
+    )
+    return 0
+
+
+def _handle_daily_backtest_home_appliances(args: argparse.Namespace) -> int:
+    print(
+        run_home_appliances_daily_backtest(
+            spec_path=args.spec,
+            panel_csv=args.panel,
+            execution_price_csv=args.execution_price_csv,
+            dividend_cash_csv=args.dividend_cash_csv,
+            benchmark_csv=args.benchmark_csv,
+            engineering_gate_summary=args.engineering_gate_summary,
+            out_dir=args.out,
+            benchmark_id=args.benchmark_id,
+            start_date=args.start_date,
+            end_date=args.end_date,
+            initial_cash=args.initial_cash,
+            target_exposure=args.target_exposure,
+            lot_size=args.lot_size,
         )
     )
     return 0

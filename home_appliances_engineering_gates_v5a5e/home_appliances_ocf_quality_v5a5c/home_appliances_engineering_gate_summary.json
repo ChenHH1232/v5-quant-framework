@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "strategy_id": "home_appliances_ocf_quality_v5a5c",
+  "sector_id": "home_appliances",
+  "experiment_layer": "pm_decision_gate",
+  "status": "engineering_handoff_ready_local_daily_only",
+  "next_gate": "engineering_run_local_daily_simulation_with_order_health",
+  "state_policy": {
+    "decision": "no_state_scoring_or_guard_policy_accepted_for_engineering_smoke_test",
+    "reason": "True inventory, receivables, working-capital and export exposure fields have been repaired, but state diagnostics do not justify a stable ex-ante scoring or guard rule. External real-estate, export and commodity proxies remain diagnostic risk context only.",
+    "allowed_in_engineering": [
+      "log_state_fields_for_attribution",
+      "use_state_fields_for_post_trade_failure_diagnosis"
+    ],
+    "blocked_in_engineering": [
+      "positive_scoring_factor",
+      "defensive_guard",
+      "rebalance_timing_rule",
+      "selection_count_or_weight_tuning"
+    ],
+    "formal_status": "formal_validation_completed_not_acceptance",
+    "state_status": "state_diagnostic_completed_not_engineering_handoff"
+  },
+  "inputs": {
+    "formal_summary": "validation_formal_v5a5d_home_appliances_true_state\\home_appliances_ocf_quality_v5a5c\\formal_validation_summary.json",
+    "state_diagnostic": "validation_state_v5a5d_home_appliances\\home_appliances_ocf_quality_v5a5d\\state_diagnostic_summary.json",
+    "panel_csv": "数据库\\processed\\home_appliances_state_gate_v5a5d\\panel_with_home_appliances_state_gate.csv",
+    "price_csv": "数据库\\processed\\home_appliances_v5a5_joinquant_real_daily_prices.csv",
+    "dividend_csv": "数据库\\processed\\home_appliances_v5a5_joinquant_cash_dividends.csv",
+    "benchmark_csv": "数据库\\processed\\home_appliances_v5a5_joinquant_real_benchmark_prices.csv"
+  },
+  "data_health": {
+    "panel_exists": true,
+    "price_exists": true,
+    "dividend_exists": true,
+    "benchmark_exists": true,
+    "panel_row_count": 1687,
+    "price_row_count": 124028,
+    "dividend_row_count": 440,
+    "benchmark_row_count": 1228,
+    "latest_panel_trade_date": "2026-04-01",
+    "latest_price_date": "2026-05-29",
+    "latest_dividend_pay_date": "2026-05-29",
+    "latest_benchmark_date": "2026-05-29"
+  },
+  "formal_evidence": {
+    "row_count": 1687,
+    "date_count": 20,
+    "status": "formal_validation_completed_not_acceptance",
+    "rolling_validation": [
+      {
+        "window": "2023",
+        "status": "completed",
+        "case": "rolling_test_2023",
+        "periods": 4,
+        "cum_return": 0.25225667563043297,
+        "mean_return": 0.062032267888525006,
+        "positive_ratio": 0.5,
+        "mean_selected_count": 10
+      },
+      {
+        "window": "2024",
+        "status": "completed",
+        "case": "rolling_test_2024",
+        "periods": 4,
+        "cum_return": 0.3526684111011966,
+        "mean_return": 0.082014260823125,
+        "positive_ratio": 0.75,
+        "mean_selected_count": 10
+      },
+      {
+        "window": "2025",
+        "status": "completed",
+        "case": "rolling_test_2025",
+        "periods": 4,
+        "cum_return": 0.10175230157643256,
+        "mean_return": 0.025934610784672504,
+        "positive_ratio": 0.5,
+        "mean_selected_count": 10
+      },
+      {
+        "window": "2026",
+        "status": "completed",
+        "case": "rolling_test_2026",
+        "periods": 2,
+        "cum_return": -0.018259869237312598,
+        "mean_return": -0.008484126705499997,
+        "positive_ratio": 0.5,
+        "mean_selected_count": 10
+      }
+    ],
+    "factor_ic_rankic": [
+      {
+        "factor": "operating_cash_flow_yield",
+        "direction": "higher_is_better",
+        "observations": 1687,
+        "dates": 20,
+        "mean_ic": 0.04296565339346672,
+        "mean_rankic": 0.01974519452047149,
+        "positive_ic_ratio": 0.6,
+        "top_minus_bottom_mean_return": 0.007064526230895761
+      },
+      {
+        "factor": "operating_cash_flow_to_net_profit",
+        "direction": "higher_is_better",
+        "observations": 1687,
+        "dates": 20,
+        "mean_ic": 0.018030777816686303,
+        "mean_rankic": 0.02222727493876183,
+        "positive_ic_ratio": 0.65,
+        "top_minus_bottom_mean_return": 0.01070473752990085
+      }
+    ],
+    "governance": "Do not use 2021-2026 platform-confirmation results for tuning. Single-model acceptance requires rolling validation."
+  },
+  "state_evidence": {
+    "status": "state_diagnostic_completed_not_engineering_handoff",
+    "bucket_row_count": 68,
+    "metrics": [
+      "external_china_exports_yoy",
+      "external_commodity_price_index",
+      "external_energy_goods_yoy",
+      "external_mineral_goods_yoy",
+      "external_producer_goods_total_yoy",
+      "external_real_estate_climate_index",
+      "sector_capex_burden_median",
+      "sector_current_ratio_median",
+      "sector_high_capex_burden_ratio",
+      "sector_high_export_exposure_ratio",
+      "sector_high_inventory_pressure_ratio",
+      "sector_high_receivables_pressure_ratio",
+      "sector_high_working_capital_pressure_ratio",
+      "sector_inventory_to_revenue_median",
+      "sector_negative_ocf_yield_ratio",
+      "sector_overseas_revenue_share_median",
+      "sector_receivables_to_revenue_median",
+      "sector_working_capital_pressure_to_revenue_median"
+    ],
+    "governance": "State diagnostics explain or block a research hypothesis; they do not approve Engineering handoff."
+  },
+  "outputs": {
+    "flow_table_csv": "home_appliances_engineering_gates_v5a5e\\home_appliances_ocf_quality_v5a5c\\home_appliances_engineering_gate_flow_table.csv",
+    "health_check_csv": "home_appliances_engineering_gates_v5a5e\\home_appliances_ocf_quality_v5a5c\\home_appliances_engineering_gate_health_check.csv",
+    "engineering_queue_csv": "home_appliances_engineering_gates_v5a5e\\home_appliances_ocf_quality_v5a5c\\home_appliances_engineering_queue.csv",
+    "report_path": "home_appliances_engineering_gates_v5a5e\\home_appliances_ocf_quality_v5a5c\\home_appliances_engineering_gate_report.md"
+  },
+  "pm_rules": [
+    "This gate resolves Research/Quant state policy; it does not tune V5a.5c.",
+    "External macro state variables are diagnostic only and cannot be positive scoring factors or guards in this handoff.",
+    "Engineering may run local daily simulation only with frozen OCF yield + OCF-to-net-profit scoring.",
+    "Engineering must output real dividends, trades, cash, holdings and rebalance_order_health.",
+    "No V57f sleeve inclusion, JoinQuant platform claim or accepted-strategy status is allowed here."
+  ],
+  "created_at_utc": "2026-07-22T09:30:57+00:00",
+  "agent_packet": {
+    "packet_path": "agent_loop_packets_v5a5\\home_appliances_engineering_gate\\home_appliances_engineering_gate_20260722\\checkpoint_packet.json",
+    "report_path": "agent_loop_packets_v5a5\\home_appliances_engineering_gate\\home_appliances_engineering_gate_20260722\\checkpoint_packet.md"
+  }
+}

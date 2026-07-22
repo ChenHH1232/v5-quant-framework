@@ -2554,6 +2554,39 @@
         "No newly screened V5a.10/V5a.11 sector is Engineering-ready. Continue only with frozen/core sleeve refresh or documented research repair loops."
       ],
       "next_gate": "return_to_v57f_mainline_forward_queue_or_core_sleeve_refresh_without_tuning"
+    },
+    {
+      "strategy_id": "home_appliances_ocf_quality_v5a5e_engineering_handoff",
+      "sector": "home_appliances",
+      "current_status": [
+        "research_pit_validation_passed",
+        "no_state_scoring_or_guard_policy_accepted",
+        "engineering_local_daily_simulation_passed",
+        "rebalance_order_health_passed",
+        "observation_candidate_not_v57f_sleeve"
+      ],
+      "not_status": [
+        "accepted_strategy",
+        "platform_replication",
+        "paper_trading_ready",
+        "v57f_core_sleeve",
+        "joinquant_code_ready"
+      ],
+      "experiment_layer": "engineering_smoke_test",
+      "evidence_paths": [
+        "docs/governance/v5a.5e_home_appliances_engineering_handoff_pm_decision.md",
+        "home_appliances_engineering_gates_v5a5e/home_appliances_ocf_quality_v5a5c/home_appliances_engineering_gate_summary.json",
+        "home_appliances_engineering_gates_v5a5e/home_appliances_ocf_quality_v5a5c/home_appliances_engineering_gate_report.md",
+        "local_daily_backtests_home_appliances_v5a5e/home_appliances_ocf_quality_v5a5c/summary.json",
+        "local_daily_backtests_home_appliances_v5a5e/home_appliances_ocf_quality_v5a5c/rebalance_order_health.csv",
+        "local_daily_backtests_home_appliances_v5a5e/home_appliances_ocf_quality_v5a5c/rebalance_signals.csv"
+      ],
+      "blockers": [
+        "Not a V57f sleeve; PM must separately approve any observation-basket or paper-trading route.",
+        "2021-2026 remains engineering/platform-confirmation context, not accepted strategy evidence.",
+        "Platform replication and JoinQuant code remain blocked."
+      ],
+      "next_gate": "pm_review_for_observation_sleeve_or_paper_tracking"
     }
   ],
   "sector_test_policy": {
@@ -3276,6 +3309,14 @@
     "v59b_gas_water_paper_tracking_summary": "paper_trading_signals/gas_water_v59b_promotion_queue/gas_water_v57b_text_debt_state_guard_v59b/gas_water_paper_tracking_summary.json",
     "v59b_gas_water_paper_tracking_report": "paper_trading_signals/gas_water_v59b_promotion_queue/gas_water_v57b_text_debt_state_guard_v59b/gas_water_paper_tracking_report.md",
     "v59b_gas_water_paper_tracking_agent_packet": "agent_loop_packets_v59/gas_water_paper_tracking/gas_water_paper_tracking_20260722/checkpoint_packet.json",
-    "v59b_gas_water_paper_tracking_next_gate": "wait_until_clean_forward_window"
+    "v59b_gas_water_paper_tracking_next_gate": "wait_until_clean_forward_window",
+    "v5a.5e_home_appliances_status": "engineering_local_daily_simulation_passed_observation_candidate_not_v57f_sleeve",
+    "v5a.5e_home_appliances_pm_decision": "docs/governance/v5a.5e_home_appliances_engineering_handoff_pm_decision.md",
+    "v5a.5e_home_appliances_engineering_gate_runner": "src/v5/home_appliances_engineering_gate_runner.py",
+    "v5a.5e_home_appliances_daily_runner": "src/v5/home_appliances_daily_backtest_runner.py",
+    "v5a.5e_home_appliances_engineering_gate_summary": "home_appliances_engineering_gates_v5a5e/home_appliances_ocf_quality_v5a5c/home_appliances_engineering_gate_summary.json",
+    "v5a.5e_home_appliances_daily_summary": "local_daily_backtests_home_appliances_v5a5e/home_appliances_ocf_quality_v5a5c/summary.json",
+    "v5a.5e_home_appliances_rebalance_order_health": "local_daily_backtests_home_appliances_v5a5e/home_appliances_ocf_quality_v5a5c/rebalance_order_health.csv",
+    "v5a.5e_home_appliances_next_gate": "pm_review_for_observation_sleeve_or_paper_tracking"
   }
 }

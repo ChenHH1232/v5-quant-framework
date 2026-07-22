@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "packet_type": "checkpoint_packet",
+  "protocol_id": "agent_operating_protocol_v1",
+  "objective": "Harden V57f production-line state gates",
+  "agent": "Project Manager Agent",
+  "experiment_layer": "pm_decision_gate",
+  "elapsed_timebox_minutes": 30,
+  "artifacts_created": [
+    "docs/governance/v57f_production_line_state_gate_execution.md",
+    "strategy_state_gates_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/platform_replication_passed/strategy_state_gate_summary.json",
+    "strategy_state_gates_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/accepted_strategy/strategy_state_gate_summary.json"
+  ],
+  "evidence_found": [
+    "V57f platform_replication_passed is blocked by missing/deferred platform exports; accepted_strategy is blocked by missing platform replication passed and open blockers. formal_etf_candidate is now recognized correctly by the state gate."
+  ],
+  "blockers": [],
+  "decision": "return_to_engineering",
+  "next_owner": "Engineering Agent",
+  "stop_rule_status": "state_upgrade_blocked_correctly_no_user_decision_required",
+  "user_decision_required": false,
+  "user_decision_reason": "",
+  "allowed_next_action": "Engineering local refresh and 2026-10-08 paper-window preparation only; no strategy-state promotion.",
+  "restart_condition": "",
+  "skill_status_change": "none",
+  "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
+  "created_at_utc": "2026-07-22T02:07:51+00:00"
+}

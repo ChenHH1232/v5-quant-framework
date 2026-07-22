@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-07-22T02:08:23+00:00",
+  "sleeve_count": 33,
+  "active_v57f_sleeve_count": 4,
+  "lane_counts": {
+    "core_frozen_refresh": 4,
+    "observation_refresh_only": 2,
+    "research_repair_queue": 8,
+    "data_gate_blocked": 6,
+    "archived_or_rejected": 6,
+    "excluded_from_current_mandate": 7
+  },
+  "engineering_gate_counts": {
+    "ready_for_local_refresh": 4,
+    "not_core_engineering_observation_only": 2,
+    "not_engineering_handoff": 8,
+    "blocked_before_modeling": 6,
+    "archived_not_engineering": 6,
+    "excluded_not_engineering": 7
+  },
+  "pm_rule": "This registry routes sleeves; it does not promote or tune any strategy."
+}

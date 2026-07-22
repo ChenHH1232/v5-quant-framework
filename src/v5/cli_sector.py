@@ -9,6 +9,13 @@ from v5.dividend_low_vol_fcf_screener_runner import (
     DEFAULT_STATUS_REGISTRY as DEFAULT_V56_STATUS_REGISTRY,
     run_dividend_low_vol_fcf_batch_screening,
 )
+from v5.enhanced_etf_production_line_runner import (
+    DEFAULT_BASKET_CONFIG as DEFAULT_ENHANCED_ETF_LINE_BASKET_CONFIG,
+    DEFAULT_MASTER_TABLE as DEFAULT_ENHANCED_ETF_LINE_MASTER_TABLE,
+    DEFAULT_OUT_DIR as DEFAULT_ENHANCED_ETF_LINE_OUT,
+    DEFAULT_STATUS_REGISTRY as DEFAULT_ENHANCED_ETF_LINE_STATUS_REGISTRY,
+    build_enhanced_etf_production_line,
+)
 from v5.sector_replication_roadmap_runner import (
     DEFAULT_CONFIG as DEFAULT_V58_REPLICATION_ROADMAP_CONFIG,
     DEFAULT_OUT_DIR as DEFAULT_V58_REPLICATION_ROADMAP_OUT,
@@ -616,6 +623,15 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     basket_jq_parser.add_argument("--lot-size", type=int, default=100)
     basket_jq_parser.set_defaults(handler=_handle_export_basket_frozen_signals_joinquant)
 
+    enhanced_etf_line_parser = subparsers.add_parser("build-enhanced-etf-production-line")
+    enhanced_etf_line_parser.add_argument("--master-table", type=Path, default=DEFAULT_ENHANCED_ETF_LINE_MASTER_TABLE)
+    enhanced_etf_line_parser.add_argument("--basket-config", type=Path, default=DEFAULT_ENHANCED_ETF_LINE_BASKET_CONFIG)
+    enhanced_etf_line_parser.add_argument("--status-registry", type=Path, default=DEFAULT_ENHANCED_ETF_LINE_STATUS_REGISTRY)
+    enhanced_etf_line_parser.add_argument("--out", type=Path, default=DEFAULT_ENHANCED_ETF_LINE_OUT)
+    enhanced_etf_line_parser.add_argument("--strategy-id")
+    enhanced_etf_line_parser.add_argument("--next-clean-rebalance-date", default="2026-10-08")
+    enhanced_etf_line_parser.set_defaults(handler=_handle_build_enhanced_etf_production_line)
+
 
 def _handle_collect_similar_sector_pit_panel(args: argparse.Namespace) -> int:
     print(
@@ -1123,6 +1139,20 @@ def _handle_export_basket_frozen_signals_joinquant(args: argparse.Namespace) -> 
             benchmark=args.benchmark,
             target_exposure=args.target_exposure,
             lot_size=args.lot_size,
+        )
+    )
+    return 0
+
+
+def _handle_build_enhanced_etf_production_line(args: argparse.Namespace) -> int:
+    print(
+        build_enhanced_etf_production_line(
+            master_table=args.master_table,
+            basket_config=args.basket_config,
+            status_registry=args.status_registry,
+            out_dir=args.out,
+            strategy_id=args.strategy_id,
+            next_clean_rebalance_date=args.next_clean_rebalance_date,
         )
     )
     return 0

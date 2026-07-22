@@ -2,19 +2,19 @@
   "schema_version": 1,
   "strategy_id": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f",
   "experiment_layer": "pm_decision_gate",
-  "status": "frozen_candidate_waiting_for_future_paper_window_platform_deferred",
+  "status": "needs_pm_review",
   "blocker_count": 0,
-  "needs_review_count": 0,
+  "needs_review_count": 1,
   "checks": [
     {
       "check": "pm_gate",
       "severity": "pass",
-      "detail": "PM gate status is formal_candidate_pending_platform_exports."
+      "detail": "PM gate status is formal_candidate_paper_tracking_started_needs_review."
     },
     {
       "check": "platform_export_intake",
-      "severity": "pass",
-      "detail": "Platform test is explicitly deferred by user."
+      "severity": "needs_review",
+      "detail": "Platform export intake summary is missing."
     },
     {
       "check": "forward_paper_gate",
@@ -38,8 +38,8 @@
     }
   ],
   "source_statuses": {
-    "pm_gate": "formal_candidate_pending_platform_exports",
-    "platform_export_intake": "platform_test_deferred_by_user_waiting_for_exports",
+    "pm_gate": "formal_candidate_paper_tracking_started_needs_review",
+    "platform_export_intake": "missing",
     "forward_paper_gate": "pending_clean_future_rebalance",
     "paper_input_preflight": "pending_future_data_window",
     "paper_refresh_queue": "queued_for_future_refresh_window",
@@ -47,10 +47,10 @@
   },
   "key_dates": {
     "next_rebalance_date": "2026-10-08",
-    "last_recorded_signal_date": "2026-07-01",
+    "last_recorded_signal_date": "2026-04-01",
     "dashboard_as_of_date": "2026-07-20"
   },
-  "next_gate": "wait_until_refresh_window_or_user_supplies_platform_exports",
+  "next_gate": "pm_review_missing_or_needs_review_items",
   "blocked_actions": [
     "accepted_strategy",
     "live_trading_approved",
@@ -61,11 +61,11 @@
   "pm_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
   "input_paths": {
     "pm_gate_summary": "pm_gate_packets_v57f\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\basket_pm_gate_summary.json",
-    "platform_export_intake_summary": "platform_export_intake_checks_v57f\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\platform_export_intake_summary.json",
-    "forward_paper_gate_summary": "paper_trading_gates_v57f\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\forward_paper_gate_summary.json",
+    "platform_export_intake_summary": null,
+    "forward_paper_gate_summary": "basket_forward_paper_gates_v57f\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\forward_paper_gate_summary.json",
     "paper_input_preflight_summary": "paper_input_preflight_checks_v57f\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\paper_input_preflight_summary.json",
     "paper_refresh_queue_summary": "paper_refresh_queues_v57f\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\paper_refresh_task_queue_summary.json",
     "paper_refresh_status_summary": "paper_refresh_status_checks_v57f\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\paper_refresh_task_status_summary.json"
   },
-  "created_at_utc": "2026-07-20T03:59:13+00:00"
+  "created_at_utc": "2026-07-21T12:42:09+00:00"
 }

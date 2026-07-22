@@ -84,6 +84,7 @@ def _checks(strategy: dict[str, Any], current_statuses: set[str], evidence: list
     blockers = [str(item) for item in strategy.get("blockers", [])]
     not_statuses = set(strategy.get("not_status", []))
     evidence_text = "\n".join(evidence).lower()
+    status_text = "\n".join(sorted(current_statuses | not_statuses) + blockers).lower()
 
     if target_status in current_statuses:
         checks.append(_check("target_status", "pass", f"Strategy already has status {target_status}."))
@@ -98,9 +99,21 @@ def _checks(strategy: dict[str, Any], current_statuses: set[str], evidence: list
             checks.append(_check("candidate_failure_status", "blocker", "Strategy is currently marked failed or archived."))
 
     if target_status == "platform_replication_passed":
-        _require_current(checks, current_statuses, {"formal_strategy_candidate", "frozen_formal_strategy_candidate"}, "formal strategy candidate status")
+        _require_current(
+            checks,
+            current_statuses,
+            {"formal_strategy_candidate", "frozen_formal_strategy_candidate", "formal_etf_candidate"},
+            "formal strategy or ETF candidate status",
+        )
         _require_evidence(checks, evidence_text, ["platform_replication", "platform_attribution"], "platform replication or attribution evidence")
-        if "platform_test_deferred_by_user" in evidence_text or "waiting_for_exports" in evidence_text:
+        if (
+            "platform_test_deferred_by_user" in status_text
+            or "platform_replication_prepared_pending_joinquant_exports" in status_text
+            or "pending_joinquant_exports" in status_text
+            or "platform exports" in status_text
+            or "without exports" in status_text
+            or "waiting_for_exports" in status_text
+        ):
             checks.append(_check("platform_exports", "blocker", "Platform exports are deferred or missing; cannot mark platform replication passed."))
 
     if target_status == "paper_trading_started":

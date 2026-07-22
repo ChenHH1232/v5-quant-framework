@@ -81,3 +81,32 @@ def test_state_gate_requires_user_stage_gate_when_platform_evidence_is_ready(tmp
     assert result.blocker_count == 0
     assert result.user_decision_required is True
     assert summary["blocked_actions"] == ["auto_mark_platform_replication_passed_without_user_stage_gate"]
+
+
+def test_state_gate_blocks_etf_platform_replication_when_exports_are_deferred(tmp_path: Path) -> None:
+    registry = _write_registry(
+        tmp_path / "registry.json",
+        [
+            _strategy(
+                current_status=[
+                    "formal_etf_candidate",
+                    "platform_replication_prepared_pending_joinquant_exports",
+                    "platform_test_deferred_by_user",
+                ],
+                evidence_paths=["platform_replication_packets_v57f_etf/candidate/platform_replication_packet.json"],
+                blockers=["Platform exports must be supplied before attribution."],
+            )
+        ],
+    )
+
+    result = run_strategy_state_gate(
+        strategy_id="candidate",
+        target_status="platform_replication_passed",
+        registry_path=registry,
+        out_dir=tmp_path / "out",
+    )
+
+    summary = json.loads(result.summary_path.read_text(encoding="utf-8"))
+    assert result.status == "blocked"
+    assert any(check["check"] == "platform_exports" and check["severity"] == "blocker" for check in summary["checks"])
+    assert any(check["check"] == "formal strategy or ETF candidate status" and check["severity"] == "pass" for check in summary["checks"])

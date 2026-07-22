@@ -1,24 +1,24 @@
 # Basket PM Action Route: dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f
 
-- Dashboard status: `frozen_candidate_waiting_for_future_paper_window_platform_deferred`
-- Route status: `no_action_until_external_event`
-- PM decision: `hold_frozen_candidate`
+- Dashboard status: `needs_pm_review`
+- Route status: `needs_pm_review`
+- PM decision: `stop_and_review_missing_or_ambiguous_status`
 - Continue agent loop: `False`
 - User decision required: `False`
 - Next owner: `Project Manager Agent`
-- Allowed next action: `wait_for_future_refresh_window_or_user_supplied_platform_exports`
-- Next trigger: `2026-10-08 refresh window or JoinQuant exports supplied by user`
+- Allowed next action: `inspect_governance_dashboard_and_source_summaries`
+- Next trigger: `ambiguous dashboard status resolved`
 
 ## Key Dates
 
 - next_rebalance_date: `2026-10-08`
-- last_recorded_signal_date: `2026-07-01`
+- last_recorded_signal_date: `2026-04-01`
 - dashboard_as_of_date: `2026-07-20`
 
 ## Source Statuses
 
-- pm_gate: `formal_candidate_pending_platform_exports`
-- platform_export_intake: `platform_test_deferred_by_user_waiting_for_exports`
+- pm_gate: `formal_candidate_paper_tracking_started_needs_review`
+- platform_export_intake: `missing`
 - forward_paper_gate: `pending_clean_future_rebalance`
 - paper_input_preflight: `pending_future_data_window`
 - paper_refresh_queue: `queued_for_future_refresh_window`

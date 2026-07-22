@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
   "strategy_id": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f",
-  "status": "formal_candidate_pending_platform_exports",
+  "status": "formal_candidate_paper_tracking_started_needs_review",
   "experiment_layer": "pm_decision_gate",
   "blocker_count": 0,
-  "needs_review_count": 5,
-  "pass_count": 7,
+  "needs_review_count": 3,
+  "pass_count": 8,
   "checks": [
     {
       "check": "formal_validation",
@@ -55,17 +55,12 @@
     {
       "check": "platform_replication",
       "severity": "needs_review",
-      "detail": "Platform replication is waiting for JoinQuant exports."
+      "detail": "Platform replication packet is missing."
     },
     {
       "check": "paper_trading",
-      "severity": "needs_review",
-      "detail": "Paper trading is waiting for the next clean future rebalance signal."
-    },
-    {
-      "check": "paper_recording_timing",
-      "severity": "needs_review",
-      "detail": "Paper signal appears to be late-recorded; next future rebalance must be clean."
+      "severity": "pass",
+      "detail": "Paper trading signal exists with 526 selected stocks."
     }
   ],
   "metrics_snapshot": {
@@ -77,15 +72,15 @@
     "local_dividend_count": 128,
     "formal_signal_count": 19,
     "formal_panel_row_count": 3371,
-    "platform_status": "pending_attribution"
+    "platform_status": null
   },
   "input_paths": {
     "formal_summary": "validation_formal_v57f_etf\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\basket_formal_validation_summary.json",
     "daily_summary": "local_daily_backtests_v57f_etf\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\summary.json",
     "overfit_summary": "validation_overfit_v57f_etf\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\overfit_audit_summary.json",
     "ablation_summary": "validation_ablation_v57f_etf\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\basket_ablation_summary.json",
-    "platform_packet": "platform_replication_packets_v57f_etf\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\platform_replication_packet.json",
-    "paper_signal_summary": "paper_trading_gates_v57f\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\forward_paper_gate_summary.json"
+    "platform_packet": null,
+    "paper_signal_summary": "validation_formal_v57f_etf_constructor\\basket_construction_summary.json"
   },
   "pm_rules": [
     "Historical performance alone is never sufficient evidence for accepting a strategy.",
@@ -93,5 +88,5 @@
     "A frozen candidate may enter platform replication or paper trading, but not live trading approval.",
     "Platform replication requires JoinQuant daily, transaction and position attribution."
   ],
-  "created_at_utc": "2026-07-20T16:57:27+00:00"
+  "created_at_utc": "2026-07-21T12:39:55+00:00"
 }

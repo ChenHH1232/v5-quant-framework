@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "packet_type": "checkpoint_packet",
+  "protocol_id": "agent_operating_protocol_v1",
+  "objective": "Build V5 enhanced ETF sleeve production line after V57f refresh",
+  "agent": "Project Manager Agent",
+  "experiment_layer": "pm_decision_gate",
+  "elapsed_timebox_minutes": 30,
+  "artifacts_created": [
+    "docs/governance/v5_enhanced_etf_production_line_workflow.md",
+    "src/v5/enhanced_etf_production_line_runner.py",
+    "enhanced_etf_production_lines_v5/current/production_line_summary.json",
+    "enhanced_etf_production_lines_v5/current/sleeve_registry.csv",
+    "enhanced_etf_production_lines_v5/current/refresh_plan.csv"
+  ],
+  "evidence_found": [
+    "Production line built from V5a master table and frozen V57f config. Four active sleeves are ready for local Engineering refresh; gas/water and insurance remain observation-only; no new sleeve was added to V57f."
+  ],
+  "blockers": [],
+  "decision": "return_to_engineering",
+  "next_owner": "Engineering Agent",
+  "stop_rule_status": "stage_gate_reached_engineering_boundary_no_user_decision_required",
+  "user_decision_required": false,
+  "user_decision_reason": "",
+  "allowed_next_action": "Engineering may use the production-line refresh plan to rerun local simulation, real dividends, cash, holdings, trades and rebalance_order_health; no tuning or platform claim is allowed.",
+  "restart_condition": "",
+  "skill_status_change": "none",
+  "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
+  "created_at_utc": "2026-07-21T15:23:26+00:00"
+}

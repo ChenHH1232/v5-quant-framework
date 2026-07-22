@@ -1,8 +1,8 @@
 # Basket PM Gate: dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f
 
-- Status: `formal_candidate_pending_platform_exports`
+- Status: `formal_candidate_paper_tracking_started_needs_review`
 - Blockers: `0`
-- Needs review: `5`
+- Needs review: `3`
 
 ## Metrics Snapshot
 
@@ -14,7 +14,7 @@
 - local_dividend_count: `128`
 - formal_signal_count: `19`
 - formal_panel_row_count: `3371`
-- platform_status: `pending_attribution`
+- platform_status: `None`
 
 ## Checks
 
@@ -27,9 +27,8 @@
 - `pass` overfit_audit: Overfit audit has no blockers.
 - `needs_review` overfit_review_items: Overfit audit has 1 review items.
 - `pass` ablation: Ablation completed without blocked cases.
-- `needs_review` platform_replication: Platform replication is waiting for JoinQuant exports.
-- `needs_review` paper_trading: Paper trading is waiting for the next clean future rebalance signal.
-- `needs_review` paper_recording_timing: Paper signal appears to be late-recorded; next future rebalance must be clean.
+- `needs_review` platform_replication: Platform replication packet is missing.
+- `pass` paper_trading: Paper trading signal exists with 526 selected stocks.
 
 ## PM Rules
 

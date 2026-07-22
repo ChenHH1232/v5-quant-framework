@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "strategy_id": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f",
+  "target_status": "accepted_strategy",
+  "experiment_layer": "pm_decision_gate",
+  "status": "blocked",
+  "blocker_count": 2,
+  "user_decision_required": false,
+  "user_decision_reason": "",
+  "current_status": [
+    "clean_paper_preflight_ready",
+    "engineering_local_daily_simulation_completed",
+    "engineering_local_refresh_ready_not_platform_replication",
+    "enhanced_etf_production_line_ready",
+    "formal_etf_candidate",
+    "forward_paper_gate_ready",
+    "fresh_2026_07_pit_extension_completed_for_paper_monitoring",
+    "late_recorded_2026_07_initialization_signal_generated",
+    "local_paper_preflight_continues",
+    "next_clean_signal_pending_future_data_window",
+    "overfit_audit_no_blockers_needs_review",
+    "paper_input_preflight_ready",
+    "paper_refresh_queue_ready",
+    "paper_refresh_status_checked",
+    "paper_trading_process_started",
+    "platform_export_intake_ready",
+    "platform_replication_prepared_pending_joinquant_exports",
+    "platform_test_deferred_by_user",
+    "post_v5a_no_tuning_refresh_completed",
+    "queued_for_future_refresh_window",
+    "rebalance_order_health_passed",
+    "research_pit_validation_completed",
+    "waiting_for_future_refresh_window"
+  ],
+  "not_status": [
+    "accepted_strategy",
+    "platform_replication_passed",
+    "live_trading_approved"
+  ],
+  "next_gate": "engineering_local_refresh_ready_wait_until_2026_10_or_user_supplies_platform_exports",
+  "checks": [
+    {
+      "check": "not_status_marker",
+      "severity": "needs_user_stage_gate",
+      "detail": "Registry currently marks accepted_strategy as not_status."
+    },
+    {
+      "check": "platform replication passed status",
+      "severity": "blocker",
+      "detail": "Missing required platform replication passed status."
+    },
+    {
+      "check": "paper trading status",
+      "severity": "pass",
+      "detail": "Found paper trading status."
+    },
+    {
+      "check": "platform evidence",
+      "severity": "pass",
+      "detail": "Found platform evidence."
+    },
+    {
+      "check": "paper trading evidence",
+      "severity": "pass",
+      "detail": "Found paper trading evidence."
+    },
+    {
+      "check": "open_blockers",
+      "severity": "blocker",
+      "detail": "Strategy still lists blockers: 13."
+    }
+  ],
+  "evidence_paths_checked": [
+    "config/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f.json",
+    "examples/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f_strategy.json",
+    "docs/governance/v57f_dividend_low_vol_cashflow_enhanced_etf_pm_decision_v1.md",
+    "docs/governance/v57f_dividend_low_vol_cashflow_enhanced_etf_forward_paper_trading_log.md",
+    "validation_formal_v57f_etf_constructor/basket_construction_summary.json",
+    "local_daily_backtests_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/summary.json",
+    "validation_formal_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/basket_formal_validation_summary.json",
+    "validation_ablation_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/basket_ablation_summary.json",
+    "validation_attribution_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/failure_attribution_summary.json",
+    "validation_overfit_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/overfit_audit_summary.json",
+    "docs/governance/v57f_dividend_low_vol_cashflow_enhanced_etf_platform_replication_preparation_v1.md",
+    "platform_replication_packets_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/platform_replication_packet.json",
+    "exports/joinquant/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f_joinquant_frozen_signals_near5y.py",
+    "config/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f_paper_202607.json",
+    "docs/governance/v57f_dividend_low_vol_cashflow_enhanced_etf_paper_signal_20260719.md",
+    "paper_trading_signals/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/2026-07-19/basket_rebalance_signals.csv",
+    "paper_trading_signals/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/2026-07-19/local_monitoring/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f_paper_202607/summary.json",
+    "docs/governance/v57f_platform_export_intake_and_paper_preflight_v1.md",
+    "platform_exports_v57f/expected_exports_manifest.json",
+    "paper_trading_gates_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/forward_paper_gate_summary.json",
+    "docs/governance/v57f_no_live_joinquant_test_local_continuation_pm_decision_v1.md",
+    "platform_export_intake_checks_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/platform_export_intake_summary.json",
+    "src/v5/platform_export_intake_runner.py",
+    "docs/governance/v57f_2026_10_clean_paper_input_preflight_v1.md",
+    "paper_input_preflight_checks_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/paper_input_preflight_summary.json",
+    "src/v5/basket_paper_input_preflight_runner.py",
+    "docs/governance/v57f_2026_10_paper_refresh_task_queue_v1.md",
+    "paper_refresh_queues_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/paper_refresh_task_queue_summary.json",
+    "paper_refresh_queues_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/paper_refresh_task_queue.csv",
+    "src/v5/basket_paper_refresh_queue_runner.py",
+    "docs/governance/v57f_2026_10_paper_refresh_status_check_v1.md",
+    "paper_refresh_status_checks_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/paper_refresh_task_status_summary.json",
+    "paper_refresh_status_checks_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/paper_refresh_task_status.csv",
+    "src/v5/basket_paper_refresh_status_runner.py",
+    "docs/governance/v57f_post_v5a_no_tuning_refresh_workflow.md",
+    "docs/governance/v57f_post_v5a_no_tuning_refresh_execution.md",
+    "local_daily_backtests_v57f_etf/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/rebalance_order_health.csv",
+    "basket_forward_paper_gates_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/forward_paper_gate_summary.json",
+    "basket_governance_dashboards_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/basket_governance_dashboard_summary.json",
+    "basket_pm_action_routes_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/basket_pm_action_route_summary.json",
+    "agent_loop_packets_v57f/v57f_post_v5a_no_tuning_refresh_20260721/checkpoint_packet.json",
+    "docs/governance/v5_enhanced_etf_production_line_workflow.md",
+    "src/v5/enhanced_etf_production_line_runner.py",
+    "tests/test_enhanced_etf_production_line_runner.py",
+    "enhanced_etf_production_lines_v5/current/sleeve_registry.csv",
+    "enhanced_etf_production_lines_v5/current/sleeve_registry_summary.json",
+    "enhanced_etf_production_lines_v5/current/refresh_plan.csv",
+    "enhanced_etf_production_lines_v5/current/production_line_summary.json",
+    "enhanced_etf_production_lines_v5/current/production_line_report.md",
+    "agent_loop_packets_v5/v5_enhanced_etf_production_line_20260721/checkpoint_packet.json",
+    "enhanced_etf_production_lines_v5/current/production_line_summary.json"
+  ],
+  "blocked_actions": [
+    "mark_accepted_strategy",
+    "strategy_state_promotion"
+  ],
+  "pm_rule": "Strategy state gates are read-only. Passing this gate does not change registry status; promotion still requires an explicit PM/user stage-gate decision.",
+  "created_at_utc": "2026-07-22T02:06:56+00:00"
+}

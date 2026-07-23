@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-22",
+  "updated_at": "2026-07-24",
   "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
   "strategies": [
     {
@@ -647,13 +647,14 @@
         "sample_size_blocked",
         "small_sample_observation_sleeve",
         "basket_diagnostic_only",
-        "not_engineering_handoff"
+        "engineering_observation_sleeve_ready",
+        "engineering_handoff_observation_only"
       ],
       "not_status": [
         "formal_strategy_candidate",
-        "engineering_smoke_test",
         "platform_replication",
-        "accepted_strategy"
+        "accepted_strategy",
+        "v57f_core_inclusion"
       ],
       "experiment_layer": "research_pit_validation",
       "evidence_paths": [
@@ -667,17 +668,22 @@
         "数据库/processed/telecom_joinquant_joinquant_cash_dividends.csv",
         "数据库/processed/low_volatility_factors_v58/telecom_operators/telecom_operators_cashflow_dividend_v55a/panel_with_low_vol.csv",
         "validation_formal_v55a_similar_sectors/telecom_operators_cashflow_dividend_v55a/formal_validation_summary.json",
-        "knowledge/research_agent/strategy_cases/v55a_similar_sector_initial_model_result.md"
+        "knowledge/research_agent/strategy_cases/v55a_similar_sector_initial_model_result.md",
+        "telecom_engineering_readiness_v5/current/telecom_engineering_readiness_summary.json",
+        "telecom_engineering_readiness_v5/current/telecom_engineering_readiness_report.md",
+        "telecom_engineering_readiness_v5/current/telecom_engineering_next_agent_queue.csv",
+        "agent_loop_packets_v5a/telecom_engineering_readiness/telecom_engineering_readiness_20260724/checkpoint_packet.json"
       ],
       "blockers": [
         "Only three A-share core telecom operators; IC / RankIC evidence is sample-size constrained.",
         "2026 rolling result is negative.",
         "ARPU, subscriber count, capex cycle, EBITDA margin and enterprise-service mix are not joined.",
         "Composite mean selected count is 1.5, so current evidence is concentration-sensitive.",
-        "Telecom requires PM-approved specialist sleeve handling before any Engineering handoff.",
-        "Specialist operating data such as ARPU, subscriber count, capex cycle and enterprise-service mix remains missing."
+        "Specialist operating data such as ARPU, subscriber count, capex cycle and enterprise-service mix remains missing.",
+        "Standalone formal candidate remains blocked by sample size.",
+        "Engineering handoff is limited to capped observation / paper tracking refresh only."
       ],
-      "next_gate": "capped_basket_contribution_diagnostic_only"
+      "next_gate": "engineering_refresh_capped_observation_and_paper_tracking"
     },
     {
       "strategy_id": "gas_water_cashflow_dividend_v55a",
@@ -1408,6 +1414,7 @@
       "current_status": [
         "diagnostic_overlay_completed",
         "observation_sleeve_data_repaired",
+        "engineering_observation_sleeve_ready",
         "basket_contribution_diagnostic_completed",
         "not_mainline_replacement",
         "not_platform_replication"
@@ -1427,15 +1434,20 @@
         "docs/governance/v58_telecom_overlay_basket_contribution_pm_decision_v1.md",
         "validation_formal_v58_telecom_overlay_basket_constructor/basket_construction_summary.json",
         "local_daily_backtests_v58_telecom_overlay_matched/dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay/dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay/summary.json",
-        "validation_formal_v58_telecom_overlay_matched_basket/dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay/basket_formal_validation_summary.json"
+        "validation_formal_v58_telecom_overlay_matched_basket/dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay/basket_formal_validation_summary.json",
+        "telecom_engineering_readiness_v5/current/telecom_engineering_readiness_summary.json",
+        "telecom_engineering_readiness_v5/current/telecom_engineering_readiness_report.md",
+        "telecom_engineering_readiness_v5/current/telecom_engineering_next_agent_queue.csv",
+        "agent_loop_packets_v5a/telecom_engineering_readiness/telecom_engineering_readiness_20260724/checkpoint_packet.json"
       ],
       "blockers": [
         "Telecom has only three A-share core operators and remains sample-size constrained.",
         "Overlay did not improve total return, excess return or information ratio versus V5.7f.",
         "Specialist telecom operating data remains incomplete.",
-        "No JoinQuant platform replication or paper-trading approval exists for the overlay."
+        "No JoinQuant platform replication or paper-trading approval exists for the overlay.",
+        "Engineering handoff is limited to capped observation refresh and paper tracking readiness through 2026-05-31."
       ],
-      "next_gate": "observation_only_or_future_specialist_data_research"
+      "next_gate": "engineering_refresh_capped_observation_and_paper_tracking"
     },
     {
       "strategy_id": "oil_gas_cashflow_cycle_data_gate_v58a",

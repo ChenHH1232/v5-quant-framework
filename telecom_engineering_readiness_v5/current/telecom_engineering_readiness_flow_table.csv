@@ -1,0 +1,7 @@
+﻿step,owner,input,action,output,gate,status,forbidden_action
+1,Project Manager Agent,V57f freeze state,Confirm telecom cannot change V57f core,scope lock,no_core_inclusion,completed,modify V57f
+2,Research Agent,telecom industry universe,Confirm only core operators are used,small-sample policy,sample_policy,completed,treat as ordinary cross-section
+3,Quant Validation Agent,standalone formal validation,"Review PIT, rolling, IC/RankIC, failure years",standalone blocker evidence,research_signal_only,completed,promote standalone
+4,Engineering Agent,"real prices, dividends, low-vol panel",Confirm observation inputs exist,engineering data contract,files_exist,completed,ignore missing dividends/order health
+5,Project Manager Agent,overlay daily + formal validation,Classify overlay as diagnostic only,overlay policy,not_v57f_replacement,completed,rank by historical return
+6,Project Manager Agent,all checks,Open capped observation Engineering handoff,engineering queue,local_refresh_only,completed,platform replication or JoinQuant code

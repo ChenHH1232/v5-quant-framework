@@ -37,6 +37,18 @@ from v5.new_sleeve_observation_execution_runner import (
     DEFAULT_V57F_SUMMARY as DEFAULT_NEW_SLEEVE_OBSERVATION_V57F_SUMMARY,
     run_new_sleeve_observation_execution,
 )
+from v5.telecom_engineering_readiness_runner import (
+    DEFAULT_BENCHMARK_CSV as DEFAULT_TELECOM_ENGINEERING_BENCHMARK,
+    DEFAULT_DIVIDEND_CSV as DEFAULT_TELECOM_ENGINEERING_DIVIDENDS,
+    DEFAULT_FORMAL_SUMMARY as DEFAULT_TELECOM_ENGINEERING_FORMAL,
+    DEFAULT_OUT_DIR as DEFAULT_TELECOM_ENGINEERING_OUT,
+    DEFAULT_OVERLAY_DAILY_SUMMARY as DEFAULT_TELECOM_ENGINEERING_OVERLAY_DAILY,
+    DEFAULT_OVERLAY_FORMAL_SUMMARY as DEFAULT_TELECOM_ENGINEERING_OVERLAY_FORMAL,
+    DEFAULT_PANEL as DEFAULT_TELECOM_ENGINEERING_PANEL,
+    DEFAULT_PRICE_CSV as DEFAULT_TELECOM_ENGINEERING_PRICES,
+    DEFAULT_V57F_SUMMARY as DEFAULT_TELECOM_ENGINEERING_V57F,
+    review_telecom_engineering_readiness,
+)
 from v5.sleeve_promotion_queue_runner import (
     DEFAULT_OUT_DIR as DEFAULT_SLEEVE_PROMOTION_OUT,
     DEFAULT_SLEEVE_REGISTRY as DEFAULT_SLEEVE_PROMOTION_REGISTRY,
@@ -842,6 +854,18 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     new_sleeve_observation_parser.add_argument("--status-registry", type=Path, default=DEFAULT_NEW_SLEEVE_OBSERVATION_STATUS_REGISTRY)
     new_sleeve_observation_parser.set_defaults(handler=_handle_run_new_sleeve_observation_execution)
 
+    telecom_engineering_parser = subparsers.add_parser("review-telecom-engineering-readiness")
+    telecom_engineering_parser.add_argument("--formal-summary", type=Path, default=DEFAULT_TELECOM_ENGINEERING_FORMAL)
+    telecom_engineering_parser.add_argument("--overlay-daily-summary", type=Path, default=DEFAULT_TELECOM_ENGINEERING_OVERLAY_DAILY)
+    telecom_engineering_parser.add_argument("--overlay-formal-summary", type=Path, default=DEFAULT_TELECOM_ENGINEERING_OVERLAY_FORMAL)
+    telecom_engineering_parser.add_argument("--panel", type=Path, default=DEFAULT_TELECOM_ENGINEERING_PANEL)
+    telecom_engineering_parser.add_argument("--price-csv", type=Path, default=DEFAULT_TELECOM_ENGINEERING_PRICES)
+    telecom_engineering_parser.add_argument("--dividend-csv", type=Path, default=DEFAULT_TELECOM_ENGINEERING_DIVIDENDS)
+    telecom_engineering_parser.add_argument("--benchmark-csv", type=Path, default=DEFAULT_TELECOM_ENGINEERING_BENCHMARK)
+    telecom_engineering_parser.add_argument("--v57f-summary", type=Path, default=DEFAULT_TELECOM_ENGINEERING_V57F)
+    telecom_engineering_parser.add_argument("--out", type=Path, default=DEFAULT_TELECOM_ENGINEERING_OUT)
+    telecom_engineering_parser.set_defaults(handler=_handle_review_telecom_engineering_readiness)
+
     sleeve_promotion_parser = subparsers.add_parser("build-sleeve-promotion-queue")
     sleeve_promotion_parser.add_argument("--sleeve-registry", type=Path, default=DEFAULT_SLEEVE_PROMOTION_REGISTRY)
     sleeve_promotion_parser.add_argument("--status-registry", type=Path, default=DEFAULT_SLEEVE_PROMOTION_STATUS)
@@ -1520,6 +1544,23 @@ def _handle_run_new_sleeve_observation_execution(args: argparse.Namespace) -> in
             v57f_summary=args.v57f_summary,
             sleeve_registry=args.sleeve_registry,
             status_registry=args.status_registry,
+        )
+    )
+    return 0
+
+
+def _handle_review_telecom_engineering_readiness(args: argparse.Namespace) -> int:
+    print(
+        review_telecom_engineering_readiness(
+            formal_summary=args.formal_summary,
+            overlay_daily_summary=args.overlay_daily_summary,
+            overlay_formal_summary=args.overlay_formal_summary,
+            panel_csv=args.panel,
+            price_csv=args.price_csv,
+            dividend_csv=args.dividend_csv,
+            benchmark_csv=args.benchmark_csv,
+            v57f_summary=args.v57f_summary,
+            out_dir=args.out,
         )
     )
     return 0

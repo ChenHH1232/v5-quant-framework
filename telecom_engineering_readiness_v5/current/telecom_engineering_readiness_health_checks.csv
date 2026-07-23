@@ -1,0 +1,11 @@
+﻿check,status,detail
+standalone_formal_validation_exists,passed,formal_validation_completed_not_acceptance
+standalone_sample_size_policy_documented,passed,core_security_count=3
+standalone_promotion_blocked,passed,standalone_blocked_small_sample_capped_observation_only
+overlay_local_daily_exists,passed,strategy_return=80.12%
+overlay_formal_validation_exists,passed,formal_validation_completed_not_acceptance
+panel_with_low_vol_exists,passed,rows=52 latest=2026-04-01
+real_daily_prices_exist,passed,rows=3684 latest=2026-05-29
+real_cash_dividends_exist,passed,rows=26 latest=2025-10-24
+benchmark_prices_exist,passed,rows=1228 latest=2026-05-29
+engineering_scope_is_observation_only,passed,local refresh + paper tracking + order health only

@@ -1,0 +1,307 @@
+{
+  "schema_version": 1,
+  "strategy_id": "telecom_operators_cashflow_dividend_v55a",
+  "overlay_id": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay",
+  "sector_id": "telecom_operators",
+  "label_en": "Telecom operators",
+  "label_zh": "电信运营商",
+  "experiment_layer": "pm_decision_gate",
+  "status": "engineering_observation_sleeve_ready",
+  "next_gate": "engineering_refresh_capped_observation_and_paper_tracking",
+  "inputs": {
+    "formal_summary": "validation_formal_v55a_similar_sectors\\telecom_operators_cashflow_dividend_v55a\\formal_validation_summary.json",
+    "overlay_daily_summary": "local_daily_backtests_v58_telecom_overlay_matched\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay\\summary.json",
+    "overlay_formal_summary": "validation_formal_v58_telecom_overlay_matched_basket\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay\\basket_formal_validation_summary.json",
+    "panel_csv": "数据库\\processed\\low_volatility_factors_v58\\telecom_operators\\telecom_operators_cashflow_dividend_v55a\\panel_with_low_vol.csv",
+    "price_csv": "数据库\\processed\\telecom_joinquant_joinquant_real_daily_prices.csv",
+    "dividend_csv": "数据库\\processed\\telecom_joinquant_joinquant_cash_dividends.csv",
+    "benchmark_csv": "数据库\\processed\\telecom_joinquant_joinquant_real_benchmark_prices.csv",
+    "v57f_summary": "local_daily_backtests_v57f_etf\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\summary.json"
+  },
+  "sample_policy": {
+    "decision": "standalone_blocked_small_sample_capped_observation_only",
+    "core_security_count": 3,
+    "minimum_for_standalone": 8,
+    "reason": "Only three core A-share telecom operators are available, so cross-sectional IC/RankIC is fragile.",
+    "allowed": [
+      "capped_observation_sleeve",
+      "paper_tracking",
+      "basket_sidecar_diagnostic"
+    ],
+    "blocked": [
+      "standalone_formal_candidate",
+      "accepted_strategy",
+      "v57f_core_inclusion"
+    ]
+  },
+  "overlay_policy": {
+    "decision": "overlay_diagnostic_completed_not_core_promotion",
+    "reason": "Telecom overlay is useful as a defensive observation sleeve, but it does not beat V57f on return, excess return, or information ratio.",
+    "return_delta_vs_v57f": -0.012988554500002136,
+    "information_ratio_delta_vs_v57f": -0.04408295725239175,
+    "max_drawdown_delta_vs_v57f": -0.006426088248591588,
+    "overlay_status": "formal_validation_completed_not_acceptance",
+    "allowed": [
+      "refresh_observation_inputs",
+      "paper_tracking_packet",
+      "rebalance_order_health_review"
+    ],
+    "blocked": [
+      "replace_v57f",
+      "join_v57f_core",
+      "platform_replication"
+    ]
+  },
+  "data_health": {
+    "panel_exists": true,
+    "price_exists": true,
+    "dividend_exists": true,
+    "benchmark_exists": true,
+    "panel_row_count": 52,
+    "price_row_count": 3684,
+    "dividend_row_count": 26,
+    "benchmark_row_count": 1228,
+    "latest_panel_trade_date": "2026-04-01",
+    "latest_price_date": "2026-05-29",
+    "latest_dividend_pay_date": "2025-10-24",
+    "latest_benchmark_date": "2026-05-29"
+  },
+  "standalone_evidence": {
+    "status": "formal_validation_completed_not_acceptance",
+    "row_count": 52,
+    "date_count": 20,
+    "core_security_count": 3,
+    "rolling_2026_return": -0.17726796853836502,
+    "baseline_tests": [
+      {
+        "case": "equal_weight_core_telecom",
+        "periods": 20,
+        "cum_return": 0.25242554115358296,
+        "mean_return": 0.015892321750316667,
+        "positive_ratio": 0.5,
+        "mean_selected_count": 2.6
+      },
+      {
+        "case": "high_dividend_top2",
+        "periods": 20,
+        "cum_return": 0.26072396378212925,
+        "mean_return": 0.016309345255225,
+        "positive_ratio": 0.5,
+        "mean_selected_count": 1.85
+      },
+      {
+        "case": "cashflow_dividend_composite_top2",
+        "periods": 20,
+        "cum_return": 0.48930452846172057,
+        "mean_return": 0.026011961013,
+        "positive_ratio": 0.45,
+        "mean_selected_count": 1.5
+      }
+    ],
+    "factor_ic_rankic": [
+      {
+        "factor": "dividend_yield",
+        "direction": "higher_is_better",
+        "observations": 52,
+        "dates": 15,
+        "mean_ic": 0.351277716702702,
+        "mean_rankic": 0.33333333333333326,
+        "positive_ic_ratio": 0.6666666666666666,
+        "top_minus_bottom_mean_return": 0.006673000743933335
+      },
+      {
+        "factor": "operating_cash_flow_yield",
+        "direction": "higher_is_better",
+        "observations": 52,
+        "dates": 15,
+        "mean_ic": -0.25423983800956357,
+        "mean_rankic": -0.29999999999999993,
+        "positive_ic_ratio": 0.3333333333333333,
+        "top_minus_bottom_mean_return": 0.004380751164733335
+      },
+      {
+        "factor": "low_price_to_book",
+        "direction": "lower_is_better",
+        "observations": 52,
+        "dates": 15,
+        "mean_ic": -0.21648784484069003,
+        "mean_rankic": -0.23333333333333328,
+        "positive_ic_ratio": 0.4,
+        "top_minus_bottom_mean_return": 0.029038445864733337
+      },
+      {
+        "factor": "capex_burden",
+        "direction": "lower_is_better",
+        "observations": 52,
+        "dates": 15,
+        "mean_ic": -0.15624383643658218,
+        "mean_rankic": -0.16666666666666663,
+        "positive_ic_ratio": 0.4666666666666667,
+        "top_minus_bottom_mean_return": -0.023949170669333334
+      }
+    ],
+    "governance": "Do not use 2021-2026 platform-confirmation results for tuning. Single-model acceptance requires rolling validation."
+  },
+  "overlay_evidence": {
+    "daily_metrics": {
+      "strategy_return": 0.8011754749999982,
+      "annualized_return": 0.1408920387227317,
+      "excess_return": 0.28669241532506473,
+      "benchmark_return": 0.5144830596749335,
+      "alpha": 0.06807153732150813,
+      "beta": 0.7473669845842194,
+      "sharpe": 0.9499813522167432,
+      "win_rate": 0.5368888888888889,
+      "profit_loss_ratio": 1.0202500887195105,
+      "max_drawdown": 0.11106300528744428,
+      "sortino": 1.3722421790193349,
+      "mean_excess_return": 0.00013818783408747287,
+      "excess_max_drawdown": 0.19375271291781937,
+      "excess_sharpe": 0.4002346724658017,
+      "daily_win_rate": 0.5368888888888889,
+      "profit_count": 604,
+      "loss_count": 521,
+      "information_ratio": 0.4002346724658017,
+      "strategy_volatility": 0.15077258772295082,
+      "benchmark_volatility": 0.17506280402339736,
+      "max_drawdown_interval": "2023-05-08,2024-01-22",
+      "annual_factor": 252
+    },
+    "signal_count": 19,
+    "trade_count": 737,
+    "dividend_count": 147,
+    "formal_status": "formal_validation_completed_not_acceptance",
+    "sector_exposure": [
+      {
+        "sector_id": "bank",
+        "holding_count": 133,
+        "avg_weight_per_rebalance": "0.2258064516",
+        "avg_names_per_rebalance": "7"
+      },
+      {
+        "sector_id": "highway_infrastructure",
+        "holding_count": 127,
+        "avg_weight_per_rebalance": "0.2156196944",
+        "avg_names_per_rebalance": "6.684210526"
+      },
+      {
+        "sector_id": "port_rail_infrastructure",
+        "holding_count": 133,
+        "avg_weight_per_rebalance": "0.2258064516",
+        "avg_names_per_rebalance": "7"
+      },
+      {
+        "sector_id": "telecom_operators",
+        "holding_count": 45,
+        "avg_weight_per_rebalance": "0.07640067913",
+        "avg_names_per_rebalance": "2.368421053"
+      },
+      {
+        "sector_id": "utilities_electricity",
+        "holding_count": 133,
+        "avg_weight_per_rebalance": "0.2258064516",
+        "avg_names_per_rebalance": "7"
+      }
+    ],
+    "weak_year_analysis": [
+      {
+        "year": "2021",
+        "strategy_return": "0.0147430795",
+        "benchmark_return": "-0.007521727833",
+        "excess_return": "0.02226480733",
+        "max_drawdown": "0.0826589205",
+        "diagnosis_required": "yes"
+      },
+      {
+        "year": "2026",
+        "strategy_return": "0.02319835681",
+        "benchmark_return": "0.1251233941",
+        "excess_return": "-0.1019250373",
+        "max_drawdown": "0.06967650143",
+        "diagnosis_required": "yes"
+      },
+      {
+        "year": "2022",
+        "strategy_return": "0.08457085491",
+        "benchmark_return": "-0.02615106202",
+        "excess_return": "0.1107219169",
+        "max_drawdown": "0.1066856645",
+        "diagnosis_required": "no"
+      },
+      {
+        "year": "2025",
+        "strategy_return": "0.09782049478",
+        "benchmark_return": "0.1262569087",
+        "excess_return": "-0.02843641388",
+        "max_drawdown": "0.06686199755",
+        "diagnosis_required": "no"
+      },
+      {
+        "year": "2023",
+        "strategy_return": "0.1324796344",
+        "benchmark_return": "0.04922405533",
+        "excess_return": "0.08325557903",
+        "max_drawdown": "0.1055502506",
+        "diagnosis_required": "no"
+      },
+      {
+        "year": "2024",
+        "strategy_return": "0.2865315119",
+        "benchmark_return": "0.1785444181",
+        "excess_return": "0.1079870938",
+        "max_drawdown": "0.09266117472",
+        "diagnosis_required": "no"
+      }
+    ]
+  },
+  "v57f_reference": {
+    "strategy_return": 0.8141640295000003,
+    "annualized_return": 0.14272978567948713,
+    "excess_return": 0.3040452388824073,
+    "benchmark_return": 0.510118790617593,
+    "alpha": 0.06753142560478344,
+    "beta": 0.7774297881665941,
+    "sharpe": 0.9317411868082882,
+    "win_rate": 0.5351111111111111,
+    "profit_loss_ratio": 1.0248923908789362,
+    "max_drawdown": 0.11748909353603587,
+    "sortino": 1.336345551370714,
+    "mean_excess_return": 0.00014972612721624634,
+    "excess_max_drawdown": 0.18152499538753242,
+    "excess_sharpe": 0.44431762971819344,
+    "daily_win_rate": 0.5351111111111111,
+    "profit_count": 602,
+    "loss_count": 523,
+    "information_ratio": 0.44431762971819344,
+    "strategy_volatility": 0.15638693854762073,
+    "benchmark_volatility": 0.1762983342005713,
+    "max_drawdown_interval": "2022-03-03,2022-03-15",
+    "annual_factor": 252
+  },
+  "pm_decision": {
+    "can_enter_engineering": true,
+    "engineering_scope": "capped_observation_sleeve_local_refresh_and_paper_tracking_only",
+    "can_promote_standalone": false,
+    "can_join_v57f_core": false,
+    "can_enter_platform_replication": false,
+    "can_write_joinquant_code": false
+  },
+  "outputs": {
+    "flow_table_csv": "telecom_engineering_readiness_v5\\current\\telecom_engineering_readiness_flow_table.csv",
+    "health_check_csv": "telecom_engineering_readiness_v5\\current\\telecom_engineering_readiness_health_checks.csv",
+    "engineering_queue_csv": "telecom_engineering_readiness_v5\\current\\telecom_engineering_next_agent_queue.csv",
+    "report_md": "telecom_engineering_readiness_v5\\current\\telecom_engineering_readiness_report.md"
+  },
+  "pm_rules": [
+    "Telecom has only three core A-share operators, so standalone promotion remains blocked.",
+    "Engineering may refresh capped observation inputs and paper tracking only.",
+    "Do not modify V57f factors, weights, sleeves, or rebalance rules.",
+    "Do not rank telecom by historical return or use this review for tuning.",
+    "Do not claim formal_strategy_candidate, platform_replication_passed, accepted_strategy, or live_trading_approved."
+  ],
+  "created_at_utc": "2026-07-23T17:34:27+00:00",
+  "agent_packet": {
+    "packet_path": "agent_loop_packets_v5a\\telecom_engineering_readiness\\telecom_engineering_readiness_20260724\\checkpoint_packet.json",
+    "report_path": "agent_loop_packets_v5a\\telecom_engineering_readiness\\telecom_engineering_readiness_20260724\\checkpoint_packet.md"
+  }
+}

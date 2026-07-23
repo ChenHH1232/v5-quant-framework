@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "packet_type": "checkpoint_packet",
+  "protocol_id": "agent_operating_protocol_v1",
+  "objective": "telecom_operators_engineering_readiness_observation_sleeve",
+  "agent": "Project Manager Agent",
+  "experiment_layer": "pm_decision_gate",
+  "elapsed_timebox_minutes": 60,
+  "artifacts_created": [
+    "telecom_engineering_readiness_v5\\current\\telecom_engineering_readiness_flow_table.csv",
+    "telecom_engineering_readiness_v5\\current\\telecom_engineering_readiness_health_checks.csv",
+    "telecom_engineering_readiness_v5\\current\\telecom_engineering_next_agent_queue.csv",
+    "telecom_engineering_readiness_v5\\current\\telecom_engineering_readiness_summary.json",
+    "telecom_engineering_readiness_v5\\current\\telecom_engineering_readiness_report.md"
+  ],
+  "evidence_found": [
+    "Standalone sample policy: standalone_blocked_small_sample_capped_observation_only",
+    "Overlay policy: overlay_diagnostic_completed_not_core_promotion",
+    "Engineering readiness status: engineering_observation_sleeve_ready"
+  ],
+  "blockers": [],
+  "decision": "return_to_engineering",
+  "next_owner": "Engineering Agent",
+  "stop_rule_status": "not_triggered",
+  "user_decision_required": false,
+  "user_decision_reason": "",
+  "allowed_next_action": "engineering_refresh_capped_observation_and_paper_tracking",
+  "restart_condition": "rerun after Engineering completes capped observation refresh or after Research repairs failed checks",
+  "skill_status_change": "none",
+  "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
+  "created_at_utc": "2026-07-23T17:34:27+00:00"
+}

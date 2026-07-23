@@ -1,0 +1,2 @@
+owner,priority,task,input,output,blocked_actions,stop_condition
+PM Agent,P1,"review explained price-limit skips, partial fill, and high cash drag before any observation paper tracking",order_skip_diagnosis.csv; partial_fill_diagnosis.csv; rebalance_order_health.csv,PM tradability/cash-drag decision,modify_V57f_or_start_platform_replication_or_tune_food_beverage_returns,PM either accepts observation-only tracking or returns execution policy repair

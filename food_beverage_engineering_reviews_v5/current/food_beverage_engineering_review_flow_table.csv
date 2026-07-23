@@ -1,0 +1,7 @@
+step,owner,input,action,output,pass_standard,forbidden_action
+1,PM Agent,V57f freeze state + food_beverage route,confirm this review cannot change V57f or promote the sleeve,scope lock,V57f core unchanged; food_beverage remains observation/engineering review,add food_beverage to V57f; tune factors; claim accepted
+2,Engineering Agent,"local daily summary, rebalance_order_health, trades",separate no-order bugs from genuine tradability skips,order skip diagnosis,"every skipped order has date, code, reason, and price-limit/suspension evidence",ignore skipped orders because total return is low or high
+3,Engineering Agent,trades,surface buy orders whose filled amount is below the true rebalance delta,partial fill diagnosis,cash/lot-limited buy gaps are visible to PM gate,treat target_amount as the same thing as this-order amount
+4,Engineering Agent,dividend source csv + local dividends output,verify whether real cash dividends entered the local simulation,dividend gap diagnosis,real tax-adjusted cash dividend rows exist or blocker is explicit,promote a dividend sleeve with an empty dividend source
+5,Research Agent,PIT panel date coverage + first signal,classify pre-first-signal empty period,startup gap diagnosis,"2021 gap is classified as PIT window issue, not order execution bug",fill missing 2021 signal by using future-visible data
+6,PM Agent,all diagnostics,route next agent queue,repair/explain decision packet,one clear next action; no platform replication until blockers are closed,continue to JoinQuant replication or V57f inclusion

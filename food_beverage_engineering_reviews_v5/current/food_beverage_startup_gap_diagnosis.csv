@@ -1,0 +1,2 @@
+status,requested_start_date,first_signal_date,has_startup_gap,classification,diagnosis,required_repair
+research_pit_window_gap,2021-05-01,2022-01-04,true,panel_has_no_pit_rebalance_rows_before_first_signal,"pre-first-signal cash period is caused by missing PIT rebalance rows, not by failed local order execution",Research Agent repairs 2021 PIT panel only if PM requires pre-2022 food/beverage exposure

@@ -21,11 +21,11 @@ This is a local daily Engineering smoke test only. It does not promote the strat
 
 ## Local Metrics
 
-- Strategy return: 4.65%
+- Strategy return: 11.58%
 - Benchmark return: -3.34%
-- Excess return: 7.99%
-- Max drawdown: 45.06%
-- Sharpe: 0.162
+- Excess return: 14.92%
+- Max drawdown: 43.16%
+- Sharpe: 0.215
 
 ## PM Rules
 

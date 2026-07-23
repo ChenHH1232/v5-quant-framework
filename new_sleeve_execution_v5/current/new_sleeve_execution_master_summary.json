@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-07-23T07:27:13+00:00",
+  "project": "v5_new_sleeve_observation_execution",
+  "status": "all_candidates_routed_no_v57f_change",
+  "freeze": {
+    "freeze_status": "pass",
+    "core_sleeves": [
+      "bank",
+      "utilities_electricity",
+      "highway_infrastructure",
+      "port_rail_infrastructure"
+    ],
+    "expected_core_sleeves": [
+      "bank",
+      "utilities_electricity",
+      "highway_infrastructure",
+      "port_rail_infrastructure"
+    ],
+    "config_path": "config\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f.json",
+    "summary_path": "local_daily_backtests_v57f_etf\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\summary.json",
+    "locked_metrics": {
+      "strategy_return": 0.8141640295000003,
+      "benchmark_return": 0.510118790617593,
+      "excess_return": 0.3040452388824073,
+      "max_drawdown": 0.11748909353603587,
+      "sharpe": 0.9317411868082882,
+      "trade_count": 709,
+      "dividend_count": 128,
+      "rebalance_signal_count": 19,
+      "order_health": "pass"
+    },
+    "blocked_actions": [
+      "do_not_modify_V57f_factors",
+      "do_not_modify_V57f_weights",
+      "do_not_add_observation_sleeves_to_V57f",
+      "do_not_claim_accepted_or_platform_replication_passed"
+    ]
+  },
+  "route_status_counts": {
+    "observation_paper_tracking": 2,
+    "external_event_wait": 1,
+    "engineering_needs_review": 1,
+    "research_data_gate_repair": 1,
+    "sidecar_candidate_needs_forward": 1,
+    "archived_not_current_mandate": 1
+  },
+  "sidecar_status_counts": {
+    "completed_not_core_promotion": 2,
+    "not_run_pending_pm_gate": 4,
+    "not_allowed_archived": 1
+  },
+  "candidate_count": 7,
+  "pm_decision_packet_count": 7,
+  "pm_decision_packets": [
+    "new_sleeve_execution_v5\\current\\pm_decision_packets\\gas_water_operators_pm_decision_packet.md",
+    "new_sleeve_execution_v5\\current\\pm_decision_packets\\home_appliances_pm_decision_packet.md",
+    "new_sleeve_execution_v5\\current\\pm_decision_packets\\oil_gas_pipeline_integrated_pm_decision_packet.md",
+    "new_sleeve_execution_v5\\current\\pm_decision_packets\\food_beverage_pm_decision_packet.md",
+    "new_sleeve_execution_v5\\current\\pm_decision_packets\\insurance_pm_decision_packet.md",
+    "new_sleeve_execution_v5\\current\\pm_decision_packets\\telecom_operators_pm_decision_packet.md",
+    "new_sleeve_execution_v5\\current\\pm_decision_packets\\coal_pm_decision_packet.md"
+  ],
+  "next_agent_queue": [
+    {
+      "queue_rank": "1",
+      "sector_id": "food_beverage",
+      "owner": "Engineering Agent",
+      "task": "Repair or explain order-health, skipped-order and dividend issues.",
+      "input_artifacts": "candidate_route_table.csv; sidecar_basket_comparison.csv; PM decision packet",
+      "output_artifacts": "checkpoint_or_repair_packet",
+      "gate": "rebalance_order_health_and_dividend_review",
+      "blocked_actions": "do_not_modify_V57f; do_not_tune_returns; do_not_add_observation_sleeve_to_core; do_not_claim_platform_replication"
+    }
+  ],
+  "hard_rules": [
+    "V57f core config remains unchanged.",
+    "Observation sleeves cannot be added to V57f from this run.",
+    "Historical returns cannot promote a sleeve.",
+    "Accepted/platform/live statuses remain blocked."
+  ]
+}

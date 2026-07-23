@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-07-23T07:27:12+00:00",
+  "sector_id": "insurance",
+  "label_en": "Insurance",
+  "label_zh": "保险",
+  "route_status": "research_data_gate_repair",
+  "pm_gate": "specialist_ev_nbv_platform_attribution_gate",
+  "data_gate": {
+    "pit_panel_status": "pass",
+    "price_status": "pass",
+    "dividend_status": "pass",
+    "low_vol_status": "pass",
+    "external_state_status": "needs_review",
+    "local_daily_status": "pass",
+    "order_health_status": "unknown",
+    "paper_tracking_status": "missing"
+  },
+  "metrics": {
+    "strategy_return": "0.29887860315",
+    "benchmark_return": "-0.0302430546138",
+    "excess_return": "0.329121657764",
+    "max_drawdown": "0.341961599089",
+    "sharpe": "0.327511242876"
+  },
+  "allowed_next_action": "Keep insurance as specialist observation; repair EV/NBV/P/EV or wait for platform attribution.",
+  "blocked_action": "Do not add insurance to ETF core.",
+  "source_paths": {
+    "local_summary": "local_daily_backtests_insurance_v53g\\insurance_pev_value_v53g\\summary.json",
+    "paper_summary": "",
+    "sidecar_summary": ""
+  },
+  "pm_rule": "Observation sleeve packets cannot modify frozen V57f or imply strategy acceptance."
+}

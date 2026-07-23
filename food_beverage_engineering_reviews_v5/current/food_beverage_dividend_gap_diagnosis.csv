@@ -1,0 +1,2 @@
+status,source_path,source_exists,source_dividend_event_count,output_dividend_event_count,diagnosis,required_repair
+passed,数据库\processed\food_beverage_v5a5_joinquant_cash_dividends.csv,true,202,40,cash dividend source and local dividend output are non-empty,none

@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-07-23T07:27:12+00:00",
+  "sector_id": "oil_gas_pipeline_integrated",
+  "label_en": "Oil / gas pipeline and integrated energy",
+  "label_zh": "油气管道/综合能源",
+  "route_status": "external_event_wait",
+  "pm_gate": "wait_for_platform_or_forward_event",
+  "data_gate": {
+    "pit_panel_status": "pass",
+    "price_status": "pass",
+    "dividend_status": "pass",
+    "low_vol_status": "pass",
+    "external_state_status": "pass",
+    "local_daily_status": "pass",
+    "order_health_status": "pass",
+    "paper_tracking_status": "external_event_wait"
+  },
+  "metrics": {
+    "strategy_return": "0.99792370835",
+    "benchmark_return": "0.862127544447",
+    "excess_return": "0.135796163903",
+    "max_drawdown": "0.217818405173",
+    "sharpe": "0.713590663443"
+  },
+  "allowed_next_action": "Park oil/gas until external event, platform export, or forward window appears.",
+  "blocked_action": "Do not rerun parameters for returns.",
+  "source_paths": {
+    "local_summary": "validation_daily_v58h_oil_gas_sector_benchmark\\oil_gas_state_conditioned_ocf_v58g\\summary.json",
+    "paper_summary": "",
+    "sidecar_summary": ""
+  },
+  "pm_rule": "Observation sleeve packets cannot modify frozen V57f or imply strategy acceptance."
+}

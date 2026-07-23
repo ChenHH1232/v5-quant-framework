@@ -29,6 +29,14 @@ from v5.v57f_execution_robustness_runner import (
     DEFAULT_SIGNALS as DEFAULT_V57F_EXECUTION_SIGNALS,
     run_v57f_execution_robustness,
 )
+from v5.new_sleeve_observation_execution_runner import (
+    DEFAULT_OUT_DIR as DEFAULT_NEW_SLEEVE_OBSERVATION_OUT,
+    DEFAULT_SLEEVE_REGISTRY as DEFAULT_NEW_SLEEVE_OBSERVATION_SLEEVE_REGISTRY,
+    DEFAULT_STATUS_REGISTRY as DEFAULT_NEW_SLEEVE_OBSERVATION_STATUS_REGISTRY,
+    DEFAULT_V57F_CONFIG as DEFAULT_NEW_SLEEVE_OBSERVATION_V57F_CONFIG,
+    DEFAULT_V57F_SUMMARY as DEFAULT_NEW_SLEEVE_OBSERVATION_V57F_SUMMARY,
+    run_new_sleeve_observation_execution,
+)
 from v5.sleeve_promotion_queue_runner import (
     DEFAULT_OUT_DIR as DEFAULT_SLEEVE_PROMOTION_OUT,
     DEFAULT_SLEEVE_REGISTRY as DEFAULT_SLEEVE_PROMOTION_REGISTRY,
@@ -168,6 +176,13 @@ from v5.food_beverage_daily_backtest_runner import (
     DEFAULT_RESEARCH_GATE as DEFAULT_FOOD_BEVERAGE_DAILY_GATE,
     DEFAULT_SPEC as DEFAULT_FOOD_BEVERAGE_DAILY_SPEC,
     run_food_beverage_daily_backtest,
+)
+from v5.food_beverage_engineering_review_runner import (
+    DEFAULT_DIVIDEND_CASH_CSV as DEFAULT_FOOD_BEVERAGE_REVIEW_DIVIDENDS,
+    DEFAULT_EXECUTION_PRICE_CSV as DEFAULT_FOOD_BEVERAGE_REVIEW_PRICES,
+    DEFAULT_LOCAL_DAILY_DIR as DEFAULT_FOOD_BEVERAGE_REVIEW_LOCAL_DAILY,
+    DEFAULT_OUT_DIR as DEFAULT_FOOD_BEVERAGE_REVIEW_OUT,
+    run_food_beverage_engineering_review,
 )
 from v5.pharma_specialist_data_gate_runner import (
     DEFAULT_CASH_DIVIDENDS as DEFAULT_PHARMA_DATA_GATE_DIVIDENDS,
@@ -697,6 +712,13 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     food_beverage_daily_parser.add_argument("--min-coverage-ratio", type=float, default=0.0)
     food_beverage_daily_parser.set_defaults(handler=_handle_daily_backtest_food_beverage)
 
+    food_beverage_review_parser = subparsers.add_parser("review-food-beverage-engineering-blockers")
+    food_beverage_review_parser.add_argument("--local-daily-dir", type=Path, default=DEFAULT_FOOD_BEVERAGE_REVIEW_LOCAL_DAILY)
+    food_beverage_review_parser.add_argument("--price-csv", type=Path, default=DEFAULT_FOOD_BEVERAGE_REVIEW_PRICES)
+    food_beverage_review_parser.add_argument("--dividend-cash-csv", type=Path, default=DEFAULT_FOOD_BEVERAGE_REVIEW_DIVIDENDS)
+    food_beverage_review_parser.add_argument("--out", type=Path, default=DEFAULT_FOOD_BEVERAGE_REVIEW_OUT)
+    food_beverage_review_parser.set_defaults(handler=_handle_review_food_beverage_engineering_blockers)
+
     pharma_gate_parser = subparsers.add_parser("audit-pharma-specialist-data-gate")
     pharma_gate_parser.add_argument("--panel", type=Path, default=DEFAULT_PHARMA_DATA_GATE_PANEL)
     pharma_gate_parser.add_argument("--daily-prices", type=Path, default=DEFAULT_PHARMA_DATA_GATE_DAILY_PRICES)
@@ -811,6 +833,14 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     v57f_execution_parser.add_argument("--close-commission", type=float, default=0.0003)
     v57f_execution_parser.add_argument("--min-commission", type=float, default=5.0)
     v57f_execution_parser.set_defaults(handler=_handle_run_v57f_execution_robustness)
+
+    new_sleeve_observation_parser = subparsers.add_parser("run-new-sleeve-observation-execution")
+    new_sleeve_observation_parser.add_argument("--out", type=Path, default=DEFAULT_NEW_SLEEVE_OBSERVATION_OUT)
+    new_sleeve_observation_parser.add_argument("--v57f-config", type=Path, default=DEFAULT_NEW_SLEEVE_OBSERVATION_V57F_CONFIG)
+    new_sleeve_observation_parser.add_argument("--v57f-summary", type=Path, default=DEFAULT_NEW_SLEEVE_OBSERVATION_V57F_SUMMARY)
+    new_sleeve_observation_parser.add_argument("--sleeve-registry", type=Path, default=DEFAULT_NEW_SLEEVE_OBSERVATION_SLEEVE_REGISTRY)
+    new_sleeve_observation_parser.add_argument("--status-registry", type=Path, default=DEFAULT_NEW_SLEEVE_OBSERVATION_STATUS_REGISTRY)
+    new_sleeve_observation_parser.set_defaults(handler=_handle_run_new_sleeve_observation_execution)
 
     sleeve_promotion_parser = subparsers.add_parser("build-sleeve-promotion-queue")
     sleeve_promotion_parser.add_argument("--sleeve-registry", type=Path, default=DEFAULT_SLEEVE_PROMOTION_REGISTRY)
@@ -966,7 +996,6 @@ def _handle_daily_backtest_gas_water_state_guard(args: argparse.Namespace) -> in
             initial_cash=args.initial_cash,
             target_exposure=args.target_exposure,
             lot_size=args.lot_size,
-            min_coverage_ratio=args.min_coverage_ratio,
         )
     )
     return 0
@@ -1330,6 +1359,18 @@ def _handle_daily_backtest_food_beverage(args: argparse.Namespace) -> int:
     return 0
 
 
+def _handle_review_food_beverage_engineering_blockers(args: argparse.Namespace) -> int:
+    print(
+        run_food_beverage_engineering_review(
+            local_daily_dir=args.local_daily_dir,
+            price_csv=args.price_csv,
+            dividend_cash_csv=args.dividend_cash_csv,
+            out_dir=args.out,
+        )
+    )
+    return 0
+
+
 def _handle_audit_pharma_specialist_data_gate(args: argparse.Namespace) -> int:
     print(
         run_pharma_specialist_data_gate(
@@ -1466,6 +1507,19 @@ def _handle_run_v57f_execution_robustness(args: argparse.Namespace) -> int:
             open_commission=args.open_commission,
             close_commission=args.close_commission,
             min_commission=args.min_commission,
+        )
+    )
+    return 0
+
+
+def _handle_run_new_sleeve_observation_execution(args: argparse.Namespace) -> int:
+    print(
+        run_new_sleeve_observation_execution(
+            out_dir=args.out,
+            v57f_config=args.v57f_config,
+            v57f_summary=args.v57f_summary,
+            sleeve_registry=args.sleeve_registry,
+            status_registry=args.status_registry,
         )
     )
     return 0

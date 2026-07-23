@@ -1,0 +1,4 @@
+trade_date,code,side,reason,target_amount,attempted_amount,trade_price,price_open,price_high_limit,price_low_limit,paused,tradability_check,engineering_interpretation
+2024-10-08,600305.XSHG,buy_skipped,high_limit,26000,26000,9.35,9.35,9.35,7.65,0,confirmed_buy_open_at_high_limit,explained_tradability_skip_not_code_no_order_bug
+2024-10-08,002847.XSHE,buy_skipped,high_limit,4100,4100,58.3,58.3,58.3,47.7,0,confirmed_buy_open_at_high_limit,explained_tradability_skip_not_code_no_order_bug
+2024-10-08,002495.XSHE,buy_skipped,high_limit,117200,117200,2.08,2.08,2.08,1.7,0,confirmed_buy_open_at_high_limit,explained_tradability_skip_not_code_no_order_bug

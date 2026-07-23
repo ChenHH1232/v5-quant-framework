@@ -1,0 +1,99 @@
+{
+  "strategy_id": "food_beverage_packaged_food_ocf_quality_v5a9a",
+  "review_type": "food_beverage_engineering_blocker_review",
+  "experiment_layer": "engineering_smoke_test",
+  "created_at_utc": "2026-07-23T13:25:06+00:00",
+  "inputs": {
+    "local_daily_dir": "local_daily_backtests_food_beverage_v5a9\\food_beverage_packaged_food_ocf_quality_v5a9a",
+    "summary_json": "local_daily_backtests_food_beverage_v5a9\\food_beverage_packaged_food_ocf_quality_v5a9a\\summary.json",
+    "price_csv": "数据库\\processed\\food_beverage_v5a5_joinquant_real_daily_prices.csv",
+    "dividend_cash_csv": "数据库\\processed\\food_beverage_v5a5_joinquant_cash_dividends.csv"
+  },
+  "local_metrics": {
+    "strategy_return": 0.11581544170000191,
+    "annualized_return": 0.022742990892159476,
+    "excess_return": 0.14920700325159453,
+    "benchmark_return": -0.03339156155159262,
+    "alpha": 0.027898545145790148,
+    "beta": 0.7423267630955238,
+    "sharpe": 0.21458682921374056,
+    "win_rate": 0.4381107491856677,
+    "profit_loss_ratio": 1.0169586008480487,
+    "max_drawdown": 0.4316312442134379,
+    "sortino": 0.31211659875198466,
+    "mean_excess_return": 0.00017799631298450082,
+    "excess_max_drawdown": 0.36709518653308526,
+    "excess_sharpe": 0.20762663219131167,
+    "daily_win_rate": 0.4381107491856677,
+    "profit_count": 538,
+    "loss_count": 526,
+    "information_ratio": 0.20762663219131167,
+    "strategy_volatility": 0.24814873803882354,
+    "benchmark_volatility": 0.17537230843172497,
+    "max_drawdown_interval": "2023-03-06,2024-09-13",
+    "annual_factor": 252
+  },
+  "order_health": {
+    "status": "explained_needs_review",
+    "rebalance_signal_count": 18,
+    "normal_rebalance_count": 18,
+    "no_order_rebalance_count": 0,
+    "no_order_no_position_count": 0,
+    "blocked_or_unfilled_rebalance_count": 0,
+    "partial_skipped_order_count": 3,
+    "partial_fill_count": 0,
+    "high_cash_rebalance_count": 1,
+    "high_cash_rebalance_dates": [
+      "2024-10-08"
+    ],
+    "diagnosis": "3 skipped orders; high cash after rebalance on 2024-10-08; execution is explainable but not promotion-ready"
+  },
+  "dividend_gap": {
+    "status": "passed",
+    "source_path": "数据库\\processed\\food_beverage_v5a5_joinquant_cash_dividends.csv",
+    "source_exists": "true",
+    "source_dividend_event_count": 202,
+    "output_dividend_event_count": 40,
+    "diagnosis": "cash dividend source and local dividend output are non-empty",
+    "required_repair": "none"
+  },
+  "startup_gap": {
+    "status": "research_pit_window_gap",
+    "requested_start_date": "2021-05-01",
+    "first_signal_date": "2022-01-04",
+    "has_startup_gap": "true",
+    "classification": "panel_has_no_pit_rebalance_rows_before_first_signal",
+    "diagnosis": "pre-first-signal cash period is caused by missing PIT rebalance rows, not by failed local order execution",
+    "required_repair": "Research Agent repairs 2021 PIT panel only if PM requires pre-2022 food/beverage exposure"
+  },
+  "pm_decision": {
+    "status": "engineering_needs_review_explained",
+    "next_gate": "pm_review_tradability_and_cash_drag_before_observation_paper_tracking",
+    "blockers": [],
+    "review_items": [
+      "explained_needs_review",
+      "research_pit_window_gap"
+    ],
+    "allowed_next_action": "pm_review_only",
+    "blocked_action": "modify_V57f_or_start_platform_replication_or_tune_food_beverage_returns",
+    "can_enter_engineering_next_layer": false,
+    "can_enter_platform_replication": false,
+    "can_join_v57f_core": false
+  },
+  "outputs": {
+    "flow_table": "food_beverage_engineering_reviews_v5\\current\\food_beverage_engineering_review_flow_table.csv",
+    "order_skip_diagnosis": "food_beverage_engineering_reviews_v5\\current\\food_beverage_order_skip_diagnosis.csv",
+    "partial_fill_diagnosis": "food_beverage_engineering_reviews_v5\\current\\food_beverage_partial_fill_diagnosis.csv",
+    "dividend_gap_diagnosis": "food_beverage_engineering_reviews_v5\\current\\food_beverage_dividend_gap_diagnosis.csv",
+    "startup_gap_diagnosis": "food_beverage_engineering_reviews_v5\\current\\food_beverage_startup_gap_diagnosis.csv",
+    "next_agent_queue": "food_beverage_engineering_reviews_v5\\current\\food_beverage_next_agent_queue.csv",
+    "report": "food_beverage_engineering_reviews_v5\\current\\food_beverage_engineering_review_report.md"
+  },
+  "pm_rules": [
+    "Do not modify V57f core sleeves, factors, weights, or rebalance rules.",
+    "Do not tune food/beverage returns from this engineering review.",
+    "Explained skipped orders are still an Engineering review item when they cause high cash drag.",
+    "Missing real cash dividends remains a data/engineering blocker until repaired.",
+    "Do not claim platform_replication_passed, accepted_strategy, or live_trading_approved."
+  ]
+}

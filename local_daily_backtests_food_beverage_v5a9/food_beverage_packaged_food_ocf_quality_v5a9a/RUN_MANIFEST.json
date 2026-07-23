@@ -1,46 +1,46 @@
 {
   "strategy_id": "food_beverage_packaged_food_ocf_quality_v5a9a",
   "experiment_layer": "engineering_smoke_test",
-  "created_at_utc": "2026-07-22T15:07:03+00:00",
+  "created_at_utc": "2026-07-23T13:24:54+00:00",
   "git": {
-    "commit": "05fe8fa38b3aeced48b240860383e095256cfe42",
+    "commit": "a4fdb3022824ec83b43adcccae3b1c3aa9d7ad83",
     "dirty": true,
     "dirty_scope": "pre_run",
     "pre_run": {
-      "commit": "05fe8fa38b3aeced48b240860383e095256cfe42",
+      "commit": "a4fdb3022824ec83b43adcccae3b1c3aa9d7ad83",
       "dirty": true,
       "status_short": [
-        "M docs/governance/status_registry.json",
-        " M enhanced_etf_production_lines_v5/current/sleeve_promotion_queue.csv",
-        " M enhanced_etf_production_lines_v5/current/sleeve_promotion_report.md",
-        " M enhanced_etf_production_lines_v5/current/sleeve_promotion_summary.json",
-        " M src/v5/cli_sector.py",
-        " M src/v5/sleeve_promotion_queue_runner.py",
-        " M tests/test_sleeve_promotion_queue_runner.py",
-        "?? docs/governance/v5a.9_food_beverage_local_daily_engineering_pm_decision.md",
-        "?? src/v5/food_beverage_daily_backtest_runner.py",
-        "?? tests/test_food_beverage_daily_backtest_runner.py",
+        "M src/v5/cli_sector.py",
+        "?? food_beverage_engineering_reviews_v5/",
+        "?? new_sleeve_execution_v5/",
+        "?? src/v5/food_beverage_engineering_review_runner.py",
+        "?? src/v5/new_sleeve_observation_execution_runner.py",
+        "?? tests/test_food_beverage_engineering_review_runner.py",
+        "?? tests/test_new_sleeve_observation_execution_runner.py",
         "?? workspace_contract_audits/"
       ],
-      "captured_at_utc": "2026-07-22T15:07:00+00:00"
+      "captured_at_utc": "2026-07-23T13:24:51+00:00"
     },
     "manifest_created": {
-      "commit": "05fe8fa38b3aeced48b240860383e095256cfe42",
+      "commit": "a4fdb3022824ec83b43adcccae3b1c3aa9d7ad83",
       "dirty": true,
       "status_short": [
-        "M docs/governance/status_registry.json",
-        " M enhanced_etf_production_lines_v5/current/sleeve_promotion_queue.csv",
-        " M enhanced_etf_production_lines_v5/current/sleeve_promotion_report.md",
-        " M enhanced_etf_production_lines_v5/current/sleeve_promotion_summary.json",
+        "M local_daily_backtests_food_beverage_v5a9/food_beverage_packaged_food_ocf_quality_v5a9a/daily_returns.csv",
+        " M local_daily_backtests_food_beverage_v5a9/food_beverage_packaged_food_ocf_quality_v5a9a/dividends.csv",
+        " M local_daily_backtests_food_beverage_v5a9/food_beverage_packaged_food_ocf_quality_v5a9a/holdings.csv",
+        " M local_daily_backtests_food_beverage_v5a9/food_beverage_packaged_food_ocf_quality_v5a9a/rebalance_order_health.csv",
+        " M local_daily_backtests_food_beverage_v5a9/food_beverage_packaged_food_ocf_quality_v5a9a/summary.json",
+        " M local_daily_backtests_food_beverage_v5a9/food_beverage_packaged_food_ocf_quality_v5a9a/trades.csv",
         " M src/v5/cli_sector.py",
-        " M src/v5/sleeve_promotion_queue_runner.py",
-        " M tests/test_sleeve_promotion_queue_runner.py",
-        "?? docs/governance/v5a.9_food_beverage_local_daily_engineering_pm_decision.md",
-        "?? src/v5/food_beverage_daily_backtest_runner.py",
-        "?? tests/test_food_beverage_daily_backtest_runner.py",
+        "?? food_beverage_engineering_reviews_v5/",
+        "?? new_sleeve_execution_v5/",
+        "?? src/v5/food_beverage_engineering_review_runner.py",
+        "?? src/v5/new_sleeve_observation_execution_runner.py",
+        "?? tests/test_food_beverage_engineering_review_runner.py",
+        "?? tests/test_new_sleeve_observation_execution_runner.py",
         "?? workspace_contract_audits/"
       ],
-      "captured_at_utc": "2026-07-22T15:07:03+00:00"
+      "captured_at_utc": "2026-07-23T13:24:54+00:00"
     }
   },
   "command_profile": {

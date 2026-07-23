@@ -16,6 +16,19 @@ from v5.enhanced_etf_production_line_runner import (
     DEFAULT_STATUS_REGISTRY as DEFAULT_ENHANCED_ETF_LINE_STATUS_REGISTRY,
     build_enhanced_etf_production_line,
 )
+from v5.enhanced_etf_comparison_runner import (
+    DEFAULT_OUT_DIR as DEFAULT_ENHANCED_ETF_COMPARISON_OUT,
+    DEFAULT_PRODUCTION_SUMMARY as DEFAULT_ENHANCED_ETF_COMPARISON_PRODUCTION_SUMMARY,
+    build_v57f_comparison_packet,
+)
+from v5.v57f_execution_robustness_runner import (
+    DEFAULT_BASELINE_SUMMARY as DEFAULT_V57F_EXECUTION_BASELINE_SUMMARY,
+    DEFAULT_CONFIG as DEFAULT_V57F_EXECUTION_CONFIG,
+    DEFAULT_OUT_DIR as DEFAULT_V57F_EXECUTION_OUT,
+    DEFAULT_PRODUCTION_SUMMARY as DEFAULT_V57F_EXECUTION_PRODUCTION_SUMMARY,
+    DEFAULT_SIGNALS as DEFAULT_V57F_EXECUTION_SIGNALS,
+    run_v57f_execution_robustness,
+)
 from v5.sleeve_promotion_queue_runner import (
     DEFAULT_OUT_DIR as DEFAULT_SLEEVE_PROMOTION_OUT,
     DEFAULT_SLEEVE_REGISTRY as DEFAULT_SLEEVE_PROMOTION_REGISTRY,
@@ -776,6 +789,29 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     enhanced_etf_line_parser.add_argument("--next-clean-rebalance-date", default="2026-10-08")
     enhanced_etf_line_parser.set_defaults(handler=_handle_build_enhanced_etf_production_line)
 
+    enhanced_etf_comparison_parser = subparsers.add_parser("build-v57f-comparison-packet")
+    enhanced_etf_comparison_parser.add_argument("--out", type=Path, default=DEFAULT_ENHANCED_ETF_COMPARISON_OUT)
+    enhanced_etf_comparison_parser.add_argument(
+        "--production-summary",
+        type=Path,
+        default=DEFAULT_ENHANCED_ETF_COMPARISON_PRODUCTION_SUMMARY,
+    )
+    enhanced_etf_comparison_parser.set_defaults(handler=_handle_build_v57f_comparison_packet)
+
+    v57f_execution_parser = subparsers.add_parser("run-v57f-execution-robustness")
+    v57f_execution_parser.add_argument("--config", type=Path, default=DEFAULT_V57F_EXECUTION_CONFIG)
+    v57f_execution_parser.add_argument("--signals", type=Path, default=DEFAULT_V57F_EXECUTION_SIGNALS)
+    v57f_execution_parser.add_argument("--baseline-summary", type=Path, default=DEFAULT_V57F_EXECUTION_BASELINE_SUMMARY)
+    v57f_execution_parser.add_argument("--production-summary", type=Path, default=DEFAULT_V57F_EXECUTION_PRODUCTION_SUMMARY)
+    v57f_execution_parser.add_argument("--out", type=Path, default=DEFAULT_V57F_EXECUTION_OUT)
+    v57f_execution_parser.add_argument("--initial-cash", type=float, default=2_000_000.0)
+    v57f_execution_parser.add_argument("--target-exposure", type=float, default=0.995)
+    v57f_execution_parser.add_argument("--lot-size", type=int, default=100)
+    v57f_execution_parser.add_argument("--open-commission", type=float, default=0.0003)
+    v57f_execution_parser.add_argument("--close-commission", type=float, default=0.0003)
+    v57f_execution_parser.add_argument("--min-commission", type=float, default=5.0)
+    v57f_execution_parser.set_defaults(handler=_handle_run_v57f_execution_robustness)
+
     sleeve_promotion_parser = subparsers.add_parser("build-sleeve-promotion-queue")
     sleeve_promotion_parser.add_argument("--sleeve-registry", type=Path, default=DEFAULT_SLEEVE_PROMOTION_REGISTRY)
     sleeve_promotion_parser.add_argument("--status-registry", type=Path, default=DEFAULT_SLEEVE_PROMOTION_STATUS)
@@ -1406,6 +1442,30 @@ def _handle_build_enhanced_etf_production_line(args: argparse.Namespace) -> int:
             out_dir=args.out,
             strategy_id=args.strategy_id,
             next_clean_rebalance_date=args.next_clean_rebalance_date,
+        )
+    )
+    return 0
+
+
+def _handle_build_v57f_comparison_packet(args: argparse.Namespace) -> int:
+    print(build_v57f_comparison_packet(out_dir=args.out, production_summary_path=args.production_summary))
+    return 0
+
+
+def _handle_run_v57f_execution_robustness(args: argparse.Namespace) -> int:
+    print(
+        run_v57f_execution_robustness(
+            config_path=args.config,
+            signals_csv=args.signals,
+            baseline_summary_path=args.baseline_summary,
+            production_summary_path=args.production_summary,
+            out_dir=args.out,
+            initial_cash=args.initial_cash,
+            target_exposure=args.target_exposure,
+            lot_size=args.lot_size,
+            open_commission=args.open_commission,
+            close_commission=args.close_commission,
+            min_commission=args.min_commission,
         )
     )
     return 0

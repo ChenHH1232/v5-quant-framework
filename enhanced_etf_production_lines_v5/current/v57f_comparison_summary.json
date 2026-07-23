@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-07-23T04:37:05+00:00",
+  "strategy_id": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f",
+  "status": "comparison_packet_hardened_not_strategy_acceptance",
+  "production_line_status": "engineering_local_refresh_ready_not_platform_replication",
+  "pm_gate_status": "formal_candidate_paper_tracking_started_needs_review",
+  "dashboard_status": "needs_pm_review",
+  "action_route_status": "no_action_until_external_event",
+  "not_status": [
+    "platform_replication_passed",
+    "accepted_strategy",
+    "live_trading_approved"
+  ],
+  "next_clean_rebalance_date": "2026-10-08",
+  "next_gate": "wait_until_2026_10_08_or_joinquant_exports_for_daily_attribution",
+  "row_count": 12,
+  "group_counts": {
+    "current_best": 1,
+    "core_sleeve": 4,
+    "observation": 5,
+    "blocked_or_failed": 2
+  },
+  "order_health_counts": {
+    "pass": 5,
+    "unknown": 6,
+    "needs_review": 1
+  },
+  "outputs": {
+    "all_csv": "enhanced_etf_production_lines_v5\\current\\v57f_best_and_sector_comparison.csv",
+    "best_csv": "enhanced_etf_production_lines_v5\\current\\v57f_best_version_metrics.csv",
+    "core_csv": "enhanced_etf_production_lines_v5\\current\\v57f_core_sleeve_comparison.csv",
+    "observation_csv": "enhanced_etf_production_lines_v5\\current\\v57f_observation_blocked_comparison.csv",
+    "report": "enhanced_etf_production_lines_v5\\current\\v57f_comparison_report.md"
+  },
+  "pm_rules": [
+    "Rows with different windows, benchmarks or portfolio contracts are not directly comparable to V57f.",
+    "High-return non-mainline rows must keep eligible_for_core=false unless a separate PM promotion gate passes.",
+    "Blank order-health values are forbidden; unknown is not pass.",
+    "Historical performance alone is never sufficient evidence for accepting a strategy."
+  ]
+}

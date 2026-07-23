@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-07-23T05:49:51+00:00",
+  "strategy_id": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f",
+  "freeze_status": "frozen_execution_robustness_candidate_not_tuned",
+  "experiment_layer": "engineering_execution_robustness",
+  "core_sleeves": [
+    "bank",
+    "utilities_electricity",
+    "highway_infrastructure",
+    "port_rail_infrastructure"
+  ],
+  "config_path": "config\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f.json",
+  "config_sha256": "84514d050c2ef918fcb651e731c529af89747e9606abcf32993a0d596aa33946",
+  "signals_csv": "validation_formal_v57f_etf_constructor\\basket_rebalance_signals.csv",
+  "signals_sha256": "ae7e08a5000126fb0e4021d4173b334c7b8246851662c8253b2a2fabe9afafba",
+  "signal_count": 19,
+  "baseline_summary_path": "local_daily_backtests_v57f_etf\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\summary.json",
+  "baseline_summary_sha256": "cf045514ba76fbc022a18b990a89ff96e30ede848b7c6f4c19f39da2806e4763",
+  "production_summary_path": "enhanced_etf_production_lines_v5\\current\\production_line_summary.json",
+  "production_line_status": "engineering_local_refresh_ready_not_platform_replication",
+  "pm_gate_status": "formal_candidate_paper_tracking_started_needs_review",
+  "action_route_status": "no_action_until_external_event",
+  "locked_metrics": {
+    "strategy_return": 0.8141640295000003,
+    "annualized_return": 0.14272978567948713,
+    "benchmark_return": 0.510118790617593,
+    "excess_return": 0.3040452388824073,
+    "max_drawdown": 0.11748909353603587,
+    "sharpe": 0.9317411868082882,
+    "trade_count": 709,
+    "dividend_count": 128,
+    "rebalance_signal_count": 19,
+    "first_executed_order_date": "2021-10-08",
+    "first_position_date": "2021-10-08"
+  },
+  "not_status": [
+    "accepted_strategy",
+    "platform_replication_passed",
+    "live_trading_approved"
+  ],
+  "pm_rules": [
+    "This manifest freezes V57f inputs for execution robustness only.",
+    "No factor recomputation, sleeve change, weight tuning or return-driven variant selection is allowed.",
+    "2021-2026 remains platform-confirmation context, not clean acceptance evidence."
+  ]
+}

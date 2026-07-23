@@ -1259,7 +1259,10 @@
         "rebalance_order_health_passed",
         "forward_paper_gate_ready",
         "engineering_local_refresh_ready_not_platform_replication",
-        "enhanced_etf_production_line_ready"
+        "enhanced_etf_production_line_ready",
+        "governed_comparison_packet_hardened_not_acceptance",
+        "execution_robustness_completed_not_tuning",
+        "execution_timing_not_fragile_no_strategy_change"
       ],
       "not_status": [
         "accepted_strategy",
@@ -1323,7 +1326,23 @@
         "strategy_state_gates_v57f/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f/accepted_strategy/strategy_state_gate_summary.json",
         "agent_loop_packets_v57f/v57f_production_line_state_gate_20260722/checkpoint_packet.json",
         "docs/governance/v57f_pm_action_router_external_wait_fix.md",
-        "agent_loop_packets_v57f/v57f_external_wait_action_route_20260722/checkpoint_packet.json"
+        "agent_loop_packets_v57f/v57f_external_wait_action_route_20260722/checkpoint_packet.json",
+        "src/v5/enhanced_etf_comparison_runner.py",
+        "tests/test_enhanced_etf_comparison_runner.py",
+        "enhanced_etf_production_lines_v5/current/v57f_best_and_sector_comparison.csv",
+        "enhanced_etf_production_lines_v5/current/v57f_best_version_metrics.csv",
+        "enhanced_etf_production_lines_v5/current/v57f_core_sleeve_comparison.csv",
+        "enhanced_etf_production_lines_v5/current/v57f_observation_blocked_comparison.csv",
+        "enhanced_etf_production_lines_v5/current/v57f_comparison_summary.json",
+        "enhanced_etf_production_lines_v5/current/v57f_comparison_report.md",
+        "docs/governance/v57f_execution_robustness_freeze_and_result.md",
+        "src/v5/v57f_execution_robustness_runner.py",
+        "tests/test_v57f_execution_robustness_runner.py",
+        "execution_robustness_v57f/current/v57f_freeze_manifest.json",
+        "execution_robustness_v57f/current/execution_variant_matrix.csv",
+        "execution_robustness_v57f/current/execution_robustness_summary.json",
+        "execution_robustness_v57f/current/execution_robustness_report.md",
+        "execution_robustness_v57f/current/non_rebalance_risk_control_log.csv"
       ],
       "blockers": [
         "2021-2026 is platform-confirmation context, not clean out-of-sample acceptance evidence.",

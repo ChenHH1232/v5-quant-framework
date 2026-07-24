@@ -1,0 +1,8 @@
+﻿step,stage,owner,input,action,output,gate,status,forbidden_action
+1,Candidate screening,Project Manager Agent,sleeve_registry + status_registry,"Generate candidate queue by data readiness, mandate fit and completion cost",sleeve_promotion_queue.csv,rank_by_cost_and_fit_not_return,completed,rank_by_historical_return
+2,Gap checklist,Project Manager Agent,candidate queue,"Check PIT, real dividends, low-vol factors, state variables, sample risk, local daily and order-health gaps",candidate_snapshot.csv,every_gap_is_a_gate,completed,treat_missing_evidence_as_passed
+3,PM selection,Project Manager Agent,ranked queue,Select only rank-1 candidate: gas_water_operators,selected_candidate_agent_queue.csv,rank1_only,completed,advance_multiple_candidates_at_once
+4,Engineering scope lock,Engineering Agent,gas_water_operators,"Confirm local daily test only; no V57f change, no tuning, no JoinQuant",scope lock,no_strategy_change,completed,modify_V57f_or_write_joinquant_code
+5,Local daily simulation audit,Engineering Agent,summary/daily/trades/holdings/dividends,Verify local daily simulation outputs and 2026-05-31 window,engineering_checks.csv,daily_outputs_exist,completed,ignore_missing_trade_or_dividend_outputs
+6,Order-health audit,Engineering Agent,rebalance_order_health.csv,"Verify all rebalance dates either trade, hold existing positions, or intentionally hold cash by guard",engineering_checks.csv,unexpected_issue_count_zero,completed,ignore_no_order_rebalance_dates
+7,PM closeout,Project Manager Agent,engineering checks,Classify selected sleeve as engineering test passed or route repair,summary/report/next_queue,single_next_queue,completed,promote_to_V57f_core_or_accepted_strategy

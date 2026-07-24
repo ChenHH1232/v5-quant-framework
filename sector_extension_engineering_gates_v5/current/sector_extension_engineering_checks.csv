@@ -1,0 +1,15 @@
+﻿check,status,detail
+selected_queue_exists,passed,rows=1
+rank1_candidate_supported,passed,gas_water_operators
+local_daily_summary_exists,passed,local_daily_backtests_v59b_gas_water_state_guard_repaired_2021_07\gas_water_v57b_text_debt_state_guard_v59b\summary.json
+local_daily_status_passed,passed,engineering_local_daily_simulation_passed_ready_for_platform_preparation
+window_end_locked_2026_05_31,passed,"{""start_date"": ""2021-05-01"", ""end_date"": ""2026-05-31""}"
+rebalance_signal_count_positive,passed,signal_count=20
+daily_rows_positive,passed,daily_count=1228
+trades_exist,passed,trade_count=None file_rows=182
+holdings_exist,passed,local_daily_backtests_v59b_gas_water_state_guard_repaired_2021_07\gas_water_v57b_text_debt_state_guard_v59b\holdings.csv
+real_dividends_exist,passed,dividend_count=None file_rows=38
+rebalance_order_health_output_exists,passed,local_daily_backtests_v59b_gas_water_state_guard_repaired_2021_07\gas_water_v57b_text_debt_state_guard_v59b\rebalance_order_health.csv
+rebalance_order_health_passed,passed,"{""rebalance_signal_count"": 20, ""normal_rebalance_count"": 13, ""no_order_rebalance_count"": 3, ""no_order_no_position_count"": 0, ""blocked_or_unfilled_rebalance_count"": 0, ""missing_daily_rebalance_count"": 0, ""leading_no_order_no_position_count"": 0, ""first_executed_order_date"": ""2021-07-01"", ""first_position_date"": ""2021-07-01"", ""needs_review"": false, ""pm_rule"": ""Guard-blocked empty selections are intentional cash defense. Non-guard missing orders, blocked orders, or no-position rebalance dates still require review."", ""intentional_guard_cash_block_count"": 7, ""unexpected_rebalance_issue_count"": 0}"
+no_leading_no_position_gap,passed,"{""rebalance_signal_count"": 20, ""normal_rebalance_count"": 13, ""no_order_rebalance_count"": 3, ""no_order_no_position_count"": 0, ""blocked_or_unfilled_rebalance_count"": 0, ""missing_daily_rebalance_count"": 0, ""leading_no_order_no_position_count"": 0, ""first_executed_order_date"": ""2021-07-01"", ""first_position_date"": ""2021-07-01"", ""needs_review"": false, ""pm_rule"": ""Guard-blocked empty selections are intentional cash defense. Non-guard missing orders, blocked orders, or no-position rebalance dates still require review."", ""intentional_guard_cash_block_count"": 7, ""unexpected_rebalance_issue_count"": 0}"
+coverage_no_missing_rebalance,passed,"{""rebalance_signal_count"": 20, ""normal_rebalance_count"": 13, ""no_order_rebalance_count"": 3, ""no_order_no_position_count"": 0, ""blocked_or_unfilled_rebalance_count"": 0, ""missing_daily_rebalance_count"": 0, ""leading_no_order_no_position_count"": 0, ""first_executed_order_date"": ""2021-07-01"", ""first_position_date"": ""2021-07-01"", ""needs_review"": false, ""pm_rule"": ""Guard-blocked empty selections are intentional cash defense. Non-guard missing orders, blocked orders, or no-position rebalance dates still require review."", ""intentional_guard_cash_block_count"": 7, ""unexpected_rebalance_issue_count"": 0}"

@@ -1,6 +1,6 @@
 # V5 Sleeve Promotion Queue
 
-Generated at: 2026-07-23T13:44:29.577902+00:00
+Generated at: 2026-07-24T14:00:58.761316+00:00
 
 ## Purpose
 
@@ -27,9 +27,9 @@ Historical performance alone is never sufficient evidence for accepting a strate
 | 2 | home_appliances | observation_paper_tracking | 60.0 | 82.0 | 9.0 | 13.0 | Engineering Agent | paper_tracking_only_no_core_inclusion |
 | 3 | oil_gas_pipeline_integrated | external_event_wait | 42.0 | 76.0 | 9.0 | 25.0 | Project Manager Agent | wait_for_external_platform_or_forward_event |
 | 4 | food_beverage | engineering_needs_review | 35.0 | 68.0 | 4.0 | 29.0 | Project Manager Agent | rebalance_order_health_review_gate |
-| 5 | insurance | research_repair | 3.0 | 70.0 | 24.0 | 43.0 | Research Agent | research_data_gate_repair |
-| 6 | consumer_staples_cashflow | research_repair | -7.0 | 72.0 | 56.0 | 23.0 | Research Agent | research_data_gate_repair |
-| 7 | telecom_operators | external_event_wait | -8.0 | 62.0 | 31.0 | 39.0 | Project Manager Agent | wait_for_external_platform_or_forward_event |
+| 5 | telecom_operators | external_event_wait | 5.0 | 62.0 | 23.0 | 34.0 | Project Manager Agent | wait_for_external_platform_or_forward_event |
+| 6 | insurance | research_repair | 3.0 | 70.0 | 24.0 | 43.0 | Research Agent | research_data_gate_repair |
+| 7 | consumer_staples_cashflow | research_repair | -7.0 | 72.0 | 56.0 | 23.0 | Research Agent | research_data_gate_repair |
 
 ## Selected Agent Queue
 

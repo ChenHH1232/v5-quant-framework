@@ -78,6 +78,13 @@ from v5.sleeve_promotion_queue_runner import (
     DEFAULT_STATUS_REGISTRY as DEFAULT_SLEEVE_PROMOTION_STATUS,
     build_sleeve_promotion_queue,
 )
+from v5.sector_extension_engineering_gate_runner import (
+    DEFAULT_GAS_WATER_LOCAL_DAILY as DEFAULT_SECTOR_EXTENSION_GATE_GAS_WATER_LOCAL_DAILY,
+    DEFAULT_OUT_DIR as DEFAULT_SECTOR_EXTENSION_GATE_OUT,
+    DEFAULT_PROMOTION_QUEUE as DEFAULT_SECTOR_EXTENSION_GATE_PROMOTION_QUEUE,
+    DEFAULT_SELECTED_QUEUE as DEFAULT_SECTOR_EXTENSION_GATE_SELECTED_QUEUE,
+    run_sector_extension_engineering_gate,
+)
 from v5.sector_replication_roadmap_runner import (
     DEFAULT_CONFIG as DEFAULT_V58_REPLICATION_ROADMAP_CONFIG,
     DEFAULT_OUT_DIR as DEFAULT_V58_REPLICATION_ROADMAP_OUT,
@@ -928,6 +935,18 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     sleeve_promotion_parser.add_argument("--candidate", action="append", dest="candidates")
     sleeve_promotion_parser.set_defaults(handler=_handle_build_sleeve_promotion_queue)
 
+    sector_extension_gate_parser = subparsers.add_parser("run-sector-extension-engineering-gate")
+    sector_extension_gate_parser.add_argument("--promotion-queue", type=Path, default=DEFAULT_SECTOR_EXTENSION_GATE_PROMOTION_QUEUE)
+    sector_extension_gate_parser.add_argument("--selected-queue", type=Path, default=DEFAULT_SECTOR_EXTENSION_GATE_SELECTED_QUEUE)
+    sector_extension_gate_parser.add_argument(
+        "--gas-water-local-daily",
+        type=Path,
+        default=DEFAULT_SECTOR_EXTENSION_GATE_GAS_WATER_LOCAL_DAILY,
+    )
+    sector_extension_gate_parser.add_argument("--out", type=Path, default=DEFAULT_SECTOR_EXTENSION_GATE_OUT)
+    sector_extension_gate_parser.add_argument("--as-of-date", default="2026-07-24")
+    sector_extension_gate_parser.set_defaults(handler=_handle_run_sector_extension_engineering_gate)
+
 
 def _handle_collect_similar_sector_pit_panel(args: argparse.Namespace) -> int:
     print(
@@ -1675,6 +1694,19 @@ def _handle_build_sleeve_promotion_queue(args: argparse.Namespace) -> int:
             status_registry=args.status_registry,
             out_dir=args.out,
             candidate_ids=args.candidates,
+        )
+    )
+    return 0
+
+
+def _handle_run_sector_extension_engineering_gate(args: argparse.Namespace) -> int:
+    print(
+        run_sector_extension_engineering_gate(
+            promotion_queue=args.promotion_queue,
+            selected_queue=args.selected_queue,
+            gas_water_local_daily=args.gas_water_local_daily,
+            out_dir=args.out,
+            as_of_date=args.as_of_date,
         )
     )
     return 0

@@ -1,0 +1,2 @@
+﻿queue_rank,owner,task,input_artifacts,output_artifacts,gate,blocked_actions
+1,Project Manager Agent,Keep gas_water_operators as observation sleeve with engineering test passed; wait for clean future paper evidence or separate PM stage gate.,local_daily_backtests_v59b_gas_water_state_guard_repaired_2021_07\gas_water_v57b_text_debt_state_guard_v59b,observation_sleeve_checkpoint,observation_wait_no_core_inclusion,do_not_modify_V57f;do_not_tune;do_not_start_joinquant_test;do_not_claim_platform_replication

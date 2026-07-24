@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "project": "v5_sector_extension_engineering_gate",
+  "experiment_layer": "pm_engineering_gate",
+  "status": "engineering_test_passed",
+  "as_of_date": "2026-07-24",
+  "selected_sector_id": "gas_water_operators",
+  "selected_rule": "rank1_only_by_min_completion_cost_plus_cashflow_dividend_low_vol_fit_not_returns",
+  "selected_local_daily_dir": "local_daily_backtests_v59b_gas_water_state_guard_repaired_2021_07\\gas_water_v57b_text_debt_state_guard_v59b",
+  "local_daily_summary": {
+    "status": "engineering_local_daily_simulation_passed_ready_for_platform_preparation",
+    "strategy_id": "gas_water_v57b_text_debt_state_guard_v59b",
+    "window": {
+      "start_date": "2021-05-01",
+      "end_date": "2026-05-31"
+    },
+    "signal_count": 20,
+    "daily_count": 1228,
+    "trade_count": null,
+    "dividend_count": null,
+    "trade_file_rows": 182,
+    "dividend_file_rows": 38,
+    "rebalance_order_health": {
+      "rebalance_signal_count": 20,
+      "normal_rebalance_count": 13,
+      "no_order_rebalance_count": 3,
+      "no_order_no_position_count": 0,
+      "blocked_or_unfilled_rebalance_count": 0,
+      "missing_daily_rebalance_count": 0,
+      "leading_no_order_no_position_count": 0,
+      "first_executed_order_date": "2021-07-01",
+      "first_position_date": "2021-07-01",
+      "needs_review": false,
+      "pm_rule": "Guard-blocked empty selections are intentional cash defense. Non-guard missing orders, blocked orders, or no-position rebalance dates still require review.",
+      "intentional_guard_cash_block_count": 7,
+      "unexpected_rebalance_issue_count": 0
+    },
+    "metrics": {
+      "strategy_return": 0.764885276749997,
+      "annualized_return": 0.12364497723763379,
+      "excess_return": 0.43794293774999726,
+      "benchmark_return": 0.3269423389999997,
+      "alpha": 0.08448766782730933,
+      "beta": 0.6551583041529718,
+      "sharpe": 0.7172438176737768,
+      "win_rate": 0.3583061889250814,
+      "profit_loss_ratio": 0.9579406188222745,
+      "max_drawdown": 0.24393652399388144,
+      "sortino": 1.0279162063959175,
+      "mean_excess_return": 0.0002075726846326287,
+      "excess_max_drawdown": 0.24048614477200225,
+      "excess_sharpe": 0.3671046147961071,
+      "daily_win_rate": 0.3583061889250814,
+      "profit_count": 440,
+      "loss_count": 357,
+      "information_ratio": 0.3671046147961071,
+      "strategy_volatility": 0.18698313496187016,
+      "benchmark_volatility": 0.21734959118451425,
+      "max_drawdown_interval": "2021-09-28,2022-04-26",
+      "annual_factor": 252
+    }
+  },
+  "outputs": {
+    "flow_table_csv": "sector_extension_engineering_gates_v5\\current\\sector_extension_123_flow_table.csv",
+    "candidate_snapshot_csv": "sector_extension_engineering_gates_v5\\current\\sector_extension_candidate_snapshot.csv",
+    "engineering_checks_csv": "sector_extension_engineering_gates_v5\\current\\sector_extension_engineering_checks.csv",
+    "next_agent_queue_csv": "sector_extension_engineering_gates_v5\\current\\sector_extension_next_agent_queue.csv",
+    "report_md": "sector_extension_engineering_gates_v5\\current\\sector_extension_engineering_gate_report.md"
+  },
+  "inputs": {
+    "promotion_queue": "enhanced_etf_production_lines_v5\\current\\sleeve_promotion_queue.csv",
+    "selected_queue": "enhanced_etf_production_lines_v5\\current\\promotion_agent_queues\\selected_candidate_agent_queue.csv",
+    "gas_water_local_daily": "local_daily_backtests_v59b_gas_water_state_guard_repaired_2021_07\\gas_water_v57b_text_debt_state_guard_v59b"
+  },
+  "pm_rules": [
+    "Do not modify frozen V57f core sleeves, weights, factors, rebalance rules or timing.",
+    "Do not rank or promote candidates by historical return.",
+    "Only the rank-1 candidate may enter this engineering gate.",
+    "Engineering gate means local daily simulation, real dividends, trades, holdings and rebalance_order_health.",
+    "Do not start JoinQuant platform replication or generate the 2026-10 paper runner in this task."
+  ],
+  "created_at_utc": "2026-07-24T14:01:58+00:00"
+}

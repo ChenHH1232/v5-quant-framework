@@ -1,7 +1,7 @@
 # Gas/Water Paper Tracking Packet: gas_water_v57b_text_debt_state_guard_v59b
 
 - Status: `paper_tracking_ready_waiting_for_future_window`
-- As of date: `2026-07-23`
+- As of date: `2026-07-24`
 - Next clean rebalance date: `2026-10-08`
 - Next gate: `wait_until_clean_forward_window`
 - Selected from promotion queue: `gas_water_operators`
@@ -14,7 +14,7 @@
 | 2 | Engineering Agent | `gas_water_v57b_text_debt_state_guard_v59b` | Load frozen gas/water local daily artifacts | `local evidence snapshot` | `no_strategy_change` | `completed` |
 | 3 | Engineering Agent | `rebalance_order_health.csv` | Check every rebalance signal ordered, held cash intentionally, or produced no unexpected issue | `health_check.csv` | `unexpected_issue_count_zero` | `passed` |
 | 4 | Engineering Agent | `PIT panel / prices / dividends / benchmark` | Check source files exist and capture latest dates | `data freshness snapshot` | `files_exist` | `passed` |
-| 5 | Project Manager Agent | `as_of=2026-07-23` | Do not generate a late paper signal before the clean future date arrives | `future-window gate` | `target_date_future` | `waiting` |
+| 5 | Project Manager Agent | `as_of=2026-07-24` | Do not generate a late paper signal before the clean future date arrives | `future-window gate` | `target_date_future` | `waiting` |
 | 6 | Engineering Agent | `2026-10-08` | Near the target window, refresh PIT panel, prices and dividends, then rerun this packet | `clean paper input packet` | `no_tuning` | `pending_future_window` |
 | 7 | Project Manager Agent | `clean paper input packet` | Append future signal to paper log only if generated on time | `paper trading log entry` | `forward_evidence_only` | `pending_future_window` |
 
@@ -30,7 +30,7 @@
 | `price_file_exists` | `passed` | latest=2026-05-29 rows=49120 |
 | `dividend_file_exists` | `passed` | latest=2026-05-29 rows=185 |
 | `benchmark_file_exists` | `passed` | latest=2026-05-29 rows=1228 |
-| `future_window_not_due` | `passed` | as_of=2026-07-23 target=2026-10-08 |
+| `future_window_not_due` | `passed` | as_of=2026-07-24 target=2026-10-08 |
 | `target_panel_rows_pending_is_expected` | `passed` | target_rows=0 |
 
 ## PM Rules

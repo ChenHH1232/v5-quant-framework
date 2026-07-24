@@ -1,34 +1,56 @@
 {
   "strategy_id": "food_beverage_packaged_food_high_ocf_wc_guard_v5a9b",
   "experiment_layer": "research_pit_validation",
-  "created_at_utc": "2026-07-22T11:41:50+00:00",
+  "created_at_utc": "2026-07-24T15:14:12+00:00",
   "git": {
-    "commit": "7a987938a916c325473cbfff69ac20ed2a02b9ea",
+    "commit": "badf42b97241b51e27a95985132bc107d0d39cee",
     "dirty": true,
     "dirty_scope": "pre_run",
     "pre_run": {
-      "commit": "7a987938a916c325473cbfff69ac20ed2a02b9ea",
+      "commit": "badf42b97241b51e27a95985132bc107d0d39cee",
       "dirty": true,
       "status_short": [
-        "M src/v5/cli_sector.py",
-        "?? agent_loop_packets_v5a9/",
-        "?? src/v5/food_beverage_research_repair_runner.py",
-        "?? tests/test_food_beverage_research_repair_runner.py",
+        "M agent_loop_packets_v5a5/home_appliances_engineering_gate/home_appliances_engineering_gate_20260722/checkpoint_packet.json",
+        " M home_appliances_engineering_gates_v5a5e/home_appliances_ocf_quality_v5a5c/home_appliances_engineering_gate_summary.json",
+        " M local_daily_backtests_home_appliances_v5a5e/home_appliances_ocf_quality_v5a5c/RUN_MANIFEST.json",
+        " M local_daily_backtests_home_appliances_v5a5e/home_appliances_ocf_quality_v5a5c/summary.json",
+        " M paper_trading_signals/gas_water_v59b_promotion_queue/gas_water_v57b_text_debt_state_guard_v59b/gas_water_paper_tracking_flow_table.csv",
+        " M paper_trading_signals/gas_water_v59b_promotion_queue/gas_water_v57b_text_debt_state_guard_v59b/gas_water_paper_tracking_health_check.csv",
+        " M paper_trading_signals/gas_water_v59b_promotion_queue/gas_water_v57b_text_debt_state_guard_v59b/gas_water_paper_tracking_report.md",
+        " M paper_trading_signals/gas_water_v59b_promotion_queue/gas_water_v57b_text_debt_state_guard_v59b/gas_water_paper_tracking_summary.json",
+        " M paper_trading_signals/home_appliances_v5a5e_promotion_queue/home_appliances_ocf_quality_v5a5c/home_appliances_paper_tracking_flow_table.csv",
+        " M paper_trading_signals/home_appliances_v5a5e_promotion_queue/home_appliances_ocf_quality_v5a5c/home_appliances_paper_tracking_health_check.csv",
+        " M paper_trading_signals/home_appliances_v5a5e_promotion_queue/home_appliances_ocf_quality_v5a5c/home_appliances_paper_tracking_report.md",
+        " M paper_trading_signals/home_appliances_v5a5e_promotion_queue/home_appliances_ocf_quality_v5a5c/home_appliances_paper_tracking_summary.json",
+        " M validation_formal_v5a9_food_beverage_research_repair/formal/food_beverage_packaged_food_ocf_quality_v5a9a/RUN_MANIFEST.json",
+        "?? agent_loop_packets_v59/gas_water_paper_tracking/gas_water_paper_tracking_20260724/",
+        "?? agent_loop_packets_v5a5/home_appliances_paper_tracking/home_appliances_paper_tracking_20260724/",
         "?? workspace_contract_audits/"
       ],
-      "captured_at_utc": "2026-07-22T11:41:50+00:00"
+      "captured_at_utc": "2026-07-24T15:14:12+00:00"
     },
     "manifest_created": {
-      "commit": "7a987938a916c325473cbfff69ac20ed2a02b9ea",
+      "commit": "badf42b97241b51e27a95985132bc107d0d39cee",
       "dirty": true,
       "status_short": [
-        "M src/v5/cli_sector.py",
-        "?? agent_loop_packets_v5a9/",
-        "?? src/v5/food_beverage_research_repair_runner.py",
-        "?? tests/test_food_beverage_research_repair_runner.py",
+        "M agent_loop_packets_v5a5/home_appliances_engineering_gate/home_appliances_engineering_gate_20260722/checkpoint_packet.json",
+        " M home_appliances_engineering_gates_v5a5e/home_appliances_ocf_quality_v5a5c/home_appliances_engineering_gate_summary.json",
+        " M local_daily_backtests_home_appliances_v5a5e/home_appliances_ocf_quality_v5a5c/RUN_MANIFEST.json",
+        " M local_daily_backtests_home_appliances_v5a5e/home_appliances_ocf_quality_v5a5c/summary.json",
+        " M paper_trading_signals/gas_water_v59b_promotion_queue/gas_water_v57b_text_debt_state_guard_v59b/gas_water_paper_tracking_flow_table.csv",
+        " M paper_trading_signals/gas_water_v59b_promotion_queue/gas_water_v57b_text_debt_state_guard_v59b/gas_water_paper_tracking_health_check.csv",
+        " M paper_trading_signals/gas_water_v59b_promotion_queue/gas_water_v57b_text_debt_state_guard_v59b/gas_water_paper_tracking_report.md",
+        " M paper_trading_signals/gas_water_v59b_promotion_queue/gas_water_v57b_text_debt_state_guard_v59b/gas_water_paper_tracking_summary.json",
+        " M paper_trading_signals/home_appliances_v5a5e_promotion_queue/home_appliances_ocf_quality_v5a5c/home_appliances_paper_tracking_flow_table.csv",
+        " M paper_trading_signals/home_appliances_v5a5e_promotion_queue/home_appliances_ocf_quality_v5a5c/home_appliances_paper_tracking_health_check.csv",
+        " M paper_trading_signals/home_appliances_v5a5e_promotion_queue/home_appliances_ocf_quality_v5a5c/home_appliances_paper_tracking_report.md",
+        " M paper_trading_signals/home_appliances_v5a5e_promotion_queue/home_appliances_ocf_quality_v5a5c/home_appliances_paper_tracking_summary.json",
+        " M validation_formal_v5a9_food_beverage_research_repair/formal/food_beverage_packaged_food_ocf_quality_v5a9a/RUN_MANIFEST.json",
+        "?? agent_loop_packets_v59/gas_water_paper_tracking/gas_water_paper_tracking_20260724/",
+        "?? agent_loop_packets_v5a5/home_appliances_paper_tracking/home_appliances_paper_tracking_20260724/",
         "?? workspace_contract_audits/"
       ],
-      "captured_at_utc": "2026-07-22T11:41:50+00:00"
+      "captured_at_utc": "2026-07-24T15:14:12+00:00"
     }
   },
   "command_profile": {

@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "packet_type": "checkpoint_packet",
+  "protocol_id": "agent_operating_protocol_v1",
+  "objective": "home_appliances_observation_sleeve_paper_tracking_refresh",
+  "agent": "Engineering Agent",
+  "experiment_layer": "paper_trading_preparation",
+  "elapsed_timebox_minutes": 60,
+  "artifacts_created": [
+    "paper_trading_signals\\home_appliances_v5a5e_promotion_queue\\home_appliances_ocf_quality_v5a5c\\home_appliances_paper_tracking_flow_table.csv",
+    "paper_trading_signals\\home_appliances_v5a5e_promotion_queue\\home_appliances_ocf_quality_v5a5c\\home_appliances_paper_tracking_health_check.csv",
+    "paper_trading_signals\\home_appliances_v5a5e_promotion_queue\\home_appliances_ocf_quality_v5a5c\\home_appliances_paper_tracking_summary.json",
+    "paper_trading_signals\\home_appliances_v5a5e_promotion_queue\\home_appliances_ocf_quality_v5a5c\\home_appliances_paper_tracking_report.md"
+  ],
+  "evidence_found": [
+    "Promotion queue rank=2",
+    "Order health needs_review=False normal_rebalance_count=20",
+    "Next clean rebalance date 2026-10-08 is future relative to 2026-07-24"
+  ],
+  "blockers": [
+    "No blocker for paper-tracking preparation.",
+    "Clean forward signal cannot be generated until the future rebalance window."
+  ],
+  "decision": "continue_next_timebox",
+  "next_owner": "Engineering Agent",
+  "stop_rule_status": "not_triggered",
+  "user_decision_required": false,
+  "user_decision_reason": "",
+  "allowed_next_action": "wait_until_clean_forward_window_then_refresh_inputs_without_tuning",
+  "restart_condition": "run again near 2026-10-08 with refreshed PIT panel, prices and dividends",
+  "skill_status_change": "none",
+  "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
+  "created_at_utc": "2026-07-24T15:14:11+00:00"
+}

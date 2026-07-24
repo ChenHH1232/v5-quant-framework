@@ -4,6 +4,6 @@ stage,owner,input,action,output,gate,status
 3,Engineering Agent,rebalance_signals.csv,Confirm every formal rebalance date has a generated local signal,signal coverage audit,20/20_signals_required,passed
 4,Engineering Agent,rebalance_order_health.csv,Check every rebalance signal produced normal orders and post-rebalance holdings,health_check.csv,order_health_passed,passed
 5,Engineering Agent,PIT panel / prices / dividends / benchmark,Check source files exist and capture latest dates,data freshness snapshot,files_exist,passed
-6,Project Manager Agent,as_of=2026-07-22,Do not generate a late paper signal before the clean future date arrives,future-window gate,target_date_future,waiting
+6,Project Manager Agent,as_of=2026-07-24,Do not generate a late paper signal before the clean future date arrives,future-window gate,target_date_future,waiting
 7,Engineering Agent,2026-10-08,"Near the target window, refresh PIT panel, prices and dividends, then rerun this packet",clean paper input packet,no_tuning,pending_future_window
 8,Project Manager Agent,clean paper input packet,Append future signal to paper log only if generated on time,paper trading log entry,forward_evidence_only,pending_future_window

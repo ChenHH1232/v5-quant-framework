@@ -3,7 +3,7 @@
   "experiment_layer": "data_availability_gate",
   "status": "core_state_ready_needs_promotion_sources",
   "state_csv": "数据库\\processed\\oil_gas_source_gate_v58e\\oil_gas_official_state_formal_candidate.csv",
-  "panel_path": "数据库\\processed\\oil_gas_state_conditioned_panel_v58d\\oil_gas_state_conditioned_ocf_v58d\\panel.csv",
+  "panel_path": "数据库\\processed\\oil_gas_state_conditioned_panel_v58g\\oil_gas_state_conditioned_ocf_v58g\\panel.csv",
   "trade_date_count": 18,
   "row_count": 94,
   "validation": {
@@ -121,5 +121,5 @@
   "promotion_ready": false,
   "min_coverage_ratio": 0.8,
   "pm_rule": "Core official/reviewed state coverage can reopen research validation; promotion still requires inventory/demand and pipeline tariff/policy evidence.",
-  "created_at_utc": "2026-07-20T10:36:22+00:00"
+  "created_at_utc": "2026-07-24T15:18:07+00:00"
 }

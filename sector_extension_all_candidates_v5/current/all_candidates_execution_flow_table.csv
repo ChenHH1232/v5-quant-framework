@@ -1,0 +1,7 @@
+﻿step,stage,owner,input,action,output,gate,forbidden_action
+1,Candidate queue,PM Agent,sleeve_promotion_queue.csv,Load all current expansion candidates,candidate universe,all_candidates_present,modify_V57f
+2,Research/data gate,Research Agent,sector research artifacts,Advance data-gated sectors to latest source gate,research/data packets,no_model_without_data_gate,invent_missing_state_data
+3,Quant/validation gate,Quant Agent,formal/local summaries,Use existing frozen hypotheses only; no return tuning,validation evidence,frozen_logic,change_weights_or_selection_count
+4,Engineering gate,Engineering Agent,local daily runners,"Run or refresh local daily, dividends, trades, holdings and order-health where allowed",engineering evidence,local_only_no_joinquant,start_platform_replication
+5,Paper prep gate,Engineering Agent,passed engineering evidence,Build readiness packet waiting for future clean window,paper readiness,no_late_signal_generation,generate_2026_10_signal_now
+6,PM closeout,PM Agent,all evidence,"Classify every candidate as observe, repair, wait or specialist",status matrix,one_status_per_candidate,promote_by_backtest_return

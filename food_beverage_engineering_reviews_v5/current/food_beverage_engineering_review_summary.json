@@ -2,7 +2,7 @@
   "strategy_id": "food_beverage_packaged_food_ocf_quality_v5a9a",
   "review_type": "food_beverage_engineering_blocker_review",
   "experiment_layer": "engineering_smoke_test",
-  "created_at_utc": "2026-07-23T13:25:06+00:00",
+  "created_at_utc": "2026-07-24T15:14:17+00:00",
   "inputs": {
     "local_daily_dir": "local_daily_backtests_food_beverage_v5a9\\food_beverage_packaged_food_ocf_quality_v5a9a",
     "summary_json": "local_daily_backtests_food_beverage_v5a9\\food_beverage_packaged_food_ocf_quality_v5a9a\\summary.json",

@@ -3,7 +3,7 @@
   "strategy_id": "home_appliances_ocf_quality_v5a5c",
   "experiment_layer": "paper_trading_preparation",
   "status": "paper_tracking_ready_waiting_for_future_window",
-  "as_of_date": "2026-07-22",
+  "as_of_date": "2026-07-24",
   "next_clean_rebalance_date": "2026-10-08",
   "target_date_is_future": true,
   "promotion_queue_rank": 2,
@@ -118,9 +118,9 @@
     "A clean forward paper signal can only be recorded on or before the future rebalance date.",
     "2021-2026 performance remains Engineering context, not accepted-strategy evidence."
   ],
-  "created_at_utc": "2026-07-22T11:03:44+00:00",
+  "created_at_utc": "2026-07-24T15:14:11+00:00",
   "agent_packet": {
-    "packet_path": "agent_loop_packets_v5a5\\home_appliances_paper_tracking\\home_appliances_paper_tracking_20260722\\checkpoint_packet.json",
-    "report_path": "agent_loop_packets_v5a5\\home_appliances_paper_tracking\\home_appliances_paper_tracking_20260722\\checkpoint_packet.md"
+    "packet_path": "agent_loop_packets_v5a5\\home_appliances_paper_tracking\\home_appliances_paper_tracking_20260724\\checkpoint_packet.json",
+    "report_path": "agent_loop_packets_v5a5\\home_appliances_paper_tracking\\home_appliances_paper_tracking_20260724\\checkpoint_packet.md"
   }
 }

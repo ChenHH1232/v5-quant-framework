@@ -57,7 +57,7 @@
     "Do not tune factor weights, selection count, timing or subindustry membership based on 2021-2026 returns.",
     "Do not send small-sample specialist watchlists to Engineering without a separate PM approval gate."
   ],
-  "created_at_utc": "2026-07-22T11:41:50+00:00",
+  "created_at_utc": "2026-07-24T15:14:12+00:00",
   "agent_packet": {
     "packet_path": "agent_loop_packets_v5a9\\food_beverage_research_repair\\food_beverage_research_repair_v5a9\\checkpoint_packet.json",
     "report_path": "agent_loop_packets_v5a9\\food_beverage_research_repair\\food_beverage_research_repair_v5a9\\checkpoint_packet.md"

@@ -1,7 +1,7 @@
 # Home Appliances Paper Tracking Packet: home_appliances_ocf_quality_v5a5c
 
 - Status: `paper_tracking_ready_waiting_for_future_window`
-- As of date: `2026-07-22`
+- As of date: `2026-07-24`
 - Next clean rebalance date: `2026-10-08`
 - Next gate: `wait_until_clean_forward_window`
 - Promotion queue rank: `2`
@@ -15,7 +15,7 @@
 | 3 | Engineering Agent | `rebalance_signals.csv` | Confirm every formal rebalance date has a generated local signal | `signal coverage audit` | `20/20_signals_required` | `passed` |
 | 4 | Engineering Agent | `rebalance_order_health.csv` | Check every rebalance signal produced normal orders and post-rebalance holdings | `health_check.csv` | `order_health_passed` | `passed` |
 | 5 | Engineering Agent | `PIT panel / prices / dividends / benchmark` | Check source files exist and capture latest dates | `data freshness snapshot` | `files_exist` | `passed` |
-| 6 | Project Manager Agent | `as_of=2026-07-22` | Do not generate a late paper signal before the clean future date arrives | `future-window gate` | `target_date_future` | `waiting` |
+| 6 | Project Manager Agent | `as_of=2026-07-24` | Do not generate a late paper signal before the clean future date arrives | `future-window gate` | `target_date_future` | `waiting` |
 | 7 | Engineering Agent | `2026-10-08` | Near the target window, refresh PIT panel, prices and dividends, then rerun this packet | `clean paper input packet` | `no_tuning` | `pending_future_window` |
 | 8 | Project Manager Agent | `clean paper input packet` | Append future signal to paper log only if generated on time | `paper trading log entry` | `forward_evidence_only` | `pending_future_window` |
 
@@ -32,7 +32,7 @@
 | `price_file_exists` | `passed` | latest=2026-05-29 rows=124028 |
 | `dividend_file_exists` | `passed` | latest=2026-05-29 rows=440 |
 | `benchmark_file_exists` | `passed` | latest=2026-05-29 rows=1228 |
-| `future_window_not_due` | `passed` | as_of=2026-07-22 target=2026-10-08 |
+| `future_window_not_due` | `passed` | as_of=2026-07-24 target=2026-10-08 |
 | `target_panel_rows_pending_is_expected` | `passed` | target_rows=0 |
 
 ## PM Rules

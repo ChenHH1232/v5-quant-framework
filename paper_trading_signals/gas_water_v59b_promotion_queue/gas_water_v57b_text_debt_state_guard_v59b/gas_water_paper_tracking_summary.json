@@ -3,7 +3,7 @@
   "strategy_id": "gas_water_v57b_text_debt_state_guard_v59b",
   "experiment_layer": "paper_trading_preparation",
   "status": "paper_tracking_ready_waiting_for_future_window",
-  "as_of_date": "2026-07-23",
+  "as_of_date": "2026-07-24",
   "next_clean_rebalance_date": "2026-10-08",
   "target_date_is_future": true,
   "selected_from_promotion_queue": "gas_water_operators",
@@ -91,9 +91,9 @@
     "A clean forward paper signal can only be recorded on or before the future rebalance date.",
     "Guard-driven cash blocks are valid only when order health marks them intentional and non-error."
   ],
-  "created_at_utc": "2026-07-23T13:51:12+00:00",
+  "created_at_utc": "2026-07-24T15:14:06+00:00",
   "agent_packet": {
-    "packet_path": "agent_loop_packets_v59\\gas_water_paper_tracking\\gas_water_paper_tracking_20260723\\checkpoint_packet.json",
-    "report_path": "agent_loop_packets_v59\\gas_water_paper_tracking\\gas_water_paper_tracking_20260723\\checkpoint_packet.md"
+    "packet_path": "agent_loop_packets_v59\\gas_water_paper_tracking\\gas_water_paper_tracking_20260724\\checkpoint_packet.json",
+    "report_path": "agent_loop_packets_v59\\gas_water_paper_tracking\\gas_water_paper_tracking_20260724\\checkpoint_packet.md"
   }
 }

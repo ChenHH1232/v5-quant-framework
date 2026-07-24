@@ -4,7 +4,7 @@
   "strategy_id": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f",
   "experiment_layer": "pm_decision_gate",
   "status": "v57f_core_and_observation_governance_completed",
-  "created_at_utc": "2026-07-24T12:47:02+00:00",
+  "created_at_utc": "2026-07-24T13:47:59+00:00",
   "core_sleeve_count": 4,
   "observation_sleeve_count": 7,
   "mainline_decision": "V57f remains frozen mainline; no sleeve, factor, weight, sector-cap, rebalance, or timing change.",
@@ -21,6 +21,13 @@
     "local_summary_available_needs_pm_review": 1,
     "archived_or_failed": 1
   },
+  "promotion_decision_counts": {
+    "remain_observation_needs_forward_or_sidecar_evidence": 1,
+    "capped_observation_only": 1,
+    "research_data_repair_required": 2,
+    "engineering_repair_required": 2,
+    "archived_or_data_gate_failed": 1
+  },
   "outputs": {
     "core_dashboard_csv": "enhanced_etf_governance_v5\\current\\v57f_core_dashboard.csv",
     "observation_registry_csv": "enhanced_etf_governance_v5\\current\\observation_sleeve_registry.csv",
@@ -30,7 +37,8 @@
   "source_paths": {
     "status_registry": "docs\\governance\\status_registry.json",
     "production_summary": "enhanced_etf_production_lines_v5\\current\\production_line_summary.json",
-    "sleeve_registry": "enhanced_etf_production_lines_v5\\current\\sleeve_registry.csv"
+    "sleeve_registry": "enhanced_etf_production_lines_v5\\current\\sleeve_registry.csv",
+    "promotion_audit": "enhanced_etf_governance_v5\\current\\promotion_policy\\sleeve_promotion_eligibility_audit.csv"
   },
   "pm_rules": [
     "Historical performance alone cannot promote an observation sleeve.",

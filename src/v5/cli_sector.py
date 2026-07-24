@@ -23,10 +23,17 @@ from v5.enhanced_etf_comparison_runner import (
 )
 from v5.enhanced_etf_governance_summary_runner import (
     DEFAULT_OUT_DIR as DEFAULT_ENHANCED_ETF_GOVERNANCE_OUT,
+    DEFAULT_PROMOTION_AUDIT as DEFAULT_ENHANCED_ETF_GOVERNANCE_PROMOTION_AUDIT,
     DEFAULT_PRODUCTION_SUMMARY as DEFAULT_ENHANCED_ETF_GOVERNANCE_PRODUCTION,
     DEFAULT_SLEEVE_REGISTRY as DEFAULT_ENHANCED_ETF_GOVERNANCE_SLEEVES,
     DEFAULT_STATUS_REGISTRY as DEFAULT_ENHANCED_ETF_GOVERNANCE_STATUS,
     build_enhanced_etf_governance_summary,
+)
+from v5.sleeve_promotion_policy_runner import (
+    DEFAULT_CORE_DASHBOARD as DEFAULT_SLEEVE_PROMOTION_POLICY_CORE_DASHBOARD,
+    DEFAULT_OBSERVATION_REGISTRY as DEFAULT_SLEEVE_PROMOTION_POLICY_OBSERVATION_REGISTRY,
+    DEFAULT_OUT_DIR as DEFAULT_SLEEVE_PROMOTION_POLICY_OUT,
+    run_sleeve_promotion_policy_audit,
 )
 from v5.v57f_execution_robustness_runner import (
     DEFAULT_BASELINE_SUMMARY as DEFAULT_V57F_EXECUTION_BASELINE_SUMMARY,
@@ -852,8 +859,15 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     enhanced_etf_governance_parser.add_argument("--status-registry", type=Path, default=DEFAULT_ENHANCED_ETF_GOVERNANCE_STATUS)
     enhanced_etf_governance_parser.add_argument("--production-summary", type=Path, default=DEFAULT_ENHANCED_ETF_GOVERNANCE_PRODUCTION)
     enhanced_etf_governance_parser.add_argument("--sleeve-registry", type=Path, default=DEFAULT_ENHANCED_ETF_GOVERNANCE_SLEEVES)
+    enhanced_etf_governance_parser.add_argument("--promotion-audit", type=Path, default=DEFAULT_ENHANCED_ETF_GOVERNANCE_PROMOTION_AUDIT)
     enhanced_etf_governance_parser.add_argument("--out", type=Path, default=DEFAULT_ENHANCED_ETF_GOVERNANCE_OUT)
     enhanced_etf_governance_parser.set_defaults(handler=_handle_build_enhanced_etf_governance_summary)
+
+    sleeve_promotion_policy_parser = subparsers.add_parser("run-sleeve-promotion-policy-audit")
+    sleeve_promotion_policy_parser.add_argument("--observation-registry", type=Path, default=DEFAULT_SLEEVE_PROMOTION_POLICY_OBSERVATION_REGISTRY)
+    sleeve_promotion_policy_parser.add_argument("--core-dashboard", type=Path, default=DEFAULT_SLEEVE_PROMOTION_POLICY_CORE_DASHBOARD)
+    sleeve_promotion_policy_parser.add_argument("--out", type=Path, default=DEFAULT_SLEEVE_PROMOTION_POLICY_OUT)
+    sleeve_promotion_policy_parser.set_defaults(handler=_handle_run_sleeve_promotion_policy_audit)
 
     v57f_execution_parser = subparsers.add_parser("run-v57f-execution-robustness")
     v57f_execution_parser.add_argument("--config", type=Path, default=DEFAULT_V57F_EXECUTION_CONFIG)
@@ -1564,6 +1578,18 @@ def _handle_build_enhanced_etf_governance_summary(args: argparse.Namespace) -> i
             status_registry=args.status_registry,
             production_summary=args.production_summary,
             sleeve_registry=args.sleeve_registry,
+            promotion_audit=args.promotion_audit,
+            out_dir=args.out,
+        )
+    )
+    return 0
+
+
+def _handle_run_sleeve_promotion_policy_audit(args: argparse.Namespace) -> int:
+    print(
+        run_sleeve_promotion_policy_audit(
+            observation_registry=args.observation_registry,
+            core_dashboard=args.core_dashboard,
             out_dir=args.out,
         )
     )

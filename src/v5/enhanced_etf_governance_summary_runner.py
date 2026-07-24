@@ -15,6 +15,7 @@ DEFAULT_PRODUCTION_SUMMARY = Path("enhanced_etf_production_lines_v5") / "current
 DEFAULT_SLEEVE_REGISTRY = Path("enhanced_etf_production_lines_v5") / "current" / "sleeve_registry.csv"
 DEFAULT_OUT_DIR = Path("enhanced_etf_governance_v5") / "current"
 DEFAULT_MAIN_STRATEGY_ID = "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f"
+DEFAULT_PROMOTION_AUDIT = DEFAULT_OUT_DIR / "promotion_policy" / "sleeve_promotion_eligibility_audit.csv"
 
 CORE_FIELDS = [
     "row_type",
@@ -45,6 +46,9 @@ OBSERVATION_FIELDS = [
     "information_ratio",
     "order_health_status",
     "paper_tracking_status",
+    "promotion_decision",
+    "can_promote_to_core_candidate",
+    "required_next_evidence",
     "can_join_v57f_core",
     "can_platform_replication",
     "allowed_next_action",
@@ -179,17 +183,22 @@ def build_enhanced_etf_governance_summary(
     status_registry: Path = DEFAULT_STATUS_REGISTRY,
     production_summary: Path = DEFAULT_PRODUCTION_SUMMARY,
     sleeve_registry: Path = DEFAULT_SLEEVE_REGISTRY,
+    promotion_audit: Path = DEFAULT_PROMOTION_AUDIT,
     out_dir: Path = DEFAULT_OUT_DIR,
     main_strategy_id: str = DEFAULT_MAIN_STRATEGY_ID,
 ) -> EnhancedEtfGovernanceSummaryResult:
     registry = _read_json(status_registry)
     production = _read_json(production_summary)
     sleeve_rows = read_csv_rows_if_exists(sleeve_registry)
+    promotion_rows = {str(row.get("sector_id") or ""): row for row in read_csv_rows_if_exists(promotion_audit)}
     registry_by_id = {str(item.get("strategy_id") or ""): item for item in registry.get("strategies", [])}
 
     main = registry_by_id.get(main_strategy_id, {})
     core_rows = _core_rows(main_strategy_id, main, production, sleeve_rows)
-    observation_rows = [_observation_row(spec, registry_by_id.get(spec.strategy_id, {})) for spec in OBSERVATION_SPECS]
+    observation_rows = [
+        _observation_row(spec, registry_by_id.get(spec.strategy_id, {}), promotion_rows.get(spec.sector_id, {}))
+        for spec in OBSERVATION_SPECS
+    ]
     next_queue = _next_queue(core_rows, observation_rows)
     status = "v57f_core_and_observation_governance_completed"
 
@@ -217,6 +226,7 @@ def build_enhanced_etf_governance_summary(
         "paper_runner_note": "Future 2026-10 paper refresh belongs to a separate simulation/paper workflow, not this V5 governance summary.",
         "core_status_counts": _count(core_rows, "governance_status"),
         "observation_stage_counts": _count(observation_rows, "latest_stage"),
+        "promotion_decision_counts": _count(observation_rows, "promotion_decision"),
         "outputs": {
             "core_dashboard_csv": str(core_dashboard_csv),
             "observation_registry_csv": str(observation_registry_csv),
@@ -227,6 +237,7 @@ def build_enhanced_etf_governance_summary(
             "status_registry": str(status_registry),
             "production_summary": str(production_summary),
             "sleeve_registry": str(sleeve_registry),
+            "promotion_audit": str(promotion_audit),
         },
         "pm_rules": [
             "Historical performance alone cannot promote an observation sleeve.",
@@ -297,7 +308,7 @@ def _core_rows(main_strategy_id: str, main: dict[str, Any], production: dict[str
     return rows
 
 
-def _observation_row(spec: ObservationSpec, registry_item: dict[str, Any]) -> dict[str, Any]:
+def _observation_row(spec: ObservationSpec, registry_item: dict[str, Any], promotion: dict[str, str]) -> dict[str, Any]:
     summary = _read_json(spec.summary_path)
     metrics = summary.get("metrics", {}) if isinstance(summary, dict) else {}
     order = summary.get("rebalance_order_health", {}) if isinstance(summary, dict) else {}
@@ -313,6 +324,9 @@ def _observation_row(spec: ObservationSpec, registry_item: dict[str, Any]) -> di
         "information_ratio": _num(metrics.get("information_ratio")),
         "order_health_status": _order_status(order),
         "paper_tracking_status": paper_status,
+        "promotion_decision": promotion.get("promotion_decision", "promotion_audit_not_run"),
+        "can_promote_to_core_candidate": promotion.get("can_promote_to_core_candidate", "no"),
+        "required_next_evidence": promotion.get("required_next_evidence", "run sleeve_promotion_policy_v1 audit"),
         "can_join_v57f_core": "no",
         "can_platform_replication": "no",
         "allowed_next_action": spec.allowed_next_action,
@@ -377,10 +391,18 @@ def _report(summary: dict[str, Any], core_rows: list[dict[str, Any]], observatio
         lines.append(
             f"| `{row['row_type']}` | `{row['sector_id']}` | `{row['governance_status']}` | {_pct(row['strategy_return'])} | {_pct(row['max_drawdown'])} | `{row['order_health_status']}` | `{row['next_gate']}` |"
         )
-    lines.extend(["", "## Observation Sleeves", "", "| Sector | Class | Stage | Return | Drawdown | Paper | Allowed next action |", "| --- | --- | --- | ---: | ---: | --- | --- |"])
+    lines.extend(
+        [
+            "",
+            "## Observation Sleeves",
+            "",
+            "| Sector | Class | Stage | Promotion decision | Return | Drawdown | Paper | Required next evidence |",
+            "| --- | --- | --- | --- | ---: | ---: | --- | --- |",
+        ]
+    )
     for row in observation_rows:
         lines.append(
-            f"| `{row['sector_id']}` | `{row['observation_class']}` | `{row['latest_stage']}` | {_pct(row['strategy_return'])} | {_pct(row['max_drawdown'])} | `{row['paper_tracking_status']}` | {row['allowed_next_action']} |"
+            f"| `{row['sector_id']}` | `{row['observation_class']}` | `{row['latest_stage']}` | `{row['promotion_decision']}` | {_pct(row['strategy_return'])} | {_pct(row['max_drawdown'])} | `{row['paper_tracking_status']}` | {row['required_next_evidence']} |"
         )
     lines.extend(["", "## Next Queue", "", "| Rank | Owner | Task | Gate |", "| ---: | --- | --- | --- |"])
     for row in next_queue:

@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "policy_id": "sleeve_promotion_policy_v1",
+  "created_at_utc": "2026-07-24T13:47:48+00:00",
+  "status": "active_governance_policy",
+  "purpose": "Define when an observation sleeve can be promoted to a V57f core candidate.",
+  "mainline_reference": {
+    "strategy_id": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f",
+    "strategy_return": "0.8141640295",
+    "max_drawdown": "0.117489093536",
+    "information_ratio": "0.444317629718"
+  },
+  "rules": [
+    {
+      "rule_id": "P1",
+      "category": "governance",
+      "rule": "V57f is frozen during promotion audit.",
+      "threshold_or_condition": "No sleeve/factor/weight/timing change",
+      "failure_effect": "block_core_promotion"
+    },
+    {
+      "rule_id": "P2",
+      "category": "evidence",
+      "rule": "Local daily simulation must exist and use real dividends where applicable.",
+      "threshold_or_condition": "summary_path exists and dividend/order outputs are reviewed",
+      "failure_effect": "remain_observation_or_repair"
+    },
+    {
+      "rule_id": "P3",
+      "category": "execution",
+      "rule": "Rebalance order health must pass.",
+      "threshold_or_condition": "order_health_status == passed",
+      "failure_effect": "block_paper_and_core"
+    },
+    {
+      "rule_id": "P4",
+      "category": "forward",
+      "rule": "Paper tracking or clean forward evidence is required before core candidacy.",
+      "threshold_or_condition": "paper_tracking_status == paper_artifact_exists and future window is not retroactive",
+      "failure_effect": "remain_observation"
+    },
+    {
+      "rule_id": "P5",
+      "category": "risk",
+      "rule": "Drawdown cannot materially worsen versus V57f.",
+      "threshold_or_condition": "max_drawdown <= V57f max_drawdown * 1.10",
+      "failure_effect": "remain_observation_or_repair"
+    },
+    {
+      "rule_id": "P6",
+      "category": "quality",
+      "rule": "Information ratio cannot be materially worse than V57f.",
+      "threshold_or_condition": "information_ratio >= V57f IR * 0.90",
+      "failure_effect": "remain_observation"
+    },
+    {
+      "rule_id": "P7",
+      "category": "sample",
+      "rule": "Small-sample/specialist sleeves need separate capped policy.",
+      "threshold_or_condition": "no small_sample/specialist class unless PM approves capped sleeve",
+      "failure_effect": "capped_observation_only"
+    },
+    {
+      "rule_id": "P8",
+      "category": "data",
+      "rule": "Research/data-gate/archived stages cannot promote.",
+      "threshold_or_condition": "latest_stage not in research_or_data_repair, archived_or_failed",
+      "failure_effect": "block_core_promotion"
+    },
+    {
+      "rule_id": "P9",
+      "category": "mandate",
+      "rule": "Cycle-state or specialist-data gaps must be closed ex ante.",
+      "threshold_or_condition": "required industry data gate is passed",
+      "failure_effect": "remain_observation_or_archive"
+    }
+  ],
+  "hard_blocks": [
+    "Historical return alone cannot promote a sleeve.",
+    "Small-sample sleeves cannot become ordinary core sleeves without a separate PM-approved capped policy.",
+    "Order-health needs_review blocks paper tracking and core promotion.",
+    "Archived/data-gate-failed sleeves cannot be reopened by high backtest return.",
+    "This policy does not modify V57f or generate a 2026-10 paper runner."
+  ]
+}

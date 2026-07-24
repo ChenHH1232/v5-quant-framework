@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "strategy_id": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay",
+  "sector_id": "telecom_operators",
+  "experiment_layer": "engineering_smoke_test",
+  "status": "paper_tracking_ready_waiting_for_future_window",
+  "next_gate": "wait_until_clean_forward_window",
+  "as_of_date": "2026-07-24",
+  "next_clean_rebalance_date": "2026-10-08",
+  "local_daily_dir": "local_daily_backtests_v5a_telecom_observation_refresh\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay",
+  "readiness_summary": "telecom_engineering_readiness_v5\\current\\telecom_engineering_readiness_summary.json",
+  "local_daily_summary": {
+    "summary_json": "local_daily_backtests_v5a_telecom_observation_refresh\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay\\summary.json",
+    "daily_returns": "local_daily_backtests_v5a_telecom_observation_refresh\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay\\daily_returns.csv",
+    "holdings": "local_daily_backtests_v5a_telecom_observation_refresh\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay\\holdings.csv",
+    "trades": "local_daily_backtests_v5a_telecom_observation_refresh\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay\\trades.csv",
+    "dividends": "local_daily_backtests_v5a_telecom_observation_refresh\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay\\dividends.csv",
+    "rebalance_order_health": "local_daily_backtests_v5a_telecom_observation_refresh\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay\\rebalance_order_health.csv",
+    "metrics": {
+      "strategy_return": 0.8011754749999982,
+      "annualized_return": 0.1408920387227317,
+      "excess_return": 0.28669241532506473,
+      "benchmark_return": 0.5144830596749335,
+      "alpha": 0.06807153732150813,
+      "beta": 0.7473669845842194,
+      "sharpe": 0.9499813522167432,
+      "win_rate": 0.5368888888888889,
+      "profit_loss_ratio": 1.0202500887195105,
+      "max_drawdown": 0.11106300528744428,
+      "sortino": 1.3722421790193349,
+      "mean_excess_return": 0.00013818783408747287,
+      "excess_max_drawdown": 0.19375271291781937,
+      "excess_sharpe": 0.4002346724658017,
+      "daily_win_rate": 0.5368888888888889,
+      "profit_count": 604,
+      "loss_count": 521,
+      "information_ratio": 0.4002346724658017,
+      "strategy_volatility": 0.15077258772295082,
+      "benchmark_volatility": 0.17506280402339736,
+      "max_drawdown_interval": "2023-05-08,2024-01-22",
+      "annual_factor": 252
+    },
+    "rebalance_order_health_summary": {
+      "rebalance_signal_count": 19,
+      "normal_rebalance_count": 19,
+      "no_order_rebalance_count": 0,
+      "no_order_no_position_count": 0,
+      "blocked_or_unfilled_rebalance_count": 0,
+      "missing_daily_rebalance_count": 0,
+      "leading_no_order_no_position_count": 0,
+      "first_executed_order_date": "2021-10-08",
+      "first_position_date": "2021-10-08",
+      "needs_review": false,
+      "pm_rule": "Every rebalance signal must be checked for actual local orders and post-rebalance holdings before comparing with JoinQuant."
+    },
+    "signal_count": 19,
+    "daily_count": 1125,
+    "trade_count": 737,
+    "dividend_count": 147
+  },
+  "data_health": {
+    "panel_exists": true,
+    "price_exists": true,
+    "dividend_exists": true,
+    "benchmark_exists": true,
+    "panel_row_count": 52,
+    "price_row_count": 3684,
+    "dividend_row_count": 26,
+    "benchmark_row_count": 1228,
+    "latest_panel_trade_date": "2026-04-01",
+    "latest_price_date": "2026-05-29",
+    "latest_dividend_pay_date": "2025-10-24",
+    "latest_benchmark_date": "2026-05-29",
+    "target_panel_rows": 0
+  },
+  "paper_tracking": {
+    "summary_json": "paper_trading_signals\\telecom_v5a_observation_queue\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay\\telecom_paper_tracking_summary.json",
+    "report_md": "paper_trading_signals\\telecom_v5a_observation_queue\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay\\telecom_paper_tracking_report.md"
+  },
+  "outputs": {
+    "flow_table_csv": "telecom_engineering_execution_v5\\current\\telecom_engineering_execution_flow_table.csv",
+    "health_check_csv": "telecom_engineering_execution_v5\\current\\telecom_engineering_execution_health_checks.csv",
+    "next_queue_csv": "telecom_engineering_execution_v5\\current\\telecom_engineering_execution_next_queue.csv",
+    "report_md": "telecom_engineering_execution_v5\\current\\telecom_engineering_execution_report.md"
+  },
+  "pm_rules": [
+    "Telecom remains a capped observation sleeve.",
+    "Do not modify V57f core sleeves, factors, weights, sector caps, or rebalance rules.",
+    "Do not tune telecom from this local refresh.",
+    "Do not start JoinQuant platform replication or write JoinQuant code.",
+    "Do not promote telecom standalone, accepted, or live-trading status."
+  ],
+  "created_at_utc": "2026-07-24T06:33:20+00:00",
+  "agent_packet": {
+    "packet_path": "agent_loop_packets_v5a\\telecom_engineering_execution\\telecom_engineering_execution_20260724\\checkpoint_packet.json",
+    "report_path": "agent_loop_packets_v5a\\telecom_engineering_execution\\telecom_engineering_execution_20260724\\checkpoint_packet.md"
+  }
+}

@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "strategy_id": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay",
+  "sector_id": "telecom_operators",
+  "experiment_layer": "paper_trading_preparation",
+  "status": "paper_tracking_ready_waiting_for_future_window",
+  "as_of_date": "2026-07-24",
+  "next_clean_rebalance_date": "2026-10-08",
+  "target_date_is_future": true,
+  "local_daily_dir": "local_daily_backtests_v5a_telecom_observation_refresh\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay",
+  "local_daily_summary": {
+    "signal_count": 19,
+    "daily_count": 1125,
+    "trade_count": 737,
+    "dividend_count": 147,
+    "rebalance_order_health": {
+      "rebalance_signal_count": 19,
+      "normal_rebalance_count": 19,
+      "no_order_rebalance_count": 0,
+      "no_order_no_position_count": 0,
+      "blocked_or_unfilled_rebalance_count": 0,
+      "missing_daily_rebalance_count": 0,
+      "leading_no_order_no_position_count": 0,
+      "first_executed_order_date": "2021-10-08",
+      "first_position_date": "2021-10-08",
+      "needs_review": false,
+      "pm_rule": "Every rebalance signal must be checked for actual local orders and post-rebalance holdings before comparing with JoinQuant."
+    },
+    "metrics": {
+      "strategy_return": 0.8011754749999982,
+      "annualized_return": 0.1408920387227317,
+      "excess_return": 0.28669241532506473,
+      "benchmark_return": 0.5144830596749335,
+      "alpha": 0.06807153732150813,
+      "beta": 0.7473669845842194,
+      "sharpe": 0.9499813522167432,
+      "win_rate": 0.5368888888888889,
+      "profit_loss_ratio": 1.0202500887195105,
+      "max_drawdown": 0.11106300528744428,
+      "sortino": 1.3722421790193349,
+      "mean_excess_return": 0.00013818783408747287,
+      "excess_max_drawdown": 0.19375271291781937,
+      "excess_sharpe": 0.4002346724658017,
+      "daily_win_rate": 0.5368888888888889,
+      "profit_count": 604,
+      "loss_count": 521,
+      "information_ratio": 0.4002346724658017,
+      "strategy_volatility": 0.15077258772295082,
+      "benchmark_volatility": 0.17506280402339736,
+      "max_drawdown_interval": "2023-05-08,2024-01-22",
+      "annual_factor": 252
+    }
+  },
+  "data_health": {
+    "panel_exists": true,
+    "price_exists": true,
+    "dividend_exists": true,
+    "benchmark_exists": true,
+    "panel_row_count": 52,
+    "price_row_count": 3684,
+    "dividend_row_count": 26,
+    "benchmark_row_count": 1228,
+    "latest_panel_trade_date": "2026-04-01",
+    "latest_price_date": "2026-05-29",
+    "latest_dividend_pay_date": "2025-10-24",
+    "latest_benchmark_date": "2026-05-29",
+    "target_panel_rows": 0
+  },
+  "health_checks": [
+    {
+      "check": "pm_readiness_allows_engineering",
+      "status": "passed",
+      "detail": "engineering_observation_sleeve_ready"
+    },
+    {
+      "check": "engineering_scope_observation_only",
+      "status": "passed",
+      "detail": "{\"can_enter_engineering\": true, \"engineering_scope\": \"capped_observation_sleeve_local_refresh_and_paper_tracking_only\", \"can_promote_standalone\": false, \"can_join_v57f_core\": false, \"can_enter_platform_replication\": false, \"can_write_joinquant_code\": false}"
+    },
+    {
+      "check": "local_daily_refreshed",
+      "status": "passed",
+      "detail": "daily_count=1125"
+    },
+    {
+      "check": "real_dividends_recorded",
+      "status": "passed",
+      "detail": "dividend_count=147"
+    },
+    {
+      "check": "trades_holdings_outputs_exist",
+      "status": "passed",
+      "detail": "trade_count=737"
+    },
+    {
+      "check": "rebalance_order_health_output_exists",
+      "status": "passed",
+      "detail": "rows=19"
+    },
+    {
+      "check": "rebalance_order_health_passed",
+      "status": "passed",
+      "detail": "{\"rebalance_signal_count\": 19, \"normal_rebalance_count\": 19, \"no_order_rebalance_count\": 0, \"no_order_no_position_count\": 0, \"blocked_or_unfilled_rebalance_count\": 0, \"missing_daily_rebalance_count\": 0, \"leading_no_order_no_position_count\": 0, \"first_executed_order_date\": \"2021-10-08\", \"first_position_date\": \"2021-10-08\", \"needs_review\": false, \"pm_rule\": \"Every rebalance signal must be checked for actual local orders and post-rebalance holdings before comparing with JoinQuant.\"}"
+    },
+    {
+      "check": "all_signal_dates_present",
+      "status": "passed",
+      "detail": "summary=19 signal_dates=19"
+    },
+    {
+      "check": "panel_file_exists",
+      "status": "passed",
+      "detail": "latest=2026-04-01 rows=52"
+    },
+    {
+      "check": "price_file_exists",
+      "status": "passed",
+      "detail": "latest=2026-05-29 rows=3684"
+    },
+    {
+      "check": "dividend_file_exists",
+      "status": "passed",
+      "detail": "latest=2025-10-24 rows=26"
+    },
+    {
+      "check": "benchmark_file_exists",
+      "status": "passed",
+      "detail": "latest=2026-05-29 rows=1228"
+    },
+    {
+      "check": "current_window_ends_2026_05_31",
+      "status": "passed",
+      "detail": "{'start_date': '2021-10-08', 'end_date': '2026-05-31'}"
+    },
+    {
+      "check": "future_window_not_due",
+      "status": "passed",
+      "detail": "as_of=2026-07-24 target=2026-10-08"
+    }
+  ],
+  "pm_rules": [
+    "Telecom remains observation only.",
+    "No core V57f inclusion, platform replication, JoinQuant code, or tuning is allowed.",
+    "The next usable paper signal must be generated at the future rebalance window, not retroactively."
+  ],
+  "created_at_utc": "2026-07-24T06:33:20+00:00"
+}

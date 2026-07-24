@@ -1,0 +1,15 @@
+﻿check,status,detail
+pm_readiness_allows_engineering,passed,engineering_observation_sleeve_ready
+engineering_scope_observation_only,passed,"{""can_enter_engineering"": true, ""engineering_scope"": ""capped_observation_sleeve_local_refresh_and_paper_tracking_only"", ""can_promote_standalone"": false, ""can_join_v57f_core"": false, ""can_enter_platform_replication"": false, ""can_write_joinquant_code"": false}"
+local_daily_refreshed,passed,daily_count=1125
+real_dividends_recorded,passed,dividend_count=147
+trades_holdings_outputs_exist,passed,trade_count=737
+rebalance_order_health_output_exists,passed,rows=19
+rebalance_order_health_passed,passed,"{""rebalance_signal_count"": 19, ""normal_rebalance_count"": 19, ""no_order_rebalance_count"": 0, ""no_order_no_position_count"": 0, ""blocked_or_unfilled_rebalance_count"": 0, ""missing_daily_rebalance_count"": 0, ""leading_no_order_no_position_count"": 0, ""first_executed_order_date"": ""2021-10-08"", ""first_position_date"": ""2021-10-08"", ""needs_review"": false, ""pm_rule"": ""Every rebalance signal must be checked for actual local orders and post-rebalance holdings before comparing with JoinQuant.""}"
+all_signal_dates_present,passed,summary=19 signal_dates=19
+panel_file_exists,passed,latest=2026-04-01 rows=52
+price_file_exists,passed,latest=2026-05-29 rows=3684
+dividend_file_exists,passed,latest=2025-10-24 rows=26
+benchmark_file_exists,passed,latest=2026-05-29 rows=1228
+current_window_ends_2026_05_31,passed,"{'start_date': '2021-10-08', 'end_date': '2026-05-31'}"
+future_window_not_due,passed,as_of=2026-07-24 target=2026-10-08

@@ -49,6 +49,15 @@ from v5.telecom_engineering_readiness_runner import (
     DEFAULT_V57F_SUMMARY as DEFAULT_TELECOM_ENGINEERING_V57F,
     review_telecom_engineering_readiness,
 )
+from v5.telecom_engineering_execution_runner import (
+    DEFAULT_CONFIG as DEFAULT_TELECOM_EXECUTION_CONFIG,
+    DEFAULT_LOCAL_DAILY_OUT as DEFAULT_TELECOM_EXECUTION_LOCAL_OUT,
+    DEFAULT_OUT_DIR as DEFAULT_TELECOM_EXECUTION_OUT,
+    DEFAULT_PAPER_OUT_DIR as DEFAULT_TELECOM_EXECUTION_PAPER_OUT,
+    DEFAULT_READINESS_SUMMARY as DEFAULT_TELECOM_EXECUTION_READINESS,
+    DEFAULT_SIGNALS as DEFAULT_TELECOM_EXECUTION_SIGNALS,
+    execute_telecom_engineering_queue,
+)
 from v5.sleeve_promotion_queue_runner import (
     DEFAULT_OUT_DIR as DEFAULT_SLEEVE_PROMOTION_OUT,
     DEFAULT_SLEEVE_REGISTRY as DEFAULT_SLEEVE_PROMOTION_REGISTRY,
@@ -866,6 +875,24 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     telecom_engineering_parser.add_argument("--out", type=Path, default=DEFAULT_TELECOM_ENGINEERING_OUT)
     telecom_engineering_parser.set_defaults(handler=_handle_review_telecom_engineering_readiness)
 
+    telecom_execution_parser = subparsers.add_parser("execute-telecom-engineering-queue")
+    telecom_execution_parser.add_argument("--config", type=Path, default=DEFAULT_TELECOM_EXECUTION_CONFIG)
+    telecom_execution_parser.add_argument("--signals", type=Path, default=DEFAULT_TELECOM_EXECUTION_SIGNALS)
+    telecom_execution_parser.add_argument("--readiness-summary", type=Path, default=DEFAULT_TELECOM_EXECUTION_READINESS)
+    telecom_execution_parser.add_argument("--panel", type=Path, default=DEFAULT_TELECOM_ENGINEERING_PANEL)
+    telecom_execution_parser.add_argument("--price-csv", type=Path, default=DEFAULT_TELECOM_ENGINEERING_PRICES)
+    telecom_execution_parser.add_argument("--dividend-csv", type=Path, default=DEFAULT_TELECOM_ENGINEERING_DIVIDENDS)
+    telecom_execution_parser.add_argument("--benchmark-csv", type=Path, default=DEFAULT_TELECOM_ENGINEERING_BENCHMARK)
+    telecom_execution_parser.add_argument("--local-daily-out", type=Path, default=DEFAULT_TELECOM_EXECUTION_LOCAL_OUT)
+    telecom_execution_parser.add_argument("--out", type=Path, default=DEFAULT_TELECOM_EXECUTION_OUT)
+    telecom_execution_parser.add_argument("--paper-out", type=Path, default=DEFAULT_TELECOM_EXECUTION_PAPER_OUT)
+    telecom_execution_parser.add_argument("--as-of-date", default="2026-07-24")
+    telecom_execution_parser.add_argument("--next-clean-rebalance-date", default="2026-10-08")
+    telecom_execution_parser.add_argument("--initial-cash", type=float, default=2_000_000.0)
+    telecom_execution_parser.add_argument("--target-exposure", type=float, default=0.995)
+    telecom_execution_parser.add_argument("--lot-size", type=int, default=100)
+    telecom_execution_parser.set_defaults(handler=_handle_execute_telecom_engineering_queue)
+
     sleeve_promotion_parser = subparsers.add_parser("build-sleeve-promotion-queue")
     sleeve_promotion_parser.add_argument("--sleeve-registry", type=Path, default=DEFAULT_SLEEVE_PROMOTION_REGISTRY)
     sleeve_promotion_parser.add_argument("--status-registry", type=Path, default=DEFAULT_SLEEVE_PROMOTION_STATUS)
@@ -1561,6 +1588,29 @@ def _handle_review_telecom_engineering_readiness(args: argparse.Namespace) -> in
             benchmark_csv=args.benchmark_csv,
             v57f_summary=args.v57f_summary,
             out_dir=args.out,
+        )
+    )
+    return 0
+
+
+def _handle_execute_telecom_engineering_queue(args: argparse.Namespace) -> int:
+    print(
+        execute_telecom_engineering_queue(
+            config_path=args.config,
+            signals_csv=args.signals,
+            readiness_summary=args.readiness_summary,
+            panel_csv=args.panel,
+            price_csv=args.price_csv,
+            dividend_csv=args.dividend_csv,
+            benchmark_csv=args.benchmark_csv,
+            local_daily_out=args.local_daily_out,
+            out_dir=args.out,
+            paper_out_dir=args.paper_out,
+            as_of_date=args.as_of_date,
+            next_clean_rebalance_date=args.next_clean_rebalance_date,
+            initial_cash=args.initial_cash,
+            target_exposure=args.target_exposure,
+            lot_size=args.lot_size,
         )
     )
     return 0

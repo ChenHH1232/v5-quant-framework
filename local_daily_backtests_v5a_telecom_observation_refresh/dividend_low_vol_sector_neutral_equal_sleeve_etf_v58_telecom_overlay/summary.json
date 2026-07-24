@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "strategy_id": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay",
+  "mode": "basket_daily_joinquant_like",
+  "experiment_layer": "engineering_smoke_test",
+  "config": "config\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay.json",
+  "signals_csv": "validation_formal_v58_telecom_overlay_basket_constructor\\basket_rebalance_signals.csv",
+  "price_files": [
+    "数据库\\processed\\bank_v3_joinquant_real_daily_prices.csv",
+    "数据库\\processed\\utilities_joinquant_real_daily_prices.csv",
+    "数据库\\processed\\highway_v54h_joinquant_real_daily_prices.csv",
+    "数据库\\processed\\port_rail_v55c_joinquant_real_daily_prices.csv",
+    "数据库\\processed\\telecom_joinquant_joinquant_real_daily_prices.csv"
+  ],
+  "dividend_files": [
+    "数据库\\processed\\bank_v3_joinquant_cash_dividends.csv",
+    "数据库\\processed\\utilities_joinquant_cash_dividends.csv",
+    "数据库\\processed\\highway_v54h_joinquant_cash_dividends.csv",
+    "数据库\\processed\\port_rail_v55c_joinquant_cash_dividends.csv",
+    "数据库\\processed\\telecom_joinquant_joinquant_cash_dividends.csv"
+  ],
+  "window": {
+    "start_date": "2021-10-08",
+    "end_date": "2026-05-31"
+  },
+  "execution": {
+    "initial_cash": 2000000.0,
+    "target_exposure": 0.995,
+    "lot_size": 100,
+    "open_commission": 0.0003,
+    "close_commission": 0.0003,
+    "min_commission": 5.0,
+    "trade_price": "daily_open",
+    "valuation_price": "daily_close",
+    "cash_dividend_policy": "Tax-adjusted net_cash_per_share is added to cash on pay_date.",
+    "share_action_policy": "Bonus/transfer shares adjust position amount on ex_date before same-day trading and close valuation.",
+    "benchmark_policy": "Same-pool equal-weight total-return benchmark where net cash dividends are available; otherwise price return."
+  },
+  "signal_count": 19,
+  "daily_count": 1125,
+  "trade_count": 737,
+  "dividend_count": 147,
+  "corporate_action_count": 0,
+  "rebalance_order_health": {
+    "rebalance_signal_count": 19,
+    "normal_rebalance_count": 19,
+    "no_order_rebalance_count": 0,
+    "no_order_no_position_count": 0,
+    "blocked_or_unfilled_rebalance_count": 0,
+    "missing_daily_rebalance_count": 0,
+    "leading_no_order_no_position_count": 0,
+    "first_executed_order_date": "2021-10-08",
+    "first_position_date": "2021-10-08",
+    "needs_review": false,
+    "pm_rule": "Every rebalance signal must be checked for actual local orders and post-rebalance holdings before comparing with JoinQuant."
+  },
+  "metrics": {
+    "strategy_return": 0.8011754749999982,
+    "annualized_return": 0.1408920387227317,
+    "excess_return": 0.28669241532506473,
+    "benchmark_return": 0.5144830596749335,
+    "alpha": 0.06807153732150813,
+    "beta": 0.7473669845842194,
+    "sharpe": 0.9499813522167432,
+    "win_rate": 0.5368888888888889,
+    "profit_loss_ratio": 1.0202500887195105,
+    "max_drawdown": 0.11106300528744428,
+    "sortino": 1.3722421790193349,
+    "mean_excess_return": 0.00013818783408747287,
+    "excess_max_drawdown": 0.19375271291781937,
+    "excess_sharpe": 0.4002346724658017,
+    "daily_win_rate": 0.5368888888888889,
+    "profit_count": 604,
+    "loss_count": 521,
+    "information_ratio": 0.4002346724658017,
+    "strategy_volatility": 0.15077258772295082,
+    "benchmark_volatility": 0.17506280402339736,
+    "max_drawdown_interval": "2023-05-08,2024-01-22",
+    "annual_factor": 252
+  },
+  "outputs": {
+    "summary": "summary.json",
+    "daily_returns": "daily_returns.csv",
+    "holdings": "holdings.csv",
+    "trades": "trades.csv",
+    "dividends": "dividends.csv",
+    "corporate_actions": "corporate_actions.csv",
+    "rebalance_order_health": "rebalance_order_health.csv",
+    "rebalance_signals": "rebalance_signals.csv",
+    "same_pool_equal_weight_benchmark": "same_pool_equal_weight_benchmark.csv",
+    "report": "basket_daily_backtest_report.md"
+  },
+  "data_coverage": {
+    "sector_ids": [
+      "bank",
+      "utilities_electricity",
+      "highway_infrastructure",
+      "port_rail_infrastructure",
+      "telecom_operators"
+    ],
+    "dividend_file_event_counts": {
+      "数据库\\processed\\bank_v3_joinquant_cash_dividends.csv": 265,
+      "数据库\\processed\\utilities_joinquant_cash_dividends.csv": 549,
+      "数据库\\processed\\highway_v54h_joinquant_cash_dividends.csv": 102,
+      "数据库\\processed\\port_rail_v55c_joinquant_cash_dividends.csv": 130,
+      "数据库\\processed\\telecom_joinquant_joinquant_cash_dividends.csv": 26
+    }
+  },
+  "notes": [
+    "This is a basket-level local daily simulation, not platform replication and not strategy acceptance.",
+    "Basket sectors included in this run: bank, utilities_electricity, highway_infrastructure, port_rail_infrastructure, telecom_operators.",
+    "Benchmark is a same-pool equal-weight total-return proxy where net cash dividends are available; otherwise price return.",
+    "All configured dividend files contain at least one cash-dividend event."
+  ],
+  "created_at_utc": "2026-07-24T06:33:19+00:00"
+}

@@ -1,0 +1,7 @@
+﻿step,owner,input,action,output,gate,status,forbidden_action
+1,Project Manager Agent,telecom_engineering_next_agent_queue.csv,Confirm Engineering scope is capped observation only,scope lock,no_v57f_change,completed,modify V57f
+2,Engineering Agent,frozen telecom overlay config + signals,Rerun local daily simulation through 2026-05-31,local daily refresh,no_tuning,completed,change factors or weights
+3,Engineering Agent,real daily prices + cash dividends,"Record daily returns, trades, holdings, cash dividends and benchmark",local output files,real_data_outputs,completed,ignore dividends
+4,Engineering Agent,rebalance_signals + trades + holdings,Generate and review rebalance_order_health,order health evidence,no_empty_rebalance_bug,completed,ignore no-order dates
+5,Engineering Agent,refreshed outputs,Build telecom paper tracking readiness packet,paper packet,future_window_gate,completed,generate late paper signal
+6,Project Manager Agent,paper packet,Route to wait for the next clean rebalance window,next queue,no_platform_replication,completed,write JoinQuant code

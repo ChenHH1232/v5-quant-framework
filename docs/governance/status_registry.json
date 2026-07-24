@@ -648,13 +648,19 @@
         "small_sample_observation_sleeve",
         "basket_diagnostic_only",
         "engineering_observation_sleeve_ready",
-        "engineering_handoff_observation_only"
+        "engineering_handoff_observation_only",
+        "engineering_local_refresh_passed",
+        "rebalance_order_health_passed",
+        "paper_tracking_preparation_ready",
+        "waiting_for_clean_forward_window"
       ],
       "not_status": [
         "formal_strategy_candidate",
         "platform_replication",
         "accepted_strategy",
-        "v57f_core_inclusion"
+        "v57f_core_inclusion",
+        "platform_replication_passed",
+        "live_trading_approved"
       ],
       "experiment_layer": "research_pit_validation",
       "evidence_paths": [
@@ -672,7 +678,15 @@
         "telecom_engineering_readiness_v5/current/telecom_engineering_readiness_summary.json",
         "telecom_engineering_readiness_v5/current/telecom_engineering_readiness_report.md",
         "telecom_engineering_readiness_v5/current/telecom_engineering_next_agent_queue.csv",
-        "agent_loop_packets_v5a/telecom_engineering_readiness/telecom_engineering_readiness_20260724/checkpoint_packet.json"
+        "agent_loop_packets_v5a/telecom_engineering_readiness/telecom_engineering_readiness_20260724/checkpoint_packet.json",
+        "telecom_engineering_execution_v5/current/telecom_engineering_execution_summary.json",
+        "telecom_engineering_execution_v5/current/telecom_engineering_execution_report.md",
+        "telecom_engineering_execution_v5/current/telecom_engineering_execution_health_checks.csv",
+        "local_daily_backtests_v5a_telecom_observation_refresh/dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay/summary.json",
+        "local_daily_backtests_v5a_telecom_observation_refresh/dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay/rebalance_order_health.csv",
+        "paper_trading_signals/telecom_v5a_observation_queue/dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay/telecom_paper_tracking_summary.json",
+        "paper_trading_signals/telecom_v5a_observation_queue/dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay/telecom_paper_tracking_report.md",
+        "agent_loop_packets_v5a/telecom_engineering_execution/telecom_engineering_execution_20260724/checkpoint_packet.json"
       ],
       "blockers": [
         "Only three A-share core telecom operators; IC / RankIC evidence is sample-size constrained.",
@@ -681,9 +695,10 @@
         "Composite mean selected count is 1.5, so current evidence is concentration-sensitive.",
         "Specialist operating data such as ARPU, subscriber count, capex cycle and enterprise-service mix remains missing.",
         "Standalone formal candidate remains blocked by sample size.",
-        "Engineering handoff is limited to capped observation / paper tracking refresh only."
+        "Engineering handoff is limited to capped observation / paper tracking refresh only.",
+        "Clean forward paper signal is not due until the next rebalance window; current evidence ends at 2026-05-31."
       ],
-      "next_gate": "engineering_refresh_capped_observation_and_paper_tracking"
+      "next_gate": "wait_until_clean_forward_window"
     },
     {
       "strategy_id": "gas_water_cashflow_dividend_v55a",
@@ -1417,7 +1432,11 @@
         "engineering_observation_sleeve_ready",
         "basket_contribution_diagnostic_completed",
         "not_mainline_replacement",
-        "not_platform_replication"
+        "not_platform_replication",
+        "engineering_local_refresh_passed",
+        "rebalance_order_health_passed",
+        "paper_tracking_preparation_ready",
+        "waiting_for_clean_forward_window"
       ],
       "not_status": [
         "formal_etf_candidate",
@@ -1438,16 +1457,25 @@
         "telecom_engineering_readiness_v5/current/telecom_engineering_readiness_summary.json",
         "telecom_engineering_readiness_v5/current/telecom_engineering_readiness_report.md",
         "telecom_engineering_readiness_v5/current/telecom_engineering_next_agent_queue.csv",
-        "agent_loop_packets_v5a/telecom_engineering_readiness/telecom_engineering_readiness_20260724/checkpoint_packet.json"
+        "agent_loop_packets_v5a/telecom_engineering_readiness/telecom_engineering_readiness_20260724/checkpoint_packet.json",
+        "telecom_engineering_execution_v5/current/telecom_engineering_execution_summary.json",
+        "telecom_engineering_execution_v5/current/telecom_engineering_execution_report.md",
+        "telecom_engineering_execution_v5/current/telecom_engineering_execution_health_checks.csv",
+        "local_daily_backtests_v5a_telecom_observation_refresh/dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay/summary.json",
+        "local_daily_backtests_v5a_telecom_observation_refresh/dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay/rebalance_order_health.csv",
+        "paper_trading_signals/telecom_v5a_observation_queue/dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay/telecom_paper_tracking_summary.json",
+        "paper_trading_signals/telecom_v5a_observation_queue/dividend_low_vol_sector_neutral_equal_sleeve_etf_v58_telecom_overlay/telecom_paper_tracking_report.md",
+        "agent_loop_packets_v5a/telecom_engineering_execution/telecom_engineering_execution_20260724/checkpoint_packet.json"
       ],
       "blockers": [
         "Telecom has only three A-share core operators and remains sample-size constrained.",
         "Overlay did not improve total return, excess return or information ratio versus V5.7f.",
         "Specialist telecom operating data remains incomplete.",
         "No JoinQuant platform replication or paper-trading approval exists for the overlay.",
-        "Engineering handoff is limited to capped observation refresh and paper tracking readiness through 2026-05-31."
+        "Engineering handoff is limited to capped observation refresh and paper tracking readiness through 2026-05-31.",
+        "Clean forward paper signal is not due until the next rebalance window; current evidence ends at 2026-05-31."
       ],
-      "next_gate": "engineering_refresh_capped_observation_and_paper_tracking"
+      "next_gate": "wait_until_clean_forward_window"
     },
     {
       "strategy_id": "oil_gas_cashflow_cycle_data_gate_v58a",

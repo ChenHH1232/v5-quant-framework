@@ -1,0 +1,3 @@
+﻿queue_rank,owner,task,input_artifacts,output_artifacts,gate,blocked_actions
+1,Project Manager Agent,Keep V57f frozen and use this governance summary as the single status entry point.,enhanced_etf_governance_summary.json;v57f_core_dashboard.csv;observation_sleeve_registry.csv,none,governance_reference_only,do_not_modify_V57f;do_not_start_paper_runner_here;do_not_promote_observation_sleeves
+2,Project Manager Agent,"When a separate simulation/paper workflow is opened, use this table to decide which sleeves are eligible for refresh.",observation_sleeve_registry.csv,separate_future_workflow_only,external_or_future_window_only,do_not_mix_future_paper_runner_into_this_v5_governance_package

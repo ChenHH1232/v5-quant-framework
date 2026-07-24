@@ -21,6 +21,13 @@ from v5.enhanced_etf_comparison_runner import (
     DEFAULT_PRODUCTION_SUMMARY as DEFAULT_ENHANCED_ETF_COMPARISON_PRODUCTION_SUMMARY,
     build_v57f_comparison_packet,
 )
+from v5.enhanced_etf_governance_summary_runner import (
+    DEFAULT_OUT_DIR as DEFAULT_ENHANCED_ETF_GOVERNANCE_OUT,
+    DEFAULT_PRODUCTION_SUMMARY as DEFAULT_ENHANCED_ETF_GOVERNANCE_PRODUCTION,
+    DEFAULT_SLEEVE_REGISTRY as DEFAULT_ENHANCED_ETF_GOVERNANCE_SLEEVES,
+    DEFAULT_STATUS_REGISTRY as DEFAULT_ENHANCED_ETF_GOVERNANCE_STATUS,
+    build_enhanced_etf_governance_summary,
+)
 from v5.v57f_execution_robustness_runner import (
     DEFAULT_BASELINE_SUMMARY as DEFAULT_V57F_EXECUTION_BASELINE_SUMMARY,
     DEFAULT_CONFIG as DEFAULT_V57F_EXECUTION_CONFIG,
@@ -841,6 +848,13 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     )
     enhanced_etf_comparison_parser.set_defaults(handler=_handle_build_v57f_comparison_packet)
 
+    enhanced_etf_governance_parser = subparsers.add_parser("build-enhanced-etf-governance-summary")
+    enhanced_etf_governance_parser.add_argument("--status-registry", type=Path, default=DEFAULT_ENHANCED_ETF_GOVERNANCE_STATUS)
+    enhanced_etf_governance_parser.add_argument("--production-summary", type=Path, default=DEFAULT_ENHANCED_ETF_GOVERNANCE_PRODUCTION)
+    enhanced_etf_governance_parser.add_argument("--sleeve-registry", type=Path, default=DEFAULT_ENHANCED_ETF_GOVERNANCE_SLEEVES)
+    enhanced_etf_governance_parser.add_argument("--out", type=Path, default=DEFAULT_ENHANCED_ETF_GOVERNANCE_OUT)
+    enhanced_etf_governance_parser.set_defaults(handler=_handle_build_enhanced_etf_governance_summary)
+
     v57f_execution_parser = subparsers.add_parser("run-v57f-execution-robustness")
     v57f_execution_parser.add_argument("--config", type=Path, default=DEFAULT_V57F_EXECUTION_CONFIG)
     v57f_execution_parser.add_argument("--signals", type=Path, default=DEFAULT_V57F_EXECUTION_SIGNALS)
@@ -1541,6 +1555,18 @@ def _handle_build_enhanced_etf_production_line(args: argparse.Namespace) -> int:
 
 def _handle_build_v57f_comparison_packet(args: argparse.Namespace) -> int:
     print(build_v57f_comparison_packet(out_dir=args.out, production_summary_path=args.production_summary))
+    return 0
+
+
+def _handle_build_enhanced_etf_governance_summary(args: argparse.Namespace) -> int:
+    print(
+        build_enhanced_etf_governance_summary(
+            status_registry=args.status_registry,
+            production_summary=args.production_summary,
+            sleeve_registry=args.sleeve_registry,
+            out_dir=args.out,
+        )
+    )
     return 0
 
 

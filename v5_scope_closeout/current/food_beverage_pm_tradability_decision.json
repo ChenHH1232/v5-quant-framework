@@ -1,0 +1,14 @@
+{
+  "decision_id": "food_beverage_pm_tradability_decision_v1",
+  "status": "closed_failed_v5_observation_candidate",
+  "strategy_return": "0.1158154417",
+  "max_drawdown": "0.4316312442",
+  "first_signal_date": "2022-01-04",
+  "partial_skipped_order_count": "3",
+  "high_cash_rebalance_dates": "2024-10-08",
+  "startup_gap_status": "research_pit_window_gap",
+  "dividend_status": "passed",
+  "pm_decision": "archive_in_v5_do_not_promote_to_observation_or_engineering_next_layer",
+  "allowed_next_action": "only_restart_with_new_research_hypothesis_and_repaired_2021_PIT_contract",
+  "blocked_action": "modify_V57f_or_start_platform_replication_or_tune_food_beverage_returns"
+}

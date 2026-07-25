@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "project": "v5_scope_closeout",
+  "experiment_layer": "pm_scope_boundary",
+  "status": "v5_scope_closed_local_engineering_to_2026_05_31",
+  "as_of_date": "2026-07-25",
+  "scope_end_date": "2026-05-31",
+  "scope_rule": "V5 local engineering and JoinQuant-aligned backtest evidence ends at 2026-05-31. Future/paper signals are outside V5 scope.",
+  "candidate_count": 8,
+  "core_promotion_allowed_count": 0,
+  "platform_replication_allowed_count": 0,
+  "food_beverage_pm_decision": "archive_in_v5_do_not_promote_to_observation_or_engineering_next_layer",
+  "outputs": {
+    "flow_table_csv": "v5_scope_closeout\\current\\v5_scope_boundary_flow_table.csv",
+    "final_status_csv": "v5_scope_closeout\\current\\v5_final_candidate_status.csv",
+    "food_decision_csv": "v5_scope_closeout\\current\\food_beverage_pm_tradability_decision.csv",
+    "food_decision_json": "v5_scope_closeout\\current\\food_beverage_pm_tradability_decision.json",
+    "next_queue_csv": "v5_scope_closeout\\current\\v5_scope_next_queue.csv",
+    "report_md": "v5_scope_closeout\\current\\v5_scope_closeout_report.md"
+  },
+  "inputs": {
+    "all_candidates_csv": "sector_extension_all_candidates_v5\\current\\all_candidates_status_matrix.csv",
+    "v57f_summary": "local_daily_backtests_v57f_etf\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\summary.json",
+    "food_review_json": "food_beverage_engineering_reviews_v5\\current\\food_beverage_engineering_review_summary.json"
+  },
+  "pm_rules": [
+    "Do not wait for or generate a 2026-10 signal inside V5.",
+    "Do not add observation sleeves to frozen V57f from this closeout.",
+    "Do not tune historical 2021-2026 results.",
+    "Food/beverage is adjudicated by tradability, PIT coverage, drawdown and contribution quality, not by a single skipped order."
+  ],
+  "created_at_utc": "2026-07-25T03:48:37+00:00"
+}

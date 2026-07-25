@@ -90,6 +90,14 @@ from v5.sector_extension_all_candidates_runner import (
     DEFAULT_PROMOTION_QUEUE as DEFAULT_SECTOR_EXTENSION_ALL_PROMOTION_QUEUE,
     summarize_sector_extension_all_candidates,
 )
+from v5.v5_scope_closeout_runner import (
+    DEFAULT_ALL_CANDIDATES as DEFAULT_V5_SCOPE_CLOSEOUT_ALL_CANDIDATES,
+    DEFAULT_FOOD_REVIEW as DEFAULT_V5_SCOPE_CLOSEOUT_FOOD_REVIEW,
+    DEFAULT_OUT_DIR as DEFAULT_V5_SCOPE_CLOSEOUT_OUT,
+    DEFAULT_SCOPE_END_DATE as DEFAULT_V5_SCOPE_CLOSEOUT_SCOPE_END_DATE,
+    DEFAULT_V57F_SUMMARY as DEFAULT_V5_SCOPE_CLOSEOUT_V57F_SUMMARY,
+    build_v5_scope_closeout_packet,
+)
 from v5.sector_replication_roadmap_runner import (
     DEFAULT_CONFIG as DEFAULT_V58_REPLICATION_ROADMAP_CONFIG,
     DEFAULT_OUT_DIR as DEFAULT_V58_REPLICATION_ROADMAP_OUT,
@@ -958,6 +966,15 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     sector_extension_all_parser.add_argument("--as-of-date", default="2026-07-24")
     sector_extension_all_parser.set_defaults(handler=_handle_summarize_sector_extension_all_candidates)
 
+    v5_scope_closeout_parser = subparsers.add_parser("build-v5-scope-closeout")
+    v5_scope_closeout_parser.add_argument("--all-candidates", type=Path, default=DEFAULT_V5_SCOPE_CLOSEOUT_ALL_CANDIDATES)
+    v5_scope_closeout_parser.add_argument("--v57f-summary", type=Path, default=DEFAULT_V5_SCOPE_CLOSEOUT_V57F_SUMMARY)
+    v5_scope_closeout_parser.add_argument("--food-review", type=Path, default=DEFAULT_V5_SCOPE_CLOSEOUT_FOOD_REVIEW)
+    v5_scope_closeout_parser.add_argument("--out", type=Path, default=DEFAULT_V5_SCOPE_CLOSEOUT_OUT)
+    v5_scope_closeout_parser.add_argument("--scope-end-date", default=DEFAULT_V5_SCOPE_CLOSEOUT_SCOPE_END_DATE)
+    v5_scope_closeout_parser.add_argument("--as-of-date", default="2026-07-25")
+    v5_scope_closeout_parser.set_defaults(handler=_handle_build_v5_scope_closeout)
+
 
 def _handle_collect_similar_sector_pit_panel(args: argparse.Namespace) -> int:
     print(
@@ -1728,6 +1745,20 @@ def _handle_summarize_sector_extension_all_candidates(args: argparse.Namespace) 
         summarize_sector_extension_all_candidates(
             promotion_queue=args.promotion_queue,
             out_dir=args.out,
+            as_of_date=args.as_of_date,
+        )
+    )
+    return 0
+
+
+def _handle_build_v5_scope_closeout(args: argparse.Namespace) -> int:
+    print(
+        build_v5_scope_closeout_packet(
+            all_candidates_csv=args.all_candidates,
+            v57f_summary=args.v57f_summary,
+            food_review_json=args.food_review,
+            out_dir=args.out,
+            scope_end_date=args.scope_end_date,
             as_of_date=args.as_of_date,
         )
     )

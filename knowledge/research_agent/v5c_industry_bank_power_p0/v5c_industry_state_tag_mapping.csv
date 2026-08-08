@@ -1,0 +1,12 @@
+﻿state_tag,industry,definition,allowed_role,can_trigger_trade,can_modify_weight,requires_pm_review
+bank_nim_pressure_watch,bank,NIM/deposit/loan repricing state suggests margin pressure.,pm_review_only,False,False,True
+bank_asset_quality_deterioration_watch,bank,Asset quality or provision state weakens dividend/valuation confidence.,pm_review_only,False,False,True
+bank_capital_buffer_weak_watch,bank,Capital buffer looks thin relative to growth/dividend pressure.,pm_review_only,False,False,True
+bank_dividend_sustainability_support,bank,"Dividend appears supported by payout, capital and earnings quality evidence.",support_context_only,False,False,False
+bank_valuation_roe_mismatch_watch,bank,Low PB/high yield not matched by stable ROE or quality evidence.,watchlist_context_only,False,False,True
+power_demand_strength_support,utilities_electricity,Electricity demand state supports sector context.,support_context_only,False,False,False
+power_fuel_cost_pressure_watch,utilities_electricity,Fuel cost regime may pressure thermal power margin.,pm_review_only,False,False,True
+power_tariff_support_watch,utilities_electricity,Tariff/capacity-payment state may support earnings.,support_context_only,False,False,True
+hydro_water_stress_watch,utilities_electricity,Water condition may pressure hydropower output.,pm_review_only,False,False,True
+power_capex_debt_pressure_watch,utilities_electricity,Capex/debt/cash-flow state needs subindustry review.,pm_review_only,False,False,True
+renewable_subsidy_cashflow_watch,utilities_electricity,Subsidy/receivable state may affect cash flow quality.,pm_review_only,False,False,True

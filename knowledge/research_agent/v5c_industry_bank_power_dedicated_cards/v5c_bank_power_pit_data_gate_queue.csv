@@ -1,0 +1,6 @@
+﻿priority,industry,task,detail,status
+P1,bank,bank_nim_asset_quality_capital_panel,"Build PIT panel for NIM, NPL, special mention, provision coverage, CET1/tier1/CAR by report visible date.",ready
+P1,bank,bank_dividend_sustainability_panel,"Link cash dividend, payout ratio, retained earnings and capital pressure; no threshold from book notes.",ready
+P1,utilities_electricity,power_coal_tariff_capacity_panel,"Collect coal/fuel spread, capacity payment policy, marketized tariff and eligible capacity by visible date.",ready
+P1,utilities_electricity,power_utilization_and_water_panel,"Collect utilization hours by power type, hydro inflow/reservoir and curtailment state.",ready
+P2,bank;utilities_electricity,dedicated_pdf_original_review,"If FXBAOGAO key is available later, PDF-review bank and power report leads before promoting any B card.",blocked_fx_api_key_missing

@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "project": "v5c_defense_profit_taking_knowledge_base",
+  "as_of_date": "2026-08-01",
+  "status": "completed_with_core_weread_book_notes_and_governance_report",
+  "scope": {
+    "v57f_modified": false,
+    "joinquant_started": false,
+    "backtest_started": false,
+    "parameter_tuning_started": false,
+    "network_or_external_api_called": true,
+    "external_api_scope": "fxbaogao_search_only",
+    "new_industry_expansion_started": false
+  },
+  "covered_themes": [
+    "portfolio_defense",
+    "profit_taking_peak_trimming",
+    "rebalancing",
+    "cash_management",
+    "dividend_low_vol_special_risks",
+    "behavioral_finance_and_discipline",
+    "PIT_safe_hypothesis_conversion"
+  ],
+  "source_status": {
+    "local_project_governance": "used",
+    "academic_frameworks": "recorded_with_public_links_needs_primary_verification",
+    "books_or_weread": "36_paraphrased_weread_c_level_cards_ingested_source_cleaned",
+    "xueqiu_or_blogs": "partially_collected_as_D_level_hypothesis_sources",
+    "fxbaogao": "pdf_original_review_completed_ab_cards_created_research_only",
+    "public_official_web": "not_collected_no_network",
+    "public_secondary_rebalancing_article": "collected_as_B_level_source_lead"
+  },
+  "file_outputs": [
+    "00_research_boundary.md",
+    "01_source_search_matrix.csv",
+    "02_source_register.csv",
+    "03_fact_cards.csv",
+    "04_theory_cards.csv",
+    "05_practitioner_view_cards.csv",
+    "06_v5c_overlay_hypothesis_library.csv",
+    "07_pit_data_requirement_matrix.csv",
+    "08_rejected_or_unsafe_ideas.md",
+    "09_v5c_research_framework.md",
+    "10_v5c_quant_handoff_packet.md",
+    "11_weread_manual_book_request.md",
+    "12_fxbaogao_api_blocker_and_collection_plan.md",
+    "13_fxbaogao_two_stage_retrieval_policy.md",
+    "v5c_knowledge_base_summary.json",
+    "seed_report_search_plan.csv",
+    "seed_report_candidates.csv",
+    "seed_report_filter_results.csv",
+    "seed_report_paragraph_pdf_results.csv",
+    "fxbaogao_retrieval_blocker_or_pass_report.md",
+    "14_pdf_review_plan.csv",
+    "15_pdf_review_results.csv",
+    "16_ab_evidence_cards.csv",
+    "17_rejected_pdf_sources.csv",
+    "18_v5c_overlay_hypothesis_update.csv",
+    "19_pdf_review_summary.md",
+    "20_weread_exporter_ingestion_policy.md",
+    "21_weread_book_note_card_template.csv",
+    "22_weread_ingestion_status.csv",
+    "23_weread_book_note_cards.csv",
+    "24_weread_core_book_note_cards.csv",
+    "25_weread_core_ingestion_report.md"
+  ],
+  "hypotheses_ready_for_next_design_stage": [
+    "V5C_H01",
+    "V5C_H02",
+    "V5C_H03",
+    "V5C_H04",
+    "V5C_H06",
+    "V5C_H07",
+    "V5C_H08",
+    "V5C_H09"
+  ],
+  "blocked_or_deferred_sources": [
+    {
+      "source": "fxbaogao",
+      "reason": "Seed-report driven fxbaogao retrieval completed, but strict local title filter accepted zero reports.",
+      "next_needed": "Wait for API-provider advanced filtering confirmation or provide manual seed report IDs; do not force noisy results into knowledge cards."
+    },
+    {
+      "source": "WeChat Reading",
+      "reason": "Core selected WeRead notes have been ingested as paraphrased C-level cards; raw full-book exports remain private/ignored.",
+      "next_needed": "Only continue selected-chapter ingestion if needed; book notes do not replace PIT financial/valuation/crowding data gates."
+    },
+    {
+      "source": "Xueqiu/blogs",
+      "reason": "Some public Xueqiu sources were collected, but D-level material remains hypothesis-only",
+      "next_needed": "User can provide additional dated links if specific practitioners should be included"
+    },
+    {
+      "source": "public official web",
+      "reason": "No external web collection performed in this task",
+      "next_needed": "Allow public source collection if needed"
+    }
+  ],
+  "pm_decision": "V5c may proceed to Research Agent hypothesis refinement using PDF-checked A/B cards, but Quant validation remains blocked until a separate V5c quant stage is opened.",
+  "fxbaogao_two_stage_status": {
+    "policy": "Broad keyword results cannot be directly written into knowledge cards before API advanced filtering is confirmed.",
+    "stage1_output_dir": "research_reports/fxbaogao_v5c_two_stage_filtered",
+    "accepted_counts": {
+      "A_dividend_low_vol_drawdown_control": 0,
+      "B_high_dividend_profit_taking_defense_crowding": 0,
+      "C_rebalancing_risk_budget_vol_target": 0,
+      "D_low_vol_strategy_risk_management": 0
+    },
+    "interpretation": "Initial fxbaogao V5c batches remain noisy source-lead archives only."
+  },
+  "fxbaogao_seed_report_retrieval_status": {
+    "policy": "Seed-report driven retrieval only; no broad keyword knowledge ingestion.",
+    "seed_count": 10,
+    "raw_candidate_rows": 200,
+    "unique_candidate_keys": 187,
+    "stage1_title_accepted_count": 54,
+    "stage2_paragraph_pass_count": 41,
+    "pdf_downloaded_count": 41,
+    "api_error_count": 0,
+    "blocker_count": 0,
+    "final_status": "pass_source_leads_downloaded_pdf_review_required_before_cards",
+    "output_dir": "knowledge/research_agent/v5c_defense_profit_taking",
+    "raw_archive_dir": "research_reports/fxbaogao_v5c_seed_report_retrieval",
+    "knowledge_card_policy": "No fxbaogao seed-search output may become A/B knowledge cards before Stage 1 + paragraph + PDF original review passes."
+  },
+  "fxbaogao_pdf_review_status": {
+    "reviewed_pdf_lead_rows": 41,
+    "reviewed_unique_pdf_reports": 38,
+    "ab_evidence_card_count": 15,
+    "accepted_report_count": 10,
+    "rejected_report_count": 28,
+    "hypothesis_update_count": 6,
+    "v57f_modified": false,
+    "backtest_started": false,
+    "joinquant_started": false,
+    "parameter_tuning_started": false,
+    "blocking_status": "no_blocker",
+    "note": "PDF source leads were reviewed conservatively; accepted cards remain research evidence only."
+  },
+  "weread_core_ingestion_status": {
+    "total_weread_paraphrased_cards": 36,
+    "core_cards_added_this_round": 29,
+    "core_books_with_cards": 10,
+    "source_register_cleaned": true,
+    "raw_full_book_ingested": false,
+    "evidence_grade": "C",
+    "allowed_use": "theory_framework_governance_hypothesis_only",
+    "blocked_use": "thresholds_accepted_status_pit_facts_live_approval",
+    "failed_or_deferred": [
+      "看透银行：投资银行股从入门到精通 selected chapters empty_or_unresolved",
+      "漫步华尔街（原书第13版） 第12章 chapter_not_resolved"
+    ]
+  }
+}

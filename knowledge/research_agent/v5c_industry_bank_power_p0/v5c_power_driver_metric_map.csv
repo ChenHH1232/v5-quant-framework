@@ -1,0 +1,8 @@
+﻿industry,driver,metric_or_observation,proposed_state_tag,source_or_panel,coverage_status,can_trigger_trade,can_change_weight
+utilities_electricity,electricity_demand,"electricity consumption yoy, secondary industry power yoy",power_demand_strength_or_weakness,V51 utilities external state panel,available_PIT_conservative_proxy,False,False
+utilities_electricity,fuel_cost_pressure,"thermal coal price, power coal consumption, coal power spread",power_fuel_cost_pressure_watch,coal price data; NEA/NBS/company reports,P0_gap,False,False
+utilities_electricity,tariff_and_capacity_payment,"marketized tariff, benchmark tariff, capacity payment, ancillary services",power_tariff_support_or_policy_watch,policy documents; broker reports; company filings,P0_gap,False,False
+utilities_electricity,utilization_hours,thermal/hydro/nuclear utilization hours and generation mix,power_utilization_state,NEA releases; company reports,sparse_available,False,False
+utilities_electricity,hydro_water_condition,"inflow, reservoir, hydropower utilization and regional rainfall",hydro_water_stress_or_support,hydrology/public reports; company filings,P0_gap,False,False
+utilities_electricity,capex_debt_cashflow,"capex intensity, debt ratio, interest burden, operating cash flow",power_capex_debt_pressure_watch,PIT financial panel; company reports,needs_subindustry_context,False,False
+utilities_electricity,renewable_subsidy_receivables,"subsidy receivables, collection cycle, impairment risk",renewable_subsidy_cashflow_watch,company reports; policy documents,manual_review_required,False,False

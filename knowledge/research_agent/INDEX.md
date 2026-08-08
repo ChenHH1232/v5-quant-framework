@@ -45,6 +45,8 @@
 - [V5a.2 theory source register](references/v5a.2_theory_source_register.csv) - academic, research-report and manual-reading sources for value, momentum, mean reversion, quality and low-volatility theory.
 - [V5a.2 ETF / index holdings source register](references/v5a.2_etf_holdings_source_register.csv) - official ETF/index methodology and holdings-snapshot sources for dividend low-volatility and FCF "copy homework".
 - [V5a.9 cement cycle-state source register](references/v5a9_cement_cycle_state_source_register.csv) - fxbaogao report-search and public macro proxy sources for cement cycle-state diagnostics; not formal factor evidence.
+- [V5c defense / profit-taking WeRead knowledge packet](v5c_defense_profit_taking/25_weread_core_ingestion_report.md) - 36 paraphrased C-level book-note cards for governance, rebalancing, behavior, risk and backtest discipline; no thresholds or accepted-status evidence.
+- [V5i technical-analysis sell-execution knowledge packet](v5i_technical_analysis_sell_execution/00_research_boundary.md) - evidence cards and PIT constraints for technical features used only to study the timing and quality of already-scheduled sells; not a standalone sell strategy or an accepted rule.
 
 ## Factor Theory
 
@@ -69,6 +71,7 @@
 - [Building materials / cement cash-flow cycle framework](factor_theory/building_materials_cement_cashflow_cycle_framework_v5a4.md) - cement is a cycle-aware cash-flow candidate; OCF/FCF require price, demand, capacity and energy-cost state gates.
 - [Pharma / medical services cash-flow framework](factor_theory/pharma_cashflow_framework.md) - pharma is a specialist lane; R&D, procurement and policy-state gates must pass before Quant validation.
 - [V5a.2 value, momentum and mean-reversion framework](factor_theory/v5a.2_value_momentum_mean_reversion_framework.md) - cross-sector theory layer for the enhanced dividend low-volatility and OCF/FCF ETF roadmap.
+- [V5e daily momentum exit diagnostic brief](factor_theory/v5e_daily_momentum_exit_diagnostic_brief.md) - V5e-specific boundary for daily momentum as holding-pool exit/late-sell diagnostic, not full-market stock selection.
 - [V5a.2 dividend low-volatility and FCF ETF lessons](factor_theory/v5a.2_dividend_low_vol_fcf_etf_holdings_lessons.md) - ETF/index methodology and holdings lessons for Research Agent sector priors.
 
 ## Strategy Cases

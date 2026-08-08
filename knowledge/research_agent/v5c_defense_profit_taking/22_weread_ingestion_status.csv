@@ -1,0 +1,7 @@
+﻿item,status,detail,next_action
+tool_route,recorded,lbq110/weread-exporter added as optional private local export route.,"User may run export for authorized books, then provide or allow derived note-card ingestion."
+raw_export_policy,defined,"Raw full-book outputs must stay outside committed knowledge base, preferably under ignored research_reports/weread_private_raw/.","Do not commit raw Markdown, images, JSON, cookies or browser profile."
+knowledge_card_template,created,21_weread_book_note_card_template.csv defines the allowed card fields.,Populate only paraphrased notes and short compliant excerpts.
+source_register,per_book_source_ids_cleaned,Per-book WeRead source rows are registered for all 36 paraphrased cards; no SRC_WEREAD_BOOK_MISC aggregate remains.,Use per-book source IDs when citing C-level theory cards.
+book_notes,core_collection_ingested_and_validated,36 total paraphrased WeRead C-level note cards are present; 29 core cards were source-cleaned and text-repaired.,Use these only as theory/governance cards; continue PIT data gates for quant validation.
+quant_impact,none,Book notes remain C-level theory evidence only.,PIT data gates remain required for any Quant validation.

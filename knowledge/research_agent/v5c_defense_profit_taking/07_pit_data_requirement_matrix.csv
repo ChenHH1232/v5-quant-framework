@@ -1,0 +1,15 @@
+data_id,related_hypothesis,field_name,source_needed,visible_date_rule,frequency,can_use_current_backfill,quality_checks,blocked_if_missing
+PIT_001,V5C_H01,V57f_portfolio_NAV,local V57f daily portfolio value,"Use only NAV known after prior close or execution policy date.",daily,no,"No future NAV; align decision/execute dates.",yes
+PIT_002,V5C_H01,V57f_prior_peak_NAV,derived from PIT_001,"Peak computed only from prior visible NAV history.",daily,no,"Expanding calculation; no full-sample peak.",yes
+PIT_003,V5C_H02,broad_index_close,official/index vendor data,"Close price visible only after market close; next-day execution if needed.",daily,no,"Calendar alignment; no future constituent data.",yes
+PIT_004,V5C_H02,broad_index_trend_state,derived from PIT_003,"Trend window uses only past index closes.",daily/no_more_than_daily,no,"Window pre-registered; no parameter sweep.",yes
+PIT_005,V5C_H03,realized_portfolio_volatility,derived from V57f returns,"Rolling window uses only prior returns.",daily,no,"Annualization fixed; missing data policy.",yes
+PIT_006,V5C_H04,sleeve_weights,local holdings / sleeve NAV,"Weights computed from current observable portfolio values.",rebalance_or_daily,no,"Sleeve mapping frozen; no new sleeve.",yes
+PIT_007,V5C_H04,transaction_cost_model,local engineering cost policy,"Cost assumptions fixed before validation.",static,no,"Commission, lot size, cash handling documented.",yes
+PIT_008,V5C_H06,cash_dividend,company announcement / JQ/DataJQ / reviewed source,"Use ex-date/pay-date/announcement-date and visible date.",event,no,"Tax policy, event coverage, original announcement checked.",yes
+PIT_009,V5C_H06,operating_cash_flow,financial statements / JQ/DataJQ / reviewed source,"Use report announcement and visible date.",quarterly/annual,no,"No restated future values unless visible-date corrected.",yes
+PIT_010,V5C_H06,payout_ratio,derived financial data,"Inputs must both be PIT visible.",quarterly/annual,no,"Outlier and missing-data policy.",yes
+PIT_011,V5C_H07,portfolio_or_sleeve_valuation,financial/market data source,"Valuation must be known as of decision date.",daily_or_rebalance,no,"Expanding percentile only.",yes
+PIT_012,V5C_H08,recovery_state,derived from approved risk state,"Recovery rule uses only prior visible data.",daily_or_rebalance,no,"No manual recovery date.",yes
+PIT_013,V5C_H10,cash_weight,local execution ledger,"Cash known after execution and valuation policy.",daily,no,"Separate intentional defense cash from failed-order cash.",yes
+PIT_014,V5C_H10,conservative_asset_return,approved future source only,"Only if PM approves non-cash conservative asset.",daily,no,"Benchmark treatment pre-declared.",yes

@@ -1,0 +1,6 @@
+﻿action,blocked,reason
+use_book_card_as_numeric_threshold,True,Books provide framework language only.
+trade_or_reweight_from_industry_card,True,Current package is observation/data-gate only.
+promote_report_lead_without_pdf_review,True,B-grade reports require original review before evidence upgrade.
+change_v57f_or_v5f_core,True,Industry knowledge cannot modify repaired baseline or V5f primary.
+accepted_or_live_approved,True,No accepted/live status from knowledge collection.

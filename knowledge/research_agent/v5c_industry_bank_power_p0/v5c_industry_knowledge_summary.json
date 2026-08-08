@@ -1,0 +1,24 @@
+{
+  "created_at_utc": "2026-08-01T13:11:54+00:00",
+  "task": "v5c_industry_knowledge_base_bank_power_p0",
+  "status": "completed_p0_industry_knowledge_base",
+  "industry_scope": [
+    "bank",
+    "utilities_electricity"
+  ],
+  "source_count": 9,
+  "knowledge_card_count": 9,
+  "bank_driver_count": 6,
+  "power_driver_count": 7,
+  "state_tag_count": 11,
+  "pit_requirement_count": 11,
+  "knowledge_base_path": "knowledge\\research_agent\\v5c_industry_bank_power_p0",
+  "v5c_role": "industry_state_explanation_and_pm_review_only",
+  "can_change_weights": false,
+  "can_trigger_trade": false,
+  "accepted": false,
+  "live_trading_approved": false,
+  "v57f_core_modified": false,
+  "dedicated_bank_power_book_gap": true,
+  "pm_gate_decision": "admit_bank_power_industry_knowledge_to_v5c_observation_layer_only"
+}

@@ -1,0 +1,12 @@
+﻿industry,data_requirement,preferred_source,v5c_use,status,pit_visible_date_required
+bank,bank_regulatory_definitions,Basel/NFRA/PBOC official definitions,definition anchor,P0_ready_manual_register,True
+bank,NIM_and_deposit_cost_panel,annual/interim reports or verified data vendor with notice_date,PIT company metric,P1_required,True
+bank,asset_quality_panel,"NPL, special mention, provision coverage with announcement visible date",PIT company metric,P1_required,True
+bank,capital_adequacy_panel,CET1/tier1/capital adequacy and RWA growth,PIT company metric,P1_required,True
+bank,dividend_sustainability_panel,"cash dividend, payout ratio, retained earnings, OCF where relevant",PIT company metric,partially_ready,True
+utilities_electricity,electricity_demand_panel,V51 external state panel,PIT state variable,P0_ready,True
+utilities_electricity,coal_price_and_fuel_cost_panel,coal price/fuel spread with visible dates,PIT state variable,P1_required,True
+utilities_electricity,tariff_capacity_policy_panel,policy/report dates for tariffs and capacity payment,PIT state variable,P1_required,True
+utilities_electricity,utilization_hours_panel,NEA/company data by power type,PIT state variable,partial_sparse,True
+utilities_electricity,hydro_water_condition_panel,hydrology/rainfall/reservoir state with visible dates,PIT state variable,P1_required,True
+utilities_electricity,capex_debt_cashflow_panel,company financial PIT fields by subindustry,PIT company metric,partially_ready,True

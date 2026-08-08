@@ -1,0 +1,7 @@
+﻿industry,driver,metric_or_observation,proposed_state_tag,source_or_panel,coverage_status,can_trigger_trade,can_change_weight
+bank,net_interest_margin_pressure,"NIM, deposit cost, loan repricing, LPR/rate state",bank_nim_pressure_watch,company reports; PBOC rate/LPR materials; bank PIT panel,needs_PIT_panel_expansion,False,False
+bank,asset_quality_cycle,"NPL ratio, special mention loans, overdue loans, provision coverage",bank_asset_quality_deterioration_watch,annual/interim reports; NFRA/PBOC context,needs_company_level_review,False,False
+bank,capital_buffer,"CET1, tier1, capital adequacy, RWA growth",bank_capital_buffer_weak_watch,annual/interim reports; Basel/NFRA definitions,needs_regulatory_definition_anchor,False,False
+bank,dividend_sustainability,"cash dividend, payout ratio, retained earnings, capital pressure",bank_dividend_sustainability_support_or_watch,company dividend plans; cash dividend panel,partially_available_in_v5c_p1,False,False
+bank,valuation_profitability_alignment,"PB, ROE, ROA, dividend yield, earnings quality",bank_valuation_roe_mismatch_watch,startup repaired factor panels; financial PIT panels,available_partial,False,False
+bank,real_estate_and_local_debt_exposure,mortgage/developer/local platform exposure and impairment language,bank_credit_exposure_watch,annual reports; interim reports; PM review notes,manual_review_required,False,False

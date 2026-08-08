@@ -1,0 +1,6 @@
+﻿action,blocked,reason
+use_books_to_set_thresholds,True,Books are framework evidence only.
+use_report_title_as_evidence,True,Report leads need PDF/paragraph review.
+change_v5f_or_v57f_weights_from_industry_tags,True,Current P0 is observation only.
+trigger_trade_from_industry_state,True,Requires separate Quant spec and forward validation.
+mark_accepted_or_live_approved,True,Not allowed from knowledge-base work.

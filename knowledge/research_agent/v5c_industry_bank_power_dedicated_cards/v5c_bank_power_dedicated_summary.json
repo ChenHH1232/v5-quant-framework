@@ -1,0 +1,26 @@
+{
+  "created_at_utc": "2026-08-01T13:16:54+00:00",
+  "task": "v5c_bank_power_dedicated_book_card_collection",
+  "status": "completed_dedicated_book_report_card_collection",
+  "depends_on": "v5c_industry_knowledge_base_bank_power_p0\\current\\v5c_industry_knowledge_summary.json",
+  "industry_scope": [
+    "bank",
+    "utilities_electricity"
+  ],
+  "source_count": 10,
+  "bank_book_card_count": 5,
+  "power_book_card_count": 5,
+  "report_article_card_count": 6,
+  "metric_map_count": 10,
+  "pit_queue_count": 5,
+  "knowledge_base_path": "knowledge\\research_agent\\v5c_industry_bank_power_dedicated_cards",
+  "fxbaogao_api_key_present": false,
+  "v5c_role": "dedicated_industry_framework_and_data_gate_only",
+  "can_change_weights": false,
+  "can_trigger_trade": false,
+  "can_set_threshold": false,
+  "accepted": false,
+  "live_trading_approved": false,
+  "v57f_core_modified": false,
+  "pm_gate_decision": "admit_dedicated_bank_power_book_cards_to_v5c_observation_knowledge_base"
+}

@@ -1,0 +1,11 @@
+﻿source_id,industry,source_type,source_title,author_or_institution,source_link_or_location,evidence_grade,allowed_use,review_status,note
+BANK_BOOK_001,bank,book,商业银行经营学（第六版）,高等教育出版社产品信息；上海财经大学相关课程材料,https://xuanshu.hep.com.cn/front/book/findBookDetails?bookId=61310a1cadb85dae6a2f48e2,C,book_framework_only,reviewed_public_catalog_not_full_book,经营管理、资本监管、风险管理和银行业务框架；不用于量化阈值。
+BANK_BOOK_002,bank,book,商业银行经营管理学,上海财经大学出版社,https://www.sufep.com/e/action/ShowInfo.php?classid=26&id=16043,C,book_framework_only,public_catalog_lead,经营目标、安全性、流动性、盈利性和风险测量框架。
+BANK_OFFICIAL_001,bank,official_statistics,商业银行主要监管指标情况表,国家金融监督管理总局,https://www.nfra.gov.cn/cn/view/pages/ItemList.html?itemId=954&itemName=%E7%BB%9F%E8%AE%A1%E4%BF%A1%E6%81%AF&itemPId=953&itemUrl=ItemListRightList.html,A,pit_data_anchor,official_source_anchor,行业净息差、不良率、拨备覆盖率、资本充足率等监管口径源。
+BANK_REPORT_001,bank,industry_report,2026 年商业银行行业分析,联合资信,https://www.lhratings.com/file/g2a76d48524.pdf,B,report_context_and_metric_lead,pdf_available_public,行业 NIM、资产质量、资本缓冲、盈利压力的报告线索。
+BANK_REPORT_002,bank,industry_report,2024 年半年度中国银行业回顾与展望,普华永道中国,https://www.pwccn.com/zh/banking/banking-newsletter-2024-h1.pdf,B,report_context_only,pdf_available_public,上市银行息差、资本和拨备状态的行业背景材料。
+POWER_BOOK_001,utilities_electricity,book,电力系统经济学原理（原书第2版）,机械工业出版社,https://www.cmpedu.com/books/book/5606781.htm,C,book_framework_only,reviewed_public_catalog_not_full_book,电能量市场、辅助服务、容量补偿、容量市场和输电投资框架。
+POWER_BOOK_002,utilities_electricity,book,电力市场手册,European University Institute / public PDF,https://cadmus.eui.eu/bitstreams/26b97fa0-157e-5c88-95c3-b7a76279ac2c/download,C,book_framework_only,public_pdf_lead,电力市场改革、市场设计和价格机制框架。
+POWER_OFFICIAL_001,utilities_electricity,policy,关于建立煤电容量电价机制的通知,国家发展改革委 / 国家能源局,https://www.ndrc.gov.cn/xxgk/zcfb/tz/202311/t20231110_1361897.html,A,pit_policy_anchor,official_policy_reviewed,煤电容量电价、固定成本回收比例和月度结算机制。
+POWER_REPORT_001,utilities_electricity,industry_report,2026 年电力行业分析,联合资信,https://www.lhratings.com/file/g28a8f1c695.pdf,B,report_context_and_metric_lead,pdf_available_public,用电需求、装机、利用小时、燃料成本和电价机制背景。
+POWER_ARTICLE_001,utilities_electricity,official_media_article,电力市场化改革向纵深推进 两部制电价加快煤电功能转型,新华网,https://www.news.cn/fortune/20240715/8f900ade01224066a61c248eeeb10f37/c.html,B,policy_explanation_context,public_article_reviewed,容量电价对煤电盈利稳定性和电力市场建设的解释材料。

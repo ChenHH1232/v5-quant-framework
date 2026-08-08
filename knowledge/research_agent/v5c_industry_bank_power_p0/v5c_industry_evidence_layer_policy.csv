@@ -1,0 +1,6 @@
+﻿evidence_layer,grade,allowed_use,blocked_use
+official_or_regulatory,A,definition; PIT source anchor; state variable if dated,"none, but still no direct trading without Quant gate"
+validated_internal_findings,A/B,"V5c observation, PM review, data gate priority",accepted/live without forward evidence
+industry_research_report,B,hypothesis and state explanation after PDF review,raw title/search result as evidence
+book_framework,C,governance language and conceptual framing,numeric threshold; signal; accepted status
+market_article_or_blog,D,source lead only,fact evidence or trading rule

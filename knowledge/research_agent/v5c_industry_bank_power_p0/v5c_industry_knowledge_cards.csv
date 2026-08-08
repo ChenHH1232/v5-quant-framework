@@ -1,0 +1,10 @@
+﻿card_id,industry,source_id,theme,paraphrased_note,allowed_use,blocked_use,evidence_status
+BANK_KB_001,bank,LOCAL_BANK_SOP_001,bank_regulatory_definitions_first,银行行业状态标签必须先定义监管口径，再解释投资含义。核心字段包括资本充足率、核心一级资本、不良率、拨备覆盖率、净息差、分红和信用周期。,PM/Quant state definition,No trading trigger.,reviewed_p0_knowledge_card
+BANK_KB_002,bank,LOCAL_BANK_V5_REPORT_001,bank_quality_panel_pit_audit,银行质量字段方向是对的，但公司级 PIT、公告可见日和字段覆盖比单纯收益更重要。V5c 只能把它们作为状态解释和数据门，不能用旧样本直接升级规则。,Data gate and review queue,No accepted status.,reviewed_p0_knowledge_card
+BANK_KB_003,bank,WEREAD_CORE_001,margin_of_safety_and_bank_value,银行低 PB 和高股息只有在 ROE、资产质量、资本缓冲和分红可持续性同时可解释时，才更像安全边际；否则可能是价值陷阱。,State explanation,No numeric threshold from book notes.,reviewed_p0_knowledge_card
+BANK_KB_004,bank,WEREAD_CORE_001,behavioral_caution_for_high_dividend,高股息可能吸引拥挤交易，也可能只是价格下跌后的表观高息。V5c 应记录估值、成交额、分红质量和资产质量状态，而不是追逐高息叙事。,Crowding and PM review,No automatic buy/sell.,reviewed_p0_knowledge_card
+POWER_KB_001,utilities_electricity,LOCAL_POWER_STATE_001,power_demand_state_available,电力已有 PIT 可用的需求状态面板，覆盖用电量累计、同比、二产用电同比等，可支持需求强弱观察。,Forward state tag,Does not cover tariff/coal/water regime fully.,reviewed_p0_knowledge_card
+POWER_KB_002,utilities_electricity,LOCAL_POWER_RETRO_001,generic_composite_failed,电力行业中通用低估值、现金流、分红、低波组合规则反复输给简单 raw baseline，说明关键不是再加静态因子，而是补燃料成本、电价机制、利用小时、来水和政策状态。,Research direction,Do not keep testing generic composites.,reviewed_p0_knowledge_card
+POWER_KB_003,utilities_electricity,FX_POWER_LEAD_001,power_tariff_report_lead,电价提升、电力 ETF 配置价值等研报线索可进入报告复核队列，但未完成 PDF 逐段审阅前只能作为 source lead。,Report review queue,No evidence card until PDF-reviewed.,reviewed_p0_knowledge_card
+POWER_KB_004,utilities_electricity,WEREAD_CORE_001,capex_and_utility_risk,公用事业高 capex 和高杠杆可能是行业常态。V5c 需要区分维护性资本开支、扩张性资本开支、政策投资和现金回收周期。,State explanation,No mechanical penalty without industry state.,reviewed_p0_knowledge_card
+CROSS_KB_001,bank;utilities_electricity,WEREAD_CORE_001,process_discipline,书籍笔记支持流程纪律：知识只能帮助解释行业状态和设计数据门，不能把观点直接变成交易参数。,Governance,No direct rule.,reviewed_p0_knowledge_card

@@ -1,0 +1,34 @@
+﻿{
+  "schema_version": 1,
+  "packet_type": "checkpoint_packet",
+  "protocol_id": "agent_operating_protocol_v1",
+  "objective": "Harden V5b telecom operators specialist / capped sleeve governance policy",
+  "agent": "Project Manager Agent",
+  "experiment_layer": "pm_policy_gate",
+  "elapsed_timebox_minutes": null,
+  "artifacts_created": [
+    "agent_loop_packets_v5b/telecom_specialist_policy_pm_20260725/checkpoint_packet.md",
+    "agent_loop_packets_v5b/telecom_specialist_policy_pm_20260725/checkpoint_packet.json"
+  ],
+  "evidence_found": [
+    "Telecom operators may represent the full oligopoly industry universe, but the three-stock cross-section is insufficient for ordinary sleeve IC/RankIC validation. Governance should treat telecom as capped specialist observation or sidecar, not ordinary V57f core."
+  ],
+  "blockers": [],
+  "decision": "route_to_project_manager_policy_gate",
+  "next_owner": "Project Manager Agent",
+  "stop_rule_status": "pm_policy_prompt_created_no_user_decision_required",
+  "user_decision_required": false,
+  "user_decision_reason": "",
+  "allowed_next_action": "Project Manager Agent may create v5b_telecom_specialist_policy/current outputs and decide capped specialist observation versus parked status. Do not modify V57f or promote telecom to ordinary core.",
+  "blocked_actions": [
+    "modify_V57f",
+    "promote_telecom_to_ordinary_core_sleeve",
+    "use_historical_return_as_promotion_evidence",
+    "treat_three-stock_IC_RankIC_as_ordinary_cross_sectional_proof",
+    "use_current_ETF_holdings_to_backfill_history"
+  ],
+  "restart_condition": "Run this packet when Project Manager Agent is ready to adjudicate telecom specialist sleeve policy inside V5b.",
+  "skill_status_change": "none",
+  "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
+  "created_at_utc": "2026-07-25T11:55:00+00:00"
+}

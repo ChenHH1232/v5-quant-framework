@@ -1,0 +1,14 @@
+﻿field,required,description
+observation_date,True,date when state is observed
+industry,True,bank or utilities_electricity
+sleeve,True,V57f sleeve id
+code,False,optional stock code for company-level tag
+state_tag,True,tag from v5c_industry_state_tag_mapping
+metric_name,True,source metric behind tag
+metric_value,False,value if available
+visible_date,True,PIT visible date
+source_id,True,source register id
+evidence_grade,True,A/B/C/D
+allowed_role,True,"support_context_only, pm_review_only, diagnostic_only"
+changes_weight,True,must be false
+pm_review_required,True,true when tag is a watch state

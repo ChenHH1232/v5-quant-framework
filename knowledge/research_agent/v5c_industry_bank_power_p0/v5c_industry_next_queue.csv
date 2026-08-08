@@ -1,0 +1,5 @@
+﻿rank,next_task,status,detail
+1,v5c_bank_power_dedicated_book_card_collection,ready,Collect paraphrased notes from bank and power industry-analysis books; no full-book ingestion.
+2,v5c_bank_p1_nim_asset_quality_capital_panel,ready,Extend PIT company-level bank panel.
+3,v5c_power_p1_coal_tariff_hydro_state_panel,ready,Extend power state variables beyond demand.
+4,attach_bank_power_tags_to_v5f_forward_tracking,ready_after_P1,Tags remain observation only.

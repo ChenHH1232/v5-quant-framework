@@ -1,0 +1,5 @@
+﻿rank,next_task,status,detail
+1,v5c_bank_p1_nim_asset_quality_capital_panel,ready,Build PIT-visible bank company/industry state panel.
+2,v5c_power_p1_coal_tariff_hydro_state_panel,ready,Build PIT-visible power state panel beyond demand.
+3,attach_bank_power_industry_tags_to_v5f_forward_tracking,ready_after_P1,Observation tags only; no V5f primary change.
+4,fxbaogao_bank_power_pdf_review_refresh,blocked_until_api_key,FXBAOGAO_API_KEY missing in current shell.

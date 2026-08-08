@@ -1,0 +1,7 @@
+﻿rank,candidate_state_tag,industry,source_cards,next_step,status
+1,bank_nim_pressure_watch,bank,BANK_BOOK_CARD_001;BANK_REPORT_CARD_001,PIT panel only; no trade rule,ready_for_data_gate
+2,bank_asset_quality_deterioration_watch,bank,BANK_BOOK_CARD_002;BANK_REPORT_CARD_001,PIT panel only; no trade rule,ready_for_data_gate
+3,bank_capital_buffer_weak_watch,bank,BANK_BOOK_CARD_003,Company visible-date panel,ready_for_data_gate
+4,power_fuel_cost_pressure_watch,utilities_electricity,POWER_BOOK_CARD_002;POWER_REPORT_CARD_002,Coal/fuel spread panel,ready_for_data_gate
+5,power_tariff_support_watch,utilities_electricity,POWER_BOOK_CARD_001;POWER_BOOK_CARD_003;POWER_REPORT_CARD_001,Policy visible-date panel,ready_for_data_gate
+6,hydro_water_stress_watch,utilities_electricity,POWER_BOOK_CARD_005,Hydrology/state source audit,ready_for_data_gate

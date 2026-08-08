@@ -1,0 +1,6 @@
+﻿priority,industry,gap,next_action,status
+P0,bank,dedicated bank industry-analysis book cards missing,collect paraphrased notes from bank accounting/valuation books or official regulatory primers,open
+P0,utilities_electricity,dedicated power industry-analysis book cards missing,collect paraphrased notes from power market/power enterprise analysis books or policy primers,open
+P1,bank,"NIM, asset quality, capital adequacy PIT company panels incomplete",extend P1 financial quality panel,ready
+P1,utilities_electricity,coal/tariff/hydro state panels incomplete,build PIT state panels before any power overlay,ready
+P2,utilities_electricity,electricity ETF report lead not PDF-reviewed,review report PDF before promoting to evidence card,queued

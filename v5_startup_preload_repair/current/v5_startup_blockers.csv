@@ -1,0 +1,3 @@
+blocker_id,severity,path,description
+deployment_day_initial_signal_blocked,fatal,v5_startup_preload_repair\current\runs\v57f_repaired_constructor\basket_rebalance_signals.csv,Initial rebalance cannot be generated from current local files because required startup fields are unavailable on the first tradable date.
+missing_pre_deployment_warmup_prices,fatal,数据库\processed\bank_v3_joinquant_real_daily_prices.csv;数据库\processed\utilities_joinquant_real_daily_prices.csv;数据库\processed\highway_v54h_joinquant_real_daily_prices.csv;数据库\processed\port_rail_v55c_joinquant_real_daily_prices.csv,"Current local price files start at or after deployment first tradable date, so 120/252-day low-volatility factors cannot be computed for deployment day."

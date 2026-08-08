@@ -1,0 +1,8 @@
+﻿version_id,family,max_drawdown,peak_date,trough_date,delta_max_drawdown_pct_points_vs_repaired_baseline
+admission_suppression_mom12_bottom_cap75,admission_suppression,0.12106893665020968,2021-09-23,2021-11-05,0.17655291536216033
+dual_sleeve_mom12_60_40,dual_sleeve_allocation,0.13196832686730298,2021-09-23,2021-11-05,1.26649193707149
+dual_sleeve_mom12_80_20,dual_sleeve_allocation,0.12561455606482919,2021-09-23,2021-11-05,0.631114856824111
+internal_subsleeve_mom12_70_30,v57f_pool_internal_subsleeve,0.11881865312548434,2021-09-23,2021-11-05,-0.0484754371103735
+internal_subsleeve_mom12_80_20,v57f_pool_internal_subsleeve,0.1189771402889005,2021-09-23,2021-11-05,-0.032626720768758055
+state_routed_mom12_70_30_or_100_0,state_routed_budget,0.1282237658833566,2021-09-23,2021-11-05,0.8920358386768523
+v57f_startup_preload_repaired_baseline,baseline,0.11930340749658808,2021-09-23,2021-11-05,0.0

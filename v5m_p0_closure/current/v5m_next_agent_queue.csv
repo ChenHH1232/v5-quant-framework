@@ -1,0 +1,4 @@
+﻿priority,task,requires_user_artifact
+P0,locate_original_overlay_quantity_lot_cash_state,True
+P0,locate_original_qmt_contract_chain,True
+P1,future_paper_cycle_after_explicit_authorization,True

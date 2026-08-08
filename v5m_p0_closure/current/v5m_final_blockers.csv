@@ -1,0 +1,4 @@
+﻿blocker_id,detail
+strict_cash_state,Missing original quantity/lot/cash/priority/fill/corporate-action state prevents strict NAV.
+qmt_contract,Missing submitted QMT script/config/target/order/fill/position/cash chain prevents exact engine parity.
+historical_boundary,"Future targets, data, platform sessions, uploads and orders remain prohibited."

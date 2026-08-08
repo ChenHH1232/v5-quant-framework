@@ -1,0 +1,5 @@
+sector_id,required_lookback_days,warmup_buffer_days,available_prior_price_days,warmup_start_date,warmup_available,blocker
+bank,252,20,0,2021-05-06,False,insufficient_prior_price_days
+utilities_electricity,252,20,0,2021-05-06,False,insufficient_prior_price_days
+highway_infrastructure,252,20,0,2021-05-06,False,insufficient_prior_price_days
+port_rail_infrastructure,252,20,0,2021-05-06,False,insufficient_prior_price_days

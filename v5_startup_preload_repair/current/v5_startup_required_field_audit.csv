@@ -1,0 +1,5 @@
+sector_id,required_fields_first_all_pass_date,required_fields_first_candidate_date,dividend_yield_first_available_date,low_vol_score_first_available_date,max_drawdown_120d_first_available_date,volatility_120d_first_available_date
+bank,2022-01-04,2021-10-08,2014-01-02,2021-10-08,2021-10-08,2021-10-08
+utilities_electricity,2021-10-08,2021-10-08,2017-01-03,2021-10-08,2021-10-08,2021-10-08
+highway_infrastructure,2021-10-08,2021-10-08,2021-05-06,2021-10-08,2021-10-08,2021-10-08
+port_rail_infrastructure,2021-10-08,2021-10-08,2021-05-06,2021-10-08,2021-10-08,2021-10-08

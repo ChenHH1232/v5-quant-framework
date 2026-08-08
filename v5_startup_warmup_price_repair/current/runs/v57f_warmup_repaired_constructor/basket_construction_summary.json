@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "project": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f",
+  "experiment_layer": "research_pit_validation",
+  "created_at_utc": "2026-07-28T08:52:17+00:00",
+  "signal_count": 21,
+  "holding_count": 582,
+  "sector_holding_counts": {
+    "utilities_electricity": 147,
+    "port_rail_infrastructure": 147,
+    "highway_infrastructure": 141,
+    "bank": 147
+  },
+  "signals_path": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_constructor\\basket_rebalance_signals.csv",
+  "report_path": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_constructor\\basket_construction_report.md",
+  "startup_preload": {
+    "deployment_date": "2021-05-01",
+    "first_tradable_date": "2021-05-06",
+    "warmup_start_date": "2020-03-20",
+    "trade_start_date": "2021-05-06",
+    "required_lookback_days": 252,
+    "warmup_buffer_days": 20,
+    "initial_rebalance_event": "2021-05-06",
+    "warmup_available": true,
+    "startup_ready": true,
+    "first_signal_date": "2021-05-06",
+    "required_fields_first_pass_date": "2021-05-06",
+    "required_fields_first_candidate_date": "2021-05-06",
+    "factor_first_available_dates": {
+      "volatility_120d": "2021-05-06",
+      "max_drawdown_120d": "2021-05-06",
+      "low_vol_score": "2021-05-06",
+      "dividend_yield": "2021-05-06"
+    },
+    "startup_blocker": ""
+  },
+  "pm_rule": "This is a basket-construction shadow signal file. It is not a backtest, platform replication or accepted strategy."
+}

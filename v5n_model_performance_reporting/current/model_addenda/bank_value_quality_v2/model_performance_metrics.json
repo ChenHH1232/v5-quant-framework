@@ -1,0 +1,52 @@
+{
+  "canonical_model_id": "bank_value_quality_v2",
+  "report_status": "report_complete_validation_not_independent",
+  "metrics": {
+    "total_return_pct": 28.055091964999335,
+    "annualized_return_pct": 5.205657156227295,
+    "max_drawdown_pct": 17.0467812577062,
+    "annualized_volatility_pct": 16.009628564526967,
+    "sharpe_ratio": 0.39706957984563307,
+    "observations": 1228,
+    "start_date": "2021-05-06",
+    "end_date": "2026-05-29",
+    "benchmark_total_return_pct": 25.16129032258101,
+    "benchmark_annualized_return_pct": 4.713335456647205,
+    "benchmark_max_drawdown_pct": 27.27272727272715,
+    "benchmark_annualized_volatility_pct": 16.892725371868856,
+    "excess_return_pct_points": 2.8938016424183246,
+    "annualized_excess_return_pct": 0.3245689536960115,
+    "max_drawdown_delta_pct_points": -10.225946015020948,
+    "volatility_ratio": 0.9477232484456005,
+    "tracking_error_pct": 8.641938132686985,
+    "information_ratio": 0.037557426206092884,
+    "beta_zero_rf": 0.818233911029287,
+    "alpha_zero_rf_annualized_pct": 1.4210488075678938,
+    "benchmark_sharpe_ratio": 0.3570985380459063
+  },
+  "benchmark": {
+    "benchmark_id": "local_same_pool_or_embedded_benchmark",
+    "benchmark_name": "local same-pool / embedded benchmark",
+    "benchmark_type": "static_proxy_basket",
+    "primary_benchmark_statement": "primary_benchmark_is_market_exposure_proxy",
+    "economic_exposure_benchmark": "local_same_pool_or_embedded_benchmark",
+    "tradable": "proxy_not_directly_tradeable",
+    "price_data_path": "local_daily_backtests_v2_real_jq\\bank_value_quality_v2\\daily_returns.csv",
+    "data_source": "local_historical_daily_series",
+    "coverage_pct": 100.0,
+    "coverage_status": "coverage_pass",
+    "pit_future_information": "no_future_information_used",
+    "selection_basis": "embedded_existing_benchmark_not_return_selected"
+  },
+  "validation": {
+    "validation_window": "2021-05-01_to_2026-05-31",
+    "sample_size": "same_as_formal_backtest_if_series_eligible",
+    "validation_type": "historical_artifact_reuse",
+    "independent": false,
+    "overlaps_formal_backtest": true,
+    "validation_result": "validation_not_independent_or_overlapping"
+  },
+  "accepted": false,
+  "live_trading_approved": false,
+  "deployment_approved": false
+}

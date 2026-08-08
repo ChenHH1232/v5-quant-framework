@@ -1,0 +1,3 @@
+﻿priority,task,status
+P0,recover_original_cash_and_qmt_historical_contract_evidence,blocked_by_missing_original_artifacts
+P1,maintain_addenda_when_new_local_historical_evidence_is_archived,allowed_reporting_only

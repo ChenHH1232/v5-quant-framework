@@ -1,0 +1,9 @@
+﻿check_id,pass,detail
+deep_engineering_gate,True,promote_internal_subsleeve_70_30_to_v5f_candidate_not_accepted
+large_return_edge,True,11.432108727064394
+drawdown_non_worse,True,-0.0484754371103735
+yearly_win_rate_ok,True,0.6666666666666666
+rebalance_period_win_rate_ok,True,0.6190476190476191
+beats_current_equal_blend,True,10.046916585199872
+governance_clean,True,"selected pool only, sleeve preserved"
+not_accepted_or_live,True,not accepted/live

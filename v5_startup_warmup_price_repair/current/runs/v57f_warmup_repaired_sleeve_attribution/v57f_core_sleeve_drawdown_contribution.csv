@@ -1,0 +1,5 @@
+sleeve_id,drawdown_start,drawdown_end,pnl_contribution,share_of_interval_sleeve_pnl
+bank,2021-09-23,2021-11-05,-11610.938,0.05129353600991517
+utilities_electricity,2021-09-23,2021-11-05,-89617.5538,0.39590265859319973
+highway_infrastructure,2021-09-23,2021-11-05,-69398.2347,0.30657995509139696
+port_rail_infrastructure,2021-09-23,2021-11-05,-55735.8701,0.24622385030548816

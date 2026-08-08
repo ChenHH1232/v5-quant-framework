@@ -1,0 +1,51 @@
+{
+  "canonical_model_id": "v5b_non_core_sector_disposition",
+  "report_status": "performance_data_unavailable",
+  "metrics": {
+    "total_return_pct": "not_available",
+    "annualized_return_pct": "not_available",
+    "max_drawdown_pct": "not_available",
+    "annualized_volatility_pct": "not_available",
+    "sharpe_ratio": "not_available",
+    "observations": "not_available",
+    "start_date": "not_available",
+    "end_date": "not_available",
+    "benchmark_total_return_pct": "not_available",
+    "benchmark_annualized_return_pct": "not_available",
+    "benchmark_max_drawdown_pct": "not_available",
+    "benchmark_annualized_volatility_pct": "not_available",
+    "excess_return_pct_points": "not_available",
+    "annualized_excess_return_pct": "not_available",
+    "max_drawdown_delta_pct_points": "not_available",
+    "volatility_ratio": "not_available",
+    "tracking_error_pct": "not_available",
+    "information_ratio": "not_available",
+    "beta_zero_rf": "not_available",
+    "alpha_zero_rf_annualized_pct": "not_available"
+  },
+  "benchmark": {
+    "benchmark_id": "not_available",
+    "benchmark_name": "not_available",
+    "benchmark_type": "not_available",
+    "primary_benchmark_statement": "benchmark_data_unavailable",
+    "economic_exposure_benchmark": "not_available",
+    "tradable": "not_available",
+    "price_data_path": "not_available",
+    "data_source": "not_available",
+    "coverage_pct": 0.0,
+    "coverage_status": "benchmark_coverage_insufficient",
+    "pit_future_information": "not_assessed_without_eligible_series",
+    "selection_basis": "no_local_eligible_benchmark_series"
+  },
+  "validation": {
+    "validation_window": "not_available",
+    "sample_size": "not_available",
+    "validation_type": "not_available",
+    "independent": false,
+    "overlaps_formal_backtest": "not_available",
+    "validation_result": "daily_nav_unavailable"
+  },
+  "accepted": false,
+  "live_trading_approved": false,
+  "deployment_approved": false
+}

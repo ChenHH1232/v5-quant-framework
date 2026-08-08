@@ -1,0 +1,6 @@
+check_id,status,detail
+daily_sleeve_returns_complete,pass,All four core sleeve return columns are present.
+sleeve_mapping_auditable,pass,Mapping uses rebalance_signals sector_id plus carried position sector.
+aggregation_consistent_with_v57f,blocked,"{""max_abs_return_gap"": 0.005841397134556678, ""max_abs_value_gap"": 0.0}"
+drawdown_contribution_explainable,blocked,Official V57f drawdown interval can be decomposed by sleeve PnL.
+ready_for_fixed_rule_risk_budget_spec,blocked,Allowed next step is fixed-rule Quant spec only; no parameter search.

@@ -1,0 +1,52 @@
+{
+  "canonical_model_id": "gas_water_v57b_text_debt_state_guard_v59b",
+  "report_status": "report_complete_validation_not_independent",
+  "metrics": {
+    "total_return_pct": 33.29134592499954,
+    "annualized_return_pct": 6.074458716157394,
+    "max_drawdown_pct": 26.55291703499999,
+    "annualized_volatility_pct": 17.389732062533188,
+    "sharpe_ratio": 0.42616622344406646,
+    "observations": 1228,
+    "start_date": "2021-05-06",
+    "end_date": "2026-05-29",
+    "benchmark_total_return_pct": 32.69423389999997,
+    "benchmark_annualized_return_pct": 5.976770676966292,
+    "benchmark_max_drawdown_pct": 28.18884289524115,
+    "benchmark_annualized_volatility_pct": 21.743814266147574,
+    "excess_return_pct_points": 0.5971120249995678,
+    "annualized_excess_return_pct": -0.7695016635300717,
+    "max_drawdown_delta_pct_points": -1.6359258602411622,
+    "volatility_ratio": 0.7997553625909529,
+    "tracking_error_pct": 15.338088330268523,
+    "information_ratio": -0.05016933316334605,
+    "beta_zero_rf": 0.5710096833236812,
+    "alpha_zero_rf_annualized_pct": 2.739818489159598,
+    "benchmark_sharpe_ratio": 0.37621817419862413
+  },
+  "benchmark": {
+    "benchmark_id": "local_same_pool_or_embedded_benchmark",
+    "benchmark_name": "local same-pool / embedded benchmark",
+    "benchmark_type": "static_proxy_basket",
+    "primary_benchmark_statement": "primary_benchmark_is_market_exposure_proxy",
+    "economic_exposure_benchmark": "local_same_pool_or_embedded_benchmark",
+    "tradable": "proxy_not_directly_tradeable",
+    "price_data_path": "local_daily_backtests_v59b_gas_water_state_guard\\gas_water_v57b_text_debt_state_guard_v59b\\daily_returns.csv",
+    "data_source": "local_historical_daily_series",
+    "coverage_pct": 100.0,
+    "coverage_status": "coverage_pass",
+    "pit_future_information": "no_future_information_used",
+    "selection_basis": "embedded_existing_benchmark_not_return_selected"
+  },
+  "validation": {
+    "validation_window": "2021-05-01_to_2026-05-31",
+    "sample_size": "same_as_formal_backtest_if_series_eligible",
+    "validation_type": "historical_artifact_reuse",
+    "independent": false,
+    "overlaps_formal_backtest": true,
+    "validation_result": "validation_not_independent_or_overlapping"
+  },
+  "accepted": false,
+  "live_trading_approved": false,
+  "deployment_approved": false
+}

@@ -1,0 +1,4 @@
+﻿priority,task,allowed_now,market_data_after_20260531
+P0,recover_original_historical_overlay_position_lot_cash_state,True,False
+P1,archive_historical_platform_contract_artifacts,True,False
+P2,future_paper_cycle,False,True

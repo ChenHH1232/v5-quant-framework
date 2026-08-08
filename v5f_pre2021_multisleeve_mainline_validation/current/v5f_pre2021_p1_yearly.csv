@@ -1,0 +1,5 @@
+﻿version_id,year,period_return,trade_days,accepted,delta_return_pct_points_vs_pre2021_baseline
+internal_subsleeve_mom12_70_30,2019,-0.07833058741547538,186,False,0.0
+internal_subsleeve_mom12_70_30,2020,-0.11109266867661494,243,False,0.3036474606464834
+pre2021_repaired_multisleeve_equal_sleeve_baseline_proxy,2019,-0.07833058741547538,186,False,0.0
+pre2021_repaired_multisleeve_equal_sleeve_baseline_proxy,2020,-0.11412914328307977,243,False,0.0

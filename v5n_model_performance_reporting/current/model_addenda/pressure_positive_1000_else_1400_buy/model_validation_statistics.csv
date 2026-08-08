@@ -1,0 +1,2 @@
+﻿canonical_model_id,validation_window,sample_size,validation_type,independent,overlaps_formal_backtest,validation_result
+pressure_positive_1000_else_1400_buy,not_available,not_available,not_available,False,not_available,daily_nav_unavailable

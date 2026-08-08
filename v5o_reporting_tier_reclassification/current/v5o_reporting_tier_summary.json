@@ -1,0 +1,20 @@
+{
+  "created_at_utc": "2026-08-07T07:22:43+00:00",
+  "task": "v5o_reporting_tier_reclassification",
+  "total_units": 335,
+  "tier_counts": {
+    "tier_a1_comparable_parent_or_market_benchmark": 4,
+    "tier_a2_comparable_proxy_benchmark_limited": 32,
+    "tier_b1_evidence_only_no_comparable_daily_performance": 233,
+    "tier_b2_execution_or_engineering_only": 52,
+    "tier_c_archived_alias_or_superseded": 14,
+    "classification_conflict": 0
+  },
+  "comparable_canonical_strategy_units": 36,
+  "research_or_evidence_units": 299,
+  "independent_validation_count": 0,
+  "model_status_modified": false,
+  "accepted": false,
+  "live_trading_approved": false,
+  "deployment_approved": false
+}

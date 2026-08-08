@@ -1,0 +1,4 @@
+﻿component,path,use
+tiered_model_registry,v5o_reporting_tier_reclassification/current/v5o_model_tier_assignment.csv,model_scope
+benchmark_discovery,v5p_benchmark_selection_decisions.csv,benchmark_contract
+sequence_reports,reports/,research_order

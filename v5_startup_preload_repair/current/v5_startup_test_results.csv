@@ -1,0 +1,7 @@
+test_command,status,note
+python -m unittest tests.test_low_volatility_factor_runner,no_tests_ran,legacy file uses pytest-style functions; verified by pytest target instead
+python -m unittest tests.test_basket_constructor_runner,no_tests_ran,legacy file uses pytest-style functions; verified by pytest target instead
+python -m unittest tests.test_basket_daily_backtest_runner,no_tests_ran,legacy file uses pytest-style functions; verified by pytest target instead
+python -m unittest tests.test_v57f_execution_robustness_runner,no_tests_ran,legacy file uses pytest-style functions; verified by pytest target instead
+python -m unittest discover -s tests,pass,Ran 86 unittest-discovered tests OK
+pytest targeted startup/affected files,pass,14 passed covering low_vol constructor daily_backtest v57f robustness startup repair ERC and V5d L4 startup checks

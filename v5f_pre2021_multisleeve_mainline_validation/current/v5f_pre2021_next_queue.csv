@@ -1,0 +1,4 @@
+﻿priority,task_id,status,reason
+P0,continue_internal_subsleeve_mom12_70_30_forward_paper_tracking,ready,pre2021_mainline_positive_supports_v5f_forward_tracking_not_accepted
+P1,extend_pre2021_repaired_pool_beyond_2019_if_source_equivalent,optional,"current P1 is limited proxy, not full V57f-equivalent"
+P2,source_full_pre2021_5min_for_spike_only_if_needed,optional_blocked_by_data_value_tradeoff,spike line is observation only

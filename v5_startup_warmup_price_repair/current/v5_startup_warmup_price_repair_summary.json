@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "project": "v5_startup_warmup_price_repair",
+  "status": "startup_warmup_price_repair_completed",
+  "created_at_utc": "2026-07-28T08:52:20+00:00",
+  "deployment_model": {
+    "deployment_date": "2021-05-01",
+    "first_tradable_date": "2021-05-06",
+    "warmup_start_date_recommended": "2019-01-01",
+    "warmup_start_date_minimum": "2020-04-01",
+    "trade_start_date": "2021-05-06",
+    "initial_rebalance_event": "2021-05-06"
+  },
+  "local_warmup_data_found": true,
+  "repaired_price_files_generated": true,
+  "original_v57f_config_modified": false,
+  "v57f_core_logic_modified": false,
+  "joinquant_started": true,
+  "baostock_started": false,
+  "tushare_started": false,
+  "v5e_started": false,
+  "accepted_strategy_marked": false,
+  "pre_post": {
+    "old_first_signal_date": "2021-10-08",
+    "repaired_first_signal_date": "2021-05-06",
+    "old_first_trade_date": "2021-10-08",
+    "repaired_first_trade_date": "2021-05-06",
+    "old_first_position_date": "2021-10-08",
+    "repaired_first_position_date": "2021-05-06",
+    "startup_gap_days_old": 160,
+    "startup_gap_days_repaired": 5
+  },
+  "blocker_count": 0,
+  "primary_blocker": "",
+  "erc_l2_l3_l4_rerun_status": "erc_rerun_completed_l2_l3_l4_blocked_by_missing_initial_5min_data",
+  "next_gate": "pm_review_startup_repair_then_initial_minute_data_gate_or_v5e_decision",
+  "outputs": {
+    "summary": "v5_startup_warmup_price_repair\\current\\v5_startup_warmup_price_repair_summary.json",
+    "report": "v5_startup_warmup_price_repair\\current\\v5_startup_warmup_price_repair_report.md",
+    "blockers": "v5_startup_warmup_price_repair\\current\\v5_warmup_missing_price_blockers.csv",
+    "repaired_price_manifest": "v5_startup_warmup_price_repair\\current\\v5_warmup_repaired_price_manifest.csv",
+    "shadow_config": "config\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f_startup_repaired_shadow.json"
+  },
+  "v57f_repaired_execution_robustness_status": "completed",
+  "erc_repaired_overlay_status": "completed_diagnostic_not_accepted",
+  "v5d_initial_minute_data_status": "missing_initial_D0_D1_D2_5min_data"
+}

@@ -1,0 +1,8 @@
+﻿direction_id,family,rule,full_market_selection,accepted
+current_repaired_overlay_reference,reference,Existing repaired comparison candidate: momentum_plus_mean_reversion_equal_blend.,False,False
+internal_subsleeve_mom12_80_20,v57f_pool_internal_subsleeve,Within each sleeve: 80% original V57f weights + 20% same-sleeve mom12 top-tercile sleeve.,False,False
+internal_subsleeve_mom12_70_30,v57f_pool_internal_subsleeve,Within each sleeve: 70% original V57f weights + 30% same-sleeve mom12 top-tercile sleeve.,False,False
+dual_sleeve_mom12_80_20,dual_sleeve_allocation,80% repaired V57f value sleeve + 20% independent mom12 selected-pool sleeve.,False,False
+dual_sleeve_mom12_60_40,dual_sleeve_allocation,60% repaired V57f value sleeve + 40% independent mom12 selected-pool sleeve.,False,False
+state_routed_mom12_70_30_or_100_0,state_routed_budget,At rebalance: if repaired V57f trailing 60d NAV return is positive use 70/30 value/momentum; otherwise 100/0.,False,False
+admission_suppression_mom12_bottom_cap75,admission_suppression,Within each sleeve: bottom mom12 tercile capped to 75% of base weight; released weight redistributed to non-bottom names.,False,False

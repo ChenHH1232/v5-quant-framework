@@ -1,0 +1,2 @@
+strategy_or_component,old_first_signal_date,repaired_first_signal_date,old_first_trade_date,repaired_first_trade_date,old_first_position_date,repaired_first_position_date,startup_gap_days_old,startup_gap_days_repaired,v57f_core_logic_modified,note
+v57f_startup_warmup_price_repair_shadow,2021-10-08,2021-05-06,2021-10-08,2021-05-06,2021-10-08,2021-05-06,160,5,False,repaired startup signal generated from shadow config

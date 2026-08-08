@@ -1,0 +1,13 @@
+﻿sector_id,field,field_exists,pre2021_nonempty_rows,pre2021_nonempty_dates,field_status,usable_for_p1_mainline,accepted
+bank,low_vol_score,True,237,7,pass_pre2021,True,False
+bank,volatility_120d,True,237,7,pass_pre2021,True,False
+bank,dividend_yield,True,677,35,pass_pre2021,True,False
+utilities_electricity,low_vol_score,True,634,7,pass_pre2021,True,False
+utilities_electricity,volatility_120d,True,634,7,pass_pre2021,True,False
+utilities_electricity,dividend_yield,True,1410,16,pass_pre2021,True,False
+highway_infrastructure,low_vol_score,True,48,7,pass_pre2021,True,False
+highway_infrastructure,volatility_120d,True,48,7,pass_pre2021,True,False
+highway_infrastructure,dividend_yield,True,48,7,pass_pre2021,True,False
+port_rail_infrastructure,low_vol_score,True,78,7,pass_pre2021,True,False
+port_rail_infrastructure,volatility_120d,True,78,7,pass_pre2021,True,False
+port_rail_infrastructure,dividend_yield,True,78,7,pass_pre2021,True,False

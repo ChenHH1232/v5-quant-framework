@@ -1,0 +1,2 @@
+﻿pm_gate_decision,primary_candidate,candidate_promoted,delta_return_pct_points_vs_repaired_baseline,delta_max_drawdown_pct_points_vs_repaired_baseline,accepted,live_trading_approved,rationale
+promote_internal_subsleeve_70_30_to_forward_paper_candidate_not_accepted,internal_subsleeve_mom12_70_30,True,11.432108727064394,-0.0484754371103735,False,False,"Strong repaired-baseline improvement with clean governance; forward/paper only, not accepted."

@@ -1,0 +1,7 @@
+# Benchmark Selection: v5c_risk_budget_overlay_engineering_comparison
+
+- Primary: `v57f_startup_preload_repaired_baseline`
+- Type: `parent_strategy`
+- Basis: `parent_lineage_predefined`
+- Coverage: `100.0` (`coverage_pass`)
+- Future-information audit: `no_future_information_used`

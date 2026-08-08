@@ -1,0 +1,52 @@
+{
+  "canonical_model_id": "v57f_startup_preload_repaired_baseline",
+  "report_status": "report_complete_validation_not_independent",
+  "metrics": {
+    "total_return_pct": 109.2546259710054,
+    "annualized_return_pct": 16.36068902681651,
+    "max_drawdown_pct": 11.930340749658752,
+    "annualized_volatility_pct": 15.627727473639597,
+    "sharpe_ratio": 1.0481050073941274,
+    "observations": 1228,
+    "start_date": "2021-05-06",
+    "end_date": "2026-05-29",
+    "benchmark_total_return_pct": 109.2546259710054,
+    "benchmark_annualized_return_pct": 16.36068902681651,
+    "benchmark_max_drawdown_pct": 11.930340749658752,
+    "benchmark_annualized_volatility_pct": 15.627727473639597,
+    "excess_return_pct_points": 0.0,
+    "annualized_excess_return_pct": 0.0,
+    "max_drawdown_delta_pct_points": 0.0,
+    "volatility_ratio": 1.0,
+    "tracking_error_pct": 0.0,
+    "information_ratio": "not_available",
+    "beta_zero_rf": 1.0,
+    "alpha_zero_rf_annualized_pct": 0.0,
+    "benchmark_sharpe_ratio": 1.0481050073941274
+  },
+  "benchmark": {
+    "benchmark_id": "local_same_pool_or_embedded_benchmark",
+    "benchmark_name": "local same-pool / embedded benchmark",
+    "benchmark_type": "static_proxy_basket",
+    "primary_benchmark_statement": "primary_benchmark_is_market_exposure_proxy",
+    "economic_exposure_benchmark": "local_same_pool_or_embedded_benchmark",
+    "tradable": "proxy_not_directly_tradeable",
+    "price_data_path": "v5f_structural_rough_screen\\current\\v5f_structural_rough_screen_daily_returns.csv",
+    "data_source": "local_historical_daily_series",
+    "coverage_pct": 100.0,
+    "coverage_status": "coverage_pass",
+    "pit_future_information": "no_future_information_used",
+    "selection_basis": "embedded_existing_benchmark_not_return_selected"
+  },
+  "validation": {
+    "validation_window": "2021-05-01_to_2026-05-31",
+    "sample_size": "same_as_formal_backtest_if_series_eligible",
+    "validation_type": "historical_artifact_reuse",
+    "independent": false,
+    "overlaps_formal_backtest": true,
+    "validation_result": "validation_not_independent_or_overlapping"
+  },
+  "accepted": false,
+  "live_trading_approved": false,
+  "deployment_approved": false
+}

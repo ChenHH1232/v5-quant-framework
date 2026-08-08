@@ -1,0 +1,4 @@
+﻿requirement,why
+strict_cash_state,needed for strict cash NAV
+qmt_historical_contract,needed for target-order-fill-position-cash attribution
+future_authorized_paper_cycle,only future source of independent paper evidence

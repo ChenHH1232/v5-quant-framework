@@ -1,0 +1,2 @@
+﻿operation,requested_market_date,market_data_max_date,allowed,reason
+generate_forward_targets,2026-10-08,2026-05-31,False,post_boundary_market_operation_blocked

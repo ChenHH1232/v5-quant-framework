@@ -1,0 +1,5 @@
+﻿test_scope,status
+v5p_and_v5q_targeted,pass
+fast,pass
+standard,pass
+extended,not_run

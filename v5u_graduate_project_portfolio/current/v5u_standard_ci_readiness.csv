@@ -1,0 +1,4 @@
+﻿layer,local_entrypoint,test_module_count,github_workflow,status
+Fast,scripts/run_v5_tests.ps1 -Tier Fast,9,.github/workflows/v5-fast-tests.yml,implemented
+Standard,scripts/run_v5_tests.ps1 -Tier Standard,14,not_promoted,local_ready_hosted_ci_blocked_by_nonversioned_evidence_bundle
+Standard promotion prerequisite,freeze evidence-bundle SHA256 manifest and provide CI-readable fixture/artifact,n/a,add after artifact contract,required; current worktree status recorded

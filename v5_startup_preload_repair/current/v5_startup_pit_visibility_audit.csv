@@ -1,0 +1,17 @@
+sector_id,field,pit_policy,deployment_day_visible,first_available_date,pit_safety
+bank,dividend_yield,price-derived fields use closes strictly before trade_date; financial/dividend fields must use visible/announced data,True,2014-01-02,safe_if_visible_date_present
+bank,low_vol_score,price-derived fields use closes strictly before trade_date; financial/dividend fields must use visible/announced data,False,2021-10-08,safe_if_visible_date_present
+bank,max_drawdown_120d,price-derived fields use closes strictly before trade_date; financial/dividend fields must use visible/announced data,False,2021-10-08,safe_if_visible_date_present
+bank,volatility_120d,price-derived fields use closes strictly before trade_date; financial/dividend fields must use visible/announced data,False,2021-10-08,safe_if_visible_date_present
+utilities_electricity,dividend_yield,price-derived fields use closes strictly before trade_date; financial/dividend fields must use visible/announced data,True,2017-01-03,safe_if_visible_date_present
+utilities_electricity,low_vol_score,price-derived fields use closes strictly before trade_date; financial/dividend fields must use visible/announced data,False,2021-10-08,safe_if_visible_date_present
+utilities_electricity,max_drawdown_120d,price-derived fields use closes strictly before trade_date; financial/dividend fields must use visible/announced data,False,2021-10-08,safe_if_visible_date_present
+utilities_electricity,volatility_120d,price-derived fields use closes strictly before trade_date; financial/dividend fields must use visible/announced data,False,2021-10-08,safe_if_visible_date_present
+highway_infrastructure,dividend_yield,price-derived fields use closes strictly before trade_date; financial/dividend fields must use visible/announced data,True,2021-05-06,safe_if_visible_date_present
+highway_infrastructure,low_vol_score,price-derived fields use closes strictly before trade_date; financial/dividend fields must use visible/announced data,False,2021-10-08,safe_if_visible_date_present
+highway_infrastructure,max_drawdown_120d,price-derived fields use closes strictly before trade_date; financial/dividend fields must use visible/announced data,False,2021-10-08,safe_if_visible_date_present
+highway_infrastructure,volatility_120d,price-derived fields use closes strictly before trade_date; financial/dividend fields must use visible/announced data,False,2021-10-08,safe_if_visible_date_present
+port_rail_infrastructure,dividend_yield,price-derived fields use closes strictly before trade_date; financial/dividend fields must use visible/announced data,True,2021-05-06,safe_if_visible_date_present
+port_rail_infrastructure,low_vol_score,price-derived fields use closes strictly before trade_date; financial/dividend fields must use visible/announced data,False,2021-10-08,safe_if_visible_date_present
+port_rail_infrastructure,max_drawdown_120d,price-derived fields use closes strictly before trade_date; financial/dividend fields must use visible/announced data,False,2021-10-08,safe_if_visible_date_present
+port_rail_infrastructure,volatility_120d,price-derived fields use closes strictly before trade_date; financial/dividend fields must use visible/announced data,False,2021-10-08,safe_if_visible_date_present

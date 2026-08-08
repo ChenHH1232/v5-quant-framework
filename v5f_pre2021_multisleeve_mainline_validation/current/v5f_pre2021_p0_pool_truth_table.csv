@@ -1,0 +1,5 @@
+﻿sector_id,panel_source_scope,panel_exists,panel_row_count,pre2021_row_count,pre2021_date_count,pre2021_code_count,candidate_preview_rows,candidate_preview_dates,candidate_preview_codes,price_pre2021_row_count,price_pre2021_date_count,price_pre2021_code_count,coverage_status,complete_v57f_equivalent,pre2021_limited_validation_ready,accepted
+bank,startup_repaired_shadow_panel,True,1627,677,35,37,10,2,8,16692,487,37,pass_pre2021_candidate_rows,False,True,False
+utilities_electricity,startup_repaired_shadow_panel,True,3833,1410,16,100,36,2,30,54813,487,115,pass_pre2021_candidate_rows,False,True,False
+highway_infrastructure,pre2021_repaired_strict_pit_panel,True,48,48,7,8,5,2,5,6331,487,13,pass_pre2021_candidate_rows,False,True,False
+port_rail_infrastructure,pre2021_repaired_strict_pit_panel,True,78,78,7,15,5,2,4,9473,487,20,pass_pre2021_candidate_rows,False,True,False

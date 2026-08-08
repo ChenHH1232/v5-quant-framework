@@ -1,0 +1,7 @@
+﻿sector,role,financial_hypothesis,evidence_level,application_treatment,status
+银行,V1-V4 基础与 V57f 金融 sleeve,低估、分红、资产质量、资本充足率与低波动,long-sample core case,黄金案例,formal research foundation; not an accepted live strategy
+电力公用事业,V57f 非金融现金流 core sleeve,经营现金流、分红、低波动与需求状态,core sleeve with PIT limitations,行业扩展主案例,"research evidence, not separate performance ranking"
+高速基础设施,V57f 非金融现金流 core sleeve,现金流、分红、capex 负担与经营纯度,core sleeve with early disclosure gaps,迁移性案例,exact pre-2021 reconstruction unavailable
+港口铁路基础设施,V57f 非金融现金流 core sleeve,现金流价值、经营纯度与低波动,core sleeve with early disclosure gaps,迁移性案例,exact pre-2021 reconstruction unavailable
+煤炭,周期行业反例,现金流与周期状态,rejected / data gated,展示拒绝机制,not a promotion candidate
+保险,金融相近行业反例,低 PB、偿付能力、EV/NBV,partial PIT and small cross-section,展示小样本与字段限制,not a promotion candidate

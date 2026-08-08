@@ -1,0 +1,5 @@
+component,startup_preload_status,initial_rebalance_support,minute_data_requirement,t_violation_count
+l2_size_aware,load_inputs_uses_deployment_window,blocked_until_v57f_initial_signal_exists,initial D0/D1/D2 BaoStock data required before L2/L3/L4 engineering rerun,0
+l3_default_exception,inherits_L2_deployment_window,blocked_until_v57f_initial_signal_exists,initial D0 minute bars required for exception audit,0
+l3_1_open_delay_price_band_fallback,inherits_L2_deployment_window,blocked_until_v57f_initial_signal_exists,initial D0 minute bars required; still review-notes candidate,0
+l4_exception_governed_completion,inherits_L2_deployment_window,blocked_until_v57f_initial_signal_exists,initial D0/D1/D2 5-minute coverage required; do not fabricate missing bars,0

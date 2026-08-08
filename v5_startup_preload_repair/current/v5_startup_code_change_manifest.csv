@@ -1,0 +1,16 @@
+path,change_type,core_logic_changed,purpose
+src/v5/startup_preload.py,modified,False,startup preload/deployment window support
+src/v5/basket_constructor_runner.py,modified,False,startup preload/deployment window support
+src/v5/basket_daily_backtest_runner.py,modified,False,startup preload/deployment window support
+src/v5/v57f_execution_robustness_runner.py,modified,False,startup preload/deployment window support
+src/v5/v5c_risk_budget_overlay_engineering_runner.py,modified,False,startup preload/deployment window support
+src/v5/v5d_baostock_5min_data_gate.py,modified,False,startup preload/deployment window support
+src/v5/v5d_order_scheduling_engineering_runner.py,modified,False,startup preload/deployment window support
+src/v5/v5_startup_preload_repair_runner.py,modified,False,startup preload/deployment window support
+src/v5/cli_core.py,modified,False,startup preload CLI entrypoint
+tests/test_basket_constructor_runner.py,modified,False,startup initial rebalance coverage
+tests/test_basket_daily_backtest_runner.py,modified,False,startup gap visibility coverage
+tests/test_v57f_execution_robustness_runner.py,modified,False,V57f execution startup gap coverage
+tests/test_startup_preload_repair_runner.py,added,False,startup repair runner blocker coverage
+tests/test_v5c_erc_startup_preload.py,added,False,ERC startup preload hardcode guard
+tests/test_v5d_l4_startup_preload.py,added,False,V5d/L4 startup data gate guard

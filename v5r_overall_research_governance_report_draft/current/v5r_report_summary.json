@@ -1,0 +1,12 @@
+{
+  "created_at_utc": "2026-08-07T07:24:27+00:00",
+  "task": "v5r_overall_research_governance_report_draft",
+  "status": "draft_only_not_final",
+  "primary_candidate": "internal_subsleeve_mom12_70_30",
+  "primary_candidate_status": "primary_forward_paper_candidate_not_accepted",
+  "comparable_performance_rows": 2,
+  "model_status_modified": false,
+  "accepted": false,
+  "live_trading_approved": false,
+  "deployment_approved": false
+}

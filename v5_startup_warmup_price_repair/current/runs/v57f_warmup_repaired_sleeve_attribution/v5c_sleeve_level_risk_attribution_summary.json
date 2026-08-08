@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "project": "v5c_sleeve_level_risk_attribution",
+  "status": "blocked_before_risk_budget_overlay",
+  "created_at_utc": "2026-07-28T08:53:26+00:00",
+  "baseline_strategy_id": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f",
+  "window": {
+    "start_date": "2021-05-01",
+    "end_date": "2026-05-31"
+  },
+  "v57f_core_modified": false,
+  "joinquant_started": false,
+  "new_overlay_tested": false,
+  "core_sleeves": [
+    "bank",
+    "utilities_electricity",
+    "highway_infrastructure",
+    "port_rail_infrastructure"
+  ],
+  "daily_count": 1228,
+  "sleeve_mapping_source": "rebalance_signals.csv sector_id mapped by active rebalance date; position sectors carried through trades",
+  "aggregation_check": {
+    "max_abs_return_gap": 0.005841397134556678,
+    "max_abs_value_gap": 0.0
+  },
+  "biggest_standalone_vol_risk_sleeve": "utilities_electricity",
+  "biggest_official_drawdown_pnl_sleeve": "utilities_electricity",
+  "risk_budget_overlay_readiness": "blocked_before_risk_budget_overlay",
+  "blocker_count": 4,
+  "outputs": {
+    "summary": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_sleeve_attribution\\v5c_sleeve_level_risk_attribution_summary.json",
+    "report": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_sleeve_attribution\\v5c_sleeve_level_risk_attribution_report.md",
+    "daily_returns": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_sleeve_attribution\\v57f_core_sleeve_daily_returns.csv",
+    "daily_pnl": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_sleeve_attribution\\v57f_core_sleeve_daily_pnl.csv",
+    "metrics": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_sleeve_attribution\\v57f_core_sleeve_metrics.csv",
+    "correlation_matrix": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_sleeve_attribution\\v57f_core_sleeve_correlation_matrix.csv",
+    "drawdown_contribution": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_sleeve_attribution\\v57f_core_sleeve_drawdown_contribution.csv",
+    "risk_contribution": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_sleeve_attribution\\v57f_core_sleeve_risk_contribution.csv",
+    "data_quality_checks": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_sleeve_attribution\\v57f_core_sleeve_data_quality_checks.csv",
+    "readiness": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_sleeve_attribution\\v5c_risk_budget_overlay_readiness.csv",
+    "blockers": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_sleeve_attribution\\v5c_sleeve_attribution_blockers.csv",
+    "agent_rules": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_sleeve_attribution\\v5c_agent_execution_rules.md"
+  }
+}

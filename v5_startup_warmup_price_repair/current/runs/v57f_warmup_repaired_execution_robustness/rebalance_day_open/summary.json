@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "strategy_id": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f",
+  "execution_variant": "rebalance_day_open",
+  "experiment_layer": "engineering_execution_robustness_not_tuning",
+  "config": "config\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f_startup_repaired_shadow.json",
+  "signals_csv": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_constructor\\basket_rebalance_signals.csv",
+  "window": {
+    "start_date": "2021-05-01",
+    "end_date": "2026-05-31"
+  },
+  "startup_preload": {
+    "configured_start_date": "2021-05-01",
+    "effective_first_signal_date": "2021-05-06",
+    "first_daily_row_date": "2021-05-06",
+    "startup_gap_days": 5,
+    "start_date_was_silently_lifted_to_first_signal": false
+  },
+  "execution_policy": "baseline same-day open execution",
+  "frozen_logic": {
+    "signals_are_reused": true,
+    "factors_are_not_recomputed": true,
+    "weights_are_not_tuned": true,
+    "sleeves_are_not_changed": true
+  },
+  "metrics": {
+    "strategy_return": 1.092546259710009,
+    "annualized_return": 0.16360689026816,
+    "excess_return": 0.30247310719352205,
+    "benchmark_return": 0.790073152516487,
+    "alpha": 0.06512110270189618,
+    "beta": 0.775983899742143,
+    "sharpe": 1.0485320210632614,
+    "win_rate": 0.5358306188925082,
+    "profit_loss_ratio": 1.0442082977771774,
+    "max_drawdown": 0.1193034074965873,
+    "sortino": 1.5183708179190438,
+    "mean_excess_return": 0.00011423061903486822,
+    "excess_max_drawdown": 0.1825517119958049,
+    "excess_sharpe": 0.3348729467005882,
+    "daily_win_rate": 0.5358306188925082,
+    "profit_count": 658,
+    "loss_count": 570,
+    "information_ratio": 0.3348729467005882,
+    "strategy_volatility": 0.1562136309647746,
+    "benchmark_volatility": 0.1755650546779155,
+    "max_drawdown_interval": "2021-09-23,2021-11-05",
+    "annual_factor": 252
+  },
+  "turnover": 16.459755314131705,
+  "trade_count": 780,
+  "skipped_buy_count": 2,
+  "skipped_sell_count": 1,
+  "delayed_fill_count": 0,
+  "cash_drag": 0.023861102910664497,
+  "rebalance_order_health": {
+    "rebalance_signal_count": 21,
+    "normal_rebalance_count": 21,
+    "no_order_rebalance_count": 0,
+    "no_order_no_position_count": 0,
+    "blocked_or_unfilled_rebalance_count": 0,
+    "missing_daily_rebalance_count": 0,
+    "leading_no_order_no_position_count": 0,
+    "first_executed_order_date": "2021-05-06",
+    "first_position_date": "2021-05-06",
+    "needs_review": false,
+    "pm_rule": "Every rebalance signal must be checked for actual local orders and post-rebalance holdings before comparing with JoinQuant."
+  },
+  "created_at_utc": "2026-07-28T08:53:21+00:00"
+}

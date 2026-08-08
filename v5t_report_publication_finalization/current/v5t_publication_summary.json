@@ -1,0 +1,17 @@
+{
+  "created_at_utc": "2026-08-07T08:02:13+00:00",
+  "report_version": "v1.0",
+  "task": "v5t_report_publication_finalization",
+  "baseline": "v57f_startup_preload_repaired_baseline",
+  "primary_candidate": "internal_subsleeve_mom12_70_30",
+  "primary_candidate_status": "primary_forward_paper_candidate_not_accepted",
+  "formal_window": "2021-05-01 至 2026-05-31",
+  "pairwise_observations": 1228,
+  "numeric_conflict_count": 0,
+  "mandatory_disclosures_pass": true,
+  "release_decision": "archive_release_pass_with_required_disclosures",
+  "accepted": false,
+  "live_trading_approved": false,
+  "deployment_approved": false,
+  "model_status_modified": false
+}

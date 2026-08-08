@@ -1,7 +1,16 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-24",
+  "updated_at": "2026-08-07",
   "governance_rule": "Historical performance alone is never sufficient evidence for accepting a strategy.",
+  "v5_active_model_registry": {
+    "authoritative_path": "config/v5_active_model_registry.json",
+    "historical_operation_boundary_path": "config/v5_historical_operation_boundary.json",
+    "active_model": "internal_subsleeve_mom12_70_30",
+    "required_baseline": "v57f_startup_preload_repaired_baseline",
+    "market_data_scope_end": "2026-05-31",
+    "status": "primary_forward_paper_candidate_not_accepted",
+    "note": "This pointer prevents duplicate V5f state. Detailed model, evidence and allowed-action fields are maintained only in the authoritative registry."
+  },
   "strategies": [
     {
       "strategy_id": "bank_high_dividend_sustainability_v3",

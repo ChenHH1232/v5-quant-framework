@@ -1,0 +1,5 @@
+﻿line,status,evidence
+workflow,completed_production_gate_rebuilt,real production Fast/Standard
+strict_cash_nav,strict_nav_input_blocked,"input audit, no synthetic NAV"
+qmt_contract,historical_qmt_contract_incomplete,local files hashed; engine contract incomplete
+forward_paper,schema_only_future_cycle_readiness,"schema only, no forward evidence"

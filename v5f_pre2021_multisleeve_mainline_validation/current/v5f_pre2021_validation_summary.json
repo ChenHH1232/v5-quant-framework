@@ -1,0 +1,22 @@
+{
+  "created_at_utc": "2026-08-01T16:47:22+00:00",
+  "task": "v5f_pre2021_multisleeve_mainline_validation",
+  "status": "completed_pre2021_p0_p1_p2_validation",
+  "pre2021_validation_start": "2019-04-01",
+  "pre2021_validation_end": "2020-12-31",
+  "formal_backtest_scope_start": "2021-05-01",
+  "formal_backtest_scope_end": "2026-05-31",
+  "p0_sector_count": 4,
+  "p1_mainline": "internal_subsleeve_mom12_70_30",
+  "p1_delta_return_pct_points_vs_pre2021_baseline": 0.2798625766868623,
+  "p1_delta_max_drawdown_pct_points_vs_pre2021_baseline": 0.0,
+  "p2_best_net_incremental_return_pct_points": 0.03996271261773315,
+  "accepted": false,
+  "live_trading_approved": false,
+  "v57f_core_modified": false,
+  "threshold_scan_used": false,
+  "joinquant_started": false,
+  "fatal_blocker_count": 0,
+  "nonfatal_blocker_count": 1,
+  "pm_gate_decision": "pre2021_mainline_positive_supports_v5f_forward_tracking_not_accepted"
+}

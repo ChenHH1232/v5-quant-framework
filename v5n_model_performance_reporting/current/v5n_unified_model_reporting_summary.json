@@ -1,0 +1,17 @@
+{
+  "created_at_utc": "2026-08-07T07:22:43+00:00",
+  "task": "v5n_unified_model_performance_reporting",
+  "formal_backtest_window": {
+    "start": "2021-05-01",
+    "end": "2026-05-31"
+  },
+  "required_baseline": "v57f_startup_preload_repaired_baseline",
+  "model_count": 335,
+  "completed_report_count": 335,
+  "daily_series_available_count": 39,
+  "benchmark_coverage_pass_count": 39,
+  "model_state_modified": false,
+  "accepted": false,
+  "live_trading_approved": false,
+  "deployment_approved": false
+}

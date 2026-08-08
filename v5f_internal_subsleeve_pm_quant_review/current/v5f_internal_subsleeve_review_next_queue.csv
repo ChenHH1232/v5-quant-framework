@@ -1,0 +1,4 @@
+﻿priority,task,allowed,requires_threshold_scan
+1,V5f internal sub-sleeve forward/paper tracking population,True,False
+2,Deployment governance review for internal sub-sleeve,True,False
+3,Scan 60/40 or 90/10 budgets,False,True

@@ -1,0 +1,6 @@
+﻿blocker,effect
+exact_pre2021_multisleeve_pit_unavailable,exact_pre2021_v57f_reconstruction_unavailable; no full exact 2013-2021 multi-sleeve reconstruction claim
+strict_cash_nav_unavailable,historical quantity/lot/cash/priority/fill/corporate-action state is incomplete
+qmt_contract_incomplete,historical submitted script/config/target/order/fill/position/cash chain is incomplete
+ETF_total_return_contract_missing,commercial ETF comparison remains economic-exposure context only
+forward_paper_cycle_not_formed,candidate cannot be called accepted or independently forward validated

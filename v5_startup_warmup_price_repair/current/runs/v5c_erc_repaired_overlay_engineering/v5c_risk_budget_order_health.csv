@@ -1,0 +1,4 @@
+variant_id,rebalance_signal_count,normal_rebalance_count,no_order_rebalance_count,no_order_no_position_count,blocked_or_unfilled_rebalance_count,missing_daily_rebalance_count,leading_no_order_no_position_count,first_executed_order_date,first_position_date,needs_review,pm_rule
+equal_reference,21,21,0,0,0,0,0,2021-05-06,2021-05-06,False,Every rebalance signal must be checked for actual local orders and post-rebalance holdings before comparing with JoinQuant.
+erc_fixed_covariance,21,21,0,0,0,0,0,2021-05-06,2021-05-06,False,Every rebalance signal must be checked for actual local orders and post-rebalance holdings before comparing with JoinQuant.
+volatility_cap_reducer,21,21,0,0,0,0,0,2021-05-06,2021-05-06,False,Every rebalance signal must be checked for actual local orders and post-rebalance holdings before comparing with JoinQuant.

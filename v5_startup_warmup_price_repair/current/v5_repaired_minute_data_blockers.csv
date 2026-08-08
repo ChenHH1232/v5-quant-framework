@@ -1,0 +1,2 @@
+required_window,first_tradable_date,status,network_fetch_required,note
+initial_rebalance_D0_D1_D2,2021-05-06,blocked_missing_local_5min_data,yes_if_user_wants_v5d_rerun,Existing BaoStock 5min index has old rebalance windows and no 2021-05-06/D+1/D+2 rows. No minute bars fabricated.

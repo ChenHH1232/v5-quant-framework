@@ -1,0 +1,5 @@
+component,status,rerun_result,t_violation_count,accepted,note
+l2_size_aware,not_rerun_blocked_by_missing_initial_5min_data,blocked,0,no,"Repaired initial signal exists on 2021-05-06, but BaoStock 5min data gate currently starts at old 2021-10-08 window."
+l3_default_exception,not_rerun_blocked_by_missing_initial_5min_data,blocked,0,no,Needs initial D0 5min bars for exception governance.
+l3_1_open_delay_price_band_fallback,not_rerun_blocked_by_missing_initial_5min_data,blocked,0,no,Still review-notes candidate; needs initial D0 minute coverage before rerun.
+l4_exception_governed_completion,not_rerun_blocked_by_missing_initial_D0_D1_D2_5min_data,blocked,0,no,Needs initial D0/D1/D2 5min coverage; missing bars were not fabricated.

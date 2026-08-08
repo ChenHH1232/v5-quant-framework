@@ -1,0 +1,11 @@
+{
+  "created_at_utc": "2026-08-07T07:24:27+00:00",
+  "task": "v5q_overall_report_readiness_repair",
+  "status": "pass_with_required_disclosures",
+  "tier_registry_count": 335,
+  "canonical_comparison_pair_count": 2,
+  "etf_total_return_contract_available": false,
+  "v5c_sleeve_weighting_diagnostic_downgraded": true,
+  "model_status_modified": false,
+  "accepted": false
+}

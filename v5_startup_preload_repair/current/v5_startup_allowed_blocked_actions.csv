@@ -1,0 +1,6 @@
+action,status,reason
+download_pre_deployment_pit_history_after_user_authorizes,allowed_future,deployment engineering needs historical PIT warmup
+modify_v57f_core_sleeves_or_factors,blocked,V57f frozen core logic
+use_post_deployment_data_for_deployment_signal,blocked,future leakage
+silently_lift_start_date_to_first_signal,blocked,hides startup gap
+start_v5e_before_startup_repair,blocked,V5e depends on deployment model

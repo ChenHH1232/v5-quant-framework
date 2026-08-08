@@ -1,0 +1,2 @@
+required_window,first_tradable_date,current_status,action
+initial_rebalance_D0_D1_D2,2021-05-06,not_required_yet_because_initial_rebalance_signal_blocked,run BaoStock data gate only after repaired initial signal exists; ask user before new network fetch

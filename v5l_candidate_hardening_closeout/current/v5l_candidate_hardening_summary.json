@@ -1,0 +1,10 @@
+{
+  "created_at_utc": "2026-08-07T19:35:21+00:00",
+  "task": "v5l_candidate_hardening_closeout",
+  "status": "completed_candidate_hardening_with_blockers",
+  "workflow_gate_pass": true,
+  "final_pm_gate_decision": "candidate_needs_cash_constrained_retest",
+  "accepted": false,
+  "live_trading_approved": false,
+  "deployment_approved": false
+}

@@ -1,0 +1,2 @@
+line,status,startup_preload_applicability,core_modified,included_in_main_repair
+v5b_non_core_sidecar,completed_pm_disposition_packet,should_reuse_same_warmup_interface_when_sidecar_or_paper_tracking_reopens,False,False

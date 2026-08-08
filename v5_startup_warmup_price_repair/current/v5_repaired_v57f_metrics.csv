@@ -1,0 +1,15 @@
+metric,old_value,repaired_value,status
+strategy_return,0.8141640295000003,1.0925462597100073,rerun_completed
+annualized_return,0.14272978567948713,0.16360689026815978,rerun_completed
+benchmark_return,0.510118790617593,0.790073152516487,rerun_completed
+excess_return,0.3040452388824073,0.3024731071935203,rerun_completed
+max_drawdown,0.11748909353603587,0.11930340749658808,rerun_completed
+sharpe,0.9317411868082882,1.0485320210632594,rerun_completed
+strategy_volatility,0.15638693854762073,0.15621363096477467,rerun_completed
+information_ratio,0.44431762971819344,0.33487294670058504,rerun_completed
+first_signal_date,,2021-05-06,rerun_completed
+first_trade_date,,2021-05-06,rerun_completed
+first_position_date,,2021-05-06,rerun_completed
+trade_count,,783,rerun_completed
+execution_robustness_status,,execution_robustness_completed_not_tuning,rerun_completed
+execution_robustness_variant_count,,8,rerun_completed

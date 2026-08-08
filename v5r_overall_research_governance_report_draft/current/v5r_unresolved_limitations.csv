@@ -1,0 +1,6 @@
+﻿blocker,status,effect
+validation_not_independent,required_disclosure,no promotion from historical report
+strict_cash_nav_unavailable,unresolved,no financing-valid historical NAV claim
+qmt_contract_incomplete,unresolved,no exact platform target-order-fill-position-cash attribution
+etf_total_return_contract_unavailable,required_disclosure,ETF is economic context only; no formal ETF alpha beta IR
+future_paper_cycle_not_formed,unresolved,no independent forward evidence

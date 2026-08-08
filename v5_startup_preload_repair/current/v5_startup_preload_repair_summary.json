@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "project": "v5_startup_preload_repair",
+  "status": "blocked_requires_warmup_price_data",
+  "created_at_utc": "2026-07-28T06:24:38+00:00",
+  "deployment_model": {
+    "deployment_date": "2021-05-01",
+    "first_tradable_date": "2021-05-06",
+    "warmup_start_date": "2021-05-06",
+    "trade_start_date": "2021-05-06",
+    "initial_rebalance_event": "2021-05-06"
+  },
+  "pre_post": {
+    "old_first_signal_date": "2021-10-08",
+    "repaired_first_signal_date": "2021-10-08",
+    "old_first_trade_date": "2021-10-08",
+    "repaired_first_trade_date": "2021-10-08",
+    "old_first_position_date": "2021-10-08",
+    "repaired_first_position_date": "2021-10-08",
+    "startup_gap_days_old": 160,
+    "startup_gap_days_repaired": 160
+  },
+  "v57f_core_modified": false,
+  "erc_modified": false,
+  "joinquant_started": false,
+  "v5e_started": false,
+  "accepted_strategy_marked": false,
+  "blocker_count": 2,
+  "primary_blocker": "deployment_day_initial_signal_blocked",
+  "next_gate": "collect_pre_deployment_warmup_prices_then_rerun_startup_repair",
+  "outputs": {
+    "summary": "v5_startup_preload_repair\\current\\v5_startup_preload_repair_summary.json",
+    "report": "v5_startup_preload_repair\\current\\v5_startup_preload_repair_report.md",
+    "candidate_matrix": "v5_startup_preload_repair\\current\\v5_startup_candidate_matrix.csv",
+    "data_coverage_audit": "v5_startup_preload_repair\\current\\v5_startup_data_coverage_audit.csv",
+    "required_field_audit": "v5_startup_preload_repair\\current\\v5_startup_required_field_audit.csv",
+    "warmup_requirement_matrix": "v5_startup_preload_repair\\current\\v5_startup_warmup_requirement_matrix.csv",
+    "pre_post_signal_comparison": "v5_startup_preload_repair\\current\\v5_startup_pre_post_signal_comparison.csv",
+    "blockers": "v5_startup_preload_repair\\current\\v5_startup_blockers.csv",
+    "repaired_constructor_summary": "v5_startup_preload_repair\\current\\runs\\v57f_repaired_constructor\\basket_construction_summary.json",
+    "repaired_backtest_summary": "v5_startup_preload_repair\\current\\runs\\v57f_repaired_daily_backtest\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\summary.json"
+  }
+}

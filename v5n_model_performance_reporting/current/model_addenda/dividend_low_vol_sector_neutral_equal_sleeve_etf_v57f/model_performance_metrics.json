@@ -1,0 +1,52 @@
+{
+  "canonical_model_id": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f",
+  "report_status": "duplicate_or_alias_of_canonical_model",
+  "metrics": {
+    "total_return_pct": 81.41640295000003,
+    "annualized_return_pct": 13.001305719749068,
+    "max_drawdown_pct": 11.748909353603587,
+    "annualized_volatility_pct": 14.976736686516515,
+    "sharpe_ratio": 0.8913181142516612,
+    "observations": 1228,
+    "start_date": "2021-05-06",
+    "end_date": "2026-05-29",
+    "benchmark_total_return_pct": 78.68231031660487,
+    "benchmark_annualized_return_pct": 12.649713607781932,
+    "benchmark_max_drawdown_pct": 17.87128792440442,
+    "benchmark_annualized_volatility_pct": 17.573203663678644,
+    "excess_return_pct_points": 2.7340926333951643,
+    "annualized_excess_return_pct": -0.11627495352364593,
+    "max_drawdown_delta_pct_points": -6.122378570800834,
+    "volatility_ratio": 0.8522485127439419,
+    "tracking_error_pct": 9.504058011001192,
+    "information_ratio": -0.012234242824386666,
+    "beta_zero_rf": 0.7169169958606469,
+    "alpha_zero_rf_annualized_pct": 3.695525921331245,
+    "benchmark_sharpe_ratio": 0.766241142611016
+  },
+  "benchmark": {
+    "benchmark_id": "local_same_pool_or_embedded_benchmark",
+    "benchmark_name": "local same-pool / embedded benchmark",
+    "benchmark_type": "static_proxy_basket",
+    "primary_benchmark_statement": "primary_benchmark_is_market_exposure_proxy",
+    "economic_exposure_benchmark": "local_same_pool_or_embedded_benchmark",
+    "tradable": "proxy_not_directly_tradeable",
+    "price_data_path": "v5_startup_preload_repair\\current\\runs\\v57f_repaired_daily_backtest\\dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f\\daily_returns.csv",
+    "data_source": "local_historical_daily_series",
+    "coverage_pct": 100.0,
+    "coverage_status": "coverage_pass",
+    "pit_future_information": "no_future_information_used",
+    "selection_basis": "embedded_existing_benchmark_not_return_selected"
+  },
+  "validation": {
+    "validation_window": "2021-05-01_to_2026-05-31",
+    "sample_size": "same_as_formal_backtest_if_series_eligible",
+    "validation_type": "historical_artifact_reuse",
+    "independent": false,
+    "overlaps_formal_backtest": true,
+    "validation_result": "validation_not_independent_or_overlapping"
+  },
+  "accepted": false,
+  "live_trading_approved": false,
+  "deployment_approved": false
+}

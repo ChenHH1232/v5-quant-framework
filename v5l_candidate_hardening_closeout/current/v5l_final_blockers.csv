@@ -1,0 +1,4 @@
+﻿blocker_id,severity,status,detail
+strict_cash_nav_position_state,primary,blocking,Need original evolving holdings/lot/cash state before strict NAV can be computed.
+qmt_contract_chain,secondary,blocking,Need historical submitted source/config/targets and per-rebalance target-order-fill-position-cash evidence.
+post_boundary_forward_operations,hard_boundary,frozen,"No future target, receipt, platform or bridge operation is allowed after 2026-05-31."

@@ -1,0 +1,52 @@
+{
+  "canonical_model_id": "highway_dividend_reviewed_operating_v54h_repaired_2021",
+  "report_status": "report_complete_validation_not_independent",
+  "metrics": {
+    "total_return_pct": 106.61232162500025,
+    "annualized_return_pct": 16.057644399251856,
+    "max_drawdown_pct": 14.910373998488103,
+    "annualized_volatility_pct": 17.559213843280137,
+    "sharpe_ratio": 0.9360986826677815,
+    "observations": 1228,
+    "start_date": "2021-05-06",
+    "end_date": "2026-05-29",
+    "benchmark_total_return_pct": 58.10407689999985,
+    "benchmark_annualized_return_pct": 9.856422146060485,
+    "benchmark_max_drawdown_pct": 14.167320629065294,
+    "benchmark_annualized_volatility_pct": 18.675728440795673,
+    "excess_return_pct_points": 48.508244725000395,
+    "annualized_excess_return_pct": 5.2884389084021395,
+    "max_drawdown_delta_pct_points": 0.7430533694228085,
+    "volatility_ratio": 0.9402157403897244,
+    "tracking_error_pct": 8.093680589929233,
+    "information_ratio": 0.653403460841093,
+    "beta_zero_rf": 0.8480938602351145,
+    "alpha_zero_rf_annualized_pct": 6.981997629029866,
+    "benchmark_sharpe_ratio": 0.5969629551166936
+  },
+  "benchmark": {
+    "benchmark_id": "local_same_pool_or_embedded_benchmark",
+    "benchmark_name": "local same-pool / embedded benchmark",
+    "benchmark_type": "static_proxy_basket",
+    "primary_benchmark_statement": "primary_benchmark_is_market_exposure_proxy",
+    "economic_exposure_benchmark": "local_same_pool_or_embedded_benchmark",
+    "tradable": "proxy_not_directly_tradeable",
+    "price_data_path": "local_daily_backtests_highway_v54h_repaired_2021_final\\highway_dividend_reviewed_operating_v54h_repaired_2021\\daily_returns.csv",
+    "data_source": "local_historical_daily_series",
+    "coverage_pct": 100.0,
+    "coverage_status": "coverage_pass",
+    "pit_future_information": "no_future_information_used",
+    "selection_basis": "embedded_existing_benchmark_not_return_selected"
+  },
+  "validation": {
+    "validation_window": "2021-05-01_to_2026-05-31",
+    "sample_size": "same_as_formal_backtest_if_series_eligible",
+    "validation_type": "historical_artifact_reuse",
+    "independent": false,
+    "overlaps_formal_backtest": true,
+    "validation_result": "validation_not_independent_or_overlapping"
+  },
+  "accepted": false,
+  "live_trading_approved": false,
+  "deployment_approved": false
+}

@@ -1,0 +1,3 @@
+﻿priority,task,status
+P0,refresh_benchmark_reporting_only_if_new_local_or_authorized_pre_boundary_series_is_archived,reporting_only
+P1,recover_strict_cash_and_qmt_historical_contract,still_required_before_execution_claim

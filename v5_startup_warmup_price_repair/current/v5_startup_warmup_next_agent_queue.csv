@@ -1,0 +1,4 @@
+priority,next_action,status,scope
+1,pm_review_repaired_startup_signal,ready,repaired first signal 2021-05-06
+2,rerun_erc_l2_l3_l4_on_repaired_schedule,ready,candidates remain not accepted
+3,start_v5e,allowed_after_pm_gate,only after startup repair package review

@@ -1,0 +1,4 @@
+﻿rank,next_task,status,reason
+1,v5c_bank_power_2013_2021_financial_report_pit_panel,required_before_deep_research,Need pre-backtest train/test window for bank/power financial-report factors
+2,v5c_bank_special_mention_loan_train_test_single_factor,blocked_until_2013_2021_panel_ready,Current +0.68 pct is only backtest-scope evidence
+3,keep_internal_subsleeve_mom12_70_30_as_v5f_primary,ready,V5f primary remains best validated model in current governance

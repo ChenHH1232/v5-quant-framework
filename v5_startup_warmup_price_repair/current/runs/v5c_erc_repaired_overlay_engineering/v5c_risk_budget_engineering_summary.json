@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "project": "v5c_risk_budget_overlay_engineering_comparison",
+  "status": "fixed_rule_engineering_completed_no_v57f_core_change",
+  "created_at_utc": "2026-07-28T08:53:37+00:00",
+  "baseline_strategy_id": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f",
+  "window": {
+    "start_date": "2021-05-01",
+    "end_date": "2026-05-31"
+  },
+  "v57f_core_modified": false,
+  "joinquant_started": false,
+  "parameter_scan_started": false,
+  "tested_specs": [
+    "V5C_RB_001",
+    "V5C_RB_002"
+  ],
+  "deferred_specs": [
+    "V5C_RB_003"
+  ],
+  "pm_decision": "erc_fixed_covariance is effective diagnostic; promote to PM/Quant review only, not V57f replacement",
+  "outputs": {
+    "summary": "v5_startup_warmup_price_repair\\current\\runs\\v5c_erc_repaired_overlay_engineering\\v5c_risk_budget_engineering_summary.json",
+    "report": "v5_startup_warmup_price_repair\\current\\runs\\v5c_erc_repaired_overlay_engineering\\v5c_risk_budget_engineering_report.md",
+    "comparison": "v5_startup_warmup_price_repair\\current\\runs\\v5c_erc_repaired_overlay_engineering\\v5c_risk_budget_engineering_comparison.csv",
+    "order_health": "v5_startup_warmup_price_repair\\current\\runs\\v5c_erc_repaired_overlay_engineering\\v5c_risk_budget_order_health.csv",
+    "risk_contribution_comparison": "v5_startup_warmup_price_repair\\current\\runs\\v5c_erc_repaired_overlay_engineering\\v5c_risk_budget_risk_contribution_comparison.csv",
+    "signal_generation_audit": "v5_startup_warmup_price_repair\\current\\runs\\v5c_erc_repaired_overlay_engineering\\v5c_risk_budget_signal_generation_audit.csv",
+    "output_index": "v5_startup_warmup_price_repair\\current\\runs\\v5c_erc_repaired_overlay_engineering\\v5c_risk_budget_output_index.csv",
+    "blockers": "v5_startup_warmup_price_repair\\current\\runs\\v5c_erc_repaired_overlay_engineering\\v5c_risk_budget_engineering_blockers.csv"
+  }
+}

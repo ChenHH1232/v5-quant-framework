@@ -1,0 +1,5 @@
+﻿rule,requirement
+inception,first available date no later than 2021-05-06
+coverage,at least 95 percent of repaired baseline daily dates
+selection,predeclared exposure match; never return-selected
+return_contract,adjusted price return or total-return contract disclosed

@@ -1,0 +1,52 @@
+{
+  "canonical_model_id": "home_appliances_ocf_quality_v5a5c",
+  "report_status": "report_complete_validation_not_independent",
+  "metrics": {
+    "total_return_pct": 106.37364557999973,
+    "annualized_return_pct": 16.030119356517414,
+    "max_drawdown_pct": 30.18167637542778,
+    "annualized_volatility_pct": 23.430220439680372,
+    "sharpe_ratio": 0.7516496439509227,
+    "observations": 1228,
+    "start_date": "2021-05-06",
+    "end_date": "2026-05-29",
+    "benchmark_total_return_pct": -3.339156155159262,
+    "benchmark_annualized_return_pct": -0.6945127819630081,
+    "benchmark_max_drawdown_pct": 40.85662188674719,
+    "benchmark_annualized_volatility_pct": 17.544375773533368,
+    "excess_return_pct_points": 109.71280173515899,
+    "annualized_excess_return_pct": 16.771878851472575,
+    "max_drawdown_delta_pct_points": -10.674945511319411,
+    "volatility_ratio": 1.3354832763572082,
+    "tracking_error_pct": 19.07167671089325,
+    "information_ratio": 0.8794129171607082,
+    "beta_zero_rf": 0.8009150343488002,
+    "alpha_zero_rf_annualized_pct": 16.93899833681012,
+    "benchmark_sharpe_ratio": 0.04784655838089968
+  },
+  "benchmark": {
+    "benchmark_id": "local_same_pool_or_embedded_benchmark",
+    "benchmark_name": "local same-pool / embedded benchmark",
+    "benchmark_type": "static_proxy_basket",
+    "primary_benchmark_statement": "primary_benchmark_is_market_exposure_proxy",
+    "economic_exposure_benchmark": "local_same_pool_or_embedded_benchmark",
+    "tradable": "proxy_not_directly_tradeable",
+    "price_data_path": "local_daily_backtests_home_appliances_v5a5e\\home_appliances_ocf_quality_v5a5c\\daily_returns.csv",
+    "data_source": "local_historical_daily_series",
+    "coverage_pct": 100.0,
+    "coverage_status": "coverage_pass",
+    "pit_future_information": "no_future_information_used",
+    "selection_basis": "embedded_existing_benchmark_not_return_selected"
+  },
+  "validation": {
+    "validation_window": "2021-05-01_to_2026-05-31",
+    "sample_size": "same_as_formal_backtest_if_series_eligible",
+    "validation_type": "historical_artifact_reuse",
+    "independent": false,
+    "overlaps_formal_backtest": true,
+    "validation_result": "validation_not_independent_or_overlapping"
+  },
+  "accepted": false,
+  "live_trading_approved": false,
+  "deployment_approved": false
+}

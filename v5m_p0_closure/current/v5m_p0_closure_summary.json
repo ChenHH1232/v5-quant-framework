@@ -1,0 +1,10 @@
+{
+  "created_at_utc": "2026-08-07T05:00:48+00:00",
+  "task": "v5m_p0_closure",
+  "workflow_production_gate_pass": true,
+  "strict_cash_nav_available": false,
+  "qmt_contract_recovered": false,
+  "forward_schema_ready": true,
+  "final_pm_gate_decision": "candidate_needs_cash_and_qmt_recovery",
+  "accepted": false
+}

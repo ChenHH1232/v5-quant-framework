@@ -1,0 +1,6 @@
+﻿blocker,effect
+strict_cash_nav_unavailable,阻塞严格现金状态下的历史 NAV 复原，以及 accepted/live 结论
+qmt_contract_incomplete,阻塞历史 target-order-fill-position-cash 的精确平台归因
+ETF total-return 合同缺失,ETF 只能作为经济暴露参考，不能计算正式 ETF Alpha/Beta/IR 或超额收益
+validation_not_independent,阻塞独立验证表述
+独立前瞻纸面周期尚未形成,阻塞前瞻独立证据和候选升级

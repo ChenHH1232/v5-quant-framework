@@ -1,0 +1,16 @@
+{
+  "created_at_utc": "2026-08-07T07:22:43+00:00",
+  "task": "v5p_benchmark_discovery_and_research_sequence",
+  "formal_scope_end": "2026-05-31",
+  "qualified_direct_etf_count": 3,
+  "qualified_industry_index_count": 0,
+  "confirmed_static_proxy_basket_model_count": 27,
+  "tier_a_models_with_direct_economic_benchmark": 5,
+  "tier_a_count": 36,
+  "tier_b_count": 285,
+  "tier_c_count": 14,
+  "model_status_modified": false,
+  "accepted": false,
+  "live_trading_approved": false,
+  "deployment_approved": false
+}

@@ -1,0 +1,2 @@
+component,startup_preload_status,can_run_with_current_local_initial_signal,warmup_requirement,accepted,v57f_replacement
+erc_fixed_rule_risk_budget_overlay,source_code_window_hardcode_repaired,no,"uses repaired V57f baseline and prior sleeve returns; insufficient history must use registered equal fallback, not future sleeve returns",no,no

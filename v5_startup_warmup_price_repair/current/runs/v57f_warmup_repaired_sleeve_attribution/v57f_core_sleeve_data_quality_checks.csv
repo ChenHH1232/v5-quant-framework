@@ -1,0 +1,7 @@
+check_id,status,detail
+required_core_sleeve_count,pass,"['bank', 'utilities_electricity', 'highway_infrastructure', 'port_rail_infrastructure']"
+daily_row_count_matches_baseline,pass,1228 vs 1228
+trade_mapping_unmapped_events_zero,pass,
+max_abs_return_gap_below_1bp,fail,0.005841397135
+max_abs_value_gap_below_1_cny,pass,0.000000
+old_file_mojibake_observed_not_modified,pass,summary.json and sleeve_registry.csv contain mojibake path display; new outputs use ASCII field names and UTF-8.

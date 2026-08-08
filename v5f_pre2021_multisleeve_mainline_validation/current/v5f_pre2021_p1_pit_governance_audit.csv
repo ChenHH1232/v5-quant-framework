@@ -1,0 +1,7 @@
+﻿audit_id,status,detail
+pre2021_pool_ready,pass,pre2021_multisleeve_pool_ready
+formal_backtest_not_used_for_discovery,pass,2021-05-01_to_2026-05-31_excluded
+mainline_required_daily_fields,pass,0
+threshold_scan_used_false,pass,False
+joinquant_started_false,pass,False
+accepted_false,pass,False

@@ -1,0 +1,5 @@
+﻿chapter,claim,evidence
+Research boundary and method,repaired baseline and historical boundary,config/v5_active_model_registry.json; config/v5_historical_operation_boundary.json
+Comparable performance,only canonical repaired-baseline/primary-candidate pair in draft table,v5q_canonical_comparison_matrix.csv; v5n_formal_backtest_performance_statistics.csv
+Execution and evidence,strict cash NAV and QMT contract remain incomplete,v5m_p0_closure/current/v5m_p0_closure_summary.json
+Benchmark limitation,direct ETF series are adjusted price return only,v5q_benchmark_return_contract_decision.csv

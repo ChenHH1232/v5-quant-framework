@@ -1,0 +1,3 @@
+﻿result_id,factor,reported_window,old_label,corrected_label,delta_vs_v5f_pct_points,may_promote_now,reason
+v5c_bank_power_single_factor_cross_section_test,bank_special_mention_loan,2021-05-01_to_2026-05-31,single_factor_positive_candidates_for_deep_research_not_accepted,backtest_scope_positive_only_requires_2013_2021_train_test,0.6825964323489142,False,"2021-2026 is the formal backtest window, not training/test evidence"
+v5c_bank_power_financial_report_pit_panel,bank_power_report_composite,2021-05-01_to_2026-05-31,financial_report_factor_no_clear_incremental_value_vs_v5f_primary,backtest_scope_negative_no_promotion,0.0 best remains v5f primary,False,No improvement and backtest window cannot be used for factor discovery

@@ -1,0 +1,4 @@
+blocked_item,reason,allowed_next_action
+v57f_core_replacement,Any risk budget overlay changes allocation behavior and cannot rewrite frozen V57f without a new PM gate.,PM/Quant review only if fixed diagnostic improves risk with acceptable return cost.
+parameter_scan,"Changing lookback, floor, cap, max-change, relative-vol threshold or reducer after seeing results would overfit.",Freeze or reject the current fixed specs; do not tune.
+drawdown_contribution_reducer,Needs a prior-only boundary memo before engineering; historical max drawdown leader cannot be used directly.,PM rule-boundary memo only.

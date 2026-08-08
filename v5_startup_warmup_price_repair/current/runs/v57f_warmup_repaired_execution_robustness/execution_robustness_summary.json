@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-07-28T08:53:23+00:00",
+  "strategy_id": "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f",
+  "status": "execution_robustness_completed_not_tuning",
+  "experiment_layer": "engineering_execution_robustness",
+  "baseline_variant": "rebalance_day_open",
+  "startup_preload": {
+    "configured_start_date": "2021-05-01",
+    "effective_first_signal_date": "2021-05-06",
+    "startup_gap_days": 5,
+    "start_date_was_silently_lifted_to_first_signal": false
+  },
+  "variant_count": 8,
+  "stable_positive_excess_variant_count": 8,
+  "risk_event_counts": {
+    "non_rebalance_no_action": 9582,
+    "blocked_or_unfilled_order": 34,
+    "cash_drag_high": 43
+  },
+  "decision": "execution_timing_not_fragile_no_strategy_change",
+  "next_gate": "prepare_clean_2026_10_08_paper_signal_or_joinquant_export_attribution",
+  "not_status": [
+    "accepted_strategy",
+    "platform_replication_passed",
+    "live_trading_approved"
+  ],
+  "outputs": {
+    "report": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\execution_robustness_report.md",
+    "variant_outputs": {
+      "rebalance_day_open": {
+        "summary": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\rebalance_day_open\\summary.json",
+        "daily_returns": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\rebalance_day_open\\daily_returns.csv",
+        "holdings": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\rebalance_day_open\\holdings.csv",
+        "trades": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\rebalance_day_open\\trades.csv",
+        "rebalance_order_health": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\rebalance_day_open\\rebalance_order_health.csv"
+      },
+      "rebalance_day_0940_proxy": {
+        "summary": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\rebalance_day_0940_proxy\\summary.json",
+        "daily_returns": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\rebalance_day_0940_proxy\\daily_returns.csv",
+        "holdings": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\rebalance_day_0940_proxy\\holdings.csv",
+        "trades": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\rebalance_day_0940_proxy\\trades.csv",
+        "rebalance_order_health": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\rebalance_day_0940_proxy\\rebalance_order_health.csv"
+      },
+      "rebalance_day_1000_proxy": {
+        "summary": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\rebalance_day_1000_proxy\\summary.json",
+        "daily_returns": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\rebalance_day_1000_proxy\\daily_returns.csv",
+        "holdings": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\rebalance_day_1000_proxy\\holdings.csv",
+        "trades": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\rebalance_day_1000_proxy\\trades.csv",
+        "rebalance_order_health": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\rebalance_day_1000_proxy\\rebalance_order_health.csv"
+      },
+      "rebalance_day_close_proxy": {
+        "summary": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\rebalance_day_close_proxy\\summary.json",
+        "daily_returns": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\rebalance_day_close_proxy\\daily_returns.csv",
+        "holdings": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\rebalance_day_close_proxy\\holdings.csv",
+        "trades": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\rebalance_day_close_proxy\\trades.csv",
+        "rebalance_order_health": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\rebalance_day_close_proxy\\rebalance_order_health.csv"
+      },
+      "t_plus_1_open": {
+        "summary": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\t_plus_1_open\\summary.json",
+        "daily_returns": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\t_plus_1_open\\daily_returns.csv",
+        "holdings": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\t_plus_1_open\\holdings.csv",
+        "trades": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\t_plus_1_open\\trades.csv",
+        "rebalance_order_health": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\t_plus_1_open\\rebalance_order_health.csv"
+      },
+      "sliced_2d_open": {
+        "summary": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\sliced_2d_open\\summary.json",
+        "daily_returns": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\sliced_2d_open\\daily_returns.csv",
+        "holdings": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\sliced_2d_open\\holdings.csv",
+        "trades": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\sliced_2d_open\\trades.csv",
+        "rebalance_order_health": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\sliced_2d_open\\rebalance_order_health.csv"
+      },
+      "sliced_3d_open": {
+        "summary": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\sliced_3d_open\\summary.json",
+        "daily_returns": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\sliced_3d_open\\daily_returns.csv",
+        "holdings": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\sliced_3d_open\\holdings.csv",
+        "trades": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\sliced_3d_open\\trades.csv",
+        "rebalance_order_health": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\sliced_3d_open\\rebalance_order_health.csv"
+      },
+      "delayed_limit_fill_3d": {
+        "summary": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\delayed_limit_fill_3d\\summary.json",
+        "daily_returns": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\delayed_limit_fill_3d\\daily_returns.csv",
+        "holdings": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\delayed_limit_fill_3d\\holdings.csv",
+        "trades": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\delayed_limit_fill_3d\\trades.csv",
+        "rebalance_order_health": "v5_startup_warmup_price_repair\\current\\runs\\v57f_warmup_repaired_execution_robustness\\delayed_limit_fill_3d\\rebalance_order_health.csv"
+      }
+    }
+  },
+  "pm_rules": [
+    "This manifest freezes V57f inputs for execution robustness only.",
+    "No factor recomputation, sleeve change, weight tuning or return-driven variant selection is allowed.",
+    "2021-2026 remains platform-confirmation context, not clean acceptance evidence."
+  ]
+}

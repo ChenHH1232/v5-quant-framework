@@ -1,0 +1,7 @@
+﻿claim,evidence,claim_status,publication_treatment
+唯一正式表现比较仅为 repaired baseline 与主候选,v5q_canonical_comparison_matrix.csv,supported,"同窗口、同父策略、1,228 个共同样本的 pairwise comparison"
+主候选为 primary_forward_paper_candidate_not_accepted,config/v5_active_model_registry.json; v5q summary,supported,候选，未 accepted
+ETF 可用于正式 Alpha/Beta/IR,v5q_benchmark_return_contract_decision.csv,removed_or_downgraded,ETF 仅为 economic exposure context
+V5c/V5d/V5e/QMT 是可比较策略表现,v5o tier registry; v5q diagnostic audit,removed_or_downgraded,研究过程、执行审计或证据附录
+正式表现正文只使用同父策略的 baseline 与主候选 pairwise comparison,v5r_performance_comparison_table.csv; v5s_numeric_reconciliation.csv,supported,正文正式表
+候选不构成 accepted、实盘或部署批准,status_registry.json; v5m_p0_closure_summary.json,supported,在摘要、结论和限制中披露

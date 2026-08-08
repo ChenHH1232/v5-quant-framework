@@ -1,0 +1,6 @@
+﻿component,status,result
+workflow,workflow_activation_pass,True
+idealized_primary,historical_edge_documented,+11.4321 pct points vs repaired baseline
+strict_cash_nav,blocked_strict_cash_nav_input_conflict,cash_path_input_conflict_blocked
+qmt_engine_evidence,completed_historical_evidence_attribution_contract_incomplete,candidate_needs_qmt_contract_repair
+risk_observation,completed_historical_risk_observation,weak-period and concentration observations retained

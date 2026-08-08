@@ -1,0 +1,5 @@
+﻿priority,next_task,allowed,requires_threshold_scan
+1,Deep research spec for internal_subsleeve_mom12_70_30,True,False
+2,Deep research spec for internal_subsleeve_mom12_80_20,True,False
+3,Keep current repaired overlay candidate in paper tracking,True,False
+4,Full-market momentum sleeve or parameter scan,False,True

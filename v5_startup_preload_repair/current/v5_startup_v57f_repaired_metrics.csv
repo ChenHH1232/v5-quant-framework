@@ -1,0 +1,9 @@
+metric,old_value,repaired_value,note
+strategy_return,0.8141640295000003,0.8141640295000003,repaired backtest preserves deployment window instead of lifting start_date to first signal
+annualized_return,0.14272978567948713,0.13001305719749068,repaired backtest preserves deployment window instead of lifting start_date to first signal
+benchmark_return,0.510118790617593,0.7868231031660486,repaired backtest preserves deployment window instead of lifting start_date to first signal
+excess_return,0.3040452388824073,0.027340926333951687,repaired backtest preserves deployment window instead of lifting start_date to first signal
+max_drawdown,0.11748909353603587,0.11748909353603587,repaired backtest preserves deployment window instead of lifting start_date to first signal
+sharpe,0.9317411868082882,0.8916812505935764,repaired backtest preserves deployment window instead of lifting start_date to first signal
+strategy_volatility,0.15638693854762073,0.14970637424733732,repaired backtest preserves deployment window instead of lifting start_date to first signal
+information_ratio,0.44431762971819344,-0.012239227238048088,repaired backtest preserves deployment window instead of lifting start_date to first signal

@@ -1,0 +1,5 @@
+﻿topic,benefit,risk,pm_read
+return_edge,11.4321 pct points vs repaired baseline,historical repaired window only,strong_positive
+drawdown,-0.0485 pct point drawdown delta,improvement is small but non-worse,pass
+versus_current_candidate,10.0469 pct points over current equal-blend,current equal-blend is more conservative,strong_upgrade
+yearly_stability,wins 66.67% of years,"negative years: 2021,2026",adequate_not_perfect

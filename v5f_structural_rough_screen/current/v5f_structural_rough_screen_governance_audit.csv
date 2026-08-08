@@ -1,0 +1,7 @@
+﻿audit_id,status,detail
+repaired_baseline_first_signal,pass,2021-05-06
+v57f_selected_pool_only,pass,0
+no_full_market_selection,pass,all rough screens use repaired V57f selected stocks only
+threshold_scan_used_false,pass,fixed rough-screen versions only
+accepted_false,pass,False
+live_approved_false,pass,False

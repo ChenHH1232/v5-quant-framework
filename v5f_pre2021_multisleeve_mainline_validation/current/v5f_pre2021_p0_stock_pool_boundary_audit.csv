@@ -1,0 +1,6 @@
+﻿audit_id,status,detail
+v57f_repaired_pool_only,pass,0
+no_full_market_selection,pass,True
+no_new_stock_selected,pass,0
+sleeve_internal_only,pass,internal_subsleeve weights only within existing sector_id
+accepted_false,pass,False

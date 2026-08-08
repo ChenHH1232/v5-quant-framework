@@ -1,0 +1,5 @@
+blocked_item,reason,allowed_next_action
+sleeve_level_attribution_readiness,One or more sleeve attribution readiness checks failed.,repair mapping or reconciliation before any risk budget overlay
+dividend_safety_and_fcf_ocf_reducer_engineering,Still requires PIT dividend announcement dates and financial statement lag contracts.,data gate feasibility audit only
+valuation_and_crowding_overheat_engineering,Still lacks audited PIT valuation percentile and crowding datasets.,data gate requirement packet only
+risk_budget_parameter_search,"Sweeping windows, caps or risk budgets against 2021-2026 would overfit.",pre-register one or two fixed simple rules before any engineering test

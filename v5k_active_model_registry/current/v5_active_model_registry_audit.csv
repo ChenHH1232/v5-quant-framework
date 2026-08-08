@@ -1,0 +1,7 @@
+﻿check_id,status,observed
+primary_model_matches_review,pass,internal_subsleeve_mom12_70_30
+baseline_is_repaired,pass,v57f_startup_preload_repaired_baseline
+formal_end_matches_boundary,pass,2026-05-31
+accepted_false,pass,False
+live_approved_false,pass,False
+central_status_points_to_authoritative_registry,pass,config/v5_active_model_registry.json

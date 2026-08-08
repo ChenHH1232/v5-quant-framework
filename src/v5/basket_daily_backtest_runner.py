@@ -12,6 +12,7 @@ from typing import Any
 from v5.io_utils import read_csv_rows, write_csv_rows, write_json_file
 from v5.math_utils import fmt_float, to_float
 from v5.rebalance_order_health import build_rebalance_order_health
+from v5.startup_preload import startup_gap_days
 
 
 DEFAULT_CONFIG = Path("config/dividend_low_vol_fcf_basket_v56.json")
@@ -50,17 +51,18 @@ def run_basket_daily_backtest(
 ) -> BasketDailyBacktestResult:
     config = _read_json(config_path)
     start_date = str(config.get("portfolio", {}).get("start_date") or "2021-05-01")
+    configured_start_date = start_date
     end_date = str(config.get("portfolio", {}).get("end_date") or "2026-05-31")
     price_files = [Path(str(sector["price_csv"])) for sector in config.get("sectors", []) if sector.get("price_csv")]
     dividend_files = [Path(str(sector["dividend_csv"])) for sector in config.get("sectors", []) if sector.get("dividend_csv")]
     if not price_files:
         raise ValueError("basket config sectors must include price_csv paths")
 
-    signals = _load_signals(signals_csv)
+    raw_signal_rows = read_csv_rows(signals_csv)
+    signals = _load_signals_from_rows(raw_signal_rows)
     if not signals:
         raise ValueError(f"no basket signals found: {signals_csv}")
     first_signal = min(signals)
-    start_date = max(start_date, first_signal)
     prices_by_date = _load_prices(price_files, start_date, end_date)
     corporate_actions_by_date = _load_corporate_actions(dividend_files, start_date, end_date)
     benchmark_by_date = _build_equal_weight_benchmark(prices_by_date, corporate_actions_by_date, start_date, end_date)
@@ -117,6 +119,17 @@ def run_basket_daily_backtest(
         "price_files": [str(path) for path in price_files],
         "dividend_files": [str(path) for path in dividend_files],
         "window": {"start_date": start_date, "end_date": end_date},
+        "startup_preload": {
+            "configured_start_date": configured_start_date,
+            "effective_first_signal_date": first_signal,
+            "first_daily_row_date": daily_rows[0]["trade_date"] if daily_rows else None,
+            "startup_gap_days": startup_gap_days(configured_start_date, first_signal),
+            "start_date_was_silently_lifted_to_first_signal": False,
+            "initial_rebalance_event_present": any(
+                str(row.get("rebalance_event_type") or "") == "initial_rebalance_event"
+                for row in raw_signal_rows
+            ),
+        },
         "execution": {
             "initial_cash": initial_cash,
             "target_exposure": target_exposure,
@@ -195,8 +208,12 @@ def _build_notes(sector_ids: list[str], dividend_file_counts: dict[str, int]) ->
 
 
 def _load_signals(path: Path) -> dict[str, dict[str, float]]:
+    return _load_signals_from_rows(read_csv_rows(path))
+
+
+def _load_signals_from_rows(rows: list[dict[str, Any]]) -> dict[str, dict[str, float]]:
     result: dict[str, dict[str, float]] = defaultdict(dict)
-    for row in read_csv_rows(path):
+    for row in rows:
         day = str(row.get("trade_date") or "")[:10]
         code = str(row.get("code") or "")
         weight = to_float(row.get("target_weight"))
@@ -770,14 +787,21 @@ def _build_report(summary: dict[str, Any]) -> str:
         "max_drawdown_interval",
     ]:
         lines.append(f"- `{key}`: `{fmt_float(metrics.get(key)) if key != 'max_drawdown_interval' else metrics.get(key)}`")
+    health = summary.get("rebalance_order_health", {})
+    startup = summary.get("startup_preload", {})
     lines.extend(
         [
             "",
-            "## Rebalance Order Health",
+            "## Startup Preload",
             "",
+            f"- `configured_start_date`: `{startup.get('configured_start_date')}`",
+            f"- `effective_first_signal_date`: `{startup.get('effective_first_signal_date')}`",
+            f"- `first_daily_row_date`: `{startup.get('first_daily_row_date')}`",
+            f"- `startup_gap_days`: `{startup.get('startup_gap_days')}`",
+            f"- `start_date_was_silently_lifted_to_first_signal`: `{startup.get('start_date_was_silently_lifted_to_first_signal')}`",
         ]
     )
-    health = summary.get("rebalance_order_health", {})
+    lines.extend(["", "## Rebalance Order Health", ""])
     for key in [
         "rebalance_signal_count",
         "normal_rebalance_count",

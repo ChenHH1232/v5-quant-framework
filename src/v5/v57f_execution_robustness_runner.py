@@ -15,6 +15,7 @@ from typing import Any
 from v5.io_utils import read_csv_rows, write_csv_rows, write_json_file
 from v5.math_utils import to_float
 from v5.rebalance_order_health import build_rebalance_order_health
+from v5.startup_preload import startup_gap_days
 
 
 DEFAULT_CONFIG = Path("config/dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f.json")
@@ -106,11 +107,12 @@ def run_v57f_execution_robustness(
     config = _read_json(config_path)
     project = str(config.get("project") or "dividend_low_vol_sector_neutral_equal_sleeve_etf_v57f")
     start_date = str(config.get("portfolio", {}).get("start_date") or "2021-05-01")
+    configured_start_date = start_date
     end_date = str(config.get("portfolio", {}).get("end_date") or "2026-05-31")
     signals = _load_signals(signals_csv)
     if not signals:
         raise ValueError(f"no frozen V57f signals found: {signals_csv}")
-    start_date = max(start_date, min(signals))
+    first_signal = min(signals)
 
     price_files = [Path(str(sector["price_csv"])) for sector in config.get("sectors", []) if sector.get("price_csv")]
     dividend_files = [Path(str(sector["dividend_csv"])) for sector in config.get("sectors", []) if sector.get("dividend_csv")]
@@ -166,6 +168,13 @@ def run_v57f_execution_robustness(
             "config": str(config_path),
             "signals_csv": str(signals_csv),
             "window": {"start_date": start_date, "end_date": end_date},
+            "startup_preload": {
+                "configured_start_date": configured_start_date,
+                "effective_first_signal_date": first_signal,
+                "first_daily_row_date": daily_rows[0]["trade_date"] if daily_rows else None,
+                "startup_gap_days": startup_gap_days(configured_start_date, first_signal),
+                "start_date_was_silently_lifted_to_first_signal": False,
+            },
             "execution_policy": variant.policy,
             "frozen_logic": {
                 "signals_are_reused": True,
@@ -236,6 +245,8 @@ def run_v57f_execution_robustness(
         signals=signals,
         baseline_summary=_read_json_if_exists(baseline_summary_path),
         production_summary=_read_json_if_exists(production_summary_path),
+        configured_start_date=configured_start_date,
+        first_signal_date=first_signal,
     )
     write_json_file(freeze_manifest_path, freeze_manifest)
     write_csv_rows(variant_matrix_csv, VARIANT_FIELDS, variant_rows)
@@ -581,6 +592,8 @@ def _build_freeze_manifest(
     signals: dict[str, dict[str, float]],
     baseline_summary: dict[str, Any],
     production_summary: dict[str, Any],
+    configured_start_date: str,
+    first_signal_date: str,
 ) -> dict[str, Any]:
     baseline_metrics = baseline_summary.get("metrics", {}) if isinstance(baseline_summary, dict) else {}
     health = baseline_summary.get("rebalance_order_health", {}) if isinstance(baseline_summary, dict) else {}
@@ -596,6 +609,12 @@ def _build_freeze_manifest(
         "signals_csv": str(signals_csv),
         "signals_sha256": _sha256(signals_csv),
         "signal_count": len(signals),
+        "startup_preload": {
+            "configured_start_date": configured_start_date,
+            "effective_first_signal_date": first_signal_date,
+            "startup_gap_days": startup_gap_days(configured_start_date, first_signal_date),
+            "start_date_was_silently_lifted_to_first_signal": False,
+        },
         "baseline_summary_path": str(baseline_summary_path),
         "baseline_summary_sha256": _sha256(baseline_summary_path),
         "production_summary_path": str(production_summary_path),
@@ -646,6 +665,7 @@ def _build_summary(
         "status": "execution_robustness_completed_not_tuning",
         "experiment_layer": "engineering_execution_robustness",
         "baseline_variant": baseline.get("execution_variant", ""),
+        "startup_preload": freeze_manifest.get("startup_preload", {}),
         "variant_count": len(variant_rows),
         "stable_positive_excess_variant_count": len(stable_rows),
         "risk_event_counts": _count_values(risk_rows, "risk_event"),

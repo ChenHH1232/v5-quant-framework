@@ -95,6 +95,9 @@ def test_v57f_execution_robustness_generates_freeze_and_variant_matrix(tmp_path:
     summary = json.loads(result.summary_json.read_text(encoding="utf-8"))
     assert summary["status"] == "execution_robustness_completed_not_tuning"
     assert "platform_replication_passed" in summary["not_status"]
+    assert summary["startup_preload"]["configured_start_date"] == "2021-05-01"
+    assert summary["startup_preload"]["effective_first_signal_date"] == "2021-10-08"
+    assert summary["startup_preload"]["start_date_was_silently_lifted_to_first_signal"] is False
 
 
 def _write_csv(path: Path, fieldnames: list[str], rows: list[list[object]]) -> None:

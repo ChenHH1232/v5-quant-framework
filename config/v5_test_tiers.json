@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "policy_id": "v5_test_tiers",
+  "tiers": {
+    "fast": [
+      "tests.test_v5k_active_model_registry_runner",
+      "tests.test_v5j_momentum_overlay_partial_buy_skip_runner",
+      "tests.test_v5f_clean_forward_target_population_runner",
+      "tests.test_v5k_historical_platform_contract_archive_runner"
+      ,"tests.test_v5k_reproducibility_provenance_runner"
+      ,"tests.test_v5k_experiment_catalog_runner"
+      ,"tests.test_v5k_workflow_repair_closeout_runner"
+      ,"tests.test_v5k_workflow_activation_runner"
+      ,"tests.test_v5l_candidate_hardening_runners"
+    ],
+    "standard": [
+      "tests.test_v5k_active_model_registry_runner",
+      "tests.test_v5j_momentum_overlay_partial_buy_skip_runner",
+      "tests.test_v5f_clean_forward_target_population_runner",
+      "tests.test_v5k_historical_platform_contract_archive_runner",
+      "tests.test_v5e_sleeve_cash_bucket_engineering_runner",
+      "tests.test_v5e_sleeve_cash_policy_spec_runner",
+      "tests.test_v5e_capital_sensitivity_runner"
+      ,"tests.test_v5k_workflow_activation_runner"
+      ,"tests.test_v5l_candidate_hardening_runners"
+      ,"tests.test_v5p_benchmark_discovery_and_research_sequence_runner"
+      ,"tests.test_v5q_overall_report_readiness_repair_runner"
+      ,"tests.test_v5s_report_draft_review_runner"
+      ,"tests.test_v5t_report_publication_finalization_runner"
+      ,"tests.test_v5u_graduate_project_portfolio_runner"
+    ],
+    "extended": {
+      "command": "python -m unittest discover -s tests",
+      "note": "May exceed ten minutes; run only in a deliberately provisioned environment."
+    }
+  },
+  "external_market_or_platform_access": false
+}

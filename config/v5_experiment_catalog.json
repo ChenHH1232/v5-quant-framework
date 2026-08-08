@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "catalog_id": "v5_experiment_catalog",
+  "market_data_scope_end": "2026-05-31",
+  "experiments": [
+    {"experiment_id": "v57f_startup_preload_repaired_baseline", "layer": "baseline", "status": "frozen_required_benchmark", "baseline_id": "self", "evidence": "v5_startup_warmup_price_repair/current/runs/v57f_warmup_repaired_daily_backtest", "next_action": "none"},
+    {"experiment_id": "internal_subsleeve_mom12_70_30", "layer": "candidate", "status": "primary_forward_paper_candidate_not_accepted", "baseline_id": "v57f_startup_preload_repaired_baseline", "evidence": "v5f_internal_subsleeve_pm_quant_review/current/v5f_internal_subsleeve_review_summary.json", "hardening_evidence": "v5l_candidate_hardening_closeout/current/v5l_candidate_hardening_summary.json", "hardening_gate": "candidate_needs_cash_constrained_retest", "next_action": "historical_governance_and_reconciliation_only"},
+    {"experiment_id": "locked_pool_monthly_mom12_70_30", "layer": "diagnostic", "status": "independent_validation_blocked", "baseline_id": "v57f_startup_preload_repaired_baseline", "evidence": "v5f_monthly_momentum_research", "next_action": "original_pre2021_pit_evidence_only"},
+    {"experiment_id": "mr_borrow_paired_drop_spike_net0_cap10_next2", "layer": "diagnostic", "status": "independent_validation_blocked", "baseline_id": "v57f_startup_preload_repaired_baseline", "evidence": "v5f_spike_funded_mr_borrowing", "next_action": "original_pre2021_pit_evidence_only"},
+    {"experiment_id": "pressure_positive_1000_else_1400_buy", "layer": "execution_observation", "status": "observation_only", "baseline_id": "internal_subsleeve_mom12_70_30", "evidence": "v5h_buy_execution", "next_action": "historical_diagnostics_only"},
+    {"experiment_id": "v5e_profit_lock_main_20pct_sell50", "layer": "diagnostic", "status": "historical_closeout_forward_only", "baseline_id": "v57f_startup_preload_repaired_baseline", "evidence": "v5e_historical_closeout_governance_packet", "next_action": "none"}
+  ],
+  "forbidden_statuses": ["accepted", "live_approved", "v57f_replacement"]
+}

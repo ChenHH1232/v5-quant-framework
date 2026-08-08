@@ -15,6 +15,8 @@ from v5.joinquant_capability_probe import run_joinquant_capability_probe
 from v5.joinquant_real_data_runner import collect_joinquant_real_data
 from v5.local_backtest import DEFAULT_BACKTEST_END, DEFAULT_BACKTEST_START, BacktestOptions, run_local_backtest
 from v5.paths import DEFAULT_DATABASE_DIR
+from v5.v5_startup_preload_repair_runner import run_v5_startup_preload_repair
+from v5.v5_startup_warmup_data_repair_runner import run_v5_startup_warmup_price_repair
 from v5.validation_runner import validate_panel
 from v5.workspace_contract_audit_runner import DEFAULT_OUT_DIR as DEFAULT_WORKSPACE_CONTRACT_AUDIT_OUT, run_workspace_contract_audit
 
@@ -29,6 +31,18 @@ def register_core_commands(subparsers: argparse._SubParsersAction[argparse.Argum
     workspace_audit_parser.add_argument("--out", type=Path, default=DEFAULT_WORKSPACE_CONTRACT_AUDIT_OUT)
     workspace_audit_parser.add_argument("--registry", type=Path, default=Path("docs/governance/status_registry.json"))
     workspace_audit_parser.set_defaults(handler=_handle_audit_workspace_contract)
+
+    startup_parser = subparsers.add_parser("audit-startup-preload")
+    startup_parser.add_argument("--root", type=Path, default=Path("."))
+    startup_parser.set_defaults(handler=_handle_audit_startup_preload)
+
+    startup_repair_parser = subparsers.add_parser("repair-startup-preload")
+    startup_repair_parser.add_argument("--root", type=Path, default=Path("."))
+    startup_repair_parser.set_defaults(handler=_handle_audit_startup_preload)
+
+    startup_warmup_parser = subparsers.add_parser("repair-startup-warmup-prices")
+    startup_warmup_parser.add_argument("--root", type=Path, default=Path("."))
+    startup_warmup_parser.set_defaults(handler=_handle_startup_warmup_prices)
 
     run_parser = subparsers.add_parser("run")
     run_parser.add_argument("spec", type=Path)
@@ -141,6 +155,18 @@ def _handle_audit_workspace_contract(args: argparse.Namespace) -> int:
     result = run_workspace_contract_audit(root=args.root, out_dir=args.out, registry_path=args.registry)
     print(result.report_path)
     return 0 if result.status == "passed" else 2
+
+
+def _handle_audit_startup_preload(args: argparse.Namespace) -> int:
+    result = run_v5_startup_preload_repair(root=args.root)
+    print(json.dumps(result, ensure_ascii=False, indent=2))
+    return 0 if not result.get("blocker_count") else 2
+
+
+def _handle_startup_warmup_prices(args: argparse.Namespace) -> int:
+    result = run_v5_startup_warmup_price_repair(root=args.root)
+    print(json.dumps(result, ensure_ascii=False, indent=2))
+    return 0 if not result.get("blocker_count") else 2
 
 
 def _handle_run(args: argparse.Namespace) -> int:

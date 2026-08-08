@@ -6,7 +6,12 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from v5.fxbaogao_report_runner import collect_fxbaogao_report_search, fetch_fxbaogao_paragraphs, load_fxbaogao_api_key
+from v5.fxbaogao_report_runner import (
+    collect_fxbaogao_report_search,
+    fetch_fxbaogao_paragraphs,
+    filter_fxbaogao_report_candidates,
+    load_fxbaogao_api_key,
+)
 
 
 class FxbaogaoReportRunnerTests(unittest.TestCase):
@@ -77,6 +82,74 @@ class FxbaogaoReportRunnerTests(unittest.TestCase):
                 rows = list(csv.DictReader(handle))
             self.assertEqual(rows[0]["content"], "内含价值段落")
             self.assertEqual(rows[0]["view_url"], "https://www.fxbaogao.com/view?id=123")
+
+    def test_filter_candidates_excludes_noisy_titles_and_ranks_relevant_reports(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            candidates = root / "report_candidates.csv"
+            with candidates.open("w", encoding="utf-8-sig", newline="") as handle:
+                writer = csv.DictWriter(
+                    handle,
+                    fieldnames=[
+                        "report_id",
+                        "title",
+                        "org_name",
+                        "industry_name",
+                        "page_num",
+                        "pub_time",
+                        "pub_time_str",
+                        "view_url",
+                        "paragraph_hit_count",
+                    ],
+                )
+                writer.writeheader()
+                writer.writerow(
+                    {
+                        "report_id": "1",
+                        "title": "红利低波策略专题：回撤控制与风险预算",
+                        "org_name": "测试证券",
+                        "industry_name": "金融工程",
+                        "page_num": "30",
+                        "pub_time": "1",
+                        "pub_time_str": "2026/01/01",
+                        "view_url": "https://www.fxbaogao.com/view?id=1",
+                        "paragraph_hit_count": "2",
+                    }
+                )
+                writer.writerow(
+                    {
+                        "report_id": "2",
+                        "title": "红利低波周报：市场跟踪",
+                        "org_name": "测试证券",
+                        "industry_name": "策略",
+                        "page_num": "8",
+                        "pub_time": "2",
+                        "pub_time_str": "2026/01/02",
+                        "view_url": "https://www.fxbaogao.com/view?id=2",
+                        "paragraph_hit_count": "1",
+                    }
+                )
+
+            manifest = filter_fxbaogao_report_candidates(
+                [candidates],
+                root / "filtered",
+                include_all=["红利低波"],
+                include_any=["回撤", "风险预算"],
+            )
+            with manifest.open(encoding="utf-8-sig") as handle:
+                payload = json.load(handle)
+            self.assertEqual(payload["accepted_count"], 1)
+            with (root / "filtered" / "filtered_report_candidates.csv").open(
+                encoding="utf-8-sig", newline=""
+            ) as handle:
+                accepted = list(csv.DictReader(handle))
+            self.assertEqual(accepted[0]["report_id"], "1")
+            with (root / "filtered" / "rejected_report_candidates.csv").open(
+                encoding="utf-8-sig", newline=""
+            ) as handle:
+                rejected = list(csv.DictReader(handle))
+            self.assertEqual(rejected[0]["report_id"], "2")
+            self.assertIn("title_excluded", rejected[0]["rejection_reason"])
 
 
 if __name__ == "__main__":

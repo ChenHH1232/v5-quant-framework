@@ -107,3 +107,34 @@ def test_basket_daily_backtest_flags_initial_rebalance_without_orders(tmp_path: 
     assert summary["rebalance_order_health"]["first_executed_order_date"] == "2021-01-05"
     assert summary["rebalance_order_health"]["needs_review"] is True
     assert "no_order_no_position" in health_rows
+
+
+def test_basket_daily_backtest_does_not_lift_start_date_to_first_signal(tmp_path: Path) -> None:
+    prices = tmp_path / "prices.csv"
+    prices.write_text(
+        "date,code,open,close,high_limit,low_limit,paused\n"
+        "2021-01-04,A,10,10,11,9,0\n"
+        "2021-01-05,A,10,10,11,9,0\n"
+        "2021-01-06,A,10,10,11,9,0\n",
+        encoding="utf-8",
+    )
+    dividends = tmp_path / "dividends.csv"
+    dividends.write_text("code,ex_date,pay_date,net_cash_per_share,stock_dividend_ratio\n", encoding="utf-8")
+    signals = tmp_path / "signals.csv"
+    signals.write_text("trade_date,code,target_weight\n2021-01-06,A,1\n", encoding="utf-8")
+    config = {
+        "project": "test_startup_gap",
+        "portfolio": {"start_date": "2021-01-04", "end_date": "2021-01-06"},
+        "sectors": [{"sector_id": "s", "strategy_id": "x", "price_csv": str(prices), "dividend_csv": str(dividends)}],
+    }
+    config_path = tmp_path / "config.json"
+    config_path.write_text(json.dumps(config), encoding="utf-8")
+
+    result = run_basket_daily_backtest(config_path, signals, tmp_path / "out", initial_cash=10000, target_exposure=1.0)
+
+    summary = json.loads(result.summary_path.read_text(encoding="utf-8"))
+    assert summary["window"]["start_date"] == "2021-01-04"
+    assert summary["startup_preload"]["first_daily_row_date"] == "2021-01-04"
+    assert summary["startup_preload"]["effective_first_signal_date"] == "2021-01-06"
+    assert summary["startup_preload"]["startup_gap_days"] == 2
+    assert summary["startup_preload"]["start_date_was_silently_lifted_to_first_signal"] is False

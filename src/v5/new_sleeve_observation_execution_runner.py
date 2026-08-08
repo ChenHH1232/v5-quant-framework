@@ -179,6 +179,18 @@ DEFAULT_CANDIDATES = [
         "small_sample_capped_observation",
     ),
     Candidate(
+        "consumer_staples_cashflow",
+        "Consumer staples cash-flow leaders",
+        "必需消费现金流",
+        Path("validation_formal_v5a6_consumer_subsector")
+        / "consumer_staples_cashflow"
+        / "consumer_subsector_validation_summary.json",
+        None,
+        None,
+        "research_repair",
+        "research_signal_only",
+    ),
+    Candidate(
         "coal",
         "Coal",
         "煤炭",
@@ -381,20 +393,20 @@ def _route_policy(candidate: Candidate, evidence: dict[str, Any]) -> tuple[str, 
             "Do not rerun parameters for returns.",
         )
     if candidate.sector_id == "food_beverage":
-        if order == "needs_review" or local == "pass":
-            return (
-                "engineering_needs_review",
-                "rebalance_order_health_and_dividend_review",
-                "Engineering Agent",
-                "Repair or explain order-health, skipped-order and dividend issues.",
-                "Do not ignore order-health or promote before repair.",
-            )
+        return (
+            "archived_not_current_mandate",
+            "v5_closed_pm_tradability_failed",
+            "Project Manager Agent",
+            "Keep food/beverage paused in V5; restart only with a new hypothesis and repaired 2021 PIT contract.",
+            "Do not continue order-health repair or promote a weak historical sample.",
+        )
+    if candidate.sector_id == "consumer_staples_cashflow":
         return (
             "research_data_gate_repair",
-            "research_repair_before_engineering",
+            "research_source_pit_contract_repair",
             "Research Agent",
-            "Repair packaged-food PIT/state evidence before local daily simulation.",
-            "Do not run sidecar basket yet.",
+            "Repair source/PIT contract and convert the consumer-staples cash-flow signal into a Quant-ready hypothesis.",
+            "Do not run Engineering or add the sleeve to V57f.",
         )
     if candidate.sector_id == "insurance":
         return (
@@ -685,6 +697,7 @@ def _sector_tokens(sector_id: str) -> list[str]:
         "home_appliances": ["home_appliances", "home appliances"],
         "oil_gas_pipeline_integrated": ["oil_gas", "oil / gas"],
         "food_beverage": ["food_beverage", "food / beverage", "packaged_food"],
+        "consumer_staples_cashflow": ["consumer_staples", "consumer staples", "consumer_staples_cashflow"],
         "insurance": ["insurance", "ev / nbv", "pev"],
         "telecom_operators": ["telecom", "arpu"],
         "coal": ["coal", "cyclical_sector"],
@@ -745,7 +758,13 @@ def _paper_default(candidate: Candidate) -> str:
 
 
 def _sidecar_missing_status(candidate: Candidate) -> str:
-    if candidate.sector_id in {"home_appliances", "insurance", "oil_gas_pipeline_integrated", "food_beverage"}:
+    if candidate.sector_id in {
+        "home_appliances",
+        "insurance",
+        "oil_gas_pipeline_integrated",
+        "food_beverage",
+        "consumer_staples_cashflow",
+    }:
         return "not_run_pending_pm_gate"
     if candidate.sector_id == "coal":
         return "not_allowed_archived"

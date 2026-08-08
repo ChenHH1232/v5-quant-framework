@@ -1,0 +1,25 @@
+name: V5 Fast Governance Tests
+
+on:
+  push:
+    paths:
+      - 'src/v5/**'
+      - 'tests/test_v5k_*'
+      - 'tests/test_v5j_momentum_overlay_partial_buy_skip_runner.py'
+      - 'tests/test_v5f_clean_forward_target_population_runner.py'
+      - 'config/v5_*'
+      - 'scripts/run_v5_tests.ps1'
+      - '.github/workflows/v5-fast-tests.yml'
+  pull_request:
+
+jobs:
+  fast-governance:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run fast local-only governance suite
+        shell: pwsh
+        run: .\scripts\run_v5_tests.ps1 -Tier Fast

@@ -10,6 +10,13 @@ from v5.basket_field_utils import enrich_basket_panel_row
 from v5.basket_scoring import score_basket_date_rows
 from v5.io_utils import read_csv_rows, write_csv_rows, write_json_file
 from v5.math_utils import fmt_float, to_float
+from v5.startup_preload import (
+    build_startup_date_model,
+    first_field_available_dates,
+    first_required_candidate_date,
+    first_required_field_pass_date,
+    load_trading_days_from_price_files,
+)
 
 
 DEFAULT_CONFIG = Path("config/dividend_low_vol_fcf_basket_v56.json")
@@ -42,6 +49,8 @@ def construct_dividend_low_vol_fcf_basket(
     end_date = str(portfolio.get("end_date") or "")
     required_fields = [str(item) for item in portfolio.get("required_fields", [])]
     calendar_policy = str(portfolio.get("rebalance_calendar_policy") or "union")
+    price_files = [Path(str(sector.get("price_csv") or "")) for sector in sectors if sector.get("price_csv")]
+    trading_days = load_trading_days_from_price_files(price_files) if price_files else sorted({str(row.get("trade_date") or "")[:10] for row in all_rows if row.get("trade_date")})
 
     raw_spec = {"signals": {"factors": factors, "scoring": scoring}}
     target_count = int(portfolio.get("target_count", 30))
@@ -49,6 +58,11 @@ def construct_dividend_low_vol_fcf_basket(
     single_stock_cap = float(portfolio.get("single_stock_weight_cap", 0.08))
     all_rows = _filter_rows(all_rows, start_date, end_date, required_fields)
     rebalance_dates = _rebalance_dates(all_rows, sectors, calendar_policy)
+    startup_model = build_startup_date_model(
+        deployment_date=start_date,
+        trading_days=trading_days,
+        regular_rebalance_dates=rebalance_dates,
+    ) if start_date else None
 
     signal_rows: list[dict[str, Any]] = []
     for trade_date in rebalance_dates:
@@ -80,6 +94,7 @@ def construct_dividend_low_vol_fcf_basket(
                     "volatility_120d": item.get("volatility_120d", ""),
                     "low_vol_score": item.get("low_vol_score", ""),
                     "business_purity_gate": item.get("business_purity_gate", ""),
+                    "rebalance_event_type": "initial_rebalance_event" if startup_model and startup_model.warmup_available and trade_date == startup_model.initial_rebalance_event else "regular_rebalance",
                 }
             )
 
@@ -110,10 +125,11 @@ def construct_dividend_low_vol_fcf_basket(
             "volatility_120d",
             "low_vol_score",
             "business_purity_gate",
+            "rebalance_event_type",
         ],
         signal_rows,
     )
-    summary = _summary(config, signal_rows, signals_path, report_path)
+    summary = _summary(config, signal_rows, signals_path, report_path, all_rows, required_fields, startup_model)
     write_json_file(summary_path, summary)
     report_path.write_text(_report(summary, signal_rows), encoding="utf-8")
     return BasketConstructionResult(out_dir, signals_path, summary_path, report_path, len(rebalance_dates), len(signal_rows))
@@ -187,11 +203,39 @@ def _select_with_caps(scored: list[dict[str, Any]], target_count: int, sector_ca
     return selected
 
 
-def _summary(config: dict[str, Any], signal_rows: list[dict[str, Any]], signals_path: Path, report_path: Path) -> dict[str, Any]:
+def _summary(
+    config: dict[str, Any],
+    signal_rows: list[dict[str, Any]],
+    signals_path: Path,
+    report_path: Path,
+    filtered_rows: list[dict[str, Any]],
+    required_fields: list[str],
+    startup_model: Any,
+) -> dict[str, Any]:
     sector_counts: dict[str, int] = {}
     for row in signal_rows:
         sector_id = str(row.get("sector_id") or "")
         sector_counts[sector_id] = sector_counts.get(sector_id, 0) + 1
+    first_signal_date = min({str(row["trade_date"]) for row in signal_rows}) if signal_rows else ""
+    startup = {}
+    if startup_model is not None:
+        field_dates = first_field_available_dates(filtered_rows, ["volatility_120d", "max_drawdown_120d", "low_vol_score", "dividend_yield"])
+        startup = {
+            "deployment_date": startup_model.deployment_date,
+            "first_tradable_date": startup_model.first_tradable_date,
+            "warmup_start_date": startup_model.warmup_start_date,
+            "trade_start_date": startup_model.trade_start_date,
+            "required_lookback_days": startup_model.required_lookback_days,
+            "warmup_buffer_days": startup_model.warmup_buffer_days,
+            "initial_rebalance_event": startup_model.initial_rebalance_event,
+            "warmup_available": startup_model.warmup_available,
+            "startup_ready": bool(startup_model.warmup_available and first_signal_date and first_signal_date == startup_model.initial_rebalance_event),
+            "first_signal_date": first_signal_date,
+            "required_fields_first_pass_date": first_required_field_pass_date(filtered_rows, required_fields),
+            "required_fields_first_candidate_date": first_required_candidate_date(filtered_rows, required_fields),
+            "factor_first_available_dates": field_dates,
+            "startup_blocker": "" if first_signal_date == startup_model.initial_rebalance_event else "initial_rebalance_not_generated_required_fields_or_warmup_missing",
+        }
     return {
         "schema_version": 1,
         "project": config.get("project", "v56_dividend_low_vol_fcf_basket"),
@@ -202,6 +246,7 @@ def _summary(config: dict[str, Any], signal_rows: list[dict[str, Any]], signals_
         "sector_holding_counts": sector_counts,
         "signals_path": str(signals_path),
         "report_path": str(report_path),
+        "startup_preload": startup,
         "pm_rule": "This is a basket-construction shadow signal file. It is not a backtest, platform replication or accepted strategy.",
     }
 
@@ -230,6 +275,21 @@ def _report(summary: dict[str, Any], signal_rows: list[dict[str, Any]]) -> str:
     lines.extend(["", "## First Signal Dates", ""])
     for day in first_dates:
         lines.append(f"- `{day}`")
+    if summary.get("startup_preload"):
+        startup = summary["startup_preload"]
+        lines.extend(
+            [
+                "",
+                "## Startup Preload",
+                "",
+                f"- `deployment_date`: `{startup.get('deployment_date')}`",
+                f"- `first_tradable_date`: `{startup.get('first_tradable_date')}`",
+                f"- `warmup_start_date`: `{startup.get('warmup_start_date')}`",
+                f"- `initial_rebalance_event`: `{startup.get('initial_rebalance_event')}`",
+                f"- `startup_ready`: `{startup.get('startup_ready')}`",
+                f"- `startup_blocker`: `{startup.get('startup_blocker')}`",
+            ]
+        )
     lines.extend(
         [
             "",

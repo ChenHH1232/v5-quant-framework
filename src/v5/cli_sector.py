@@ -98,6 +98,22 @@ from v5.v5_scope_closeout_runner import (
     DEFAULT_V57F_SUMMARY as DEFAULT_V5_SCOPE_CLOSEOUT_V57F_SUMMARY,
     build_v5_scope_closeout_packet,
 )
+from v5.v5b_forward_paper_handoff_runner import (
+    DEFAULT_ALL_CANDIDATES_STATUS as DEFAULT_V5B_HANDOFF_ALL_CANDIDATES_STATUS,
+    DEFAULT_ALL_CANDIDATES_SUMMARY as DEFAULT_V5B_HANDOFF_ALL_CANDIDATES_SUMMARY,
+    DEFAULT_EXECUTION_ROBUSTNESS as DEFAULT_V5B_HANDOFF_EXECUTION_ROBUSTNESS,
+    DEFAULT_GOVERNANCE_REPORT as DEFAULT_V5B_HANDOFF_GOVERNANCE_REPORT,
+    DEFAULT_GOVERNANCE_SUMMARY as DEFAULT_V5B_HANDOFF_GOVERNANCE_SUMMARY,
+    DEFAULT_OUT_DIR as DEFAULT_V5B_HANDOFF_OUT,
+    DEFAULT_PRODUCTION_SUMMARY as DEFAULT_V5B_HANDOFF_PRODUCTION_SUMMARY,
+    DEFAULT_PROMOTION_QUEUE as DEFAULT_V5B_HANDOFF_PROMOTION_QUEUE,
+    DEFAULT_PROMOTION_SUMMARY as DEFAULT_V5B_HANDOFF_PROMOTION_SUMMARY,
+    DEFAULT_STATUS_REGISTRY as DEFAULT_V5B_HANDOFF_STATUS_REGISTRY,
+    DEFAULT_V5_FINAL_STATUS as DEFAULT_V5B_HANDOFF_V5_FINAL_STATUS,
+    DEFAULT_V5_SCOPE_QUEUE as DEFAULT_V5B_HANDOFF_V5_SCOPE_QUEUE,
+    DEFAULT_V5_SCOPE_SUMMARY as DEFAULT_V5B_HANDOFF_V5_SCOPE_SUMMARY,
+    build_v5b_forward_paper_handoff,
+)
 from v5.sector_replication_roadmap_runner import (
     DEFAULT_CONFIG as DEFAULT_V58_REPLICATION_ROADMAP_CONFIG,
     DEFAULT_OUT_DIR as DEFAULT_V58_REPLICATION_ROADMAP_OUT,
@@ -975,6 +991,23 @@ def register_sector_commands(subparsers: argparse._SubParsersAction[argparse.Arg
     v5_scope_closeout_parser.add_argument("--as-of-date", default="2026-07-25")
     v5_scope_closeout_parser.set_defaults(handler=_handle_build_v5_scope_closeout)
 
+    v5b_handoff_parser = subparsers.add_parser("build-v5b-forward-paper-handoff")
+    v5b_handoff_parser.add_argument("--status-registry", type=Path, default=DEFAULT_V5B_HANDOFF_STATUS_REGISTRY)
+    v5b_handoff_parser.add_argument("--v5-scope-summary", type=Path, default=DEFAULT_V5B_HANDOFF_V5_SCOPE_SUMMARY)
+    v5b_handoff_parser.add_argument("--v5-final-status", type=Path, default=DEFAULT_V5B_HANDOFF_V5_FINAL_STATUS)
+    v5b_handoff_parser.add_argument("--v5-scope-queue", type=Path, default=DEFAULT_V5B_HANDOFF_V5_SCOPE_QUEUE)
+    v5b_handoff_parser.add_argument("--governance-summary", type=Path, default=DEFAULT_V5B_HANDOFF_GOVERNANCE_SUMMARY)
+    v5b_handoff_parser.add_argument("--governance-report", type=Path, default=DEFAULT_V5B_HANDOFF_GOVERNANCE_REPORT)
+    v5b_handoff_parser.add_argument("--production-summary", type=Path, default=DEFAULT_V5B_HANDOFF_PRODUCTION_SUMMARY)
+    v5b_handoff_parser.add_argument("--promotion-summary", type=Path, default=DEFAULT_V5B_HANDOFF_PROMOTION_SUMMARY)
+    v5b_handoff_parser.add_argument("--promotion-queue", type=Path, default=DEFAULT_V5B_HANDOFF_PROMOTION_QUEUE)
+    v5b_handoff_parser.add_argument("--all-candidates-summary", type=Path, default=DEFAULT_V5B_HANDOFF_ALL_CANDIDATES_SUMMARY)
+    v5b_handoff_parser.add_argument("--all-candidates-status", type=Path, default=DEFAULT_V5B_HANDOFF_ALL_CANDIDATES_STATUS)
+    v5b_handoff_parser.add_argument("--execution-robustness", type=Path, default=DEFAULT_V5B_HANDOFF_EXECUTION_ROBUSTNESS)
+    v5b_handoff_parser.add_argument("--out", type=Path, default=DEFAULT_V5B_HANDOFF_OUT)
+    v5b_handoff_parser.add_argument("--as-of-date", default="2026-07-25")
+    v5b_handoff_parser.set_defaults(handler=_handle_build_v5b_forward_paper_handoff)
+
 
 def _handle_collect_similar_sector_pit_panel(args: argparse.Namespace) -> int:
     print(
@@ -1759,6 +1792,28 @@ def _handle_build_v5_scope_closeout(args: argparse.Namespace) -> int:
             food_review_json=args.food_review,
             out_dir=args.out,
             scope_end_date=args.scope_end_date,
+            as_of_date=args.as_of_date,
+        )
+    )
+    return 0
+
+
+def _handle_build_v5b_forward_paper_handoff(args: argparse.Namespace) -> int:
+    print(
+        build_v5b_forward_paper_handoff(
+            status_registry=args.status_registry,
+            v5_scope_summary=args.v5_scope_summary,
+            v5_final_status=args.v5_final_status,
+            v5_scope_queue=args.v5_scope_queue,
+            governance_summary=args.governance_summary,
+            governance_report=args.governance_report,
+            production_summary=args.production_summary,
+            promotion_summary=args.promotion_summary,
+            promotion_queue=args.promotion_queue,
+            all_candidates_summary=args.all_candidates_summary,
+            all_candidates_status=args.all_candidates_status,
+            execution_robustness=args.execution_robustness,
+            out_dir=args.out,
             as_of_date=args.as_of_date,
         )
     )

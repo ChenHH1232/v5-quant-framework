@@ -41,6 +41,7 @@ def test_new_sleeve_observation_execution_routes_all_candidates(tmp_path: Path) 
             ["food_beverage", "yes", "yes", "yes"],
             ["insurance", "yes", "yes", "no"],
             ["telecom_operators", "yes", "yes", "yes"],
+            ["consumer_staples_cashflow", "no", "yes", "no"],
             ["coal", "no", "yes", "no"],
         ],
     )
@@ -60,6 +61,12 @@ def test_new_sleeve_observation_execution_routes_all_candidates(tmp_path: Path) 
                         "sector": "food_beverage",
                         "current_status": ["engineering_local_daily_simulation_needs_review"],
                         "evidence_paths": ["panel_with_low_vol.csv", "state_guard.csv"],
+                    },
+                    {
+                        "strategy_id": "consumer",
+                        "sector": "consumer_staples_cashflow",
+                        "current_status": ["research_signal_only_not_engineering_handoff"],
+                        "evidence_paths": ["consumer_subsector_validation_summary.json"],
                     },
                     {
                         "strategy_id": "coal",
@@ -102,12 +109,13 @@ def test_new_sleeve_observation_execution_routes_all_candidates(tmp_path: Path) 
     summary = json.loads(result.master_summary_json.read_text(encoding="utf-8"))
     assert summary["status"] == "all_candidates_routed_no_v57f_change"
     assert summary["freeze"]["freeze_status"] == "pass"
-    assert result.packet_count == 7
+    assert result.packet_count == 8
     routes = list(csv.DictReader(result.route_table_csv.open("r", encoding="utf-8-sig")))
     assert {row["sector_id"] for row in routes} == {candidate.sector_id for candidate in DEFAULT_CANDIDATES}
     by_sector = {row["sector_id"]: row for row in routes}
     assert by_sector["gas_water_operators"]["route_status"] == "observation_paper_tracking"
-    assert by_sector["food_beverage"]["route_status"] == "engineering_needs_review"
+    assert by_sector["food_beverage"]["route_status"] == "archived_not_current_mandate"
+    assert by_sector["consumer_staples_cashflow"]["route_status"] == "research_data_gate_repair"
     assert by_sector["coal"]["route_status"] == "archived_not_current_mandate"
     assert all(row["blocked_action"] for row in routes)
 

@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "policy_id": "v5_historical_operation_boundary",
+  "market_data_max_date": "2026-05-31",
+  "formal_backtest_start": "2021-05-01",
+  "formal_backtest_end": "2026-05-31",
+  "post_boundary_market_operation": "blocked",
+  "blocked_operations": [
+    "generate_forward_targets",
+    "upload_or_receive_forward_positions",
+    "start_joinquant_or_qmt_execution",
+    "read_market_data_after_max_date",
+    "use_post_boundary_data_in_backtest_or_validation"
+  ],
+  "allowed_operations": [
+    "read_local_historical_artifacts_at_or_before_max_date",
+    "historical_reconciliation",
+    "pit_original_source_review_for_pre_boundary_periods",
+    "test_and_governance_repair_without_market_data"
+  ],
+  "accepted": false,
+  "live_trading_approved": false
+}

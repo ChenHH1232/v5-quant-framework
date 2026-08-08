@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "registry_id": "v5_active_model_registry",
+  "as_of_market_data_date": "2026-05-31",
+  "formal_backtest_window": {
+    "start": "2021-05-01",
+    "end": "2026-05-31"
+  },
+  "baseline": {
+    "model_id": "v57f_startup_preload_repaired_baseline",
+    "role": "required_benchmark",
+    "status": "frozen",
+    "evidence": "v5_startup_warmup_price_repair/current/runs/v57f_warmup_repaired_daily_backtest"
+  },
+  "active_models": [
+    {
+      "model_id": "internal_subsleeve_mom12_70_30",
+      "role": "primary_forward_paper_candidate_not_accepted",
+      "baseline_id": "v57f_startup_preload_repaired_baseline",
+      "data_scope_end": "2026-05-31",
+      "allowed_next_action": "historical_governance_and_reconciliation_only",
+      "evidence": "v5f_internal_subsleeve_pm_quant_review/current/v5f_internal_subsleeve_review_summary.json",
+      "hardening_evidence": "v5l_candidate_hardening_closeout/current/v5l_candidate_hardening_summary.json",
+      "hardening_gate": "candidate_needs_cash_constrained_retest",
+      "accepted": false,
+      "live_trading_approved": false
+    }
+  ],
+  "research_lines": [
+    {
+      "model_id": "locked_pool_monthly_mom12_70_30",
+      "role": "research_only_independent_validation_blocked",
+      "baseline_id": "v57f_startup_preload_repaired_baseline",
+      "reason": "exact_pre2021_pit_target_reconstruction_unavailable"
+    },
+    {
+      "model_id": "mr_borrow_paired_drop_spike_net0_cap10_next2",
+      "role": "research_only_independent_validation_blocked",
+      "baseline_id": "v57f_startup_preload_repaired_baseline",
+      "reason": "exact_pre2021_pit_target_reconstruction_unavailable"
+    },
+    {
+      "model_id": "pressure_positive_1000_else_1400_buy",
+      "role": "execution_observation_only",
+      "baseline_id": "internal_subsleeve_mom12_70_30",
+      "reason": "pre2021_not_supported"
+    },
+    {
+      "model_id": "v5e_profit_lock_main_20pct_sell50",
+      "role": "historical_closeout_forward_only",
+      "baseline_id": "v57f_startup_preload_repaired_baseline",
+      "reason": "vwap_edge_too_thin_for_promotion"
+    }
+  ],
+  "global_blocked_actions": [
+    "modify_v57f_core",
+    "mark_accepted",
+    "mark_live_approved",
+    "use_old_v57f_as_primary_benchmark",
+    "use_market_data_after_2026_05_31"
+  ]
+}

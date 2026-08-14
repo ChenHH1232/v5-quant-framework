@@ -1,0 +1,8 @@
+evidence_area,status,scope,report_use,boundary
+正式 daily NAV pairwise,available,"2021-05-06 至 2026-05-29，1,228 日",正式表现正文,validation_not_independent
+repaired baseline 合同,available,startup preload repaired baseline,正式比较基线,旧 2021-10 链路不得使用
+2013-2021 V5 四 sleeve exact PIT 重建,partial_unresolved,部分原始披露与公司行为证据仍缺,研究边界与限制,不得写成完成的独立 rolling 验证
+严格现金 NAV,unavailable,历史原始现金状态缺失,强制披露,阻塞 accepted 与强执行结论
+QMT 历史成交合同,incomplete,脚本、配置、target/order/fill/position/cash 原件不完整,执行证据附录,不得声称精确成交归因
+ETF total-return 合同,unavailable,本地仅有价格参考,economic exposure context,不得计算正式 ETF Alpha/Beta/IR/超额收益
+独立前瞻纸面周期,not_formed,尚无完整 target->order->fill->position->cash 周期,下一门槛,主候选保持 not accepted

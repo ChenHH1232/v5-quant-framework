@@ -1,0 +1,27 @@
+{
+  "task": "v5w_final_report_preparation",
+  "created_at_utc": "2026-08-09T13:49:27.232304+00:00",
+  "formal_baseline": "v57f_startup_preload_repaired_baseline",
+  "formal_window": "2021-05-01_to_2026-05-31",
+  "formal_common_sample": {
+    "start": "2021-05-06",
+    "end": "2026-05-29",
+    "observations": 1228
+  },
+  "primary_candidate": "internal_subsleeve_mom12_70_30",
+  "candidate_status": "primary_forward_paper_candidate_not_accepted",
+  "new_figures": [
+    "v5w_final_report_preparation\\current\\figures\\v5w_formal_pairwise_annual_return_and_underwater.png",
+    "v5w_final_report_preparation\\current\\figures\\v5w_sector_research_decision_funnel.png"
+  ],
+  "formal_pairwise_source": "v5f_structural_rough_screen\\current\\v5f_structural_rough_screen_daily_returns.csv",
+  "sector_screening_source_count": 8,
+  "git_head": "c3675af1c2a6b15acd4aad40c2d7d00e1ad46771",
+  "hard_boundaries": [
+    "validation_not_independent",
+    "strict_cash_nav_unavailable",
+    "qmt_contract_incomplete",
+    "etf_total_return_contract_missing",
+    "independent_forward_paper_cycle_not_formed"
+  ]
+}

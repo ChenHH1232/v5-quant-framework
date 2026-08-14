@@ -1,0 +1,4 @@
+﻿trigger,required,current_status
+explicit_user_authorization_after_historical_boundary,True,not_authorized
+official_repaired_v57f_signal_available,True,not_checked
+no_platform_or_order_before_all_gates,True,enforced

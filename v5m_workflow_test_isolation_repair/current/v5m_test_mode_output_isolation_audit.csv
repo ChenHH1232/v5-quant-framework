@@ -1,0 +1,2 @@
+﻿unit_test_return_code,formal_current_sha_unchanged,test_mode_formal_write_allowed,detail
+0,True,False,execute_tests=False defaults to no formal output write.

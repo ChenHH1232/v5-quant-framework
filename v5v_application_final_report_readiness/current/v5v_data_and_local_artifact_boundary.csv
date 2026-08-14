@@ -1,0 +1,7 @@
+﻿category,version_control,location,reason
+source_config_tests,required,src/; tests/; config/; scripts/; .github/,Rebuilds the research workflow and audit logic.
+curated_governance_and_report_evidence,required,v5q-v5u selected current artifacts,Supports report claims and frozen status.
+raw_minute_daily_market_data,local_only_manifested,data/; local market-data stores,Large licensed source material; never required for application reading.
+annual_report_pdfs_and_ocr,local_only_manifested,local PDF/OCR work areas,Source-file volume and provenance require a separate local ledger.
+platform_logs_orders_and_temp_exports,local_only_manifested,QMT/JoinQuant/log/temp work areas,Historical contract evidence may be incomplete and must not be fabricated.
+render_intermediates_and_caches,excluded,pdf_pages/; tmp*/; logs/,Derived files are regenerated or non-authoritative.

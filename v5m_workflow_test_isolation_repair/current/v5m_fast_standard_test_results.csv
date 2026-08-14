@@ -1,0 +1,14 @@
+﻿tier,status,return_code,test_modules,external_market_or_platform_access,output_tail
+Fast,pass,0,9,False,".........
+----------------------------------------------------------------------
+Ran 9 tests in 0.473s
+
+OK
+"
+Standard,pass,0,9,False,".........
+----------------------------------------------------------------------
+Ran 9 tests in 6.668s
+
+OK
+"
+Extended,not_run,,all,False,Intentionally not run: expected runtime may exceed ten minutes.

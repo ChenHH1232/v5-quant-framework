@@ -1,0 +1,7 @@
+item,status,evidence
+正式 pairwise 数字与共同样本复核,completed,v5w_formal_pairwise_annual_decomposition.csv / v5w_formal_pairwise_underwater.csv
+行业漏斗及非通过路径的可视化,completed,v5w_sector_research_funnel_source.csv / figure
+强制证据边界汇总,completed,v5w_evidence_coverage_matrix.csv
+最终报告图表顺序与正文定位,completed,v5w_report_content_and_visual_plan.md
+pre-2021 exact PIT 完整重建,unresolved,只能作为限制，不能写为已完成 V5 独立验证
+strict cash NAV / QMT 历史合同 / 前瞻纸面闭环,unresolved,阻塞 accepted、实盘与强执行结论

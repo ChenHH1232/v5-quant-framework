@@ -1,0 +1,9 @@
+{
+  "created_at_utc": "2026-08-07T05:00:47+00:00",
+  "task": "v5m_strict_cash_state_nav_repair",
+  "workflow_gate_pass": true,
+  "status": "strict_nav_input_blocked",
+  "missing_state_count": 5,
+  "same_day_sleeve_netting_status": "same_day_sleeve_netting_diagnostic_not_strict_nav",
+  "accepted": false
+}

@@ -1,0 +1,5 @@
+﻿claim,evidence,scope
+"V5 is an auditable fintech/statistics research workflow, not a return-ranking exercise.",V5t report; V5u project brief,research-process claim
+The only formal performance comparison uses 1228 common daily observations from 2021-05-06 to 2026-05-29.,V5s numeric reconciliation,formal pairwise contract
+The candidate's historical total return was 120.6867% versus 109.2546% for the repaired baseline.,V5s numeric reconciliation,historical observation only; validation_not_independent
+"The candidate is not accepted, live approved, or a deployment recommendation.",active-model registry; V5t limitations,governance status

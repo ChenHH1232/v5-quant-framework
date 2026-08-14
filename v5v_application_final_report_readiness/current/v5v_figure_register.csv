@@ -1,0 +1,10 @@
+﻿file,status,data_scope,use
+figures/v5v_formal_pairwise_comparison.png,approved_for_application,repaired baseline vs primary candidate only,method/results section
+figures/v5v_research_governance_workflow.png,approved_for_application,"process map, no performance ranking",method/governance section
+figures/v5_physics_model_explainer.png,approved_for_application,V5 model architecture and governance interpretation; no performance claim,model-design section
+figures/v5_time_series_sample_isolation_design.png,approved_for_application,"2013-2021 research boundary, completed bank rolling evidence, limited 2019-2020 V5 proxy check, and 2021-2026 frozen formal backtest; no performance ranking","study-design, evidence boundary, and anti-leakage section"
+figures/v5_project_purpose_and_agent_system.png,superseded_for_application,Superseded combined overview retained for traceability; no performance claim,archive only
+figures/v5_core_purpose_overview.png,approved_for_application,"V1-V4 bank foundation, transferable workflow, adjacent-sleeve expansion, and signal division; no performance claim",project overview section
+figures/v5_agent_workflow_overview.png,approved_for_application,"Advisor, PM governance, agent hand-off chain, and research infrastructure; no performance claim",method and governance section
+figures/v5_finance_theory_statistics_agent_loop.png,approved_for_application,"Financial-theory hypothesis formation, quantitative falsification, and PM evidence classification; no performance claim",research philosophy and methodology section
+figures/v5_ideal_vs_reality_optimization_path.png,approved_for_application,Conceptual constrained-optimization metaphor for V5 research boundaries; no performance claim,reflection and research-limitations section

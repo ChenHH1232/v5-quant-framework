@@ -1,0 +1,5 @@
+﻿audit_id,status,detail
+same_day_sleeve_netting_diagnostic,pass,Diagnostic only; it is not strict NAV.
+strict_cash_state_complete,blocked,5
+no_dictionary_order_priority,pass,No strict NAV was produced from the earlier code-sorted diagnostic.
+partial_ledger_cash_neutral,pass,43

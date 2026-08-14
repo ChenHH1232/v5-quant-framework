@@ -1,0 +1,9 @@
+﻿category,status,detail
+price_and_adjustment,unresolved,No exact submitted price/adjustment contract.
+timing,unresolved,No submitted engine script/config snapshot.
+fees_and_slippage,unresolved,No submitted fee/slippage configuration.
+limits_pauses_unfilled,unresolved,No per-order/fill export.
+lot_and_cash_residual,unresolved,No position/cash rollforward.
+dividend_corporate_action,unresolved,No engine total-return ledger.
+target_position_deviation,unresolved,No per-rebalance target-position chain.
+unexplained_residual,present,Exact parity cannot be claimed.

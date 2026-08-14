@@ -1,0 +1,5 @@
+﻿stage,available,detail
+local_idealized_nav,True,Local historical research result.
+qmt_no_order_daily_close_replay,True,Explicitly not an order/fill backtest.
+qmt_engine_aggregate_export,True,"Summary comparison exists, but not a complete contract chain."
+target_to_order_to_fill_to_position_to_cash,False,Missing submitted target/order/fill/position/cash artifacts.

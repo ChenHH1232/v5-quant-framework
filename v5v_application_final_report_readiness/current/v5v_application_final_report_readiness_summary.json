@@ -1,0 +1,13 @@
+{
+  "created_at_utc": "2026-08-14T12:30:22+00:00",
+  "task": "v5v_application_final_report_readiness",
+  "baseline": "v57f_startup_preload_repaired_baseline",
+  "primary_candidate": "internal_subsleeve_mom12_70_30",
+  "candidate_status": "primary_forward_paper_candidate_not_accepted",
+  "formal_window": "2021-05-01_to_2026-05-31",
+  "pairwise_observations": 1228,
+  "local_fast_standard_status": "pass_in_bundled_report_environment",
+  "clean_clone_status": "needs_minimal_evidence_fixture_and_dependency_contract_repair",
+  "final_report_status": "ready_for_drafting_with_required_reproducibility_disclosure",
+  "accepted": false
+}

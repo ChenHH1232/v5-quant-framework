@@ -1,0 +1,9 @@
+{
+  "created_at_utc": "2026-08-07T05:00:48+00:00",
+  "task": "v5m_qmt_historical_contract_recovery",
+  "status": "historical_qmt_contract_incomplete",
+  "available_file_count": 5,
+  "missing_contract_artifact_count": 6,
+  "exact_qmt_contract_recovered": false,
+  "accepted": false
+}

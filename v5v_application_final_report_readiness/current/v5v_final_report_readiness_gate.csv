@@ -1,0 +1,6 @@
+﻿gate,status,detail
+statistics_and_status,pass,"Frozen baseline, candidate, 1,228 observations, and status agree."
+application_narrative,pass,"Narrative focuses on method, controls, evidence and limitations."
+figure_scope,pass,Figures show only the allowed pairwise comparison and workflow.
+reproducibility_contract,pass_with_required_follow_up,"Portable Standard needs fixtures, path configuration, and declared report dependencies."
+final_report_drafting,ready_with_required_disclosures,No model or historical statistic needs to change before drafting.

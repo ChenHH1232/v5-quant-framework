@@ -1,0 +1,8 @@
+﻿field,type,future_value,schema_only
+target_sha256,string,,True
+order_export_sha256,string,,True
+fill_export_sha256,string,,True
+position_export_sha256,string,,True
+cash_export_sha256,string,,True
+cash_reconciliation_error,number,,True
+closeout_status,string,,True

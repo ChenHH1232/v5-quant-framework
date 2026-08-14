@@ -1,0 +1,7 @@
+﻿artifact,path,exists,size_bytes,sha256,classification
+submitted_engine_script,v5m_missing_no_file,False,,,engine_contract_requirement
+submitted_engine_config_fee,v5m_missing_no_file,False,,,engine_contract_requirement
+engine_target_snapshot_per_rebalance,v5m_missing_no_file,False,,,engine_contract_requirement
+engine_order_export,v5m_missing_no_file,False,,,engine_contract_requirement
+engine_fill_export,v5m_missing_no_file,False,,,engine_contract_requirement
+engine_position_cash_export,v5m_missing_no_file,False,,,engine_contract_requirement

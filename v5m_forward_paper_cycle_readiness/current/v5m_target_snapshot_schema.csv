@@ -1,0 +1,9 @@
+﻿field,type,future_value,schema_only
+snapshot_id,string,,True
+candidate_id,string,,True
+baseline_id,string,,True
+pit_visible_date,date,,True
+input_manifest_sha256,string,,True
+target_sha256,string,,True
+target_frozen_at,timestamp,,True
+state_tag_metadata,string,,True

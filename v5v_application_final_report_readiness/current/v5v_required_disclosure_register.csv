@@ -1,0 +1,6 @@
+﻿disclosure,placement,required,status
+strict_cash_nav_unavailable,executive_summary; candidate_conclusion; limitations,True,frozen_required
+qmt_contract_incomplete,executive_summary; candidate_conclusion; limitations,True,frozen_required
+ETF total-return contract missing,executive_summary; candidate_conclusion; limitations,True,frozen_required
+validation_not_independent,executive_summary; candidate_conclusion; limitations,True,frozen_required
+independent forward paper cycle not yet formed,executive_summary; candidate_conclusion; limitations,True,frozen_required

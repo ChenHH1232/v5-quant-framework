@@ -1,0 +1,7 @@
+﻿artifact,required_for,requested,reason
+submitted_engine_script,exact_historical_qmt_contract,False,No user prompt required to record a missing local artifact.
+submitted_engine_config_fee,exact_historical_qmt_contract,False,No user prompt required to record a missing local artifact.
+engine_target_snapshot_per_rebalance,exact_historical_qmt_contract,False,No user prompt required to record a missing local artifact.
+engine_order_export,exact_historical_qmt_contract,False,No user prompt required to record a missing local artifact.
+engine_fill_export,exact_historical_qmt_contract,False,No user prompt required to record a missing local artifact.
+engine_position_cash_export,exact_historical_qmt_contract,False,No user prompt required to record a missing local artifact.

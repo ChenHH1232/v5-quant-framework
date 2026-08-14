@@ -1,0 +1,7 @@
+﻿check,status,detail
+bundled_report_environment_fast,pass,9 Fast tests passed using the packaged report runtime.
+bundled_report_environment_standard,pass,15 Standard tests passed using the packaged report runtime.
+clean_clone_windows_path,needs_repair,A default temp-path clone hit Windows path-length limits in historical paper-signal paths; use a short clone root and enable long paths.
+clean_clone_dependency_contract,needs_repair,python-docx is used by the archive renderer but is not declared in project dependencies.
+clean_clone_evidence_fixture_contract,needs_repair,Several legacy workflow tests read local generated ledgers/exports. Replace with committed minimal test fixtures before claiming clean-clone Standard portability.
+historical_claim_reproducibility,pass_with_disclosures,The formal pairwise statistics are present in curated report evidence and remain validation_not_independent.

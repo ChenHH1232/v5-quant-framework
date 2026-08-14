@@ -1,0 +1,10 @@
+﻿state_requirement,path,exists,status,reason
+target_weights,v5f_structural_rough_screen\current\v5f_structural_rough_screen_weights.csv,True,available,Available local historical input.
+portfolio_daily_return,v5f_structural_rough_screen\current\v5f_structural_rough_screen_daily_returns.csv,True,available,Available local historical input.
+same_day_netting_ledger,v5j_momentum_overlay_partial_buy_skip\current\v5j_partial_buy_skip_execution_ledger.csv,True,available,Available local historical input.
+same_day_netting_reconciliation,v5j_momentum_overlay_partial_buy_skip\current\v5j_partial_buy_skip_reconciliation.csv,True,available,Available local historical input.
+raw_holdings_with_quantity,v5m_missing_no_file,False,missing,"No local frozen file identifies this state; recovery requires original historical artifact, not a fabricated reconstruction."
+initial_cash_and_cash_rollforward,v5m_missing_no_file,False,missing,"No local frozen file identifies this state; recovery requires original historical artifact, not a fabricated reconstruction."
+frozen_buy_priority,v5m_missing_no_file,False,missing,"No local frozen file identifies this state; recovery requires original historical artifact, not a fabricated reconstruction."
+lot_level_order_fill_chain,v5m_missing_no_file,False,missing,"No local frozen file identifies this state; recovery requires original historical artifact, not a fabricated reconstruction."
+overlay_dividend_corporate_action_ledger,v5m_missing_no_file,False,missing,"No local frozen file identifies this state; recovery requires original historical artifact, not a fabricated reconstruction."

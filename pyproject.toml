@@ -6,6 +6,11 @@ requires-python = ">=3.10"
 dependencies = []
 
 [project.optional-dependencies]
+report = [
+    "pillow",
+    "python-docx",
+    "reportlab",
+]
 data = [
     "akshare",
     "pandas",
@@ -24,6 +29,9 @@ dev = [
     "pytest",
     "requests",
     "tushare",
+    "pillow",
+    "python-docx",
+    "reportlab",
 ]
 
 [tool.setuptools.packages.find]

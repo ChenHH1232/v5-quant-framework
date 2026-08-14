@@ -9,6 +9,24 @@ build/
 tmp/
 research_reports/
 
+# Local-only source material and renderer outputs. Curated report evidence is
+# stored in its named V5 archive directories, never under these work areas.
+logs/
+tmp_*/
+output/pdf/
+pre2021_financial_expectation_panel_extension/
+v5_qmt_*/
+v5_jq_sim_to_qmt_sim_bridge/
+
+# Private delivery packages and locally retained platform/source evidence.
+# These may contain personal information, licensed material, or raw platform exports.
+v5个人项目报告/
+.tmp_jq2qmt_review_*/
+tmp_qmt_*.pdf
+**/current/pdf/
+**/current/pdf_pages/
+**/platform_reproduction_inputs/
+
 data/
 validation/
 validation_*/

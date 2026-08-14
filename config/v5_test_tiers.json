@@ -12,6 +12,7 @@
       ,"tests.test_v5k_workflow_repair_closeout_runner"
       ,"tests.test_v5k_workflow_activation_runner"
       ,"tests.test_v5l_candidate_hardening_runners"
+      ,"tests.test_v5v_application_final_report_readiness_runner"
     ],
     "standard": [
       "tests.test_v5k_active_model_registry_runner",
@@ -28,6 +29,7 @@
       ,"tests.test_v5s_report_draft_review_runner"
       ,"tests.test_v5t_report_publication_finalization_runner"
       ,"tests.test_v5u_graduate_project_portfolio_runner"
+      ,"tests.test_v5v_application_final_report_readiness_runner"
     ],
     "extended": {
       "command": "python -m unittest discover -s tests",
